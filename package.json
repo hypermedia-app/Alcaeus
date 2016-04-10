@@ -1,7 +1,16 @@
 {
   "jspm": {
     "devDependencies": {
+      "sinon": "npm:sinon@^1.17.3",
       "typescript": "npm:typescript@^1.6.2"
     }
+  },
+  "devDependencies": {
+    "jasmine-core": "2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8",
+    "karma-systemjs": "^0.13.0",
+    "systemjs": "^0.19.25"
   }
 }

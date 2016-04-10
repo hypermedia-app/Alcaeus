@@ -1,15 +1,62 @@
 {
+  "name": "heracles",
+  "version": "0.1.0",
+  "description": "Hydra Core hypermedia-aware client library",
+  "main": "dist/heracles.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "es6-module-loader": "^0.17.11",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8",
+    "karma-systemjs": "^0.13.0",
+    "systemjs": "^0.19.25",
+    "typescript": "^1.8.9"
+  },
+  "scripts": {
+    "test": "karma run",
+    "build": "jspm bundle src/heracles.ts dist/heracles.js --skip-source-maps --global-name heracles --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wikibus/heracles"
+  },
+  "keywords": [
+    "ajax",
+    "hydra",
+    "semanticweb",
+    "hypermedia",
+    "rdf",
+    "json-ld"
+  ],
+  "author": "Tomasz Pluskiewicz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wikibus/heracles/issues"
+  },
+  "homepage": "https://github.com/wikibus/heracles#readme",
   "jspm": {
-    "dependencies": {
-      "whatwg-fetch": "npm:whatwg-fetch@^0.11.0"
+    "directories": {
+      "test": "tests"
     },
+    "format": "cjs",
+    "registry": "jspm",
+    "main": "dist/heracles.js",
     "devDependencies": {
       "sinon": "npm:sinon@^1.17.3",
       "typescript": "npm:typescript@^1.6.2"
+    },
+    "buildConfig": {
+      "minify": true,
+      "transpileES6": true
     }
   },
   "devDependencies": {
     "jasmine-core": "2.4.1",
+    "jspm": "^0.16.32",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
     "karma-jasmine": "^0.3.8",

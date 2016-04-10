@@ -1,0 +1,2 @@
+/// <reference path="../typings/browser.d.ts" />
+System.register("src/heracles.ts",[],function(a,b){"use strict";var c;b&&b.id;return{setters:[],execute:function(){c=function(){function a(){}return a.load=function(a){var b="application/ld+json, application/ntriples, application/nquads";return window.fetch(a,{headers:{accept:b}})},a}(),a("Hydra",c)}}});

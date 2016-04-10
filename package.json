@@ -6,16 +6,6 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {
-    "es6-module-loader": "^0.17.11",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-chrome-launcher": "^0.2.3",
-    "karma-jasmine": "^0.3.8",
-    "karma-systemjs": "^0.13.0",
-    "systemjs": "^0.19.25",
-    "typescript": "^1.8.9"
-  },
   "scripts": {
     "test": "karma run",
     "build": "jspm bundle src/heracles.ts dist/heracles.js --skip-source-maps --global-name heracles --minify"
@@ -55,12 +45,12 @@
     }
   },
   "devDependencies": {
-    "jasmine-core": "2.4.1",
-    "jspm": "^0.16.32",
+    "es6-module-loader": "^0.17.11",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
     "karma-jasmine": "^0.3.8",
     "karma-systemjs": "^0.13.0",
-    "systemjs": "^0.19.25"
+    "systemjs": "^0.19.25",
+    "typescript": "^1.8.9"
   }
 }

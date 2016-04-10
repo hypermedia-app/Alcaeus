@@ -1,0 +1,9 @@
+{
+  "ambientDependencies": {
+    "fetch.js": "github:ryan-codingintrigue/typescript-fetch/fetch.js.d.ts",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160317120654"
+  },
+  "devDependencies": {
+    "sinon": "registry:npm/sinon#1.16.0+20160309002336"
+  }
+}

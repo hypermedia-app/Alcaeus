@@ -1,11 +1,13 @@
+/// <reference path="../typings/main.d.ts" />
+
 import * as sinon from 'sinon';
-import {load} from '../src/heracles';
+import * as heracles from '../src/heracles';
 
 describe('Hydra resource', () => {
     it('should load resource with RDF accept header', (done) => {
         sinon.stub(window, 'fetch');
 
-        var res = new window.Response('{"hello":"world"}', {
+        var res = new Response('{"hello":"world"}', {
             status: 200,
             headers: {
                 'Content-type': 'application/json'
@@ -14,9 +16,12 @@ describe('Hydra resource', () => {
 
         window.fetch.returns(Promise.resolve(res));
 
-        load('http://example.com/resource').then((res) => {
-            // application/ld+json, application/ntriples, application/nquads
-            assert.isTrue(fetchMock.called());
+        heracles.Hydra.load('http://example.com/resource').then((res) => {
+            expect(window.fetch.calledWithMatch('http://example.com/resource', {
+               headers: {
+                   accept: 'application/ld+json, application/ntriples, application/nquads'
+               }
+            })).toBe(true);
 
             done();
         }).catch(done);

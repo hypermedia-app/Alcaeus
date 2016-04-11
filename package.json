@@ -35,6 +35,10 @@
     "format": "cjs",
     "registry": "jspm",
     "main": "dist/heracles.js",
+    "dependencies": {
+      "jsonld": "npm:jsonld@^0.4.6",
+      "li": "npm:li@^1.0.1"
+    },
     "devDependencies": {
       "sinon": "npm:sinon@^1.17.3",
       "typescript": "npm:typescript@^1.6.2"

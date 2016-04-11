@@ -85,6 +85,7 @@ module.exports = function (config) {
             },
             serveFiles: [
                 'src/**/*.ts',
+                'tests/**/*.ts',
                 'jspm_packages/**/*'
             ]
         }

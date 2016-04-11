@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "karma run",
+    "test": "./node_modules/karma/bin/karma start --single-run",
     "build": "jspm bundle src/heracles.ts dist/heracles.js --skip-source-maps --global-name heracles --minify"
   },
   "repository": {

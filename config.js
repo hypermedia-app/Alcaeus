@@ -4,8 +4,7 @@ System.config({
   transpiler: "typescript",
   paths: {
     "github:*": "jspm_packages/github/*",
-    "npm:*": "jspm_packages/npm/*",
-    "systemjs": "jspm_packages/system.js"
+    "npm:*": "jspm_packages/npm/*"
   },
 
   packages: {

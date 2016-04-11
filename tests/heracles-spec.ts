@@ -1,19 +1,19 @@
 /// <reference path="../typings/main.d.ts" />
 
 import * as sinon from 'sinon';
-import * as heracles from '../src/heracles';
+import * as Hydra from '../src/heracles';
 import {Responses} from './test-responses';
 
-describe('Hydra resource', () => {
+describe('Resource.load', () => {
     beforeEach(() => {
-        sinon.stub(heracles.Hydra.ApiDocumentation, 'load');
+        sinon.stub(Hydra.ApiDocumentation, 'load');
         sinon.stub(window, 'fetch');
     });
 
     it('should load resource with RDF accept header', done => {
         window.fetch.returns(Promise.resolve(Responses.jsonLdResponse()));
 
-        heracles.Hydra.load('http://example.com/resource')
+        Hydra.Resource.load('http://example.com/resource')
             .then((res) => {
                 expect(window.fetch.calledWithMatch('http://example.com/resource', {
                     headers: {
@@ -29,7 +29,7 @@ describe('Hydra resource', () => {
     it('should leave json-ld intact', done => {
         window.fetch.returns(Promise.resolve(Responses.jsonLdResponse()));
 
-        heracles.Hydra.load('http://example.com/resource')
+        Hydra.Resource.load('http://example.com/resource')
             .then(jsonLd => {
                 expect(jsonLd.prop['@value']).toBe('some textual value');
                 done();
@@ -40,9 +40,9 @@ describe('Hydra resource', () => {
     it('should load documentation', done => {
         window.fetch.returns(Promise.resolve(Responses.jsonLdResponse()));
 
-        heracles.Hydra.load('http://example.com/resource')
+        Hydra.Resource.load('http://example.com/resource')
             .then(() => {
-                expect(heracles.Hydra.ApiDocumentation.load.calledWithMatch('http://api.example.com/doc/')).toBe(true);
+                expect(Hydra.ApiDocumentation.load.calledWithMatch('http://api.example.com/doc/')).toBe(true);
                 done();
             })
             .catch(done.fail);
@@ -50,6 +50,6 @@ describe('Hydra resource', () => {
 
     afterEach(() => {
         window.fetch.restore();
-        heracles.Hydra.ApiDocumentation.load.restore();
+        Hydra.ApiDocumentation.load.restore();
     });
 });

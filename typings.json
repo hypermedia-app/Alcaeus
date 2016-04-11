@@ -5,5 +5,8 @@
   },
   "devDependencies": {
     "sinon": "registry:npm/sinon#1.16.0+20160309002336"
+  },
+  "dependencies": {
+    "lodash": "registry:npm/lodash#4.0.0+20160305082308"
   }
 }

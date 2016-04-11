@@ -2,7 +2,7 @@
 
 import * as sinon from 'sinon';
 import * as Hydra from '../src/heracles';
-import {Responses} from './test-responses';
+import {Responses} from './test-objects';
 
 describe('Resource.load', () => {
     beforeEach(() => {

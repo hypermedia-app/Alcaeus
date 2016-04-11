@@ -1,0 +1,3 @@
+interface Operation {
+    description: string;
+}

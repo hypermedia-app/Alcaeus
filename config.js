@@ -19,6 +19,7 @@ System.config({
   map: {
     "jsonld": "npm:jsonld@0.4.6",
     "li": "npm:li@1.0.1",
+    "lodash": "npm:lodash@4.9.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -217,6 +218,10 @@ System.config({
     },
     "npm:jsonld@0.4.6": {
       "es6-promise": "npm:es6-promise@2.0.1",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:lodash@4.9.0": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:miller-rabin@4.0.0": {

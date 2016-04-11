@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle src/heracles.ts dist/heracles.js --skip-source-maps --global-name heracles --minify"
+    "build": "jspm bundle src/heracles.ts - jsonld - li - lodash dist/heracles.js --skip-source-maps --global-name heracles --minify"
   },
   "repository": {
     "type": "git",
@@ -29,15 +29,15 @@
   },
   "homepage": "https://github.com/wikibus/heracles#readme",
   "jspm": {
+    "registry": "jspm",
+    "format": "cjs",
     "directories": {
       "test": "tests"
     },
-    "format": "cjs",
-    "registry": "jspm",
-    "main": "dist/heracles.js",
     "dependencies": {
       "jsonld": "npm:jsonld@^0.4.6",
-      "li": "npm:li@^1.0.1"
+      "li": "npm:li@^1.0.1",
+      "lodash": "npm:lodash@^4.9.0"
     },
     "devDependencies": {
       "sinon": "npm:sinon@^1.17.3",

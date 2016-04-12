@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle src/heracles.ts - jsonld - li - lodash dist/heracles.js --skip-source-maps --global-name heracles --minify"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash dist/heracles.js --skip-source-maps --global-name heracles --minify --format amd"
   },
   "repository": {
     "type": "git",

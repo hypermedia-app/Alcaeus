@@ -1,5 +1,5 @@
-/// <reference path="../typings/browser.d.ts" />
 'use strict';
+/// <reference path="../typings/browser.d.ts" />
 
 //noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
@@ -16,16 +16,16 @@ export class ApiDocumentation {
 
     static load(uri:string):Promise<ApiDocumentation> {
         return FetchUtil.fetchResource(uri, false)
-            .then(expanded => new ApiDocumentation(expanded.resources));;
+            .then(expanded => new ApiDocumentation(expanded.resources));
     }
 
     getOperations(classUri:string):Promise<Array<Operation>> {
         return jsonld.flatten(this._original, Core.Context)
             .then(flat => {
-                var supportedClass = _.find(flat[JsonLd.Graph], obj => obj._id === classUri);
+                var supportedClass = _.find(flat[JsonLd.Graph], obj => obj[JsonLd.Id] === classUri);
 
                 return _.chain(flat[JsonLd.Graph])
-                    .filter(obj => obj._id === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, sp => sp === obj._id))
+                    .filter(obj => obj[JsonLd.Id] === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, sp => sp === obj[JsonLd.Id]))
                     .map(op => new Operation(op))
                     .value();
             });

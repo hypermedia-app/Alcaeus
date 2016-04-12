@@ -1,6 +1,7 @@
+'use strict';
+
 export namespace Core {
     export var Context = {
-        "_id": "@id",
         "hydra": "http://www.w3.org/ns/hydra/core#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -74,6 +75,8 @@ export namespace Core {
 
 export namespace JsonLd {
     export var Graph = '@graph';
+
+    export var Id = '@id';
 }
 
 export namespace MediaTypes {

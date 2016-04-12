@@ -1,15 +1,17 @@
-/// <reference path="../typings/browser.d.ts" />
 'use strict';
+/// <reference path="../typings/browser.d.ts" />
 
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
+import {JsonLd} from './Constants';
 
 export class Resource {
     private _operations;
 
-    constructor(operations) {
+    constructor(actualResource, operations) {
         this._operations = operations;
+        Object.assign(this, actualResource);
     }
 
     getOperations() {
@@ -26,7 +28,7 @@ export class Resource {
 
             return Promise.all(resourcesPromised)
                 .then(resources => {
-                    return _.groupBy(resources, '@id')
+                    return _.groupBy(resources, JsonLd.Id)
                 })
                 .then(grouped => {
                     _.forEach(grouped, g => resourcifyChildren(g[0], grouped));
@@ -39,24 +41,20 @@ export class Resource {
 
 function createResource(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resource> {
     if (!apiDocumentation) {
-        var resource = new Resource([]);
-        Object.assign(resource, obj);
-        return Promise.resolve(resource);
+        return Promise.resolve(new Resource(obj, []));
     }
 
     return apiDocumentation.getOperations(obj['@type'])
         .then(operations => {
-            var resource = new Resource(operations);
-            Object.assign(resource, obj);
-            return resource;
+            return new Resource(obj, operations);
         });
 }
 
 function resourcifyChildren(res:Resource, resources) {
     var self = res;
 
-    if(!resources[res['@id']])
-        resources[res['@id']] = [ res ];
+    if(!resources[res[JsonLd.Id]])
+        resources[res[JsonLd.Id]] = [ res ];
 
     _.forOwn(res, (value, key) => {
         if (_.isString(value) || key.startsWith('_'))
@@ -75,5 +73,5 @@ function resourcifyChildren(res:Resource, resources) {
         throw new Error('Unexpected value ' + value);
     });
 
-    return resources[res['@id']];
+    return resources[res[JsonLd.Id]];
 }

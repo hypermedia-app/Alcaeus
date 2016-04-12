@@ -1,3 +1,5 @@
+'use strict';
+
 //noinspection TypeScriptCheckImport
 import * as li from 'li';
 //noinspection TypeScriptCheckImport

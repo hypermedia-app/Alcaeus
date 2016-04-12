@@ -10,6 +10,9 @@ export namespace Bodies {
         },
         'other': {
             '@id': 'http://example.com/linked'
+        },
+        'other_yet': {
+            '@id': 'http://example.com/linked'
         }
     };
 

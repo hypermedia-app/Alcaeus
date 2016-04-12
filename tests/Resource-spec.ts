@@ -77,6 +77,18 @@ describe('Resource.load', () => {
             .catch(done.fail);
     });
 
+    it('should turn JSON-LD into a graph of objects', done => {
+        window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, true)));
+
+        Resource.load('http://example.com/resource')
+            .then(res => {
+                expect(Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet'])).toBe(true);
+                expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked');
+                done();
+            })
+            .catch(done.fail);
+    });
+
     it('should parse non-json-ld response', done => {
         window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.ntriples(Bodies.ntriples, false)));
 

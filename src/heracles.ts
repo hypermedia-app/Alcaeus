@@ -20,15 +20,25 @@ export class Resource {
 
         return FetchUtil.fetchResource(uri).then(resWithDocs => {
 
-            var resources = _.groupBy(resWithDocs.resources, '@id');
+            var resourcesPromised = _.chain(resWithDocs.resources)
+                .map(resObj => createResource(resObj, resWithDocs.apiDocumentation))
+                .value();
 
-            return resourcify(_.find(resWithDocs.resources, ['@id', uri]), resWithDocs.apiDocumentation);
+            return Promise.all(resourcesPromised)
+                .then(resources => {
+                    return _.groupBy(resources, '@id')
+                })
+                .then(grouped => {
+                    _.forEach(grouped, g => resourcifyChildren(g[0], grouped));
+                    return grouped;
+                })
+                .then(grouped => grouped[uri][0]);
         });
     }
 }
 
-function resourcify(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resource> {
-    if(!apiDocumentation){
+function createResource(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resource> {
+    if (!apiDocumentation) {
         var resource = new Resource([]);
         Object.assign(resource, obj);
         return Promise.resolve(resource);
@@ -40,4 +50,30 @@ function resourcify(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resou
             Object.assign(resource, obj);
             return resource;
         });
+}
+
+function resourcifyChildren(res:Resource, resources) {
+    var self = res;
+
+    if(!resources[res['@id']])
+        resources[res['@id']] = [ res ];
+
+    _.forOwn(res, (value, key) => {
+        if (_.isString(value) || key.startsWith('_'))
+            return;
+
+        if(_.isArray(value)) {
+            self[key] = _.map(value, el => resourcifyChildren(res, resources));
+            return;
+        }
+
+        if(_.isObject(value)) {
+            self[key] = resourcifyChildren(value, resources)[0];
+            return;
+        }
+
+        throw new Error('Unexpected value ' + value);
+    });
+
+    return resources[res['@id']];
 }

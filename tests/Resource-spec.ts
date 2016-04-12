@@ -52,22 +52,21 @@ describe('Resource.load', () => {
 
     it('should load documentation', done => {
         window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, true)));
-        window.fetch.withArgs('http://api.example.com/doc/').returns(Promise.resolve(Responses.jsonLd(Documentations, true)));
 
         Resource.load('http://example.com/resource')
             .then(() => {
-                expect(window.fetch.calledWithMatch('http://api.example.com/doc/')).toBe(true);
+                expect(ApiDocumentation.load.calledWithMatch('http://api.example.com/doc/')).toBe(true);
                 done();
             })
             .catch(done.fail);
     });
     
     it('should append class\' supported operations to resource', done => {
-        window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
-        ApiDocumentation.load.withArgs('http://example.com/vocab#Resource')
-            .returns({
-                getOperations: () => [ { method: 'POST', description: 'test'} ]
-            });
+        window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, true)));
+        ApiDocumentation.load.withArgs('http://api.example.com/doc/')
+            .returns(Promise.resolve({
+                getOperations: () => Promise.resolve([ { method: 'POST', description: 'test'} ])
+            }));
 
         Resource.load('http://example.com/resource')
             .then(res => {

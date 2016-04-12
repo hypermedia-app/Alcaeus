@@ -6,17 +6,19 @@ import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
 
 export class Resource {
+    private _operations;
 
     constructor(operations) {
+        this._operations = operations;
     }
 
     getOperations() {
-        return [];
+        return this._operations;
     }
 
     static load(uri:string):Promise<Resource> {
 
-        return FetchUtil.fetchResource(uri, true).then(resWithDocs => {
+        return FetchUtil.fetchResource(uri).then(resWithDocs => {
 
             var resources = _.groupBy(resWithDocs.resources, '@id');
 
@@ -38,5 +40,4 @@ function resourcify(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resou
             Object.assign(resource, obj);
             return resource;
         });
-
 }

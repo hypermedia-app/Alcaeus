@@ -6,7 +6,7 @@ import {ApiDocumentation} from "./ApiDocumentation";
 import * as Constants from "./Constants";
 
 export class FetchUtil {
-    static fetchResource(uri:string, fetchApiDocs:boolean):Promise<ExpandedWithDocs> {
+    static fetchResource(uri:string, fetchApiDocs:boolean = true):Promise<ExpandedWithDocs> {
         var requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
 
         return window.fetch(uri, <FetchOptions>{
@@ -17,7 +17,7 @@ export class FetchUtil {
             .then((res:Response) => {
                 var apiDocsPromise;
                 if (fetchApiDocs) {
-                    apiDocsPromise = FetchUtil.fetchDocumentation(res);
+                    apiDocsPromise = fetchDocumentation(res);
                 } else {
                     apiDocsPromise = Promise.resolve(null);
                 }
@@ -28,20 +28,19 @@ export class FetchUtil {
                     });
             })
     }
+}
 
-    static fetchDocumentation(res:Response):Promise<ApiDocumentation> {
-        if (res.headers.has(Constants.Headers.Link)) {
-            var linkHeaders = res.headers.get(Constants.Headers.Link);
-            var links = li.parse(linkHeaders);
+function fetchDocumentation(res:Response):Promise<ApiDocumentation> {
+    if (res.headers.has(Constants.Headers.Link)) {
+        var linkHeaders = res.headers.get(Constants.Headers.Link);
+        var links = li.parse(linkHeaders);
 
-            if (links[Constants.Core.Vocab.apiDocumentation]) {
-                return FetchUtil.fetchResource(links[Constants.Core.Vocab.apiDocumentation], false)
-                    .then(expanded => new ApiDocumentation(expanded.resources));
-            }
+        if (links[Constants.Core.Vocab.apiDocumentation]) {
+            return ApiDocumentation.load(links[Constants.Core.Vocab.apiDocumentation]);
         }
-
-        return Promise.resolve(null);
     }
+
+    return Promise.resolve(null);
 }
 
 class ExpandedWithDocs {

@@ -5,6 +5,7 @@
 import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import {Core, JsonLd} from './Constants';
+import {FetchUtil} from "./FetchUtil";
 
 export class ApiDocumentation {
     private _original;
@@ -14,7 +15,8 @@ export class ApiDocumentation {
     }
 
     static load(uri:string):Promise<ApiDocumentation> {
-        return null;
+        return FetchUtil.fetchResource(uri, false)
+            .then(expanded => new ApiDocumentation(expanded.resources));;
     }
 
     getOperations(classUri:string):Promise<Array<Operation>> {

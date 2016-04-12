@@ -1,47 +1,42 @@
 /// <reference path="../typings/browser.d.ts" />
 'use strict';
 
-//noinspection TypeScriptCheckImport
-import * as li from 'li';
-//noinspection TypeScriptCheckImport
-import {promises as jsonld} from 'jsonld';
+import * as _ from 'lodash';
+import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
-import * as Constants from './Constants';
 
 export class Resource {
-    static load(uri:string) {
-        var requestAcceptHeaders = 'application/ld+json, application/ntriples, application/nquads';
 
-        return window.fetch(uri, <FetchOptions>{
-                headers: {
-                    accept: requestAcceptHeaders
-                }
-            })
-            .then((res:Response) => {
-                if (res.headers.has(Constants.Headers.Link)) {
-                    var linkHeaders = res.headers.get(Constants.Headers.Link);
-                    var links = li.parse(linkHeaders);
-                }
+    constructor(operations) {
+    }
 
-                if (links[Constants.Core.Vocab.apiDocumentation]) {
-                    ApiDocumentation.load(links[Constants.Core.Vocab.apiDocumentation]);
-                }
+    getOperations() {
+        return [];
+    }
 
-                return getJsObject(res);
-            });
+    static load(uri:string):Promise<Resource> {
+
+        return FetchUtil.fetchResource(uri, true).then(resWithDocs => {
+
+            var resources = _.groupBy(resWithDocs.resources, '@id');
+
+            return resourcify(_.find(resWithDocs.resources, ['@id', uri]), resWithDocs.apiDocumentation);
+        });
     }
 }
 
-function getJsObject(res:Response) {
-    var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.JsonLd;
-
-    if (mediaType === Constants.MediaTypes.JsonLd) {
-        return res.json();
+function resourcify(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resource> {
+    if(!apiDocumentation){
+        var resource = new Resource([]);
+        Object.assign(resource, obj);
+        return Promise.resolve(resource);
     }
 
-    if (mediaType === 'application/ntriples' || mediaType === 'application/nquads') {
-        return res.text().then(jsonld.expand);
-    }
+    return apiDocumentation.getOperations(obj['@type'])
+        .then(operations => {
+            var resource = new Resource(operations);
+            Object.assign(resource, obj);
+            return resource;
+        });
 
-    throw new Error('Unsupported media type: ' + mediaType);
 }

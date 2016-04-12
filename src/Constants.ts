@@ -77,7 +77,9 @@ export namespace JsonLd {
 }
 
 export namespace MediaTypes {
-    export var JsonLd = 'application/ld+json';
+    export var jsonLd = 'application/ld+json';
+    export var ntriples = 'application/n-triples';
+    export var nquads = 'application/n-quads';
 }
 
 export namespace Headers {

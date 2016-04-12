@@ -8,7 +8,6 @@ import {Core, JsonLd} from './Constants';
 
 export class ApiDocumentation {
     private _original;
-    private _flattened;
 
     constructor(apiDoc:any) {
         this._original = apiDoc;

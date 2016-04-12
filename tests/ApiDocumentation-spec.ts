@@ -1,10 +1,7 @@
 /// <reference path="../typings/main.d.ts" />
-/// <reference path="../heracles.d.ts" />
 
-import * as sinon from 'sinon';
-import {ApiDocumentation} from '../src/heracles';
+import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
-import {promises as jsonld} from 'jsonld';
 
 describe('ApiDocumentation', () => {
     

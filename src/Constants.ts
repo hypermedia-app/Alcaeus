@@ -54,7 +54,8 @@ export namespace Core {
         apiDocumentation: Context['hydra'] + 'apiDocumentation',
         title: Context['hydra'] + 'title',
         description: Context['hydra'] + 'description',
-        method: Context['hydra'] + 'method'
+        method: Context['hydra'] + 'method',
+        SupportedClass: Context['hydra'] + 'SupportedClass'
     };
 }
 
@@ -62,6 +63,7 @@ export namespace JsonLd {
     export var Graph = '@graph';
     export var Context = '@context';
     export var Id = '@id';
+    export var Type = '@type';
 }
 
 export namespace MediaTypes {

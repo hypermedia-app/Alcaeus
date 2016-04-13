@@ -48,6 +48,7 @@ export namespace Documentations {
         'supportedClass': [
             {
                 '@id': 'http://example.com/api#Class',
+                '@type': 'SupportedClass',
                 'supportedOperation': [
                     {
                         'description': 'Gets the api#Class',

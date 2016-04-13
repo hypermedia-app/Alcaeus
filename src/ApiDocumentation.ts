@@ -30,7 +30,10 @@ export class ApiDocumentation implements IApiDocumentation{
 
                 return _.chain(flat[JsonLd.Graph])
                     .filter(obj => obj[JsonLd.Id] === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, sp => sp === obj[JsonLd.Id]))
-                    .map(op => new Operation(op, this))
+                    .map(op => {
+                        op[JsonLd.Context] = Core.Context;
+                        return new Operation(op, this);
+                    })
                     .value();
             });
     }
@@ -42,7 +45,10 @@ export class ApiDocumentation implements IApiDocumentation{
 
                 return _.chain(flat[JsonLd.Graph])
                     .filter(obj => obj[JsonLd.Id] === supportedClass.supportedProperty || _.some(supportedClass.supportedProperty, sp => sp === obj[JsonLd.Id]))
-                    .map(prop => new SupportedProperty(prop, this))
+                    .map(prop => {
+                        prop[JsonLd.Context] = Core.Context;
+                        return new SupportedProperty(prop, this);
+                    })
                     .value();
             });
     }
@@ -73,7 +79,6 @@ export class Operation implements ISupportedOperation {
     constructor(hydraOperation:any, apiDoc:IApiDocumentation) {
         this._hydraOperation = hydraOperation;
         this._apiDoc = apiDoc;
-        this._hydraOperation[JsonLd.Context] = Core.Context;
     }
 
     get id() {

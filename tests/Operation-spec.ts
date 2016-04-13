@@ -1,10 +1,12 @@
 import * as sinon from 'sinon';
 import {Operation, ApiDocumentation} from '../src/ApiDocumentation';
+import {Core} from '../src/Constants';
 
 describe('Operation', () => {
 
     var apiDoc;
     var operationJsonLd = {
+        '@context': Core.Context,
         'title': 'The operation',
         'description': 'The operation description',
         'expects': {

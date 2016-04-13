@@ -1,3 +1,5 @@
 interface Operation {
-    description: string;
+    title:string;
+    description:string;
+    getRaw(context:any = null):Object;
 }

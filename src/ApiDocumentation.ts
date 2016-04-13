@@ -4,6 +4,8 @@
 //noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
+//noinspection TypeScriptCheckImport
+import {rdfs, schema} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
 import {FetchUtil} from "./FetchUtil";
 
@@ -33,14 +35,30 @@ export class ApiDocumentation {
 }
 
 export class Operation {
+    private _hydraOperation;
+
     constructor(hydraOperation:any) {
+        this._hydraOperation = hydraOperation;
+        this._hydraOperation[JsonLd.Context] = Core.Context;
     }
 
-    get description() {
-        return 'Gets the api#Class';
+    get description():String {
+        return this._hydraOperation.description ||
+            this._hydraOperation[rdfs.ns + 'comment'] ||
+            this._hydraOperation[schema.description]
     }
 
-    get method() {
-        return 'GET';
+    get method():String {
+        return this._hydraOperation.method;
+    }
+
+    get title():String {
+        return this._hydraOperation.title ||
+            this._hydraOperation[rdfs.ns + 'label'] ||
+            this._hydraOperation[schema.title];
+    }
+
+    getRaw(context:any = null) {
+        return jsonld.compact(this._hydraOperation, context || Core.Context);
     }
 }

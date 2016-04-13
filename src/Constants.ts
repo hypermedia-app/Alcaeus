@@ -3,13 +3,6 @@
 export namespace Core {
     export var Context = {
         "hydra": "http://www.w3.org/ns/hydra/core#",
-        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "owl": "http://www.w3.org/2002/07/owl#",
-        "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
-        "dc": "http://purl.org/dc/terms/",
-        "cc": "http://creativecommons.org/ns#",
         "apiDocumentation": "hydra:apiDocumentation",
         "ApiDocumentation": "hydra:ApiDocumentation",
         "title": "hydra:title",
@@ -54,28 +47,20 @@ export namespace Core {
         "template": "hydra:template",
         "mapping": "hydra:mapping",
         "IriTemplateMapping": "hydra:IriTemplateMapping",
-        "variable": "hydra:variable",
-        "defines": {"@reverse": "rdfs:isDefinedBy"},
-        "comment": "rdfs:comment",
-        "label": "rdfs:label",
-        "preferredPrefix": "http://purl.org/vocab/vann/preferredNamespacePrefix",
-        "cc:license": {"@type": "@id"},
-        "cc:attributionURL": {"@type": "@id"},
-        "domain": {"@id": "rdfs:domain", "@type": "@vocab"},
-        "range": {"@id": "rdfs:range", "@type": "@vocab"},
-        "subClassOf": {"@id": "rdfs:subClassOf", "@type": "@vocab"},
-        "subPropertyOf": {"@id": "rdfs:subPropertyOf", "@type": "@vocab"},
-        "seeAlso": {"@id": "rdfs:seeAlso", "@type": "@id"}
+        "variable": "hydra:variable"
     };
 
     export var Vocab = {
-        apiDocumentation: Context['hydra'] + 'apiDocumentation'
+        apiDocumentation: Context['hydra'] + 'apiDocumentation',
+        title: Context['hydra'] + 'title',
+        description: Context['hydra'] + 'description',
+        method: Context['hydra'] + 'method'
     };
 }
 
 export namespace JsonLd {
     export var Graph = '@graph';
-
+    export var Context = '@context';
     export var Id = '@id';
 }
 

@@ -17,6 +17,7 @@ System.config({
   },
 
   map: {
+    "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@0.10.0",
     "jsonld": "npm:jsonld@0.4.6",
     "li": "npm:li@1.0.1",
     "lodash": "npm:lodash@4.9.0",

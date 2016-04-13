@@ -72,33 +72,47 @@ export class ApiDocumentation implements IApiDocumentation{
     }
 }
 
-export class Operation implements ISupportedOperation {
+export class DocumentedResource implements IDocumentedResource {
+    private _hydraResource:any;
+
+    constructor(hydraResource:any){
+        this._hydraResource = hydraResource;
+    }
+
+    get id() {
+        return this._hydraResource['@id'];
+    }
+
+    get description():String {
+        return this._hydraResource.description ||
+            this._hydraResource[rdfs.ns + 'comment'] ||
+            this._hydraResource[schema.description]
+    }
+
+    get title():String {
+        return this._hydraResource.title ||
+            this._hydraResource[rdfs.ns + 'label'] ||
+            this._hydraResource[schema.title];
+    }
+
+    getRaw(context:any = null) {
+        return jsonld.compact(this._hydraResource, context || Core.Context);
+    }
+}
+
+export class Operation extends DocumentedResource implements ISupportedOperation {
     private _hydraOperation;
     private _apiDoc;
 
     constructor(hydraOperation:any, apiDoc:IApiDocumentation) {
+        super(hydraOperation);
+
         this._hydraOperation = hydraOperation;
         this._apiDoc = apiDoc;
     }
 
-    get id() {
-        return this._hydraOperation['@id'];
-    }
-
-    get description():String {
-        return this._hydraOperation.description ||
-            this._hydraOperation[rdfs.ns + 'comment'] ||
-            this._hydraOperation[schema.description]
-    }
-
     get method():String {
         return this._hydraOperation.method;
-    }
-
-    get title():String {
-        return this._hydraOperation.title ||
-            this._hydraOperation[rdfs.ns + 'label'] ||
-            this._hydraOperation[schema.title];
     }
 
     get expects():String {
@@ -107,10 +121,6 @@ export class Operation implements ISupportedOperation {
 
     get returns():String {
         return this._hydraOperation.returns[JsonLd.Id];
-    }
-
-    getRaw(context:any = null) {
-        return jsonld.compact(this._hydraOperation, context || Core.Context);
     }
 
     getExpected():Promise<IClass> {
@@ -122,31 +132,27 @@ export class Operation implements ISupportedOperation {
     }
 }
 
-export class SupportedProperty implements ISupportedProperty {
+export class SupportedProperty extends DocumentedResource implements ISupportedProperty {
     private _hydraSupportedProperty:any;
     private _apiDoc:IApiDocumentation;
 
     constructor(hydraSupportedProperty:any, apiDoc:IApiDocumentation) {
+        super(hydraSupportedProperty);
+
         this._hydraSupportedProperty = hydraSupportedProperty;
         this._apiDoc = apiDoc;
     }
-
-    get id():string {
-        return this._hydraSupportedProperty[JsonLd.Id];
-    }
 }
 
-export class Class implements IClass {
+export class Class extends DocumentedResource implements IClass {
     private _hydraClass;
     private _apiDoc;
 
     constructor(hydraClass:Object, apiDoc:IApiDocumentation) {
+        super(hydraClass);
+
         this._hydraClass = hydraClass;
         this._apiDoc = apiDoc;
-    }
-
-    get id() {
-        return this._hydraClass['@id'];
     }
 
     getSupportedOperations():Promise<Array<ISupportedOperation>> {

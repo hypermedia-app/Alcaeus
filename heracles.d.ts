@@ -14,17 +14,20 @@ interface IClass extends IResource {
     getSupportedProperties():Promise<Array<ISupportedProperty>>
 }
 
-interface ISupportedProperty extends IResource {
+interface IDocumentedResource extends IResource {
+    title:string;
+    description:string;
+    getRaw(context:any = null):Object;
+}
+
+interface ISupportedProperty extends IDocumentedResource {
 
 }
 
-interface ISupportedOperation extends IResource {
+interface ISupportedOperation extends IDocumentedResource {
     method:string;
-    title:string;
-    description:string;
     expects:string;
     returns:string;
     getExpected():Promise<IClass>;
     getReturned():Promise<IClass>;
-    getRaw(context:any = null):Object;
 }

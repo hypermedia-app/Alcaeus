@@ -1,3 +1,6 @@
+//noinspection TypeScriptCheckImport
+import {rdf, xsd} from 'jasnell/linkeddata-vocabs';
+
 export namespace Bodies {
     export var someJsonLd = {
         '@context': {
@@ -48,13 +51,39 @@ export namespace Documentations {
         'supportedClass': [
             {
                 '@id': 'http://example.com/api#Class',
-                '@type': 'SupportedClass',
+                '@type': 'hydra:Class',
                 'supportedOperation': [
                     {
                         'description': 'Gets the api#Class',
                         'expects': 'owl:Nothing',
                         'method': 'GET',
                         'returns': 'http://example.com/api#Class'
+                    }
+                ],
+                'supportedProperty': [
+                    {
+                        'title': 'The very important name',
+                        'description': 'A short description thereof',
+                        'readable': true,
+                        'readable': false,
+                        'required': false,
+                        'property': {
+                            '@id': 'http://purl.org/dc/elements/1.1/partOf',
+                            '@type': rdf.ns + 'Property',
+                            'range': xsd.string
+                        }
+                    },
+                    {
+                        'title': 'The less important name',
+                        'description': 'A pretty much longer description test',
+                        'readable': true,
+                        'readable': false,
+                        'required': true,
+                        'property': {
+                            '@id': 'http://schema.org/name',
+                            '@type': rdf.ns + 'Property',
+                            'range': xsd.string
+                        }
                     }
                 ]
             }

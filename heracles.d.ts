@@ -5,14 +5,20 @@ interface IResource {
 interface IApiDocumentation extends IResource {
     getClasses():Promise<Array<IClass>>;
     getClass(classId:string):Promise<IClass>;
-    getOperations(classUri:string):Promise<Array<IOperation>>;
+    getOperations(classUri:string):Promise<Array<ISupportedOperation>>;
+    getProperties(classUri:string):Promise<Array<ISupportedProperty>>;
 }
 
 interface IClass extends IResource {
-    getSupportedOperations():Promise<Array<IOperation>>
+    getSupportedOperations():Promise<Array<ISupportedOperation>>
+    getSupportedProperties():Promise<Array<ISupportedProperty>>
 }
 
-interface IOperation extends IResource {
+interface ISupportedProperty extends IResource {
+
+}
+
+interface ISupportedOperation extends IResource {
     method:string;
     title:string;
     description:string;

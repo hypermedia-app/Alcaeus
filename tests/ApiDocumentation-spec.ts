@@ -18,6 +18,18 @@ describe('ApiDocumentation', () => {
             .catch(done.fail);
     });
 
+    it('should get properties for a given class type', done => {
+
+        var docs = new ApiDocumentation('', Documentations.classWithOperation);
+
+        var op = docs.getProperties('http://example.com/api#Class')
+            .then(props => {
+                expect(props.length).toBe(2);
+                done();
+            })
+            .catch(done.fail);
+    });
+
     it('should return classes from documentation', done => {
 
         var docs = new ApiDocumentation('', Documentations.classWithOperation);

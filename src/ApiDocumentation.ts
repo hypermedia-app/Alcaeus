@@ -23,7 +23,7 @@ export class ApiDocumentation implements IApiDocumentation{
             .then(expanded => new ApiDocumentation(uri, expanded.resources));
     }
 
-    getOperations(classUri:string):Promise<Array<IOperation>> {
+    getOperations(classUri:string):Promise<Array<ISupportedOperation>> {
         return this._getFlattened()
             .then(flat => {
                 var supportedClass = _.find(flat[JsonLd.Graph], obj => obj[JsonLd.Id] === classUri);
@@ -35,11 +35,23 @@ export class ApiDocumentation implements IApiDocumentation{
             });
     }
 
+    getProperties(classUri:string):Promise<Array<ISupportedProperty>> {
+        return this._getFlattened()
+            .then(flat => {
+                var supportedClass = _.find(flat[JsonLd.Graph], obj => obj[JsonLd.Id] === classUri);
+
+                return _.chain(flat[JsonLd.Graph])
+                    .filter(obj => obj[JsonLd.Id] === supportedClass.supportedProperty || _.some(supportedClass.supportedProperty, sp => sp === obj[JsonLd.Id]))
+                    .map(prop => new SupportedProperty(prop, this))
+                    .value();
+            });
+    }
+
     getClasses():Promise<Array<IClass>> {
         return this._getFlattened()
             .then(flat => {
                 return _.chain(flat[JsonLd.Graph])
-                    .filter(obj => obj[JsonLd.Type] === 'SupportedClass')
+                    .filter(obj => obj[JsonLd.Type] === 'Class')
                     .map(sc => new Class(sc, this))
                     .value();
             });
@@ -54,11 +66,11 @@ export class ApiDocumentation implements IApiDocumentation{
     }
 }
 
-export class Operation implements IOperation {
+export class Operation implements ISupportedOperation {
     private _hydraOperation;
     private _apiDoc;
 
-    constructor(hydraOperation:any, apiDoc:ApiDocumentation) {
+    constructor(hydraOperation:any, apiDoc:IApiDocumentation) {
         this._hydraOperation = hydraOperation;
         this._apiDoc = apiDoc;
         this._hydraOperation[JsonLd.Context] = Core.Context;
@@ -105,11 +117,25 @@ export class Operation implements IOperation {
     }
 }
 
+export class SupportedProperty implements ISupportedProperty {
+    private _hydraSupportedProperty:any;
+    private _apiDoc:IApiDocumentation;
+
+    constructor(hydraSupportedProperty:any, apiDoc:IApiDocumentation) {
+        this._hydraSupportedProperty = hydraSupportedProperty;
+        this._apiDoc = apiDoc;
+    }
+
+    get id():string {
+        return this._hydraSupportedProperty[JsonLd.Id];
+    }
+}
+
 export class Class implements IClass {
     private _hydraClass;
     private _apiDoc;
 
-    constructor(hydraClass:Object, apiDoc:ApiDocumentation) {
+    constructor(hydraClass:Object, apiDoc:IApiDocumentation) {
         this._hydraClass = hydraClass;
         this._apiDoc = apiDoc;
     }
@@ -118,7 +144,11 @@ export class Class implements IClass {
         return this._hydraClass['@id'];
     }
 
-    getSupportedOperations() {
+    getSupportedOperations():Promise<Array<ISupportedOperation>> {
         return this._apiDoc.getOperations(this.id);
+    }
+
+    getSupportedProperties():Promise<Array<ISupportedProperty>> {
+        return this._apiDoc.getProperties(this.id);
     }
 }

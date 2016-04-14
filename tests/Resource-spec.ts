@@ -61,18 +61,19 @@ describe('Resource.load', () => {
             })
             .catch(done.fail);
     });
-    
+
     it('should append class\' supported operations to resource', done => {
         window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, true)));
         ApiDocumentation.load.withArgs('http://api.example.com/doc/')
             .returns(Promise.resolve({
-                getOperations: () => Promise.resolve([ { method: 'POST', description: 'test'} ])
+                getOperations: () => Promise.resolve([{method: 'POST', description: 'test'}])
             }));
 
         Resource.load('http://example.com/resource')
-            .then(res => {
-                expect(res.getOperations()[0].method).toBe('POST');
-                expect(res.getOperations()[0].description).toBe('test');
+            .then(res => res.getOperations())
+            .then(ops => {
+                expect(ops[0].method).toBe('POST');
+                expect(ops[0].description).toBe('test');
                 done();
             })
             .catch(done.fail);
@@ -107,6 +108,22 @@ describe('Resource.load', () => {
         Resource.load('http://example.com/resource')
             .then(res => {
                 expect(res['http://example.vocab/managedBy'] instanceof Resource).toBe(true);
+                done();
+            })
+            .catch(done.fail);
+    });
+
+    it('should append class\' supported operations to nested resource', done => {
+        window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.hydraCollection, true)));
+        ApiDocumentation.load.withArgs('http://api.example.com/doc/')
+            .returns(Promise.resolve({
+                getOperations: () => Promise.resolve([{method: 'POST', description: 'test'}])
+            }));
+
+        Resource.load('http://example.com/resource')
+            .then(res => res['http://example.vocab/managedBy'].getOperations())
+            .then(ops => {
+                expect(ops.length).toBe(1);
                 done();
             })
             .catch(done.fail);

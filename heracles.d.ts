@@ -1,3 +1,4 @@
+import {Operation} from "./src/ApiDocumentation";
 interface IResource {
     id:string
 }
@@ -33,4 +34,8 @@ interface ISupportedOperation extends IDocumentedResource {
     returns:string;
     getExpected():Promise<IClass>;
     getReturned():Promise<IClass>;
+}
+
+interface IHydraResource extends IResource {
+    getOperations():Promise<Array<Operation>>
 }

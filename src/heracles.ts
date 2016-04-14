@@ -5,52 +5,46 @@ import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
 import {JsonLd} from './Constants';
+import {IHydraResource} from "../heracles";
 
-export class Resource {
-    private _operations;
+export class Resource implements IHydraResource {
+    private _apiDoc;
 
-    constructor(actualResource, operations) {
-        this._operations = operations;
+    constructor(actualResource, apiDoc:ApiDocumentation) {
+        this._apiDoc = apiDoc;
         Object.assign(this, actualResource);
     }
 
+    get id() {
+        return this['@id'];
+    }
+
     getOperations() {
-        return this._operations;
+        return this._apiDoc.getOperations(this['@type']);
     }
 
     static load(uri:string):Promise<Resource> {
 
         return FetchUtil.fetchResource(uri).then(resWithDocs => {
 
-            var resourcesPromised = _.chain(resWithDocs.resources)
+            var groupedResources = _.chain(resWithDocs.resources)
                 .map(resObj => createResource(resObj, resWithDocs.apiDocumentation))
+                .groupBy(JsonLd.Id)
+                .mapValues(arr => arr[0])
                 .value();
 
-            return Promise.all(resourcesPromised)
-                .then(resources => {
-                    return _.chain(resources).groupBy(JsonLd.Id).mapValues(arr => arr[0]).value();
-                })
-                .then(grouped => {
-                    _.forEach(grouped, g => resourcifyChildren(g, grouped));
-                    return grouped;
-                })
-                .then(grouped => grouped[uri]);
+            _.forEach(groupedResources, g => resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation));
+
+            return groupedResources[uri];
         });
     }
 }
 
-function createResource(obj:Object, apiDocumentation:ApiDocumentation):Promise<Resource> {
-    if (!apiDocumentation) {
-        return Promise.resolve(new Resource(obj, []));
-    }
-
-    return apiDocumentation.getOperations(obj['@type'])
-        .then(operations => {
-            return new Resource(obj, operations);
-        });
+function createResource(obj:Object, apiDocumentation:ApiDocumentation):Resource {
+    return new Resource(obj, apiDocumentation);
 }
 
-function resourcifyChildren(res:Resource, resources) {
+function resourcifyChildren(res:Resource, resources, apiDoc) {
     var self = res;
 
     if(!resources[res[JsonLd.Id]])
@@ -61,16 +55,16 @@ function resourcifyChildren(res:Resource, resources) {
             return;
 
         if(_.isArray(value)) {
-            self[key] = _.map(value, el => resourcifyChildren(el, resources));
+            self[key] = _.map(value, el => resourcifyChildren(el, resources, apiDoc));
             return;
         }
 
         if(_.isObject(value)) {
             if(value instanceof Resource === false){
-                value = new Resource(value, []);
+                value = new Resource(value, apiDoc);
             }
 
-            self[key] = resourcifyChildren(value, resources);
+            self[key] = resourcifyChildren(value, resources, apiDoc);
             return;
         }
 

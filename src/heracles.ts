@@ -23,7 +23,7 @@ export class Resource implements IHydraResource {
         return this._apiDoc.getOperations(this['@type']);
     }
 
-    static load(uri:string):Promise<Resource> {
+    static load(uri:string):Promise<IHydraResource> {
 
         return FetchUtil.fetchResource(uri).then(resWithDocs => {
 

@@ -39,3 +39,14 @@ interface ISupportedOperation extends IDocumentedResource {
 interface IHydraResource extends IResource {
     getOperations():Promise<Array<Operation>>
 }
+
+var Resource:ResourceStatic;
+var ApiDocumentation:ApiDocumentationStatic;
+
+interface ResourceStatic {
+    load(uri:string):Promise<IHydraResource>;
+}
+
+interface ApiDocumentationStatic {
+    load(uri:string):Promise<IApiDocumentation>;
+}

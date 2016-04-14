@@ -1,4 +1,3 @@
-import {Operation} from "./src/ApiDocumentation";
 interface IResource {
     id:string
 }
@@ -6,12 +5,12 @@ interface IResource {
 interface IApiDocumentation extends IResource {
     getClasses():Promise<Array<IClass>>;
     getClass(classId:string):Promise<IClass>;
-    getOperations(classUri:string):Promise<Array<ISupportedOperation>>;
+    getOperations(classUri:string):Promise<Array<IOperation>>;
     getProperties(classUri:string):Promise<Array<ISupportedProperty>>;
 }
 
 interface IClass extends IResource {
-    getSupportedOperations():Promise<Array<ISupportedOperation>>
+    getSupportedOperations():Promise<Array<IOperation>>
     getSupportedProperties():Promise<Array<ISupportedProperty>>
 }
 
@@ -28,7 +27,7 @@ interface ISupportedProperty extends IDocumentedResource {
     property:Object;
 }
 
-interface ISupportedOperation extends IDocumentedResource {
+interface IOperation extends IDocumentedResource {
     method:string;
     expects:string;
     returns:string;
@@ -37,7 +36,7 @@ interface ISupportedOperation extends IDocumentedResource {
 }
 
 interface IHydraResource extends IResource {
-    getOperations():Promise<Array<Operation>>
+    getOperations():Promise<Array<IOperation>>
 }
 
 var Resource:ResourceStatic;

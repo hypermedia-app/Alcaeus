@@ -5,7 +5,6 @@ import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
 import {JsonLd} from './Constants';
-import {IHydraResource} from "../heracles";
 
 export class Resource implements IHydraResource {
     private _apiDoc;

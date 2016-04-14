@@ -23,7 +23,7 @@ export class ApiDocumentation implements IApiDocumentation {
             .then(expanded => new ApiDocumentation(uri, expanded.resources));
     }
 
-    getOperations(classUri:string):Promise<Array<ISupportedOperation>> {
+    getOperations(classUri:string):Promise<Array<IOperation>> {
         return this._getFlattened()
             .then(graph => {
                 var supportedClass = _.find(graph, obj => obj[JsonLd.Id] === classUri);
@@ -102,7 +102,7 @@ export class DocumentedResource implements IDocumentedResource {
     }
 }
 
-export class Operation extends DocumentedResource implements ISupportedOperation {
+export class Operation extends DocumentedResource implements IOperation {
     private _hydraOperation;
     private _apiDoc;
 
@@ -185,7 +185,7 @@ export class Class extends DocumentedResource implements IClass {
         this._apiDoc = apiDoc;
     }
 
-    getSupportedOperations():Promise<Array<ISupportedOperation>> {
+    getSupportedOperations():Promise<Array<IOperation>> {
         return this._apiDoc.getOperations(this.id);
     }
 

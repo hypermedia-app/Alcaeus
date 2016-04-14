@@ -66,6 +66,10 @@ function resourcifyChildren(res:Resource, resources) {
         }
 
         if(_.isObject(value)) {
+            if(value instanceof Resource === false){
+                value = new Resource(value, []);
+            }
+
             self[key] = resourcifyChildren(value, resources);
             return;
         }

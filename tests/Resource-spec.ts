@@ -101,6 +101,17 @@ describe('Resource.load', () => {
             .catch(done.fail);
     });
 
+    it('should make each nested object a Resource', done => {
+        window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.hydraCollection, true)));
+
+        Resource.load('http://example.com/resource')
+            .then(res => {
+                expect(res['http://example.vocab/managedBy'] instanceof Resource).toBe(true);
+                done();
+            })
+            .catch(done.fail);
+    });
+
     it('should parse non-json-ld response', done => {
         window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.ntriples(Bodies.ntriples, false)));
 

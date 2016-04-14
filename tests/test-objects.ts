@@ -32,7 +32,10 @@ export namespace Bodies {
             { '@id': 'http://example.com/element/2' },
             { '@id': 'http://example.com/element/3' },
             { '@id': 'http://example.com/element/4' }
-        ]
+        ],
+        'http://example.vocab/managedBy': {
+            '@id': 'http://example.com/collection-curator'
+        }
     };
 }
 

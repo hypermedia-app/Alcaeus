@@ -2,6 +2,7 @@
 
 import * as sinon from 'sinon';
 import {Resource} from '../src/heracles';
+import {Core} from '../src/Constants';
 import {Responses, Documentations, Bodies} from './test-objects';
 import {ApiDocumentation, Operation} from "../src/ApiDocumentation";
 
@@ -84,6 +85,17 @@ describe('Resource.load', () => {
             .then(res => {
                 expect(Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet'])).toBe(true);
                 expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked');
+                done();
+            })
+            .catch(done.fail);
+    });
+
+    it('should turn object with arrays into matching object graph', done => {
+        window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.hydraCollection, true)));
+
+        Resource.load('http://example.com/resource')
+            .then(res => {
+                expect(res[Core.Vocab.member].length).toBe(4);
                 done();
             })
             .catch(done.fail);

@@ -25,10 +25,10 @@ export class ApiDocumentation implements IApiDocumentation {
 
     getOperations(classUri:string):Promise<Array<ISupportedOperation>> {
         return this._getFlattened()
-            .then(flat => {
-                var supportedClass = _.find(flat[JsonLd.Graph], obj => obj[JsonLd.Id] === classUri);
+            .then(graph => {
+                var supportedClass = _.find(graph, obj => obj[JsonLd.Id] === classUri);
 
-                return _.chain(flat[JsonLd.Graph])
+                return _.chain(graph)
                     .filter(obj => obj[JsonLd.Id] === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, sp => sp === obj[JsonLd.Id]))
                     .map(op => {
                         op[JsonLd.Context] = Core.Context;
@@ -40,10 +40,10 @@ export class ApiDocumentation implements IApiDocumentation {
 
     getProperties(classUri:string):Promise<Array<ISupportedProperty>> {
         return this._getFlattened()
-            .then(flat => {
-                var supportedClass = _.find(flat[JsonLd.Graph], obj => obj[JsonLd.Id] === classUri);
+            .then(graph => {
+                var supportedClass = _.find(graph, obj => obj[JsonLd.Id] === classUri);
 
-                return _.chain(flat[JsonLd.Graph])
+                return _.chain(graph)
                     .filter(obj => obj[JsonLd.Id] === supportedClass.supportedProperty || _.some(supportedClass.supportedProperty, sp => sp === obj[JsonLd.Id]))
                     .map(prop => {
                         prop[JsonLd.Context] = Core.Context;
@@ -55,8 +55,9 @@ export class ApiDocumentation implements IApiDocumentation {
 
     getClasses():Promise<Array<IClass>> {
         return this._getFlattened()
-            .then(flat => {
-                return _.chain(flat[JsonLd.Graph])
+            .then(graph
+                => {
+                return _.chain(graph)
                     .filter(obj => obj[JsonLd.Type] === 'Class')
                     .map(sc => new Class(sc, this))
                     .value();
@@ -68,7 +69,8 @@ export class ApiDocumentation implements IApiDocumentation {
     }
 
     _getFlattened() {
-        return jsonld.flatten(this._original, Core.Context);
+        return jsonld.flatten(this._original, Core.Context)
+            .then(flat => flat[JsonLd.Graph]);
     }
 }
 

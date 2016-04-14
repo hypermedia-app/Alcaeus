@@ -28,13 +28,13 @@ export class Resource {
 
             return Promise.all(resourcesPromised)
                 .then(resources => {
-                    return _.groupBy(resources, JsonLd.Id);
+                    return _.chain(resources).groupBy(JsonLd.Id).mapValues(arr => arr[0]).value();
                 })
                 .then(grouped => {
-                    _.forEach(grouped, g => resourcifyChildren(g[0], grouped));
+                    _.forEach(grouped, g => resourcifyChildren(g, grouped));
                     return grouped;
                 })
-                .then(grouped => grouped[uri][0]);
+                .then(grouped => grouped[uri]);
         });
     }
 }
@@ -54,19 +54,19 @@ function resourcifyChildren(res:Resource, resources) {
     var self = res;
 
     if(!resources[res[JsonLd.Id]])
-        resources[res[JsonLd.Id]] = [ res ];
+        resources[res[JsonLd.Id]] = res;
 
     _.forOwn(res, (value, key) => {
         if (_.isString(value) || key.startsWith('_'))
             return;
 
         if(_.isArray(value)) {
-            self[key] = _.map(value, el => resourcifyChildren(res, resources));
+            self[key] = _.map(value, el => resourcifyChildren(el, resources));
             return;
         }
 
         if(_.isObject(value)) {
-            self[key] = resourcifyChildren(value, resources)[0];
+            self[key] = resourcifyChildren(value, resources);
             return;
         }
 

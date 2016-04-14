@@ -55,7 +55,8 @@ export namespace Core {
         title: Context['hydra'] + 'title',
         description: Context['hydra'] + 'description',
         method: Context['hydra'] + 'method',
-        Class: Context['hydra'] + 'Class'
+        Class: Context['hydra'] + 'Class',
+        member: Context['hydra'] + 'member'
     };
 }
 

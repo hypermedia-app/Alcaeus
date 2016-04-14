@@ -21,7 +21,10 @@ interface IDocumentedResource extends IResource {
 }
 
 interface ISupportedProperty extends IDocumentedResource {
-
+    readable:boolean;
+    writable:boolean;
+    required:boolean;
+    property:Object;
 }
 
 interface ISupportedOperation extends IDocumentedResource {

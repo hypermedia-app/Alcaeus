@@ -28,7 +28,7 @@ export class Resource {
 
             return Promise.all(resourcesPromised)
                 .then(resources => {
-                    return _.groupBy(resources, JsonLd.Id)
+                    return _.groupBy(resources, JsonLd.Id);
                 })
                 .then(grouped => {
                     _.forEach(grouped, g => resourcifyChildren(g[0], grouped));

@@ -18,7 +18,7 @@ describe('Resource', () => {
             window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
 
             Resource.load('http://example.com/resource')
-                .then((res) => {
+                .then(() => {
                     expect(window.fetch.calledWithMatch('http://example.com/resource', {
                         headers: {
                             accept: 'application/ld+json, application/n-triples, application/n-quads'
@@ -178,7 +178,7 @@ describe('Resource', () => {
             ]);
 
             resource.getOperations()
-                .then(ops => {
+                .then(() => {
                     expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
                     expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#Resource', 'http://example.com/vocab#other')).toBe(true);
                     done();

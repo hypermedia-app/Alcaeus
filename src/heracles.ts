@@ -27,7 +27,7 @@ export class Resource implements IHydraResource {
             .union()
             .value();
 
-        var operationPromises = [ classOperations, ...propertyOperations ];
+        var operationPromises = [classOperations, ...propertyOperations];
 
         return Promise.all(operationPromises)
             .then(results => _.flatten(results));
@@ -57,20 +57,20 @@ function createResource(obj:Object, apiDocumentation:ApiDocumentation, resources
 function resourcifyChildren(res:Resource, resources, apiDoc) {
     var self = res;
 
-    if(!resources[res[JsonLd.Id]])
+    if (!resources[res[JsonLd.Id]])
         resources[res[JsonLd.Id]] = res;
 
     _.forOwn(res, (value, key) => {
         if (_.isString(value) || key.startsWith('_'))
             return;
 
-        if(_.isArray(value)) {
+        if (_.isArray(value)) {
             self[key] = _.map(value, el => resourcifyChildren(el, resources, apiDoc));
             return;
         }
 
-        if(_.isObject(value)) {
-            if(value instanceof Resource === false){
+        if (_.isObject(value)) {
+            if (value instanceof Resource === false) {
                 value = new Resource(value, apiDoc, findIncomingLinks(value, resources));
             }
 
@@ -85,8 +85,11 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
 }
 
 function findIncomingLinks(object, resources) {
-    return _.chain(resources)
-        .map(res => [res['@id'], _.chain(res).toPairs().filter(p => p[1] && p[1]['@id'] === object['@id']).map(p => p[0]).value() ])
-        .transform((r,v,k) => _.each(v[1], v1 => r.push([v[0],v1])), [])
-        .value();
+    return _.transform(resources, (acc, res, key) => {
+        _.forOwn(res, (value, predicate) => {
+            if (value && value[JsonLd.Id] && value[JsonLd.Id] === object[JsonLd.Id]) {
+                acc.push([key, predicate])
+            }
+        });
+    }, []);
 }

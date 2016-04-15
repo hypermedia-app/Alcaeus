@@ -30,6 +30,7 @@
   "homepage": "https://github.com/wikibus/heracles#readme",
   "jspm": {
     "registry": "jspm",
+    "format":"amd",
     "directories": {
       "test": "tests"
     },

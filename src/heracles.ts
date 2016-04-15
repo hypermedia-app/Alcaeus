@@ -61,7 +61,7 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
         resources[res[JsonLd.Id]] = res;
 
     _.forOwn(res, (value, key) => {
-        if (_.isString(value) || key.startsWith('_'))
+        if (key.startsWith('_'))
             return;
 
         if (_.isArray(value)) {
@@ -75,10 +75,7 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
             }
 
             self[key] = resourcifyChildren(value, resources, apiDoc);
-            return;
         }
-
-        throw new Error('Unexpected value ' + value);
     });
 
     return resources[res[JsonLd.Id]];

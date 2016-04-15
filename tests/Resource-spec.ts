@@ -53,6 +53,17 @@ describe('Resource', () => {
                 .catch(done.fail);
         });
 
+        it('should return object with matching @id, trailing slash ignored', done => {
+            window.fetch.withArgs('http://example.com/resource/').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
+
+            Resource.load('http://example.com/resource/')
+                .then(res => {
+                    expect(res['@id']).toBe('http://example.com/resource');
+                    done();
+                })
+                .catch(done.fail);
+        });
+
         it('should load documentation', done => {
             window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, true)));
 

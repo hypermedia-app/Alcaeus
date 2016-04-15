@@ -39,15 +39,20 @@ export class Resource implements IHydraResource {
 
             var groupedResources = _.chain(resWithDocs.resources)
                 .map(resObj => createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources))
-                .groupBy(JsonLd.Id)
+                .groupBy(JsonLd.Id, trimSlash)
                 .mapValues(arr => arr[0])
                 .value();
 
             _.forEach(groupedResources, g => resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation));
 
-            return groupedResources[uri];
+            return groupedResources[trimSlash(uri)];
         });
     }
+}
+
+function trimSlash(uri:string){
+    // todo: is this really correct to ignore trailing slash?
+    return uri.replace(/\/$/, '');
 }
 
 function createResource(obj:Object, apiDocumentation:ApiDocumentation, resources):Resource {

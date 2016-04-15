@@ -1,1 +1,505 @@
-!function(a){function b(a,b,c){a in h||(h[a]={name:a,declarative:!0,deps:b,declare:c,normalizedDeps:b})}function c(a){return m[a]||(m[a]={name:a,dependencies:[],exports:{},importers:[]})}function d(b){if(!b.module){var e=b.module=c(b.name),f=b.module.exports,i=b.declare.call(a,function(a,b){if(e.locked=!0,"object"==typeof a)for(var c in a)f[c]=a[c];else f[a]=b;for(var d=0,g=e.importers.length;g>d;d++){var h=e.importers[d];if(!h.locked)for(var i=0;i<h.dependencies.length;++i)h.dependencies[i]===e&&h.setters[i](f)}return e.locked=!1,b},b.name);e.setters=i.setters,e.execute=i.execute;for(var j=0,k=b.normalizedDeps.length;k>j;j++){var l,n=b.normalizedDeps[j],o=h[n],p=m[n];p?l=p.exports:o&&!o.declarative?l=o.esModule:o?(d(o),p=o.module,l=p.exports):l=g(n),p&&p.importers?(p.importers.push(e),e.dependencies.push(p)):e.dependencies.push(null),e.setters[j]&&e.setters[j](l)}}}function e(a){var b={};if("object"==typeof a||"function"==typeof a)if(j){var c;for(var d in a)(c=Object.getOwnPropertyDescriptor(a,d))&&l(b,d,c)}else{var e=a&&a.hasOwnProperty;for(var d in a)(!e||a.hasOwnProperty(d))&&(b[d]=a[d])}return b["default"]=a,l(b,"__useDefault",{value:!0}),b}function f(b,c){var d=h[b];if(d&&!d.evaluated&&d.declarative){c.push(b);for(var e=0,j=d.normalizedDeps.length;j>e;e++){var k=d.normalizedDeps[e];-1==i.call(c,k)&&(h[k]?f(k,c):g(k))}d.evaluated||(d.evaluated=!0,d.module.execute.call(a))}}function g(a){if(o[a])return o[a];if("@node/"==a.substr(0,6))return n(a.substr(6));var b=h[a];if(!b)throw"Module "+a+" not present.";return d(h[a]),f(a,[]),h[a]=void 0,b.declarative&&l(b.module.exports,"__esModule",{value:!0}),o[a]=b.declarative?b.module.exports:b.esModule}var h={},i=Array.prototype.indexOf||function(a){for(var b=0,c=this.length;c>b;b++)if(this[b]===a)return b;return-1},j=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(k){j=!1}var l;!function(){try{Object.defineProperty({},"a",{})&&(l=Object.defineProperty)}catch(a){l=function(a,b,c){try{a[b]=c.value||c.get.call(a)}catch(d){}}}}();var m={},n="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,o={"@empty":{}};return function(a,c,d){return function(f){f(function(f){for(var h=0;h<c.length;h++)(function(a,b){b&&b.__esModule?o[a]=b:o[a]=e(b)})(c[h],arguments[h]);d({register:b});var i=g(a[0]);if(a.length>1)for(var h=1;h<a.length;h++)g(a[h]);return i.__useDefault?i["default"]:i})}}}("undefined"!=typeof self?self:global)(["1","2"],["4","5","3","8"],function(a,b){a.register("2",["4","5","3","6","7"],function(a,b){"use strict";var c,d,e,f,g,h,i,j,k,l,m=(b&&b.id,this&&this.__extends||function(a,b){function c(){this.constructor=a}for(var d in b)b.hasOwnProperty(d)&&(a[d]=b[d]);a.prototype=null===b?Object.create(b):(c.prototype=b.prototype,new c)});return{setters:[function(a){c=a},function(a){d=a},function(a){e=a},function(a){f=a},function(a){g=a}],execute:function(){h=function(){function a(a,b){this.id=a,this._original=b}return a.load=function(b){return g.FetchUtil.fetchResource(b,!1).then(function(c){return new a(b,c.resources)})},a.prototype.getOperations=function(a){var b=this;return this._getFlattened().then(function(c){var e=d.find(c,function(b){return b[f.JsonLd.Id]===a});return d.chain(c).filter(function(a){return a[f.JsonLd.Id]===e.supportedOperation||d.some(e.supportedOperation,function(b){return b===a[f.JsonLd.Id]})}).map(function(a){return a[f.JsonLd.Context]=f.Core.Context,new j(a,b)}).value()})},a.prototype.getProperties=function(a){var b=this;return this._getFlattened().then(function(c){var e=d.find(c,function(b){return b[f.JsonLd.Id]===a});return d.chain(c).filter(function(a){return a[f.JsonLd.Id]===e.supportedProperty||d.some(e.supportedProperty,function(b){return b===a[f.JsonLd.Id]})}).map(function(a){return a[f.JsonLd.Context]=f.Core.Context,new k(a,b)}).value()})},a.prototype.getClasses=function(){var a=this;return this._getFlattened().then(function(b){return d.chain(b).filter(function(a){return"Class"===a[f.JsonLd.Type]}).map(function(b){return new l(b,a)}).value()})},a.prototype.getClass=function(a){return this.getClasses().then(function(b){return d.find(b,["id",a])})},a.prototype._getFlattened=function(){return c.promises.flatten(this._original,f.Core.Context).then(function(a){return a[f.JsonLd.Graph]})},a}(),a("ApiDocumentation",h),i=function(){function a(a){this._hydraResource=a}return Object.defineProperty(a.prototype,"id",{get:function(){return this._hydraResource["@id"]},enumerable:!0,configurable:!0}),Object.defineProperty(a.prototype,"description",{get:function(){return this._hydraResource.description||this._hydraResource[e.rdfs.ns+"comment"]||this._hydraResource[e.schema.description]},enumerable:!0,configurable:!0}),Object.defineProperty(a.prototype,"title",{get:function(){return this._hydraResource.title||this._hydraResource[e.rdfs.ns+"label"]||this._hydraResource[e.schema.title]},enumerable:!0,configurable:!0}),a.prototype.getRaw=function(a){return void 0===a&&(a=null),c.promises.compact(this._hydraResource,a||f.Core.Context)},a}(),a("DocumentedResource",i),j=function(a){function b(b,c){a.call(this,b),this._hydraOperation=b,this._apiDoc=c}return m(b,a),Object.defineProperty(b.prototype,"method",{get:function(){return this._hydraOperation.method},enumerable:!0,configurable:!0}),Object.defineProperty(b.prototype,"expects",{get:function(){return this._hydraOperation.expects[f.JsonLd.Id]},enumerable:!0,configurable:!0}),Object.defineProperty(b.prototype,"returns",{get:function(){return this._hydraOperation.returns[f.JsonLd.Id]},enumerable:!0,configurable:!0}),b.prototype.getExpected=function(){return this._apiDoc.getClass(this.expects)},b.prototype.getReturned=function(){return this._apiDoc.getClass(this.returns)},b}(i),a("Operation",j),k=function(a){function b(b,c){a.call(this,b),this._hydraSupportedProperty=b,this._apiDoc=c}return m(b,a),Object.defineProperty(b.prototype,"readable",{get:function(){return"undefined"==typeof this._hydraSupportedProperty.readable?!0:this._hydraSupportedProperty.readable},enumerable:!0,configurable:!0}),Object.defineProperty(b.prototype,"writable",{get:function(){return"undefined"==typeof this._hydraSupportedProperty.writable?!0:this._hydraSupportedProperty.writable},enumerable:!0,configurable:!0}),Object.defineProperty(b.prototype,"required",{get:function(){return"undefined"==typeof this._hydraSupportedProperty.required?!1:this._hydraSupportedProperty.required},enumerable:!0,configurable:!0}),Object.defineProperty(b.prototype,"property",{get:function(){return this._hydraSupportedProperty.property},enumerable:!0,configurable:!0}),b}(i),a("SupportedProperty",k),l=function(a){function b(b,c){a.call(this,b),this._hydraClass=b,this._apiDoc=c}return m(b,a),b.prototype.getSupportedOperations=function(){return this._apiDoc.getOperations(this.id)},b.prototype.getSupportedProperties=function(){return this._apiDoc.getProperties(this.id)},b}(i),a("Class",l)}}}),a.register("7",["8","4","2","6"],function(a,b){"use strict";function c(a){if(a.headers.has(i.Headers.Link)){var b=a.headers.get(i.Headers.Link),c=f.parse(b);if(c[i.Core.Vocab.apiDocumentation])return h.ApiDocumentation.load(c[i.Core.Vocab.apiDocumentation])}return Promise.resolve(null)}function d(a){var b=a.headers.get(i.Headers.ContentType)||i.MediaTypes.jsonLd;return b===i.MediaTypes.jsonLd?a.json().then(e):(b!==i.MediaTypes.ntriples&&b!==i.MediaTypes.ntriples||(b="application/nquads"),a.text().then(function(a){return g.promises.fromRDF(a,{format:b}).then(e)}))}function e(a){return g.promises.flatten(a,{}).then(function(a){return a[i.JsonLd.Graph]})}var f,g,h,i,j,k;b&&b.id;return{setters:[function(a){f=a},function(a){g=a},function(a){h=a},function(a){i=a}],execute:function(){j=function(){function a(){}return a.fetchResource=function(a,b){void 0===b&&(b=!0);var e=i.MediaTypes.jsonLd+", "+i.MediaTypes.ntriples+", "+i.MediaTypes.nquads;return window.fetch(a,{headers:{accept:e}}).then(function(a){var e;return e=b?c(a):Promise.resolve(null),Promise.all([d(a),e]).then(function(a){return new k(a[0],a[1])})})},a}(),a("FetchUtil",j),k=function(){function a(a,b){this.resources=a,this.apiDocumentation=b}return a}()}}}),a.register("6",[],function(a,b){"use strict";var c,d,e,f;b&&b.id;return{setters:[],execute:function(){!function(a){a.Context={hydra:"http://www.w3.org/ns/hydra/core#",apiDocumentation:"hydra:apiDocumentation",ApiDocumentation:"hydra:ApiDocumentation",title:"hydra:title",description:"hydra:description",entrypoint:{"@id":"hydra:entrypoint","@type":"@id"},supportedClass:{"@id":"hydra:supportedClass","@type":"@vocab"},Class:"hydra:Class",supportedProperty:{"@id":"hydra:supportedProperty","@type":"@id"},SupportedProperty:"hydra:SupportedProperty",property:{"@id":"hydra:property","@type":"@vocab"},required:"hydra:required",readonly:"hydra:readonly",writeonly:"hydra:writeonly",supportedOperation:{"@id":"hydra:supportedOperation","@type":"@id"},Operation:"hydra:Operation",CreateResourceOperation:"hydra:CreateResourceOperation",ReplaceResourceOperation:"hydra:ReplaceResourceOperation",DeleteResourceOperation:"hydra:DeleteResourceOperation",method:"hydra:method",expects:{"@id":"hydra:expects","@type":"@vocab"},returns:{"@id":"hydra:returns","@type":"@vocab"},statusCodes:{"@id":"hydra:statusCodes","@type":"@id"},StatusCodeDescription:"hydra:StatusCodeDescription",statusCode:"hydra:statusCode",Error:"hydra:Error",Resource:"hydra:Resource",operation:"hydra:operation",Collection:"hydra:Collection",member:{"@id":"hydra:member","@type":"@id"},search:"hydra:search",freetextQuery:"hydra:freetextQuery",PagedCollection:"hydra:PagedCollection",totalItems:"hydra:totalItems",itemsPerPage:"hydra:itemsPerPage",firstPage:{"@id":"hydra:firstPage","@type":"@id"},lastPage:{"@id":"hydra:lastPage","@type":"@id"},nextPage:{"@id":"hydra:nextPage","@type":"@id"},previousPage:{"@id":"hydra:previousPage","@type":"@id"},Link:"hydra:Link",TemplatedLink:"hydra:TemplatedLink",IriTemplate:"hydra:IriTemplate",template:"hydra:template",mapping:"hydra:mapping",IriTemplateMapping:"hydra:IriTemplateMapping",variable:"hydra:variable"},a.Vocab={apiDocumentation:a.Context.hydra+"apiDocumentation",title:a.Context.hydra+"title",description:a.Context.hydra+"description",method:a.Context.hydra+"method",Class:a.Context.hydra+"Class",member:a.Context.hydra+"member"}}(c=c||(c={})),a("Core",c),function(a){a.Graph="@graph",a.Context="@context",a.Id="@id",a.Type="@type"}(d=d||(d={})),a("JsonLd",d),function(a){a.jsonLd="application/ld+json",a.ntriples="application/n-triples",a.nquads="application/n-quads"}(e=e||(e={})),a("MediaTypes",e),function(a){a.Link="Link",a.ContentType="Content-Type"}(f=f||(f={})),a("Headers",f)}}}),a.register("1",["5","7","6"],function(a,b){"use strict";function c(a,b,c){return new i(a,b,e(a,c))}function d(a,b,c){var g=a;return b[a[h.JsonLd.Id]]||(b[a[h.JsonLd.Id]]=a),f.forOwn(a,function(a,h){if(!f.isString(a)&&!h.startsWith("_")){if(f.isArray(a))return void(g[h]=f.map(a,function(a){return d(a,b,c)}));if(f.isObject(a))return a instanceof i==!1&&(a=new i(a,c,e(a,b))),void(g[h]=d(a,b,c));throw new Error("Unexpected value "+a)}}),b[a[h.JsonLd.Id]]}function e(a,b){return f.transform(b,function(b,c,d){f.forOwn(c,function(c,e){c&&c[h.JsonLd.Id]&&c[h.JsonLd.Id]===a[h.JsonLd.Id]&&b.push([d,e])})},[])}var f,g,h,i;b&&b.id;return{setters:[function(a){f=a},function(a){g=a},function(a){h=a}],execute:function(){i=function(){function a(a,b,c){this._apiDoc=b,this._incomingLinks=c,Object.assign(this,a)}return Object.defineProperty(a.prototype,"id",{get:function(){return this["@id"]},enumerable:!0,configurable:!0}),a.prototype.getOperations=function(){var a=this,b=this._apiDoc.getOperations(this["@type"]),c=f.chain(this._incomingLinks).map(function(b){return a._apiDoc.getOperations(b[0],b[1])}).union().value(),d=[b].concat(c);return Promise.all(d).then(function(a){return f.flatten(a)})},a.load=function(a){return g.FetchUtil.fetchResource(a).then(function(b){var e=f.chain(b.resources).map(function(a){return c(a,b.apiDocumentation,b.resources)}).groupBy(h.JsonLd.Id).mapValues(function(a){return a[0]}).value();return f.forEach(e,function(a){return d(a,e,b.apiDocumentation)}),e[a]})},a}(),a("Resource",i)}}})})(function(a){define(["jsonld","lodash","jasnell/linkeddata-vocabs","li"],a)});
+!function(e){function r(e,r,t){e in i||(i[e]={name:e,declarative:!0,deps:r,declare:t,normalizedDeps:r})}function t(e){return c[e]||(c[e]={name:e,dependencies:[],exports:{},importers:[]})}function n(r){if(!r.module){var o=r.module=t(r.name),a=r.module.exports,s=r.declare.call(e,function(e,r){if(o.locked=!0,"object"==typeof e)for(var t in e)a[t]=e[t];else a[e]=r;for(var n=0,u=o.importers.length;u>n;n++){var i=o.importers[n];if(!i.locked)for(var s=0;s<i.dependencies.length;++s)i.dependencies[s]===o&&i.setters[s](a)}return o.locked=!1,r},r.name);o.setters=s.setters,o.execute=s.execute;for(var l=0,d=r.normalizedDeps.length;d>l;l++){var f,p=r.normalizedDeps[l],v=i[p],m=c[p];m?f=m.exports:v&&!v.declarative?f=v.esModule:v?(n(v),m=v.module,f=m.exports):f=u(p),m&&m.importers?(m.importers.push(o),o.dependencies.push(m)):o.dependencies.push(null),o.setters[l]&&o.setters[l](f)}}}function o(e){var r={};if("object"==typeof e||"function"==typeof e)if(l){var t;for(var n in e)(t=Object.getOwnPropertyDescriptor(e,n))&&f(r,n,t)}else{var o=e&&e.hasOwnProperty;for(var n in e)(!o||e.hasOwnProperty(n))&&(r[n]=e[n])}return r["default"]=e,f(r,"__useDefault",{value:!0}),r}function a(r,t){var n=i[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,l=n.normalizedDeps.length;l>o;o++){var d=n.normalizedDeps[o];-1==s.call(t,d)&&(i[d]?a(d,t):u(d))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function u(e){if(v[e])return v[e];if("@node/"==e.substr(0,6))return p(e.substr(6));var r=i[e];if(!r)throw"Module "+e+" not present.";return n(i[e]),a(e,[]),i[e]=void 0,r.declarative&&f(r.module.exports,"__esModule",{value:!0}),v[e]=r.declarative?r.module.exports:r.esModule}var i={},s=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},l=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(d){l=!1}var f;!function(){try{Object.defineProperty({},"a",{})&&(f=Object.defineProperty)}catch(e){f=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var c={},p="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,v={"@empty":{}};return function(e,t,n){return function(a){a(function(a){for(var i=0;i<t.length;i++)(function(e,r){r&&r.__esModule?v[e]=r:v[e]=o(r)})(t[i],arguments[i]);n({register:r});var s=u(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)u(e[i]);return s.__useDefault?s["default"]:s})}}}("undefined"!=typeof self?self:global)
+
+(["1","2"], ["4","5","3","8"], function($__System, require) {
+
+$__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1) {
+    'use strict';
+    var __moduleName = context_1 && context_1.id;
+    var __extends = (this && this.__extends) || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+    var jsonld_1, _, linkeddata_vocabs_1, Constants_1, FetchUtil_1;
+    var ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
+    return {
+        setters:[
+            function (jsonld_1_1) {
+                jsonld_1 = jsonld_1_1;
+            },
+            function (_1) {
+                _ = _1;
+            },
+            function (linkeddata_vocabs_1_1) {
+                linkeddata_vocabs_1 = linkeddata_vocabs_1_1;
+            },
+            function (Constants_1_1) {
+                Constants_1 = Constants_1_1;
+            },
+            function (FetchUtil_1_1) {
+                FetchUtil_1 = FetchUtil_1_1;
+            }],
+        execute: function() {
+            ApiDocumentation = (function () {
+                function ApiDocumentation(docId, apiDoc) {
+                    this.id = docId;
+                    this._original = apiDoc;
+                }
+                ApiDocumentation.load = function (uri) {
+                    return FetchUtil_1.FetchUtil.fetchResource(uri, false)
+                        .then(function (expanded) { return new ApiDocumentation(uri, expanded.resources); });
+                };
+                ApiDocumentation.prototype.getOperations = function (classUri) {
+                    var _this = this;
+                    return this._getFlattened()
+                        .then(function (graph) {
+                        var supportedClass = _.find(graph, function (obj) { return obj[Constants_1.JsonLd.Id] === classUri; });
+                        return _.chain(graph)
+                            .filter(function (obj) { return obj[Constants_1.JsonLd.Id] === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, function (sp) { return sp === obj[Constants_1.JsonLd.Id]; }); })
+                            .map(function (op) {
+                            op[Constants_1.JsonLd.Context] = Constants_1.Core.Context;
+                            return new Operation(op, _this);
+                        })
+                            .value();
+                    });
+                };
+                ApiDocumentation.prototype.getProperties = function (classUri) {
+                    var _this = this;
+                    return this._getFlattened()
+                        .then(function (graph) {
+                        var supportedClass = _.find(graph, function (obj) { return obj[Constants_1.JsonLd.Id] === classUri; });
+                        return _.chain(graph)
+                            .filter(function (obj) { return obj[Constants_1.JsonLd.Id] === supportedClass.supportedProperty || _.some(supportedClass.supportedProperty, function (sp) { return sp === obj[Constants_1.JsonLd.Id]; }); })
+                            .map(function (prop) {
+                            prop[Constants_1.JsonLd.Context] = Constants_1.Core.Context;
+                            return new SupportedProperty(prop, _this);
+                        })
+                            .value();
+                    });
+                };
+                ApiDocumentation.prototype.getClasses = function () {
+                    var _this = this;
+                    return this._getFlattened()
+                        .then(function (graph) {
+                        return _.chain(graph)
+                            .filter(function (obj) { return obj[Constants_1.JsonLd.Type] === 'Class'; })
+                            .map(function (sc) { return new Class(sc, _this); })
+                            .value();
+                    });
+                };
+                ApiDocumentation.prototype.getClass = function (classId) {
+                    return this.getClasses().then(function (cs) { return _.find(cs, ['id', classId]); });
+                };
+                ApiDocumentation.prototype._getFlattened = function () {
+                    return jsonld_1.promises.flatten(this._original, Constants_1.Core.Context)
+                        .then(function (flat) { return flat[Constants_1.JsonLd.Graph]; });
+                };
+                return ApiDocumentation;
+            }());
+            exports_1("ApiDocumentation", ApiDocumentation);
+            DocumentedResource = (function () {
+                function DocumentedResource(hydraResource) {
+                    this._hydraResource = hydraResource;
+                }
+                Object.defineProperty(DocumentedResource.prototype, "id", {
+                    get: function () {
+                        return this._hydraResource['@id'];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(DocumentedResource.prototype, "description", {
+                    get: function () {
+                        return this._hydraResource.description ||
+                            this._hydraResource[linkeddata_vocabs_1.rdfs.ns + 'comment'] ||
+                            this._hydraResource[linkeddata_vocabs_1.schema.description];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(DocumentedResource.prototype, "title", {
+                    get: function () {
+                        return this._hydraResource.title ||
+                            this._hydraResource[linkeddata_vocabs_1.rdfs.ns + 'label'] ||
+                            this._hydraResource[linkeddata_vocabs_1.schema.title];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                DocumentedResource.prototype.getRaw = function (context) {
+                    if (context === void 0) { context = null; }
+                    return jsonld_1.promises.compact(this._hydraResource, context || Constants_1.Core.Context);
+                };
+                return DocumentedResource;
+            }());
+            exports_1("DocumentedResource", DocumentedResource);
+            Operation = (function (_super) {
+                __extends(Operation, _super);
+                function Operation(hydraOperation, apiDoc) {
+                    _super.call(this, hydraOperation);
+                    this._hydraOperation = hydraOperation;
+                    this._apiDoc = apiDoc;
+                }
+                Object.defineProperty(Operation.prototype, "method", {
+                    get: function () {
+                        return this._hydraOperation.method;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "expects", {
+                    get: function () {
+                        return this._hydraOperation.expects[Constants_1.JsonLd.Id];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "returns", {
+                    get: function () {
+                        return this._hydraOperation.returns[Constants_1.JsonLd.Id];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Operation.prototype.getExpected = function () {
+                    return this._apiDoc.getClass(this.expects);
+                };
+                Operation.prototype.getReturned = function () {
+                    return this._apiDoc.getClass(this.returns);
+                };
+                return Operation;
+            }(DocumentedResource));
+            exports_1("Operation", Operation);
+            SupportedProperty = (function (_super) {
+                __extends(SupportedProperty, _super);
+                function SupportedProperty(hydraSupportedProperty, apiDoc) {
+                    _super.call(this, hydraSupportedProperty);
+                    this._hydraSupportedProperty = hydraSupportedProperty;
+                    this._apiDoc = apiDoc;
+                }
+                Object.defineProperty(SupportedProperty.prototype, "readable", {
+                    get: function () {
+                        if (typeof this._hydraSupportedProperty.readable === 'undefined') {
+                            return true;
+                        }
+                        return this._hydraSupportedProperty.readable;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(SupportedProperty.prototype, "writable", {
+                    get: function () {
+                        if (typeof this._hydraSupportedProperty.writable === 'undefined') {
+                            return true;
+                        }
+                        return this._hydraSupportedProperty.writable;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(SupportedProperty.prototype, "required", {
+                    get: function () {
+                        if (typeof this._hydraSupportedProperty.required === 'undefined') {
+                            return false;
+                        }
+                        return this._hydraSupportedProperty.required;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(SupportedProperty.prototype, "property", {
+                    get: function () {
+                        return this._hydraSupportedProperty.property;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return SupportedProperty;
+            }(DocumentedResource));
+            exports_1("SupportedProperty", SupportedProperty);
+            Class = (function (_super) {
+                __extends(Class, _super);
+                function Class(hydraClass, apiDoc) {
+                    _super.call(this, hydraClass);
+                    this._hydraClass = hydraClass;
+                    this._apiDoc = apiDoc;
+                }
+                Class.prototype.getSupportedOperations = function () {
+                    return this._apiDoc.getOperations(this.id);
+                };
+                Class.prototype.getSupportedProperties = function () {
+                    return this._apiDoc.getProperties(this.id);
+                };
+                return Class;
+            }(DocumentedResource));
+            exports_1("Class", Class);
+        }
+    }
+});
+
+$__System.register("7", ["8", "4", "2", "6"], function(exports_1, context_1) {
+    'use strict';
+    var __moduleName = context_1 && context_1.id;
+    var li, jsonld_1, ApiDocumentation_1, Constants;
+    var FetchUtil, ExpandedWithDocs;
+    function fetchDocumentation(res) {
+        if (res.headers.has(Constants.Headers.Link)) {
+            var linkHeaders = res.headers.get(Constants.Headers.Link);
+            var links = li.parse(linkHeaders);
+            if (links[Constants.Core.Vocab.apiDocumentation]) {
+                return ApiDocumentation_1.ApiDocumentation.load(links[Constants.Core.Vocab.apiDocumentation]);
+            }
+        }
+        return Promise.resolve(null);
+    }
+    function getJsObject(res) {
+        var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
+        var jsonPromise;
+        if (mediaType === Constants.MediaTypes.jsonLd) {
+            return res.json().then(getFlattenedGraph);
+        }
+        else {
+            if (mediaType === Constants.MediaTypes.ntriples ||
+                mediaType === Constants.MediaTypes.ntriples) {
+                mediaType = 'application/nquads';
+            }
+            return res.text().then(function (rdf) {
+                return jsonld_1.promises.fromRDF(rdf, { format: mediaType }).then(getFlattenedGraph);
+            });
+        }
+    }
+    function getFlattenedGraph(json) {
+        return jsonld_1.promises.flatten(json, {})
+            .then(function (flattened) { return flattened[Constants.JsonLd.Graph]; });
+    }
+    return {
+        setters:[
+            function (li_1) {
+                li = li_1;
+            },
+            function (jsonld_1_1) {
+                jsonld_1 = jsonld_1_1;
+            },
+            function (ApiDocumentation_1_1) {
+                ApiDocumentation_1 = ApiDocumentation_1_1;
+            },
+            function (Constants_1) {
+                Constants = Constants_1;
+            }],
+        execute: function() {
+            FetchUtil = (function () {
+                function FetchUtil() {
+                }
+                FetchUtil.fetchResource = function (uri, fetchApiDocs) {
+                    if (fetchApiDocs === void 0) { fetchApiDocs = true; }
+                    var requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
+                    return window.fetch(uri, {
+                        headers: {
+                            accept: requestAcceptHeaders
+                        }
+                    })
+                        .then(function (res) {
+                        var apiDocsPromise;
+                        if (fetchApiDocs) {
+                            apiDocsPromise = fetchDocumentation(res);
+                        }
+                        else {
+                            apiDocsPromise = Promise.resolve(null);
+                        }
+                        return Promise.all([getJsObject(res), apiDocsPromise])
+                            .then(function (values) {
+                            return new ExpandedWithDocs(values[0], values[1]);
+                        });
+                    });
+                };
+                return FetchUtil;
+            }());
+            exports_1("FetchUtil", FetchUtil);
+            ExpandedWithDocs = (function () {
+                function ExpandedWithDocs(resources, apiDocumentation) {
+                    this.resources = resources;
+                    this.apiDocumentation = apiDocumentation;
+                }
+                return ExpandedWithDocs;
+            }());
+        }
+    }
+});
+
+$__System.register("6", [], function(exports_1, context_1) {
+    'use strict';
+    var __moduleName = context_1 && context_1.id;
+    var Core, JsonLd, MediaTypes, Headers;
+    return {
+        setters:[],
+        execute: function() {
+            (function (Core) {
+                Core.Context = {
+                    "hydra": "http://www.w3.org/ns/hydra/core#",
+                    "apiDocumentation": "hydra:apiDocumentation",
+                    "ApiDocumentation": "hydra:ApiDocumentation",
+                    "title": "hydra:title",
+                    "description": "hydra:description",
+                    "entrypoint": { "@id": "hydra:entrypoint", "@type": "@id" },
+                    "supportedClass": { "@id": "hydra:supportedClass", "@type": "@vocab" },
+                    "Class": "hydra:Class",
+                    "supportedProperty": { "@id": "hydra:supportedProperty", "@type": "@id" },
+                    "SupportedProperty": "hydra:SupportedProperty",
+                    "property": { "@id": "hydra:property", "@type": "@vocab" },
+                    "required": "hydra:required",
+                    "readonly": "hydra:readonly",
+                    "writeonly": "hydra:writeonly",
+                    "supportedOperation": { "@id": "hydra:supportedOperation", "@type": "@id" },
+                    "Operation": "hydra:Operation",
+                    "CreateResourceOperation": "hydra:CreateResourceOperation",
+                    "ReplaceResourceOperation": "hydra:ReplaceResourceOperation",
+                    "DeleteResourceOperation": "hydra:DeleteResourceOperation",
+                    "method": "hydra:method",
+                    "expects": { "@id": "hydra:expects", "@type": "@vocab" },
+                    "returns": { "@id": "hydra:returns", "@type": "@vocab" },
+                    "statusCodes": { "@id": "hydra:statusCodes", "@type": "@id" },
+                    "StatusCodeDescription": "hydra:StatusCodeDescription",
+                    "statusCode": "hydra:statusCode",
+                    "Error": "hydra:Error",
+                    "Resource": "hydra:Resource",
+                    "operation": "hydra:operation",
+                    "Collection": "hydra:Collection",
+                    "member": { "@id": "hydra:member", "@type": "@id" },
+                    "search": "hydra:search",
+                    "freetextQuery": "hydra:freetextQuery",
+                    "PagedCollection": "hydra:PagedCollection",
+                    "totalItems": "hydra:totalItems",
+                    "itemsPerPage": "hydra:itemsPerPage",
+                    "firstPage": { "@id": "hydra:firstPage", "@type": "@id" },
+                    "lastPage": { "@id": "hydra:lastPage", "@type": "@id" },
+                    "nextPage": { "@id": "hydra:nextPage", "@type": "@id" },
+                    "previousPage": { "@id": "hydra:previousPage", "@type": "@id" },
+                    "Link": "hydra:Link",
+                    "TemplatedLink": "hydra:TemplatedLink",
+                    "IriTemplate": "hydra:IriTemplate",
+                    "template": "hydra:template",
+                    "mapping": "hydra:mapping",
+                    "IriTemplateMapping": "hydra:IriTemplateMapping",
+                    "variable": "hydra:variable"
+                };
+                Core.Vocab = {
+                    apiDocumentation: Core.Context['hydra'] + 'apiDocumentation',
+                    title: Core.Context['hydra'] + 'title',
+                    description: Core.Context['hydra'] + 'description',
+                    method: Core.Context['hydra'] + 'method',
+                    Class: Core.Context['hydra'] + 'Class',
+                    member: Core.Context['hydra'] + 'member'
+                };
+            })(Core = Core || (Core = {}));
+            exports_1("Core", Core);
+            (function (JsonLd) {
+                JsonLd.Graph = '@graph';
+                JsonLd.Context = '@context';
+                JsonLd.Id = '@id';
+                JsonLd.Type = '@type';
+            })(JsonLd = JsonLd || (JsonLd = {}));
+            exports_1("JsonLd", JsonLd);
+            (function (MediaTypes) {
+                MediaTypes.jsonLd = 'application/ld+json';
+                MediaTypes.ntriples = 'application/n-triples';
+                MediaTypes.nquads = 'application/n-quads';
+            })(MediaTypes = MediaTypes || (MediaTypes = {}));
+            exports_1("MediaTypes", MediaTypes);
+            (function (Headers) {
+                Headers.Link = 'Link';
+                Headers.ContentType = 'Content-Type';
+            })(Headers = Headers || (Headers = {}));
+            exports_1("Headers", Headers);
+        }
+    }
+});
+
+$__System.register("1", ["5", "7", "6"], function(exports_1, context_1) {
+    'use strict';
+    var __moduleName = context_1 && context_1.id;
+    var _, FetchUtil_1, Constants_1;
+    var Resource;
+    function trimSlash(uri) {
+        // todo: is this really correct to ignore trailing slash?
+        return uri.replace(/\/$/, '');
+    }
+    function createResource(obj, apiDocumentation, resources) {
+        return new Resource(obj, apiDocumentation, findIncomingLinks(obj, resources));
+    }
+    function resourcifyChildren(res, resources, apiDoc) {
+        var self = res;
+        if (!resources[res[Constants_1.JsonLd.Id]])
+            resources[res[Constants_1.JsonLd.Id]] = res;
+        _.forOwn(res, function (value, key) {
+            if (key.startsWith('_'))
+                return;
+            if (_.isArray(value)) {
+                self[key] = _.map(value, function (el) { return resourcifyChildren(el, resources, apiDoc); });
+                return;
+            }
+            if (_.isObject(value)) {
+                if (value instanceof Resource === false) {
+                    value = new Resource(value, apiDoc, findIncomingLinks(value, resources));
+                }
+                self[key] = resourcifyChildren(value, resources, apiDoc);
+            }
+        });
+        return resources[res[Constants_1.JsonLd.Id]];
+    }
+    function findIncomingLinks(object, resources) {
+        return _.transform(resources, function (acc, res, key) {
+            _.forOwn(res, function (value, predicate) {
+                if (value && value[Constants_1.JsonLd.Id] && value[Constants_1.JsonLd.Id] === object[Constants_1.JsonLd.Id]) {
+                    acc.push([key, predicate]);
+                }
+            });
+        }, []);
+    }
+    return {
+        setters:[
+            function (_1) {
+                _ = _1;
+            },
+            function (FetchUtil_1_1) {
+                FetchUtil_1 = FetchUtil_1_1;
+            },
+            function (Constants_1_1) {
+                Constants_1 = Constants_1_1;
+            }],
+        execute: function() {
+            Resource = (function () {
+                function Resource(actualResource, apiDoc, incomingLinks) {
+                    this._apiDoc = apiDoc;
+                    this._incomingLinks = incomingLinks;
+                    Object.assign(this, actualResource);
+                }
+                Object.defineProperty(Resource.prototype, "id", {
+                    get: function () {
+                        return this['@id'];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Resource.prototype.getOperations = function () {
+                    var _this = this;
+                    var classOperations = this._apiDoc.getOperations(this['@type']);
+                    var propertyOperations = _.chain(this._incomingLinks)
+                        .map(function (link) { return _this._apiDoc.getOperations(link[0], link[1]); })
+                        .union()
+                        .value();
+                    var operationPromises = [classOperations].concat(propertyOperations);
+                    return Promise.all(operationPromises)
+                        .then(function (results) { return _.flatten(results); });
+                };
+                Resource.load = function (uri) {
+                    return FetchUtil_1.FetchUtil.fetchResource(uri).then(function (resWithDocs) {
+                        var groupedResources = _.chain(resWithDocs.resources)
+                            .map(function (resObj) { return createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources); })
+                            .groupBy(Constants_1.JsonLd.Id, trimSlash)
+                            .mapValues(function (arr) { return arr[0]; })
+                            .value();
+                        _.forEach(groupedResources, function (g) { return resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation); });
+                        return groupedResources[trimSlash(uri)];
+                    });
+                };
+                return Resource;
+            }());
+            exports_1("Resource", Resource);
+        }
+    }
+});
+
+})
+(function(factory) {
+  define(["jsonld","lodash","jasnell/linkeddata-vocabs","li"], factory);
+});

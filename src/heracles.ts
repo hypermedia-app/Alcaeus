@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
 import {JsonLd} from './Constants';
+import {JsonLdUtil} from "./JsonLdUtil";
 
 export class Resource implements IHydraResource {
     private _apiDoc;
@@ -39,20 +40,15 @@ export class Resource implements IHydraResource {
 
             var groupedResources = _.chain(resWithDocs.resources)
                 .map(resObj => createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources))
-                .groupBy(JsonLd.Id, trimSlash)
+                .groupBy(res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]))
                 .mapValues(arr => arr[0])
                 .value();
 
             _.forEach(groupedResources, g => resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation));
 
-            return groupedResources[trimSlash(uri)];
+            return groupedResources[JsonLdUtil.trimTrailingSlash(uri)];
         });
     }
-}
-
-function trimSlash(uri:string){
-    // todo: is this really correct to ignore trailing slash?
-    return uri.replace(/\/$/, '');
 }
 
 function createResource(obj:Object, apiDocumentation:ApiDocumentation, resources):Resource {
@@ -89,7 +85,7 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
 function findIncomingLinks(object, resources) {
     return _.transform(resources, (acc, res, key) => {
         _.forOwn(res, (value, predicate) => {
-            if (value && value[JsonLd.Id] && value[JsonLd.Id] === object[JsonLd.Id]) {
+            if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
                 acc.push([key, predicate])
             }
         });

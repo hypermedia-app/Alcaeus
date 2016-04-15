@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import {rdfs, schema} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
 import {FetchUtil} from "./FetchUtil";
+import {JsonLdUtil} from "./JsonLdUtil";
 
 export class ApiDocumentation implements IApiDocumentation {
     id:string;
@@ -26,10 +27,10 @@ export class ApiDocumentation implements IApiDocumentation {
     getOperations(classUri:string):Promise<Array<IOperation>> {
         return this._getFlattened()
             .then(graph => {
-                var supportedClass = _.find(graph, obj => obj[JsonLd.Id] === classUri);
+                var supportedClass = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], classUri));
 
                 return _.chain(graph)
-                    .filter(obj => obj[JsonLd.Id] === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, sp => sp === obj[JsonLd.Id]))
+                    .filter(obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], supportedClass.supportedOperation) || _.some(supportedClass.supportedOperation, sp => JsonLdUtil.idsEqual(sp, obj[JsonLd.Id])))
                     .map(op => {
                         op[JsonLd.Context] = Core.Context;
                         return new Operation(op, this);
@@ -41,10 +42,10 @@ export class ApiDocumentation implements IApiDocumentation {
     getProperties(classUri:string):Promise<Array<ISupportedProperty>> {
         return this._getFlattened()
             .then(graph => {
-                var supportedClass = _.find(graph, obj => obj[JsonLd.Id] === classUri);
+                var supportedClass = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], classUri));
 
                 return _.chain(graph)
-                    .filter(obj => obj[JsonLd.Id] === supportedClass.supportedProperty || _.some(supportedClass.supportedProperty, sp => sp === obj[JsonLd.Id]))
+                    .filter(obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], supportedClass.supportedProperty) || _.some(supportedClass.supportedProperty, sp => JsonLdUtil.idsEqual(sp, obj[JsonLd.Id])))
                     .map(prop => {
                         prop[JsonLd.Context] = Core.Context;
                         return new SupportedProperty(prop, this);

@@ -18,6 +18,14 @@ export namespace Bodies {
             '@id': 'http://example.com/linked'
         }
     };
+    
+    export var idWithTrailingSlash = {
+        '@context': {
+            '@vocab': 'http://example.com/vocab#'
+        },
+        '@id': 'http://example.com/resource/',
+        '@type': 'Resource'
+    };
 
     export var someJsonLdExpanded = {
         '@id': 'http://example.com/resource',

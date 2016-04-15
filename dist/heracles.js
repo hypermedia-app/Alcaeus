@@ -1,8 +1,8 @@
 !function(e){function r(e,r,t){e in i||(i[e]={name:e,declarative:!0,deps:r,declare:t,normalizedDeps:r})}function t(e){return c[e]||(c[e]={name:e,dependencies:[],exports:{},importers:[]})}function n(r){if(!r.module){var o=r.module=t(r.name),a=r.module.exports,s=r.declare.call(e,function(e,r){if(o.locked=!0,"object"==typeof e)for(var t in e)a[t]=e[t];else a[e]=r;for(var n=0,u=o.importers.length;u>n;n++){var i=o.importers[n];if(!i.locked)for(var s=0;s<i.dependencies.length;++s)i.dependencies[s]===o&&i.setters[s](a)}return o.locked=!1,r},r.name);o.setters=s.setters,o.execute=s.execute;for(var l=0,d=r.normalizedDeps.length;d>l;l++){var f,p=r.normalizedDeps[l],v=i[p],m=c[p];m?f=m.exports:v&&!v.declarative?f=v.esModule:v?(n(v),m=v.module,f=m.exports):f=u(p),m&&m.importers?(m.importers.push(o),o.dependencies.push(m)):o.dependencies.push(null),o.setters[l]&&o.setters[l](f)}}}function o(e){var r={};if("object"==typeof e||"function"==typeof e)if(l){var t;for(var n in e)(t=Object.getOwnPropertyDescriptor(e,n))&&f(r,n,t)}else{var o=e&&e.hasOwnProperty;for(var n in e)(!o||e.hasOwnProperty(n))&&(r[n]=e[n])}return r["default"]=e,f(r,"__useDefault",{value:!0}),r}function a(r,t){var n=i[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,l=n.normalizedDeps.length;l>o;o++){var d=n.normalizedDeps[o];-1==s.call(t,d)&&(i[d]?a(d,t):u(d))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function u(e){if(v[e])return v[e];if("@node/"==e.substr(0,6))return p(e.substr(6));var r=i[e];if(!r)throw"Module "+e+" not present.";return n(i[e]),a(e,[]),i[e]=void 0,r.declarative&&f(r.module.exports,"__esModule",{value:!0}),v[e]=r.declarative?r.module.exports:r.esModule}var i={},s=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},l=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(d){l=!1}var f;!function(){try{Object.defineProperty({},"a",{})&&(f=Object.defineProperty)}catch(e){f=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var c={},p="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,v={"@empty":{}};return function(e,t,n){return function(a){a(function(a){for(var i=0;i<t.length;i++)(function(e,r){r&&r.__esModule?v[e]=r:v[e]=o(r)})(t[i],arguments[i]);n({register:r});var s=u(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)u(e[i]);return s.__useDefault?s["default"]:s})}}}("undefined"!=typeof self?self:global)
 
-(["1","2"], ["4","5","3","8"], function($__System, require) {
+(["1","2"], ["4","5","3","9"], function($__System, require) {
 
-$__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1) {
+$__System.register("2", ["4", "5", "3", "6", "7", "8"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,7 @@ $__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var jsonld_1, _, linkeddata_vocabs_1, Constants_1, FetchUtil_1;
+    var jsonld_1, _, linkeddata_vocabs_1, Constants_1, FetchUtil_1, JsonLdUtil_1;
     var ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
     return {
         setters:[
@@ -28,6 +28,9 @@ $__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1
             },
             function (FetchUtil_1_1) {
                 FetchUtil_1 = FetchUtil_1_1;
+            },
+            function (JsonLdUtil_1_1) {
+                JsonLdUtil_1 = JsonLdUtil_1_1;
             }],
         execute: function() {
             ApiDocumentation = (function () {
@@ -43,9 +46,9 @@ $__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1
                     var _this = this;
                     return this._getFlattened()
                         .then(function (graph) {
-                        var supportedClass = _.find(graph, function (obj) { return obj[Constants_1.JsonLd.Id] === classUri; });
+                        var supportedClass = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], classUri); });
                         return _.chain(graph)
-                            .filter(function (obj) { return obj[Constants_1.JsonLd.Id] === supportedClass.supportedOperation || _.some(supportedClass.supportedOperation, function (sp) { return sp === obj[Constants_1.JsonLd.Id]; }); })
+                            .filter(function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], supportedClass.supportedOperation) || _.some(supportedClass.supportedOperation, function (sp) { return JsonLdUtil_1.JsonLdUtil.idsEqual(sp, obj[Constants_1.JsonLd.Id]); }); })
                             .map(function (op) {
                             op[Constants_1.JsonLd.Context] = Constants_1.Core.Context;
                             return new Operation(op, _this);
@@ -57,9 +60,9 @@ $__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1
                     var _this = this;
                     return this._getFlattened()
                         .then(function (graph) {
-                        var supportedClass = _.find(graph, function (obj) { return obj[Constants_1.JsonLd.Id] === classUri; });
+                        var supportedClass = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], classUri); });
                         return _.chain(graph)
-                            .filter(function (obj) { return obj[Constants_1.JsonLd.Id] === supportedClass.supportedProperty || _.some(supportedClass.supportedProperty, function (sp) { return sp === obj[Constants_1.JsonLd.Id]; }); })
+                            .filter(function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], supportedClass.supportedProperty) || _.some(supportedClass.supportedProperty, function (sp) { return JsonLdUtil_1.JsonLdUtil.idsEqual(sp, obj[Constants_1.JsonLd.Id]); }); })
                             .map(function (prop) {
                             prop[Constants_1.JsonLd.Context] = Constants_1.Core.Context;
                             return new SupportedProperty(prop, _this);
@@ -227,7 +230,7 @@ $__System.register("2", ["4", "5", "3", "6", "7"], function(exports_1, context_1
     }
 });
 
-$__System.register("7", ["8", "4", "2", "6"], function(exports_1, context_1) {
+$__System.register("7", ["9", "4", "2", "6"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var li, jsonld_1, ApiDocumentation_1, Constants;
@@ -404,15 +407,38 @@ $__System.register("6", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("1", ["5", "7", "6"], function(exports_1, context_1) {
+$__System.register("8", [], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
+    var JsonLdUtil;
+    return {
+        setters:[],
+        execute: function() {
+            JsonLdUtil = (function () {
+                function JsonLdUtil() {
+                }
+                JsonLdUtil.idsEqual = function (id1, id2) {
+                    return JsonLdUtil.trimTrailingSlash(id1) === JsonLdUtil.trimTrailingSlash(id2);
+                };
+                JsonLdUtil.trimTrailingSlash = function (uri) {
+                    if (!uri || !uri.replace) {
+                        return null;
+                    }
+                    // todo: is this really correct to ignore trailing slash?
+                    return uri.replace(/\/$/, '');
+                };
+                return JsonLdUtil;
+            }());
+            exports_1("JsonLdUtil", JsonLdUtil);
+        }
+    }
+});
+
+$__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var _, FetchUtil_1, Constants_1;
+    var _, FetchUtil_1, Constants_1, JsonLdUtil_1;
     var Resource;
-    function trimSlash(uri) {
-        // todo: is this really correct to ignore trailing slash?
-        return uri.replace(/\/$/, '');
-    }
     function createResource(obj, apiDocumentation, resources) {
         return new Resource(obj, apiDocumentation, findIncomingLinks(obj, resources));
     }
@@ -439,7 +465,7 @@ $__System.register("1", ["5", "7", "6"], function(exports_1, context_1) {
     function findIncomingLinks(object, resources) {
         return _.transform(resources, function (acc, res, key) {
             _.forOwn(res, function (value, predicate) {
-                if (value && value[Constants_1.JsonLd.Id] && value[Constants_1.JsonLd.Id] === object[Constants_1.JsonLd.Id]) {
+                if (value && value[Constants_1.JsonLd.Id] && JsonLdUtil_1.JsonLdUtil.idsEqual(value[Constants_1.JsonLd.Id], object[Constants_1.JsonLd.Id])) {
                     acc.push([key, predicate]);
                 }
             });
@@ -455,6 +481,9 @@ $__System.register("1", ["5", "7", "6"], function(exports_1, context_1) {
             },
             function (Constants_1_1) {
                 Constants_1 = Constants_1_1;
+            },
+            function (JsonLdUtil_1_1) {
+                JsonLdUtil_1 = JsonLdUtil_1_1;
             }],
         execute: function() {
             Resource = (function () {
@@ -485,11 +514,11 @@ $__System.register("1", ["5", "7", "6"], function(exports_1, context_1) {
                     return FetchUtil_1.FetchUtil.fetchResource(uri).then(function (resWithDocs) {
                         var groupedResources = _.chain(resWithDocs.resources)
                             .map(function (resObj) { return createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources); })
-                            .groupBy(Constants_1.JsonLd.Id, trimSlash)
+                            .groupBy(function (res) { return JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(res[Constants_1.JsonLd.Id]); })
                             .mapValues(function (arr) { return arr[0]; })
                             .value();
                         _.forEach(groupedResources, function (g) { return resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation); });
-                        return groupedResources[trimSlash(uri)];
+                        return groupedResources[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
                     });
                 };
                 return Resource;

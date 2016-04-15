@@ -19,6 +19,20 @@ export namespace Bodies {
         }
     };
 
+    export var someJsonLdExpanded = {
+        '@id': 'http://example.com/resource',
+        '@type': 'http://example.com/vocab#Resource',
+        'http://example.com/vocab#prop': {
+            '@value': 'some textual value'
+        },
+        'http://example.com/vocab#other': {
+            '@id': 'http://example.com/linked'
+        },
+        'http://example.com/vocab#other_yet': {
+            '@id': 'http://example.com/linked'
+        }
+    };
+
     export var ntriples = `
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .
@@ -34,7 +48,8 @@ export namespace Bodies {
             { '@id': 'http://example.com/element/4' }
         ],
         'http://example.vocab/managedBy': {
-            '@id': 'http://example.com/collection-curator'
+            '@id': 'http://example.com/collection-curator',
+            '@type': 'http://example.com/Person'
         }
     };
 }
@@ -103,4 +118,6 @@ export namespace Documentations {
             }
         ]
     };
+
+    //export var operationSupportedByProperty =
 }

@@ -8,9 +8,11 @@ import {JsonLd} from './Constants';
 
 export class Resource implements IHydraResource {
     private _apiDoc;
+    private _incomingLinks;
 
-    constructor(actualResource, apiDoc:ApiDocumentation) {
+    constructor(actualResource, apiDoc:ApiDocumentation, incomingLinks) {
         this._apiDoc = apiDoc;
+        this._incomingLinks = incomingLinks;
         Object.assign(this, actualResource);
     }
 
@@ -19,7 +21,16 @@ export class Resource implements IHydraResource {
     }
 
     getOperations() {
-        return this._apiDoc.getOperations(this['@type']);
+        var classOperations = this._apiDoc.getOperations(this['@type']);
+        var propertyOperations = _.chain(this._incomingLinks)
+            .map(link => this._apiDoc.getOperations(link[0], link[1]))
+            .union()
+            .value();
+
+        var operationPromises = [ classOperations, ...propertyOperations ];
+
+        return Promise.all(operationPromises)
+            .then(results => _.flatten(results));
     }
 
     static load(uri:string):Promise<IHydraResource> {
@@ -27,7 +38,7 @@ export class Resource implements IHydraResource {
         return FetchUtil.fetchResource(uri).then(resWithDocs => {
 
             var groupedResources = _.chain(resWithDocs.resources)
-                .map(resObj => createResource(resObj, resWithDocs.apiDocumentation))
+                .map(resObj => createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources))
                 .groupBy(JsonLd.Id)
                 .mapValues(arr => arr[0])
                 .value();
@@ -39,8 +50,8 @@ export class Resource implements IHydraResource {
     }
 }
 
-function createResource(obj:Object, apiDocumentation:ApiDocumentation):Resource {
-    return new Resource(obj, apiDocumentation);
+function createResource(obj:Object, apiDocumentation:ApiDocumentation, resources):Resource {
+    return new Resource(obj, apiDocumentation, findIncomingLinks(obj, resources));
 }
 
 function resourcifyChildren(res:Resource, resources, apiDoc) {
@@ -60,7 +71,7 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
 
         if(_.isObject(value)) {
             if(value instanceof Resource === false){
-                value = new Resource(value, apiDoc);
+                value = new Resource(value, apiDoc, findIncomingLinks(value, resources));
             }
 
             self[key] = resourcifyChildren(value, resources, apiDoc);
@@ -71,4 +82,11 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
     });
 
     return resources[res[JsonLd.Id]];
+}
+
+function findIncomingLinks(object, resources) {
+    return _.chain(resources)
+        .map(res => [res['@id'], _.chain(res).toPairs().filter(p => p[1] && p[1]['@id'] === object['@id']).map(p => p[0]).value() ])
+        .transform((r,v,k) => _.each(v[1], v1 => r.push([v[0],v1])), [])
+        .value();
 }

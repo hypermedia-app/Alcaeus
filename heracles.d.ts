@@ -17,7 +17,7 @@ interface IClass extends IResource {
 interface IDocumentedResource extends IResource {
     title:string;
     description:string;
-    getRaw(context:any = null):Object;
+    compact(context:any = null):Object;
 }
 
 interface ISupportedProperty extends IDocumentedResource {

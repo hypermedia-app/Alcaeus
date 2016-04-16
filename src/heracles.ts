@@ -79,10 +79,10 @@ export class PartialCollectionView extends Resource {
 
     get collection() {
         var collectionLink = _.find(this._incomingLinks, linkArray => {
-          return linkArray[1] === Core.Vocab.view  
+          return linkArray.predicate === Core.Vocab.view
         });
         
-        return collectionLink ? collectionLink[2] : null;
+        return collectionLink ? collectionLink.subject : null;
     }
 }
 
@@ -90,7 +90,11 @@ function findIncomingLinks(object, resources) {
     return _.transform(resources, (acc, res, key) => {
         _.forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
-                acc.push([key, predicate, resources[key]])
+                acc.push({
+                    subjectId: key,
+                    predicate: predicate,
+                    subject: resources[key]
+                });
             }
         });
     }, []);

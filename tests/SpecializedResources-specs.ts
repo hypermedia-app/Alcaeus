@@ -12,7 +12,11 @@ describe('PartialCollectionView', () => {
         var collection = {};
 
         var pcv = new Hydra.PartialCollectionView(pcvJson, null, [
-            [ 'http://some.id', Core.Vocab.view, collection ]
+            {
+                subjectId: 'http://some.id',
+                predicate: Core.Vocab.view,
+                subject: collection
+            }
         ]);
 
         expect(Object.is(collection, pcv.collection)).toBe(true);

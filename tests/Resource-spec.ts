@@ -175,8 +175,8 @@ describe('Resource', () => {
                     expect(res['http://example.com/vocab#other']._incomingLinks.length).toBe(2);
 
                     var incomingLinks = res['http://example.com/vocab#other']._incomingLinks;
-                    expect(_.some(incomingLinks, il => il[0] === 'http://example.com/resource' && il[1] === 'http://example.com/vocab#other')).toBe(true);
-                    expect(_.some(incomingLinks, il => il[0] === 'http://example.com/resource' && il[1] === 'http://example.com/vocab#other_yet')).toBe(true);
+                    expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other' })).toBe(true);
+                    expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other_yet' })).toBe(true);
                     done();
                 })
                 .catch(done.fail)

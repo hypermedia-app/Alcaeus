@@ -1,8 +1,7 @@
 'use strict';
 
 import {Core} from '../src/Constants';
-import {ResourceFactory} from '../src/ResourceFactory';
-import * as specialized from '../src/SpecializedResources';
+import * as Hydra from '../src/heracles';
 
 describe('ResourceFactory', () => {
 
@@ -13,9 +12,9 @@ describe('ResourceFactory', () => {
             '@type': Core.Vocab.PartialCollectionView
         };
 
-        var resource = ResourceFactory.instance.createResource(pcv, apiDoc, []);
+        var resource = Hydra.ResourceFactory.instance.createResource(pcv, apiDoc, []);
 
-        expect(resource instanceof specialized.PartialCollectionView).toBe(true);
+        expect(resource instanceof Hydra.PartialCollectionView).toBe(true);
     });
 
 });

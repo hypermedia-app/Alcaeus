@@ -4,9 +4,8 @@
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
-import {JsonLd} from './Constants';
+import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
-import {ResourceFactory} from "./ResourceFactory";
 
 export class Resource implements IHydraResource {
     private _apiDoc;
@@ -49,13 +48,50 @@ export class Resource implements IHydraResource {
 
             var resource = groupedResources[JsonLdUtil.trimTrailingSlash(uri)];
 
-            if(!resource) {
+            if (!resource) {
                 return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
             }
 
             return resource;
         });
     }
+}
+
+export class ResourceFactory implements IResourceFactory {
+    public static instance = new ResourceFactory();
+
+    public createResource(obj:Object, apiDocumentation:ApiDocumentation, resources):Resource {
+        var incomingLinks = findIncomingLinks(obj, resources);
+
+        switch(obj[JsonLd.Type]){
+            case Core.Vocab.PartialCollectionView:
+                var collection = findParentCollection(incomingLinks);
+                return new PartialCollectionView(obj, apiDocumentation, incomingLinks, collection);
+        }
+
+        return new Resource(obj, apiDocumentation, incomingLinks);
+    }
+}
+
+export class PartialCollectionView extends Resource {
+
+    constructor(actualResource, apiDoc:ApiDocumentation, incomingLinks, collection) {
+        super(actualResource, apiDoc, incomingLinks);
+    }
+}
+
+function findParentCollection(incomingLinks){
+
+}
+
+function findIncomingLinks(object, resources) {
+    return _.transform(resources, (acc, res, key) => {
+        _.forOwn(res, (value, predicate) => {
+            if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
+                acc.push([key, predicate])
+            }
+        });
+    }, []);
 }
 
 function resourcifyChildren(res:Resource, resources, apiDoc) {

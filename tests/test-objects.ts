@@ -45,7 +45,7 @@ export namespace Bodies {
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .
 `;
-    
+
     export var hydraCollection = {
         '@id': 'http://example.com/resource',
         '@context': 'http://www.w3.org/ns/hydra/context.jsonld',
@@ -58,6 +58,30 @@ export namespace Bodies {
         'http://example.vocab/managedBy': {
             '@id': 'http://example.com/collection-curator',
             '@type': 'http://example.com/Person'
+        }
+    };
+
+    export var hydraCollectionWithView = {
+        '@id': 'http://example.com/resource',
+        '@context': 'http://www.w3.org/ns/hydra/context.jsonld',
+        'member': [
+            { '@id': 'http://example.com/element/1' },
+            { '@id': 'http://example.com/element/2' },
+            { '@id': 'http://example.com/element/3' },
+            { '@id': 'http://example.com/element/4' }
+        ],
+        'http://example.vocab/managedBy': {
+            '@id': 'http://example.com/collection-curator',
+            '@type': 'http://example.com/Person'
+        },
+        'hydra:view': {
+            '@id': 'http://example.com/resource?page=3',
+            '@type': 'http://www.w3.org/ns/hydra/core#PartialCollectionView',
+            'http://www.w3.org/ns/hydra/core#totalItems': 10,
+            'http://www.w3.org/ns/hydra/core#first': 'http://example.com/resource?page=1',
+            'http://www.w3.org/ns/hydra/core#previous': 'http://example.com/resource?page=2',
+            'http://www.w3.org/ns/hydra/core#next': 'http://example.com/resource?page=4',
+            'http://www.w3.org/ns/hydra/core#last': 'http://example.com/resource?page=58'
         }
     };
 }

@@ -73,16 +73,16 @@ export class ResourceFactory implements IResourceFactory {
 }
 
 export class PartialCollectionView extends Resource {
+    public collection;
+
     constructor(actualResource, apiDoc:ApiDocumentation, incomingLinks) {
         super(actualResource, apiDoc, incomingLinks);
-    }
 
-    get collection() {
-        var collectionLink = _.find(this._incomingLinks, linkArray => {
-          return linkArray.predicate === Core.Vocab.view
+        var collectionLink = _.find(incomingLinks, linkArray => {
+            return linkArray.predicate === Core.Vocab.view
         });
-        
-        return collectionLink ? collectionLink.subject : null;
+
+        this.collection = collectionLink ? collectionLink.subject : null;
     }
 
     get first() { return this[Core.Vocab.first] || null; }

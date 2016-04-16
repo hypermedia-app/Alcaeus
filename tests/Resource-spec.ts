@@ -179,7 +179,7 @@ describe('Resource', () => {
                     expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other_yet' })).toBe(true);
                     done();
                 })
-                .catch(done.fail)
+                .catch(done.fail);
         });
 
         it('should fail when resource with given @id doesn\'t exist in the representation', done => {
@@ -207,7 +207,20 @@ describe('Resource', () => {
                 })
                 .catch(done.fail);
         });
-        
+
+        it('should load parent of collaction view as Resource', done => {
+            window.fetch.withArgs('http://example.com/resource?page=3')
+                .returns(Promise.resolve(Responses.jsonLd(Bodies.hydraCollectionWithView, true)));
+
+            Resource.load('http://example.com/resource?page=3')
+                .then(res => {
+                    expect(res.collection).toBeDefined();
+                    expect(res.collection instanceof Resource).toBe(true, 'Actual type is: ' + res.collection.constructor.name);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
         afterEach(() => {
             window.fetch.restore();
             ApiDocumentation.load.restore();

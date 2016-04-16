@@ -1,5 +1,6 @@
 //noinspection TypeScriptCheckImport
 import {rdf, xsd} from 'jasnell/linkeddata-vocabs';
+import {Core} from '../src/Constants';
 
 export namespace Bodies {
     export var someJsonLd = {
@@ -48,7 +49,7 @@ export namespace Bodies {
 
     export var hydraCollection = {
         '@id': 'http://example.com/resource',
-        '@context': 'http://www.w3.org/ns/hydra/context.jsonld',
+        '@context': Core.Context,
         'member': [
             { '@id': 'http://example.com/element/1' },
             { '@id': 'http://example.com/element/2' },
@@ -63,7 +64,7 @@ export namespace Bodies {
 
     export var hydraCollectionWithView = {
         '@id': 'http://example.com/resource',
-        '@context': 'http://www.w3.org/ns/hydra/context.jsonld',
+        '@context': Core.Context,
         'member': [
             { '@id': 'http://example.com/element/1' },
             { '@id': 'http://example.com/element/2' },
@@ -113,7 +114,7 @@ export namespace Responses {
 
 export namespace Documentations {
     export var classWithOperation = {
-        '@context': 'http://www.w3.org/ns/hydra/context.jsonld',
+        '@context': Core.Context,
         'supportedClass': [
             {
                 '@id': 'http://example.com/api#Class',

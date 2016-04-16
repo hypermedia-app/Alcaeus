@@ -56,8 +56,7 @@ export class ApiDocumentation implements IApiDocumentation {
 
     getClasses():Promise<Array<IClass>> {
         return this._getFlattened()
-            .then(graph
-                => {
+            .then(graph => {
                 return _.chain(graph)
                     .filter(obj => obj[JsonLd.Type] === 'Class')
                     .map(sc => new Class(sc, this))

@@ -403,7 +403,13 @@ $__System.register("6", [], function(exports_1, context_1) {
                     description: Core.Context['hydra'] + 'description',
                     method: Core.Context['hydra'] + 'method',
                     Class: Core.Context['hydra'] + 'Class',
-                    member: Core.Context['hydra'] + 'member'
+                    member: Core.Context['hydra'] + 'member',
+                    PartialCollectionView: Core.Context['hydra'] + 'PartialCollectionView',
+                    view: Core.Context['hydra'] + 'view',
+                    first: Core.Context['hydra'] + 'first',
+                    next: Core.Context['hydra'] + 'next',
+                    last: Core.Context['hydra'] + 'last',
+                    previous: Core.Context['hydra'] + 'previous'
                 };
             })(Core = Core || (Core = {}));
             exports_1("Core", Core);
@@ -459,10 +465,25 @@ $__System.register("8", [], function(exports_1, context_1) {
 $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
+    var __extends = (this && this.__extends) || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
     var _, FetchUtil_1, Constants_1, JsonLdUtil_1;
-    var Resource;
-    function createResource(obj, apiDocumentation, resources) {
-        return new Resource(obj, apiDocumentation, findIncomingLinks(obj, resources));
+    var Resource, ResourceFactory, PartialCollectionView;
+    function findIncomingLinks(object, resources) {
+        return _.transform(resources, function (acc, res, key) {
+            _.forOwn(res, function (value, predicate) {
+                if (value && value[Constants_1.JsonLd.Id] && JsonLdUtil_1.JsonLdUtil.idsEqual(value[Constants_1.JsonLd.Id], object[Constants_1.JsonLd.Id])) {
+                    acc.push({
+                        subjectId: key,
+                        predicate: predicate,
+                        subject: resources[key]
+                    });
+                }
+            });
+        }, []);
     }
     function resourcifyChildren(res, resources, apiDoc) {
         var self = res;
@@ -477,21 +498,12 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
             }
             if (_.isObject(value)) {
                 if (value instanceof Resource === false) {
-                    value = new Resource(value, apiDoc, findIncomingLinks(value, resources));
+                    value = ResourceFactory.instance.createResource(value, apiDoc, resources);
                 }
                 self[key] = resourcifyChildren(value, resources, apiDoc);
             }
         });
         return resources[res[Constants_1.JsonLd.Id]];
-    }
-    function findIncomingLinks(object, resources) {
-        return _.transform(resources, function (acc, res, key) {
-            _.forOwn(res, function (value, predicate) {
-                if (value && value[Constants_1.JsonLd.Id] && JsonLdUtil_1.JsonLdUtil.idsEqual(value[Constants_1.JsonLd.Id], object[Constants_1.JsonLd.Id])) {
-                    acc.push([key, predicate]);
-                }
-            });
-        }, []);
     }
     return {
         setters:[
@@ -535,7 +547,7 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
                 Resource.load = function (uri) {
                     return FetchUtil_1.FetchUtil.fetchResource(uri).then(function (resWithDocs) {
                         var groupedResources = _.chain(resWithDocs.resources)
-                            .map(function (resObj) { return createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources); })
+                            .map(function (resObj) { return ResourceFactory.instance.createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources); })
                             .groupBy(function (res) { return JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(res[Constants_1.JsonLd.Id]); })
                             .mapValues(function (arr) { return arr[0]; })
                             .value();
@@ -550,6 +562,59 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
                 return Resource;
             }());
             exports_1("Resource", Resource);
+            ResourceFactory = (function () {
+                function ResourceFactory() {
+                }
+                ResourceFactory.prototype.createResource = function (obj, apiDocumentation, resources) {
+                    var incomingLinks = findIncomingLinks(obj, resources);
+                    switch (obj[Constants_1.JsonLd.Type]) {
+                        case Constants_1.Core.Vocab.PartialCollectionView:
+                            return new PartialCollectionView(obj, apiDocumentation, incomingLinks);
+                    }
+                    return new Resource(obj, apiDocumentation, incomingLinks);
+                };
+                ResourceFactory.instance = new ResourceFactory();
+                return ResourceFactory;
+            }());
+            exports_1("ResourceFactory", ResourceFactory);
+            PartialCollectionView = (function (_super) {
+                __extends(PartialCollectionView, _super);
+                function PartialCollectionView(actualResource, apiDoc, incomingLinks) {
+                    _super.call(this, actualResource, apiDoc, incomingLinks);
+                }
+                Object.defineProperty(PartialCollectionView.prototype, "collection", {
+                    get: function () {
+                        var collectionLink = _.find(this._incomingLinks, function (linkArray) {
+                            return linkArray.predicate === Constants_1.Core.Vocab.view;
+                        });
+                        return collectionLink ? collectionLink.subject : null;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(PartialCollectionView.prototype, "first", {
+                    get: function () { return this[Constants_1.Core.Vocab.first] || null; },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(PartialCollectionView.prototype, "previous", {
+                    get: function () { return this[Constants_1.Core.Vocab.previous] || null; },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(PartialCollectionView.prototype, "next", {
+                    get: function () { return this[Constants_1.Core.Vocab.next] || null; },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(PartialCollectionView.prototype, "last", {
+                    get: function () { return this[Constants_1.Core.Vocab.last] || null; },
+                    enumerable: true,
+                    configurable: true
+                });
+                return PartialCollectionView;
+            }(Resource));
+            exports_1("PartialCollectionView", PartialCollectionView);
         }
     }
 });

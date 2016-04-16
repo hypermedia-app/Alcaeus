@@ -6,6 +6,7 @@ import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
 import {JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
+import {ResourceFactory} from "./ResourceFactory";
 
 export class Resource implements IHydraResource {
     private _apiDoc;
@@ -39,7 +40,7 @@ export class Resource implements IHydraResource {
         return FetchUtil.fetchResource(uri).then(resWithDocs => {
 
             var groupedResources = _.chain(resWithDocs.resources)
-                .map(resObj => createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources))
+                .map(resObj => ResourceFactory.instance.createResource(resObj, resWithDocs.apiDocumentation, resWithDocs.resources))
                 .groupBy(res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]))
                 .mapValues(arr => arr[0])
                 .value();
@@ -55,10 +56,6 @@ export class Resource implements IHydraResource {
             return resource;
         });
     }
-}
-
-function createResource(obj:Object, apiDocumentation:ApiDocumentation, resources):Resource {
-    return new Resource(obj, apiDocumentation, findIncomingLinks(obj, resources));
 }
 
 function resourcifyChildren(res:Resource, resources, apiDoc) {
@@ -78,7 +75,7 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
 
         if (_.isObject(value)) {
             if (value instanceof Resource === false) {
-                value = new Resource(value, apiDoc, findIncomingLinks(value, resources));
+                value = ResourceFactory.instance.createResource(value, apiDoc, resources);
             }
 
             self[key] = resourcifyChildren(value, resources, apiDoc);
@@ -86,14 +83,4 @@ function resourcifyChildren(res:Resource, resources, apiDoc) {
     });
 
     return resources[res[JsonLd.Id]];
-}
-
-function findIncomingLinks(object, resources) {
-    return _.transform(resources, (acc, res, key) => {
-        _.forOwn(res, (value, predicate) => {
-            if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
-                acc.push([key, predicate])
-            }
-        });
-    }, []);
 }

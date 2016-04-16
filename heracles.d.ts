@@ -49,3 +49,13 @@ interface ResourceStatic {
 interface ApiDocumentationStatic {
     load(uri:string):Promise<IApiDocumentation>;
 }
+
+interface IResourceFactory {
+    createResource(obj:Object, apiDocumentation:IApiDocumentation, resources):IHydraResource
+}
+
+var ResourceFactory:ResourceFactoryStatic;
+
+interface ResourceFactoryStatic {
+    instance:IResourceFactory;
+}

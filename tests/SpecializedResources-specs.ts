@@ -22,4 +22,13 @@ describe('PartialCollectionView', () => {
         expect(Object.is(collection, pcv.collection)).toBe(true);
     });
 
+    it('should contain null links to other pages if missing', () => {
+        var pcv = new Hydra.PartialCollectionView({}, null, []);
+
+        expect(pcv.next).toBe(null);
+        expect(pcv.previous).toBe(null);
+        expect(pcv.first).toBe(null);
+        expect(pcv.last).toBe(null);
+    });
+
 });

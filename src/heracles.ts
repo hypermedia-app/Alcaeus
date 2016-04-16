@@ -84,6 +84,14 @@ export class PartialCollectionView extends Resource {
         
         return collectionLink ? collectionLink.subject : null;
     }
+
+    get first() { return this[Core.Vocab.first] || null; }
+
+    get previous() { return this[Core.Vocab.previous] || null; }
+
+    get next() { return this[Core.Vocab.next] || null; }
+
+    get last() { return this[Core.Vocab.last] || null; }
 }
 
 function findIncomingLinks(object, resources) {

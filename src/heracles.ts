@@ -21,6 +21,10 @@ export class Resource implements IHydraResource {
         return this['@id'];
     }
 
+    get apiDocumentation() {
+        return this._apiDoc;
+    }
+
     getOperations() {
         var classOperations = this._apiDoc.getOperations(this['@type']);
         var propertyOperations = _.chain(this._incomingLinks)

@@ -581,17 +581,11 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
                 __extends(PartialCollectionView, _super);
                 function PartialCollectionView(actualResource, apiDoc, incomingLinks) {
                     _super.call(this, actualResource, apiDoc, incomingLinks);
+                    var collectionLink = _.find(incomingLinks, function (linkArray) {
+                        return linkArray.predicate === Constants_1.Core.Vocab.view;
+                    });
+                    this.collection = collectionLink ? collectionLink.subject : null;
                 }
-                Object.defineProperty(PartialCollectionView.prototype, "collection", {
-                    get: function () {
-                        var collectionLink = _.find(this._incomingLinks, function (linkArray) {
-                            return linkArray.predicate === Constants_1.Core.Vocab.view;
-                        });
-                        return collectionLink ? collectionLink.subject : null;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
                 Object.defineProperty(PartialCollectionView.prototype, "first", {
                     get: function () { return this[Constants_1.Core.Vocab.first] || null; },
                     enumerable: true,

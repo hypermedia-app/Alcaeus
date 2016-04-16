@@ -9,7 +9,7 @@ import {JsonLdUtil} from "./JsonLdUtil";
 
 export class Resource implements IHydraResource {
     private _apiDoc;
-    private _incomingLinks;
+    protected _incomingLinks;
 
     constructor(actualResource, apiDoc:ApiDocumentation, incomingLinks) {
         this._apiDoc = apiDoc;
@@ -65,8 +65,7 @@ export class ResourceFactory implements IResourceFactory {
 
         switch(obj[JsonLd.Type]){
             case Core.Vocab.PartialCollectionView:
-                var collection = findParentCollection(incomingLinks);
-                return new PartialCollectionView(obj, apiDocumentation, incomingLinks, collection);
+                return new PartialCollectionView(obj, apiDocumentation, incomingLinks);
         }
 
         return new Resource(obj, apiDocumentation, incomingLinks);
@@ -74,21 +73,24 @@ export class ResourceFactory implements IResourceFactory {
 }
 
 export class PartialCollectionView extends Resource {
-
-    constructor(actualResource, apiDoc:ApiDocumentation, incomingLinks, collection) {
+    constructor(actualResource, apiDoc:ApiDocumentation, incomingLinks) {
         super(actualResource, apiDoc, incomingLinks);
     }
-}
 
-function findParentCollection(incomingLinks){
-
+    get collection() {
+        var collectionLink = _.find(this._incomingLinks, linkArray => {
+          return linkArray[1] === Core.Vocab.view  
+        });
+        
+        return collectionLink ? collectionLink[2] : null;
+    }
 }
 
 function findIncomingLinks(object, resources) {
     return _.transform(resources, (acc, res, key) => {
         _.forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
-                acc.push([key, predicate])
+                acc.push([key, predicate, resources[key]])
             }
         });
     }, []);

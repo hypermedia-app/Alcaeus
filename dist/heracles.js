@@ -490,7 +490,7 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
         if (!resources[res[Constants_1.JsonLd.Id]])
             resources[res[Constants_1.JsonLd.Id]] = res;
         _.forOwn(res, function (value, key) {
-            if (key.startsWith('_'))
+            if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
                 return;
             if (_.isArray(value)) {
                 self[key] = _.map(value, function (el) { return resourcifyChildren(el, resources, apiDoc); });
@@ -501,7 +501,9 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
                     value = ResourceFactory.instance.createResource(value, apiDoc, resources);
                 }
                 self[key] = resourcifyChildren(value, resources, apiDoc);
+                return;
             }
+            throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
         });
         return resources[res[Constants_1.JsonLd.Id]];
     }

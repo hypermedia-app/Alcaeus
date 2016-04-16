@@ -2,23 +2,14 @@
 
 import * as Hydra from '../src/heracles';
 import {Core} from '../src/Constants';
+import {Bodies} from './test-objects';
 
 describe('PartialCollectionView', () => {
 
-    var pcvJson = {
-        '@id': '/markus/friends?page=3',
-        '@type': 'http://www.w3.org/ns/hydra/core#PartialCollectionView',
-        'http://www.w3.org/ns/hydra/core#totalItems': 10,
-        'http://www.w3.org/ns/hydra/core#first': '/markus/friends?page=1',
-        'http://www.w3.org/ns/hydra/core#previous': '/markus/friends?page=2',
-        'http://www.w3.org/ns/hydra/core#next': '/markus/friends?page=4',
-        'http://www.w3.org/ns/hydra/core#last': '/markus/friends?page=58'
-    };
-    
     it('should link to the collection', () => {
         var collection = {};
 
-        var pcv = new Hydra.PartialCollectionView(pcvJson, null, [
+        var pcv = new Hydra.PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, [
             {
                 subjectId: 'http://some.id',
                 predicate: Core.Vocab.view,
@@ -39,12 +30,12 @@ describe('PartialCollectionView', () => {
     });
 
     it('should contain null links to other pages if missing', () => {
-        var pcv = new Hydra.PartialCollectionView(pcvJson, null, []);
+        var pcv = new Hydra.PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, []);
 
-        expect(pcv.next).toBe('/markus/friends?page=4');
-        expect(pcv.previous).toBe('/markus/friends?page=2');
-        expect(pcv.first).toBe('/markus/friends?page=1');
-        expect(pcv.last).toBe('/markus/friends?page=58');
+        expect(pcv.next).toBe('http://example.com/resource?page=4');
+        expect(pcv.previous).toBe('http://example.com/resource?page=2');
+        expect(pcv.first).toBe('http://example.com/resource?page=1');
+        expect(pcv.last).toBe('http://example.com/resource?page=58');
     });
 
 });

@@ -98,7 +98,7 @@ export class DocumentedResource implements IDocumentedResource {
             this._hydraResource[schema.title];
     }
 
-    getRaw(context:any = null) {
+    compact(context:any = null) {
         return jsonld.compact(this._hydraResource, context || Core.Context);
     }
 }

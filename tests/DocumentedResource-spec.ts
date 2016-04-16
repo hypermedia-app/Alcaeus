@@ -1,7 +1,7 @@
 import {Core} from '../src/Constants';
 import {DocumentedResource} from "../src/ApiDocumentation";
 
-describe('SupportedProperty', () => {
+describe('DocumentedResource', () => {
 
     var hydraDescriptionJsonLd = {
         '@context': Core.Context,
@@ -57,7 +57,7 @@ describe('SupportedProperty', () => {
     it('should expose raw operation as promise of compacted object', done => {
         var op = new DocumentedResource(hydraDescriptionJsonLd);
 
-        op.getRaw()
+        op.compact()
             .then(compacted => {
                 expect(compacted['title']).toBe('The title');
                 expect(compacted['description']).toBe('The longer description');
@@ -75,7 +75,7 @@ describe('SupportedProperty', () => {
             prop: 'http://some/custom/property'
         };
 
-        op.getRaw(customContext)
+        op.compact(customContext)
             .then(compacted => {
                 expect(compacted.title).toBe('The title');
                 expect(compacted.description).toBe('The longer description');

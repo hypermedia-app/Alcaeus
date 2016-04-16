@@ -18,7 +18,7 @@ export class Resource implements IHydraResource {
     }
 
     get id() {
-        return this['@id'];
+        return this[JsonLd.Id];
     }
 
     get apiDocumentation() {

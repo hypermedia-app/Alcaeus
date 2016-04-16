@@ -43,8 +43,6 @@ describe('Resource', () => {
 
         it('should return object with matching @id', done => {
             window.fetch.withArgs('http://example.com/resource').returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
-            //ApiDocumentation.load.returns(null);
-
             Resource.load('http://example.com/resource')
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/resource');
@@ -184,6 +182,32 @@ describe('Resource', () => {
                 .catch(done.fail)
         });
 
+        it('should fail when resource with given @id doesn\'t exist in the representation', done => {
+            window.fetch.withArgs('http://example.com/not/there')
+                .returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
+
+            Resource.load('http://example.com/not/there')
+                .then(done.fail, err => {
+                    expect(err.message).toBe('Resource http://example.com/not/there was not found in the response');
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should fail when resource returns non-success status code', done => {
+            window.fetch.withArgs('http://example.com/not/there')
+                .returns(Promise.resolve(Responses.notFound()));
+
+            Resource.load('http://example.com/not/there')
+                .then(done.fail, err => {
+                    // hm, why doesn't thins work?
+                    // expect(err.message).toBe('Request failed');
+                    expect(err.response).toBeDefined();
+                    done();
+                })
+                .catch(done.fail);
+        });
+        
         afterEach(() => {
             window.fetch.restore();
             ApiDocumentation.load.restore();

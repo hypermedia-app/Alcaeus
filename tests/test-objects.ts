@@ -67,6 +67,11 @@ export namespace Responses {
 
     export var ntriples = (ntriples, includeDocsLink = true) => createResponse(ntriples, 'application/n-triples', includeDocsLink);
 
+    export var notFound = () => new Response('', {
+        status: 404,
+        ok: false
+    });
+
     function createResponse(body:string, contentType:string, includeDocsLink:boolean) {
         var headers = new Headers({
             'Content-Type': contentType

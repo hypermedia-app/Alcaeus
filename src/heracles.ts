@@ -34,7 +34,7 @@ export class Resource implements IHydraResource {
             .then(results => _.flatten(results));
     }
 
-    static load(uri:string):Promise<IHydraResource> {
+    static load(uri:string) {
 
         return FetchUtil.fetchResource(uri).then(resWithDocs => {
 
@@ -46,7 +46,13 @@ export class Resource implements IHydraResource {
 
             _.forEach(groupedResources, g => resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation));
 
-            return groupedResources[JsonLdUtil.trimTrailingSlash(uri)];
+            var resource = groupedResources[JsonLdUtil.trimTrailingSlash(uri)];
+
+            if(!resource) {
+                return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
+            }
+
+            return resource;
         });
     }
 }

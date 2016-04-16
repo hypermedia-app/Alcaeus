@@ -119,7 +119,7 @@ $__System.register("2", ["4", "5", "3", "6", "7", "8"], function(exports_1, cont
                     enumerable: true,
                     configurable: true
                 });
-                DocumentedResource.prototype.getRaw = function (context) {
+                DocumentedResource.prototype.compact = function (context) {
                     if (context === void 0) { context = null; }
                     return jsonld_1.promises.compact(this._hydraResource, context || Constants_1.Core.Context);
                 };
@@ -233,8 +233,13 @@ $__System.register("2", ["4", "5", "3", "6", "7", "8"], function(exports_1, cont
 $__System.register("7", ["9", "4", "2", "6"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
+    var __extends = (this && this.__extends) || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
     var li, jsonld_1, ApiDocumentation_1, Constants;
-    var FetchUtil, ExpandedWithDocs;
+    var FetchUtil, ExpandedWithDocs, FetchError;
     function fetchDocumentation(res) {
         if (res.headers.has(Constants.Headers.Link)) {
             var linkHeaders = res.headers.get(Constants.Headers.Link);
@@ -247,7 +252,9 @@ $__System.register("7", ["9", "4", "2", "6"], function(exports_1, context_1) {
     }
     function getJsObject(res) {
         var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
-        var jsonPromise;
+        if (res.ok === false) {
+            return Promise.reject(new FetchError(res));
+        }
         if (mediaType === Constants.MediaTypes.jsonLd) {
             return res.json().then(getFlattenedGraph);
         }
@@ -315,6 +322,21 @@ $__System.register("7", ["9", "4", "2", "6"], function(exports_1, context_1) {
                 }
                 return ExpandedWithDocs;
             }());
+            FetchError = (function (_super) {
+                __extends(FetchError, _super);
+                function FetchError(response) {
+                    _super.call(this, 'Request failed');
+                    this._response = response;
+                }
+                Object.defineProperty(FetchError.prototype, "response", {
+                    get: function () {
+                        return this._response;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return FetchError;
+            }(Error));
         }
     }
 });
@@ -518,7 +540,11 @@ $__System.register("1", ["5", "7", "6", "8"], function(exports_1, context_1) {
                             .mapValues(function (arr) { return arr[0]; })
                             .value();
                         _.forEach(groupedResources, function (g) { return resourcifyChildren(g, groupedResources, resWithDocs.apiDocumentation); });
-                        return groupedResources[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
+                        var resource = groupedResources[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
+                        if (!resource) {
+                            return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
+                        }
+                        return resource;
                     });
                 };
                 return Resource;

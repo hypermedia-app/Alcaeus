@@ -55,9 +55,26 @@ class ExpandedWithDocs {
     apiDocumentation:ApiDocumentation
 }
 
+class FetchError extends Error {
+    private _response;
+
+    constructor(response:Response) {
+        super('Request failed');
+
+        this._response = response;
+    }
+
+    get response() {
+        return this._response;
+    }
+}
+
 function getJsObject(res:Response) {
     var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
-    var jsonPromise;
+
+    if(res.ok === false){
+        return Promise.reject(new FetchError(res))
+    }
 
     if (mediaType === Constants.MediaTypes.jsonLd) {
         return res.json().then(getFlattenedGraph);

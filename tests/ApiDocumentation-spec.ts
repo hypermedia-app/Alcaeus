@@ -82,7 +82,7 @@ describe('ApiDocumentation', () => {
         });
 
         it('should invoke Resource.load', done => {
-            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
+            var docs = new ApiDocumentation(heracles, 'http://api.example.com.doc', Documentations.classWithOperation);
             heracles.loadResource.returns(Promise.resolve(null));
 
             docs.getEntrypoint()

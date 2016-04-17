@@ -182,7 +182,12 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                     return this.getClasses().then(function (cs) { return _.find(cs, ['id', classId]); });
                 };
                 ApiDocumentation.prototype.getEntrypoint = function () {
-                    return this._heracles.loadResource(this._original.entrypoint);
+                    var _this = this;
+                    return this._getFlattened()
+                        .then(function (graph) {
+                        var doc = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], _this.id); });
+                        return _this._heracles.loadResource(doc.entrypoint);
+                    });
                 };
                 ApiDocumentation.prototype._getFlattened = function () {
                     return jsonld_1.promises.flatten(this._original, Constants_1.Core.Context)

@@ -63,9 +63,14 @@ export class ApiDocumentation implements IApiDocumentation {
     getClass(classId):Promise<IClass> {
         return this.getClasses().then(cs => _.find(cs, ['id', classId]));
     }
-    
+
     getEntrypoint():Promise<IHydraResource> {
-        return this._heracles.loadResource(this._original.entrypoint);
+        return this._getFlattened()
+            .then(graph => {
+                var doc = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], this.id));
+
+                return this._heracles.loadResource(doc.entrypoint)
+            });
     }
 
     _getFlattened() {

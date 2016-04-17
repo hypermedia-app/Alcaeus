@@ -114,6 +114,7 @@ export namespace Responses {
 
 export namespace Documentations {
     export var classWithOperation = {
+        '@id': 'http://api.example.com.doc',
         '@context': Core.Context,
         'entrypoint': 'http://example.com/home',
         'supportedClass': [

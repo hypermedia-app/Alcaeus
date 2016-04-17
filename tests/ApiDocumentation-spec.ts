@@ -1,5 +1,6 @@
 /// <reference path="../typings/main.d.ts" />
 
+import * as sinon from 'sinon';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
 
@@ -64,6 +65,25 @@ describe('ApiDocumentation', () => {
                 })
                 .catch(done.fail);
         });
+
+    });
+
+    describe('getting entrypoint', () => {
+
+        beforeEach(() => sinon.stub(Resource, 'load'));
+
+        it('should invoke Resource.load', done => {
+            var docs = new ApiDocumentation('', Documentations.classWithOperation);
+
+            var classes = docs.getEntrypoint()
+                .then(clas => {
+                    expect(ResourceLoader.load.calledWithExactly('http://example.com/home')).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        afterEach(Resource.load.restore);
 
     });
 });

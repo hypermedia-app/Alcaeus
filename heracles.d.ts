@@ -43,6 +43,7 @@ interface IOperation extends IDocumentedResource {
 
 interface IHydraResource extends IResource {
     getOperations():Promise<Array<IOperation>>
+    apiDocumentation:IApiDocumentation;
 }
 
 interface IResourceFactory {

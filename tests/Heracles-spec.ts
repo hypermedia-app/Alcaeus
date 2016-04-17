@@ -1,5 +1,6 @@
 'use strict';
 import * as sinon from 'sinon';
+//noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
 import {Heracles} from '../src/heracles';
 import {Resource} from '../src/Resources';
@@ -152,7 +153,7 @@ describe('Heracles', () => {
                 .returns(mockedResponse(Bodies.hydraCollection));
 
             Heracles.loadResource('http://example.com/resource')
-                .then(res => {
+                .then(() => {
                     var ids = _.map(Heracles.resourceFactory.createResource.getCalls(), call => {
                         return call.args[0]['@id'];
                     });

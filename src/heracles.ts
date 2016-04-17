@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
-import {JsonLd, Core} from './Constants';
+import {JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory} from './ResourceFactory';
 import {Resource} from "./Resources";

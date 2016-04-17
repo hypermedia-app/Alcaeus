@@ -18,7 +18,7 @@ describe('Operation', () => {
         'method': 'TRACE'
     };
     
-    beforeEach(() => apiDoc = new ApiDocumentation('', {}));
+    beforeEach(() => apiDoc = new ApiDocumentation({}, '', {}));
 
     it('should expose operation method', () => {
         var op = new Operation(operationJsonLd, apiDoc);
@@ -43,7 +43,7 @@ describe('Operation', () => {
         sinon.spy(apiDoc, 'getClass');
 
         op.getExpected()
-            .then(expected =>{
+            .then(() => {
                 expect(apiDoc.getClass.calledWithExactly('http://www.w3.org/2002/07/owl#Nothing')).toBe(true);
                 done();
             })
@@ -55,7 +55,7 @@ describe('Operation', () => {
         sinon.spy(apiDoc, 'getClass');
 
         op.getReturned()
-            .then(expected =>{
+            .then(() => {
                 expect(apiDoc.getClass.calledWithExactly('http://example.com/Something')).toBe(true);
                 done();
             })

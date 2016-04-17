@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
 import {rdfs, schema} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
-import {FetchUtil} from "./FetchUtil";
 import {JsonLdUtil} from "./JsonLdUtil";
 
 export class ApiDocumentation implements IApiDocumentation {
@@ -19,11 +18,6 @@ export class ApiDocumentation implements IApiDocumentation {
         this.id = docId;
         this._original = apiDoc;
         this._heracles = heracles;
-    }
-
-    static load(uri:string):Promise<ApiDocumentation> {
-        return FetchUtil.fetchResource(uri, false)
-            .then(expanded => new ApiDocumentation(uri, expanded.resources));
     }
 
     getOperations(classUri:string):Promise<Array<IOperation>> {

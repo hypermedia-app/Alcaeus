@@ -16,7 +16,7 @@ describe('ApiDocumentation', () => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
-            var op = docs.getOperations('http://example.com/api#Class')
+            docs.getOperations('http://example.com/api#Class')
                 .then(op => {
                     expect(op[0].description).toBe('Gets the api#Class');
                     expect(op[0].method).toBe('GET');
@@ -33,7 +33,7 @@ describe('ApiDocumentation', () => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
-            var op = docs.getProperties('http://example.com/api#Class')
+            docs.getProperties('http://example.com/api#Class')
                 .then(props => {
                     expect(props.length).toBe(2);
                     done();
@@ -49,7 +49,7 @@ describe('ApiDocumentation', () => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
-            var classes = docs.getClasses()
+            docs.getClasses()
                 .then(classes => {
                     expect(classes.length).toBe(1);
                     expect(classes[0].id).toBe('http://example.com/api#Class');
@@ -62,7 +62,7 @@ describe('ApiDocumentation', () => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
-            var classes = docs.getClass('http://example.com/api#Class')
+            docs.getClass('http://example.com/api#Class')
                 .then(clas => {
                     expect(clas.id).toBe('http://example.com/api#Class');
                     done();
@@ -76,7 +76,7 @@ describe('ApiDocumentation', () => {
 
         var heracles:IHeracles;
         beforeEach(() => {
-            heracles = {
+            heracles = <IHeracles>{
                 loadResource: sinon.stub()
             }
         });
@@ -85,8 +85,8 @@ describe('ApiDocumentation', () => {
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
             heracles.loadResource.returns(Promise.resolve(null));
 
-            var classes = docs.getEntrypoint()
-                .then(entrypoint => {
+            docs.getEntrypoint()
+                .then(() => {
                     expect(heracles.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
                     done();
                 })

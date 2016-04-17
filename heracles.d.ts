@@ -1,3 +1,8 @@
+interface IHeracles {
+    resourceFactory:IResourceFactory;
+    loadResource(uri:string):Promise<IHydraResource>;
+}
+
 interface IResource {
     id:string
 }
@@ -40,23 +45,6 @@ interface IHydraResource extends IResource {
     getOperations():Promise<Array<IOperation>>
 }
 
-var Resource:ResourceStatic;
-var ApiDocumentation:ApiDocumentationStatic;
-
-interface ResourceStatic {
-    load(uri:string):Promise<IHydraResource>;
-}
-
-interface ApiDocumentationStatic {
-    load(uri:string):Promise<IApiDocumentation>;
-}
-
 interface IResourceFactory {
     createResource(obj:Object, apiDocumentation:IApiDocumentation, resources):IHydraResource
-}
-
-var ResourceFactory:ResourceFactoryStatic;
-
-interface ResourceFactoryStatic {
-    instance:IResourceFactory;
 }

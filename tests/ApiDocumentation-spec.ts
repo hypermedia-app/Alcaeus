@@ -6,11 +6,15 @@ import {Documentations} from './test-objects';
 
 describe('ApiDocumentation', () => {
 
+    var heracles;
+    
+    beforeEach(() => heracles = {});
+    
     describe('getting operations', () => {
 
         it('should get operation\'s method and description given a type', done => {
 
-            var docs = new ApiDocumentation('', Documentations.classWithOperation);
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             var op = docs.getOperations('http://example.com/api#Class')
                 .then(op => {
@@ -27,7 +31,7 @@ describe('ApiDocumentation', () => {
 
         it('should get properties for a given class type', done => {
 
-            var docs = new ApiDocumentation('', Documentations.classWithOperation);
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             var op = docs.getProperties('http://example.com/api#Class')
                 .then(props => {
@@ -43,7 +47,7 @@ describe('ApiDocumentation', () => {
 
         it('should return classes from documentation', done => {
 
-            var docs = new ApiDocumentation('', Documentations.classWithOperation);
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             var classes = docs.getClasses()
                 .then(classes => {
@@ -56,7 +60,7 @@ describe('ApiDocumentation', () => {
 
         it('should return selected class by @id', done => {
 
-            var docs = new ApiDocumentation('', Documentations.classWithOperation);
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             var classes = docs.getClass('http://example.com/api#Class')
                 .then(clas => {
@@ -70,20 +74,24 @@ describe('ApiDocumentation', () => {
 
     describe('getting entrypoint', () => {
 
-        beforeEach(() => sinon.stub(Resource, 'load'));
+        var heracles:IHeracles;
+        beforeEach(() => {
+            heracles = {
+                loadResource: sinon.stub()
+            }
+        });
 
         it('should invoke Resource.load', done => {
-            var docs = new ApiDocumentation('', Documentations.classWithOperation);
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
+            heracles.loadResource.returns(Promise.resolve(null));
 
             var classes = docs.getEntrypoint()
-                .then(clas => {
-                    expect(ResourceLoader.load.calledWithExactly('http://example.com/home')).toBe(true);
+                .then(entrypoint => {
+                    expect(heracles.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
                     done();
                 })
                 .catch(done.fail);
         });
-
-        afterEach(Resource.load.restore);
 
     });
 });

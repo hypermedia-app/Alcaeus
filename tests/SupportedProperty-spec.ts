@@ -1,8 +1,8 @@
-import {SupportedProperty, ApiDocumentation} from "../src/ApiDocumentation";
+import {SupportedProperty} from "../src/ApiDocumentation";
 
 describe('SupportedProperty', () => {
 
-    var apiDoc = new ApiDocumentation('', {});
+    var apiDoc = <IApiDocumentation>{};
 
     it('is readable if unspecified', () => {
         var prop = new SupportedProperty({ }, apiDoc);

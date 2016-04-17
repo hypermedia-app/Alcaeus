@@ -1,6 +1,6 @@
 'use strict';
 
-import * as Hydra from '../src/heracles';
+import * as Hydra from '../src/Resources';
 import {Core} from '../src/Constants';
 import {Bodies} from './test-objects';
 

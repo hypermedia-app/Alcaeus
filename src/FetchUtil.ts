@@ -4,55 +4,54 @@
 import * as li from 'li';
 //noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
-import {ApiDocumentation} from "./ApiDocumentation";
 import * as Constants from "./Constants";
 
 export class FetchUtil {
-    static fetchResource(uri:string, fetchApiDocs:boolean = true):Promise<ExpandedWithDocs> {
-        var requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
+    static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
+
+    static fetchResource(uri:string):Promise<ExpandedWithDocs> {
 
         return window.fetch(uri, <FetchOptions>{
                 headers: {
-                    accept: requestAcceptHeaders
+                    accept: FetchUtil._requestAcceptHeaders
                 }
             })
             .then((res:Response) => {
-                var apiDocsPromise;
-                if (fetchApiDocs) {
-                    apiDocsPromise = fetchDocumentation(res);
-                } else {
-                    apiDocsPromise = Promise.resolve(null);
-                }
+                var apiDocsUri = getDocumentationUri(res);
 
-                return Promise.all([getJsObject(res), apiDocsPromise])
-                    .then(values => {
-                        return new ExpandedWithDocs(values[0], values[1]);
-                    });
-            })
+                return getFlattendGraph(res)
+                    .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+            });
+    }
+
+    static fetchDocumentation(uri:string):Promise<Object> {
+        return window.fetch(uri, <FetchOptions>{
+            headers: {
+                accept: FetchUtil._requestAcceptHeaders
+            }
+        }).then(getFlattendGraph);
     }
 }
 
-function fetchDocumentation(res:Response):Promise<ApiDocumentation> {
+function getDocumentationUri(res:Response):string {
     if (res.headers.has(Constants.Headers.Link)) {
         var linkHeaders = res.headers.get(Constants.Headers.Link);
         var links = li.parse(linkHeaders);
 
-        if (links[Constants.Core.Vocab.apiDocumentation]) {
-            return ApiDocumentation.load(links[Constants.Core.Vocab.apiDocumentation]);
-        }
+        return links[Constants.Core.Vocab.apiDocumentation];
     }
 
-    return Promise.resolve(null);
+    return null;
 }
 
 class ExpandedWithDocs {
-    constructor(resources:Object, apiDocumentation:ApiDocumentation) {
+    constructor(resources:Object, apiDocumentationLink:string) {
         this.resources = resources;
-        this.apiDocumentation = apiDocumentation;
+        this.apiDocumentationLink = apiDocumentationLink;
     }
 
     resources:Object;
-    apiDocumentation:ApiDocumentation
+    apiDocumentationLink:string;
 }
 
 class FetchError extends Error {
@@ -69,15 +68,15 @@ class FetchError extends Error {
     }
 }
 
-function getJsObject(res:Response) {
+function getFlattendGraph(res:Response) {
     var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
 
-    if(res.ok === false){
+    if (res.ok === false) {
         return Promise.reject(new FetchError(res))
     }
 
     if (mediaType === Constants.MediaTypes.jsonLd) {
-        return res.json().then(getFlattenedGraph);
+        return res.json().then(flatten);
     } else {
 
         if (mediaType === Constants.MediaTypes.ntriples ||
@@ -86,12 +85,12 @@ function getJsObject(res:Response) {
         }
 
         return res.text().then(rdf => {
-            return jsonld.fromRDF(rdf, {format: mediaType}).then(getFlattenedGraph);
+            return jsonld.fromRDF(rdf, {format: mediaType}).then(flatten);
         });
     }
 }
 
-function getFlattenedGraph(json) {
+function flatten(json) {
     return jsonld.flatten(json, {})
         .then(flattened => flattened[Constants.JsonLd.Graph]);
 }

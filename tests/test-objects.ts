@@ -50,7 +50,7 @@ export namespace Bodies {
     export var hydraCollection = {
         '@id': 'http://example.com/resource',
         '@context': Core.Context,
-        'member': [
+        'hydra:member': [
             { '@id': 'http://example.com/element/1' },
             { '@id': 'http://example.com/element/2' },
             { '@id': 'http://example.com/element/3' },

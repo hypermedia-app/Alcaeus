@@ -13,10 +13,12 @@ import {JsonLdUtil} from "./JsonLdUtil";
 export class ApiDocumentation implements IApiDocumentation {
     id:string;
     private _original;
+    private _heracles:IHeracles;
 
-    constructor(docId:string, apiDoc:any) {
+    constructor(heracles:IHeracles, docId:string, apiDoc:any) {
         this.id = docId;
         this._original = apiDoc;
+        this._heracles = heracles;
     }
 
     static load(uri:string):Promise<ApiDocumentation> {
@@ -69,7 +71,7 @@ export class ApiDocumentation implements IApiDocumentation {
     }
     
     getEntrypoint():Promise<IHydraResource> {
-        return ResourceLoader.load(this[Core.Vocab.entrypoint]);
+        return this._heracles.loadResource(this._original.entrypoint);
     }
 
     _getFlattened() {

@@ -62,7 +62,8 @@ export namespace Core {
         first: Context['hydra'] + 'first',
         next: Context['hydra'] + 'next',
         last: Context['hydra'] + 'last',
-        previous: Context['hydra'] + 'previous'
+        previous: Context['hydra'] + 'previous',
+        entrypoint: Context['hydra'] + 'entrypoint'
     };
 }
 

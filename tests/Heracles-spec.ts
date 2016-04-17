@@ -2,16 +2,16 @@
 import * as sinon from 'sinon';
 //noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
-import {Heracles} from '../src/heracles';
+import {Hydra} from '../src/heracles';
 import {Resource} from '../src/Resources';
 import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations} from './test-objects';
 
-describe('Heracles', () => {
+describe('Hydra', () => {
 
     beforeEach(() => {
-        sinon.spy(Heracles.resourceFactory, 'createResource');
+        sinon.spy(Hydra.resourceFactory, 'createResource');
         sinon.stub(FetchUtil, 'fetchResource');
         sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.resolve(Documentations.classWithOperation));
     });
@@ -22,7 +22,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/resource');
                     done();
@@ -34,7 +34,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource/')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
-            Heracles.loadResource('http://example.com/resource/')
+            Hydra.loadResource('http://example.com/resource/')
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/resource');
                     done();
@@ -46,7 +46,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.idWithTrailingSlash));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/resource/');
                     done();
@@ -58,7 +58,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(() => {
                     expect(FetchUtil.fetchDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true);
                     done();
@@ -70,7 +70,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet'])).toBe(true);
                     expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked');
@@ -83,7 +83,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res[Core.Vocab.member].length).toBe(4);
                     _.each(res[Core.Vocab.member], member => {
@@ -98,7 +98,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res['http://example.vocab/managedBy'] instanceof Resource)
                         .toBe(true, 'was ' + JSON.stringify(res['http://example.vocab/managedBy']));
@@ -111,7 +111,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource?page=3')
                 .returns(mockedResponse(Bodies.hydraCollectionWithView));
 
-            Heracles.loadResource('http://example.com/resource?page=3')
+            Hydra.loadResource('http://example.com/resource?page=3')
                 .then(res => {
                     expect(res.collection).toBeDefined();
                     expect(res.collection instanceof Resource).toBe(true, 'Actual type is: ' + res.collection.constructor.name);
@@ -124,7 +124,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/not/there')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
-            Heracles.loadResource('http://example.com/not/there')
+            Hydra.loadResource('http://example.com/not/there')
                 .then(done.fail, err => {
                     expect(err.message).toBe('Resource http://example.com/not/there was not found in the response');
                     done();
@@ -136,7 +136,7 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res['http://example.com/vocab#other']._incomingLinks.length).toBe(2);
 
@@ -152,12 +152,12 @@ describe('Heracles', () => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
-            Heracles.loadResource('http://example.com/resource')
+            Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    var ids = _.map(Heracles.resourceFactory.createResource.getCalls(), call => {
+                    var ids = _.map(Hydra.resourceFactory.createResource.getCalls(), call => {
                         return call.args[0]['@id'];
                     });
-                    expect(Heracles.resourceFactory.createResource.callCount)
+                    expect(Hydra.resourceFactory.createResource.callCount)
                         .toBe(6, 'Actual calls for: ' + ids);
                     done();
                 })
@@ -168,7 +168,7 @@ describe('Heracles', () => {
 
     afterEach(() => FetchUtil.fetchResource.restore());
     afterEach(() => FetchUtil.fetchDocumentation.restore());
-    afterEach(() => Heracles.resourceFactory.createResource.restore());
+    afterEach(() => Hydra.resourceFactory.createResource.restore());
 
 });
 

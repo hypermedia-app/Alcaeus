@@ -27,8 +27,7 @@ class Heracles implements IHeracles {
     }
 }
 
-// todo: rename Hydra
-export var Heracles = new Heracles();
+export var Hydra = new Heracles();
 
 function getRequestedObject(uri, resources, resourceFactory) {
     return apiDocumentation => {

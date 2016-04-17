@@ -67,6 +67,10 @@ export class ApiDocumentation implements IApiDocumentation {
     getClass(classId):Promise<IClass> {
         return this.getClasses().then(cs => _.find(cs, ['id', classId]));
     }
+    
+    getEntrypoint():Promise<IHydraResource> {
+        return ResourceLoader.load(this[Core.Vocab.entrypoint]);
+    }
 
     _getFlattened() {
         return jsonld.flatten(this._original, Core.Context)

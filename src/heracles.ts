@@ -12,7 +12,7 @@ import {Resource} from "./Resources";
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactory();
 
-    loadResource(uri:string) {
+    loadResource(uri:string):Promise<IHydraResource> {
         return FetchUtil.fetchResource(uri)
             .then(response => {
                 return FetchUtil.fetchDocumentation(response.apiDocumentationLink)

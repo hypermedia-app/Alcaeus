@@ -26,5 +26,21 @@ describe('Resource', () => {
                 .catch(done.fail);
         });
 
+        it('should combine operations for multiple @types', done => {
+            var apiDoc = <IApiDocumentation>{
+                getOperations: sinon.stub()
+            };
+            apiDoc.getOperations.returns(Promise.resolve([]));
+            var resource = new Resource(Bodies.multipleTypesExpanded, apiDoc, [ ]);
+
+            resource.getOperations()
+                .then(() => {
+                    expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
+                    expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
     });
 });

@@ -27,13 +27,19 @@ export class Resource implements IHydraResource {
     }
 
     getOperations() {
-        var classOperations = this.apiDocumentation.getOperations(this['@type']);
+        var classOperations;
+        if(_.isArray(this[JsonLd.Type])) {
+            classOperations = _.map(this[JsonLd.Type], type => this.apiDocumentation.getOperations(type));
+        } else {
+            classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
+        }
+
         var propertyOperations = _.chain(this.incomingLinks)
             .map(link => this.apiDocumentation.getOperations(link[0], link[1]))
             .union()
             .value();
 
-        var operationPromises = [classOperations, ...propertyOperations];
+        var operationPromises = [...classOperations, ...propertyOperations];
 
         return Promise.all(operationPromises)
             .then(results => _.flatten(results));

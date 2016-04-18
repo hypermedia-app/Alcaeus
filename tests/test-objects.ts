@@ -42,6 +42,14 @@ export namespace Bodies {
         }
     };
 
+    export var multipleTypesExpanded = {
+        '@id': 'http://example.com/resource',
+        '@type': [
+            'http://example.com/vocab#Resource',
+            'http://example.com/vocab#AnotherType'
+        ]
+    };
+
     export var ntriples = `
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .

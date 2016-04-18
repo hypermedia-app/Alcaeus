@@ -107,7 +107,7 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should load parent of collection view as Resource', done => {
+        fit('should load parent of collection view as Resource', done => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource?page=3')
                 .returns(mockedResponse(Bodies.hydraCollectionWithView));
 
@@ -132,15 +132,15 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should discover incoming links for resources', done => {
+        fit('should discover incoming links for resources', done => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource')
                 .then(res => {
-                    expect(res['http://example.com/vocab#other']._incomingLinks.length).toBe(2);
+                    expect(res['http://example.com/vocab#other'].incomingLinks.length).toBe(2);
 
-                    var incomingLinks = res['http://example.com/vocab#other']._incomingLinks;
+                    var incomingLinks = res['http://example.com/vocab#other'].incomingLinks;
                     expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other' })).toBe(true);
                     expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other_yet' })).toBe(true);
                     done();

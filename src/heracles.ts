@@ -32,12 +32,11 @@ export var Hydra = new Heracles();
 function getRequestedObject(uri, resources, resourceFactory) {
     return apiDocumentation => {
         var groupedResources = _.chain(resources)
-            .map(resObj => resourceFactory.createResource(resObj, apiDocumentation, resources))
             .groupBy(res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]))
             .mapValues(arr => arr[0])
             .value();
 
-        _.forEach(groupedResources, g => resourcifyChildren(g, groupedResources, apiDocumentation, resourceFactory));
+        _.forEach(groupedResources, g => resourcify(g, groupedResources, apiDocumentation, resourceFactory));
 
         var resource = groupedResources[JsonLdUtil.trimTrailingSlash(uri)];
 
@@ -49,23 +48,25 @@ function getRequestedObject(uri, resources, resourceFactory) {
     };
 }
 
-function resourcifyChildren(res, resources, apiDoc, resourceFactory) {
+function resourcify(res, resources, apiDoc, resourceFactory) {
     var self = res;
 
-    if (!resources[res[JsonLd.Id]]) {
-        if (res instanceof Resource === false) {
-            res = resourceFactory.createResource(res, apiDoc, resources);
-        }
-        resources[res[JsonLd.Id]] = res;
+    if (self instanceof Resource === false) {
+        self = resourceFactory.createResource(res, apiDoc, resources);
+        resources[self[JsonLd.Id]] = self;
     }
 
-    resources[res[JsonLd.Id]]._isProcessed = true;
-    _.forOwn(res, (value, key) => {
+    if (!resources[self[JsonLd.Id]]) {
+        resources[self[JsonLd.Id]] = self;
+    }
+
+    resources[self[JsonLd.Id]]._isProcessed = true;
+    _.forOwn(self, (value, key) => {
         if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
             return;
 
         if (_.isArray(value)) {
-            self[key] = _.map(value, el => resourcifyChildren(el, resources, apiDoc, resourceFactory));
+            self[key] = _.map(value, el => resourcify(el, resources, apiDoc, resourceFactory));
             return;
         }
 
@@ -83,12 +84,12 @@ function resourcifyChildren(res, resources, apiDoc, resourceFactory) {
                 value = resourceFactory.createResource(value, apiDoc, resources);
             }
 
-            self[key] = resourcifyChildren(value, resources, apiDoc, resourceFactory);
+            self[key] = resourcify(value, resources, apiDoc, resourceFactory);
             return;
         }
 
         throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
     });
 
-    return resources[res[JsonLd.Id]];
+    return resources[self[JsonLd.Id]];
 }

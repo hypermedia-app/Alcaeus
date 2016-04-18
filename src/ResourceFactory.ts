@@ -18,15 +18,36 @@ export class ResourceFactory implements IResourceFactory {
     }
 }
 
+class IncomingLink {
+    private _id;
+    private _predicate;
+    private _linkSubject;
+
+    constructor(id, predicate, resoruces) {
+        this._id = id;
+        this._predicate = predicate;
+
+        Object.defineProperty(this, 'subject', <PropertyDescriptor>{
+            get: () => resoruces[id]
+        });
+    }
+
+    get subjectId() {
+        return this._id;
+    }
+
+    get predicate() {
+        return this._predicate;
+    }
+}
+
 function findIncomingLinks(object, resources) {
     return _.transform(resources, (acc, res, key) => {
         _.forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
-                acc.push({
-                    subjectId: key,
-                    predicate: predicate,
-                    subject: resources[key]
-                });
+                acc.push(new IncomingLink(
+                    key, predicate, resources
+                ));
             }
         });
     }, []);

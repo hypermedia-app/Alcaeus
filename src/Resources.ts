@@ -2,28 +2,38 @@
 import * as _ from 'lodash';
 import {JsonLd, Core} from './Constants';
 
+var _apiDocumentation = new WeakMap();
+var _incomingLinks = new WeakMap();
+var _isProcessed = new WeakMap();
+
 export class Resource implements IHydraResource {
 
     constructor(actualResource, apiDoc:IApiDocumentation, incomingLinks) {
         Object.assign(this, actualResource);
 
-        Object.defineProperty(this, 'apiDocumentation', <PropertyDescriptor>{
-            get: () => apiDoc
-        });
-
-        Object.defineProperty(this, 'incomingLinks', <PropertyDescriptor>{
-            get: () => incomingLinks
-        });
-
-        var isProcessed;
-        Object.defineProperty(this, '_processed', <PropertyDescriptor>{
-            get: () => isProcessed,
-            set: val => isProcessed = val
-        });
+        _apiDocumentation.set(this, apiDoc);
+        _incomingLinks.set(this, incomingLinks);
+        _isProcessed.set(this, false);
     }
 
     get id() {
         return this[JsonLd.Id];
+    }
+
+    get apiDocumentation() {
+        return _apiDocumentation.get(this);
+    }
+
+    get incomingLinks() {
+        return _incomingLinks.get(this);
+    }
+
+    get _processed() {
+        return _isProcessed.get(this);
+    }
+
+    set _processed(val:boolean) {
+        _isProcessed.set(this, val);
     }
 
     getOperations() {
@@ -47,19 +57,6 @@ export class Resource implements IHydraResource {
 }
 
 export class PartialCollectionView extends Resource {
-    public collection;
-
-    constructor(actualResource, apiDoc:IApiDocumentation, incomingLinks) {
-        super(actualResource, apiDoc, incomingLinks);
-
-        var collectionLink = _.find(incomingLinks, linkArray => {
-            return linkArray.predicate === Core.Vocab.view
-        });
-
-        Object.defineProperty(this, 'collection', <PropertyDescriptor>{
-            get: () => collectionLink ? collectionLink.subject : null
-        });
-    }
 
     get first() { return this[Core.Vocab.first] || null; }
 
@@ -68,4 +65,12 @@ export class PartialCollectionView extends Resource {
     get next() { return this[Core.Vocab.next] || null; }
 
     get last() { return this[Core.Vocab.last] || null; }
+
+    get collection() {
+        var collectionLink = _.find(this.incomingLinks, linkArray => {
+            return linkArray.predicate === Core.Vocab.view
+        });
+
+        return collectionLink ? collectionLink.subject : null
+    }
 }

@@ -107,7 +107,7 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        fit('should load parent of collection view as Resource', done => {
+        it('should load parent of collection view as Resource', done => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource?page=3')
                 .returns(mockedResponse(Bodies.hydraCollectionWithView));
 
@@ -132,7 +132,7 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        fit('should discover incoming links for resources', done => {
+        it('should discover incoming links for resources', done => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 

@@ -25,6 +25,10 @@ export class ApiDocumentation implements IApiDocumentation {
             .then(graph => {
                 var supportedClass = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], classUri));
 
+                if(!supportedClass) {
+                    return [];
+                }
+
                 return _.chain(graph)
                     .filter(obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], supportedClass.supportedOperation) || _.some(supportedClass.supportedOperation, sp => JsonLdUtil.idsEqual(sp, obj[JsonLd.Id])))
                     .map(op => {
@@ -39,6 +43,10 @@ export class ApiDocumentation implements IApiDocumentation {
         return this._getFlattened()
             .then(graph => {
                 var supportedClass = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], classUri));
+
+                if(!supportedClass) {
+                    return [];
+                }
 
                 return _.chain(graph)
                     .filter(obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], supportedClass.supportedProperty) || _.some(supportedClass.supportedProperty, sp => JsonLdUtil.idsEqual(sp, obj[JsonLd.Id])))
@@ -61,7 +69,7 @@ export class ApiDocumentation implements IApiDocumentation {
     }
 
     getClass(classId):Promise<IClass> {
-        return this.getClasses().then(cs => _.find(cs, ['id', classId]));
+        return this.getClasses().then(cs => _.find(cs, ['id', classId]) || null);
     }
 
     getEntrypoint():Promise<IHydraResource> {

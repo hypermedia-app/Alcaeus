@@ -145,6 +145,9 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                     return this._getFlattened()
                         .then(function (graph) {
                         var supportedClass = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], classUri); });
+                        if (!supportedClass) {
+                            return [];
+                        }
                         return _.chain(graph)
                             .filter(function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], supportedClass.supportedOperation) || _.some(supportedClass.supportedOperation, function (sp) { return JsonLdUtil_1.JsonLdUtil.idsEqual(sp, obj[Constants_1.JsonLd.Id]); }); })
                             .map(function (op) {
@@ -159,6 +162,9 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                     return this._getFlattened()
                         .then(function (graph) {
                         var supportedClass = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], classUri); });
+                        if (!supportedClass) {
+                            return [];
+                        }
                         return _.chain(graph)
                             .filter(function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], supportedClass.supportedProperty) || _.some(supportedClass.supportedProperty, function (sp) { return JsonLdUtil_1.JsonLdUtil.idsEqual(sp, obj[Constants_1.JsonLd.Id]); }); })
                             .map(function (prop) {
@@ -179,7 +185,7 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                     });
                 };
                 ApiDocumentation.prototype.getClass = function (classId) {
-                    return this.getClasses().then(function (cs) { return _.find(cs, ['id', classId]); });
+                    return this.getClasses().then(function (cs) { return _.find(cs, ['id', classId]) || null; });
                 };
                 ApiDocumentation.prototype.getEntrypoint = function () {
                     var _this = this;

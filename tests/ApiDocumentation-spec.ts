@@ -25,6 +25,18 @@ describe('ApiDocumentation', () => {
                 .catch(done.fail);
         });
 
+        it('should return empty array for missing supported class', done => {
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
+
+            docs.getOperations('http://example.com/api#UndomcumentedClass')
+                .then(ops => {
+                    expect(_.isArray(ops)).toBe(true);
+                    expect(ops.length).toBe(0);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
     });
 
     describe('getting properties', () => {
@@ -36,6 +48,18 @@ describe('ApiDocumentation', () => {
             docs.getProperties('http://example.com/api#Class')
                 .then(props => {
                     expect(props.length).toBe(2);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should return empty array for missing supported class', done => {
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
+
+            docs.getProperties('http://example.com/api#UndomcumentedClass')
+                .then(props => {
+                    expect(_.isArray(props)).toBe(true);
+                    expect(props.length).toBe(0);
                     done();
                 })
                 .catch(done.fail);
@@ -65,6 +89,17 @@ describe('ApiDocumentation', () => {
             docs.getClass('http://example.com/api#Class')
                 .then(clas => {
                     expect(clas.id).toBe('http://example.com/api#Class');
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should return null for missing supported class', done => {
+            var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
+
+            docs.getClass('http://example.com/api#UndomcumentedClass')
+                .then(clas => {
+                    expect(clas).toBe(null);
                     done();
                 })
                 .catch(done.fail);

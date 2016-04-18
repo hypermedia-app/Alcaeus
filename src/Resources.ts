@@ -3,27 +3,33 @@ import * as _ from 'lodash';
 import {JsonLd, Core} from './Constants';
 
 export class Resource implements IHydraResource {
-    private _apiDoc;
-    protected _incomingLinks;
 
     constructor(actualResource, apiDoc:IApiDocumentation, incomingLinks) {
-        this._apiDoc = apiDoc;
-        this._incomingLinks = incomingLinks;
         Object.assign(this, actualResource);
+
+        Object.defineProperty(this, 'apiDocumentation', <PropertyDescriptor>{
+            get: () => apiDoc
+        });
+
+        Object.defineProperty(this, 'incomingLinks', <PropertyDescriptor>{
+            get: () => incomingLinks
+        });
+
+        var isProcessed;
+        Object.defineProperty(this, '_processed', <PropertyDescriptor>{
+            get: () => isProcessed,
+            set: val => isProcessed = val
+        });
     }
 
     get id() {
         return this[JsonLd.Id];
     }
 
-    get apiDocumentation() {
-        return this._apiDoc;
-    }
-
     getOperations() {
-        var classOperations = this._apiDoc.getOperations(this['@type']);
-        var propertyOperations = _.chain(this._incomingLinks)
-            .map(link => this._apiDoc.getOperations(link[0], link[1]))
+        var classOperations = this.apiDocumentation.getOperations(this['@type']);
+        var propertyOperations = _.chain(this.incomingLinks)
+            .map(link => this.apiDocumentation.getOperations(link[0], link[1]))
             .union()
             .value();
 
@@ -44,7 +50,9 @@ export class PartialCollectionView extends Resource {
             return linkArray.predicate === Core.Vocab.view
         });
 
-        this.collection = collectionLink ? collectionLink.subject : null;
+        Object.defineProperty(this, 'collection', <PropertyDescriptor>{
+            get: () => collectionLink ? collectionLink.subject : null
+        });
     }
 
     get first() { return this[Core.Vocab.first] || null; }

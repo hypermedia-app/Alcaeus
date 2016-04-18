@@ -664,54 +664,41 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
     var Heracles, Hydra;
     function getRequestedObject(uri, resources, resourceFactory) {
         return function (apiDocumentation) {
-            var groupedResources = _.chain(resources)
-                .groupBy(function (res) { return JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(res[Constants_1.JsonLd.Id]); })
-                .mapValues(function (arr) { return arr[0]; })
-                .value();
-            _.forEach(groupedResources, function (g) { return resourcify(g, groupedResources, apiDocumentation, resourceFactory); });
-            var resource = groupedResources[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
+            var resourcified = {};
+            _.transform(resources, function (acc, val, key) {
+                var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(val[Constants_1.JsonLd.Id]);
+                acc[id] = resourceFactory.createResource(val, apiDocumentation, acc);
+            }, resourcified);
+            _.each(resourcified, function (g) { return resourcify(g, resourcified, apiDocumentation, resourceFactory); });
+            var resource = resourcified[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
             if (!resource) {
                 return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
             }
             return resource;
         };
     }
-    function resourcify(res, resources, apiDoc, resourceFactory) {
-        var self = res;
-        var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(self[Constants_1.JsonLd.Id]);
-        if (self instanceof Resources_1.Resource === false) {
-            self = resourceFactory.createResource(res, apiDoc, resources);
-            resources[selfId] = self;
+    function resourcify(obj, resourcified, apiDoc, resourceFactory) {
+        if (_.isObject(obj) === false) {
+            return obj;
         }
-        if (!resources[selfId]) {
-            resources[selfId] = self;
+        var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
+        var resource = resourcified[selfId];
+        if (resourcified[selfId] instanceof Resources_1.Resource === false) {
+            resource = resourceFactory.createResource(obj, apiDoc, resourcified);
+            resourcified[selfId] = resource;
         }
-        resources[selfId]._isProcessed = true;
-        _.forOwn(self, function (value, key) {
-            if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
-                return;
+        if (resource._processed === true) {
+            return resource;
+        }
+        _.forOwn(resource, function (value, key) {
             if (_.isArray(value)) {
-                self[key] = _.map(value, function (el) { return resourcify(el, resources, apiDoc, resourceFactory); });
+                resource[key] = _.map(value, function (el) { return resourcify(el, resourcified, apiDoc, resourceFactory); });
                 return;
             }
-            var valueId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(value[Constants_1.JsonLd.Id]);
-            if (_.isObject(value)) {
-                if (resources[valueId]) {
-                    value = resources[valueId];
-                }
-                if (value._isProcessed) {
-                    self[key] = value;
-                    return;
-                }
-                if (value instanceof Resources_1.Resource === false) {
-                    value = resourceFactory.createResource(value, apiDoc, resources);
-                }
-                self[key] = resourcify(value, resources, apiDoc, resourceFactory);
-                return;
-            }
-            throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
+            resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
         });
-        return resources[selfId];
+        resource._processed = true;
+        return resource;
     }
     return {
         setters:[

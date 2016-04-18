@@ -50,6 +50,21 @@ export namespace Bodies {
         ]
     };
 
+    export var deepBlankNodes = {
+        "@id": "http://example.com/root",
+        "http://example.com/prop": {
+            "http://example.com/prop": {
+                "http://example.com/prop": {
+                    "http://example.com/prop": {
+                        "http://example.com/text": {
+                            "@value": "I'm nested way deep"
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     export var ntriples = `
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .

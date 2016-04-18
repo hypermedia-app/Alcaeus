@@ -31,14 +31,16 @@ export var Hydra = new Heracles();
 
 function getRequestedObject(uri, resources, resourceFactory) {
     return apiDocumentation => {
-        var groupedResources = _.chain(resources)
-            .groupBy(res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]))
-            .mapValues(arr => arr[0])
-            .value();
+        var resourcified = {};
 
-        _.forEach(groupedResources, g => resourcify(g, groupedResources, apiDocumentation, resourceFactory));
+        _.transform(resources, (acc, val, key) => {
+            var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
+            acc[id] = resourceFactory.createResource(val, apiDocumentation, acc);
+        }, resourcified);
 
-        var resource = groupedResources[JsonLdUtil.trimTrailingSlash(uri)];
+        _.each(resourcified, g => resourcify(g, resourcified, apiDocumentation, resourceFactory));
+
+        var resource = resourcified[JsonLdUtil.trimTrailingSlash(uri)];
 
         if (!resource) {
             return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
@@ -48,51 +50,33 @@ function getRequestedObject(uri, resources, resourceFactory) {
     };
 }
 
-function resourcify(res, resources, apiDoc, resourceFactory) {
-    var self = res;
-    var selfId = JsonLdUtil.trimTrailingSlash(self[JsonLd.Id]);
+function resourcify(obj, resourcified, apiDoc, resourceFactory) {
 
-    if (self instanceof Resource === false) {
-        self = resourceFactory.createResource(res, apiDoc, resources);
-        resources[selfId] = self;
+    if (_.isObject(obj) === false) {
+        return obj;
     }
 
-    if (!resources[selfId]) {
-        resources[selfId] = self;
+    var selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
+
+    var resource = resourcified[selfId];
+    if (resourcified[selfId] instanceof Resource === false) {
+        resource = resourceFactory.createResource(obj, apiDoc, resourcified);
+        resourcified[selfId] = resource;
     }
 
-    resources[selfId]._isProcessed = true;
-    _.forOwn(self, (value, key) => {
-        if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
-            return;
+    if(resource._processed === true){
+        return resource;
+    }
 
+    _.forOwn(resource, (value, key) => {
         if (_.isArray(value)) {
-            self[key] = _.map(value, el => resourcify(el, resources, apiDoc, resourceFactory));
+            resource[key] = _.map(value, el => resourcify(el, resourcified, apiDoc, resourceFactory));
             return;
         }
 
-        var valueId = JsonLdUtil.trimTrailingSlash(value[JsonLd.Id]);
-
-        if (_.isObject(value)) {
-            if(resources[valueId]){
-                value = resources[valueId];
-            }
-
-            if(value._isProcessed) {
-                self[key] = value;
-                return;
-            }
-
-            if (value instanceof Resource === false) {
-                value = resourceFactory.createResource(value, apiDoc, resources);
-            }
-
-            self[key] = resourcify(value, resources, apiDoc, resourceFactory);
-            return;
-        }
-
-        throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
+        resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
     });
 
-    return resources[selfId];
+    resource._processed = true;
+    return resource;
 }

@@ -66,7 +66,7 @@ describe('Hydra', () => {
                 })
                 .catch(done.fail);
         });
-        
+
         it('should turn JSON-LD into a graph of objects', done => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
@@ -165,6 +165,20 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
+        it('should load resource with deep blank node structure', done => {
+            FetchUtil.fetchResource.withArgs('http://example.com/root')
+                .returns(mockedResponse(Bodies.deepBlankNodes));
+
+            Hydra.loadResource('http://example.com/root')
+                .then(res => {
+                    var p = 'http://example.com/prop';
+                    var t = 'http://example.com/text';
+
+                    expect(res[p][p][p][p][t]).toBe('I\'m nested way deep');
+                    done();
+                })
+                .catch(done.fail);
+        })
     });
 
     afterEach(() => FetchUtil.fetchResource.restore());

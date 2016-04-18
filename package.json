@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs dist/heracles.js --skip-source-maps --global-name heracles --format amd"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs - core-decorators dist/heracles.js --skip-source-maps --global-name heracles --format amd"
   },
   "repository": {
     "type": "git",
@@ -30,11 +30,12 @@
   "homepage": "https://github.com/wikibus/heracles#readme",
   "jspm": {
     "registry": "jspm",
-    "format":"amd",
+    "format": "amd",
     "directories": {
       "test": "tests"
     },
     "dependencies": {
+      "core-decorators": "npm:core-decorators@^0.12.2",
       "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@^0.10.0",
       "jsonld": "npm:jsonld@^0.4.6",
       "li": "npm:li@^1.0.1",

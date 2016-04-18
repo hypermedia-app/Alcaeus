@@ -1,6 +1,6 @@
 !function(e){function r(e,r,t){e in i||(i[e]={name:e,declarative:!0,deps:r,declare:t,normalizedDeps:r})}function t(e){return c[e]||(c[e]={name:e,dependencies:[],exports:{},importers:[]})}function n(r){if(!r.module){var o=r.module=t(r.name),a=r.module.exports,s=r.declare.call(e,function(e,r){if(o.locked=!0,"object"==typeof e)for(var t in e)a[t]=e[t];else a[e]=r;for(var n=0,u=o.importers.length;u>n;n++){var i=o.importers[n];if(!i.locked)for(var s=0;s<i.dependencies.length;++s)i.dependencies[s]===o&&i.setters[s](a)}return o.locked=!1,r},r.name);o.setters=s.setters,o.execute=s.execute;for(var l=0,d=r.normalizedDeps.length;d>l;l++){var f,p=r.normalizedDeps[l],v=i[p],m=c[p];m?f=m.exports:v&&!v.declarative?f=v.esModule:v?(n(v),m=v.module,f=m.exports):f=u(p),m&&m.importers?(m.importers.push(o),o.dependencies.push(m)):o.dependencies.push(null),o.setters[l]&&o.setters[l](f)}}}function o(e){var r={};if("object"==typeof e||"function"==typeof e)if(l){var t;for(var n in e)(t=Object.getOwnPropertyDescriptor(e,n))&&f(r,n,t)}else{var o=e&&e.hasOwnProperty;for(var n in e)(!o||e.hasOwnProperty(n))&&(r[n]=e[n])}return r["default"]=e,f(r,"__useDefault",{value:!0}),r}function a(r,t){var n=i[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,l=n.normalizedDeps.length;l>o;o++){var d=n.normalizedDeps[o];-1==s.call(t,d)&&(i[d]?a(d,t):u(d))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function u(e){if(v[e])return v[e];if("@node/"==e.substr(0,6))return p(e.substr(6));var r=i[e];if(!r)throw"Module "+e+" not present.";return n(i[e]),a(e,[]),i[e]=void 0,r.declarative&&f(r.module.exports,"__esModule",{value:!0}),v[e]=r.declarative?r.module.exports:r.esModule}var i={},s=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},l=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(d){l=!1}var f;!function(){try{Object.defineProperty({},"a",{})&&(f=Object.defineProperty)}catch(e){f=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var c={},p="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,v={"@empty":{}};return function(e,t,n){return function(a){a(function(a){for(var i=0;i<t.length;i++)(function(e,r){r&&r.__esModule?v[e]=r:v[e]=o(r)})(t[i],arguments[i]);n({register:r});var s=u(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)u(e[i]);return s.__useDefault?s["default"]:s})}}}("undefined"!=typeof self?self:global)
 
-(["1"], ["3","4","8","7"], function($__System, require) {
+(["1"], ["3","4","8","7","c"], function($__System, require) {
 
 $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     'use strict';
@@ -535,7 +535,7 @@ $__System.register("5", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("b", ["8", "5"], function(exports_1, context_1) {
+$__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -543,12 +543,21 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var _, Constants_1;
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var _, core_decorators_1, Constants_1;
     var _apiDocumentation, _incomingLinks, _isProcessed, Resource, PartialCollectionView;
     return {
         setters:[
             function (_1) {
                 _ = _1;
+            },
+            function (core_decorators_1_1) {
+                core_decorators_1 = core_decorators_1_1;
             },
             function (Constants_1_1) {
                 Constants_1 = Constants_1_1;
@@ -578,23 +587,15 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
-                Object.defineProperty(Resource.prototype, "incomingLinks", {
-                    get: function () {
-                        return _incomingLinks.get(this);
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                Object.defineProperty(Resource.prototype, "_processed", {
-                    get: function () {
-                        return _isProcessed.get(this);
-                    },
-                    set: function (val) {
-                        _isProcessed.set(this, val);
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
+                Resource.prototype.getIncomingLinks = function () {
+                    return _incomingLinks.get(this);
+                };
+                Resource.prototype._processed = function () {
+                    return _isProcessed.get(this);
+                };
+                Resource.prototype._processed = function (val) {
+                    _isProcessed.set(this, val);
+                };
                 Resource.prototype.getOperations = function () {
                     var _this = this;
                     var classOperations;
@@ -604,7 +605,7 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                     else {
                         classOperations = [this.apiDocumentation.getOperations(this[Constants_1.JsonLd.Type])];
                     }
-                    var propertyOperations = _.chain(this.incomingLinks)
+                    var propertyOperations = _.chain(this.getIncomingLinks())
                         .map(function (link) { return _this.apiDocumentation.getOperations(link[0], link[1]); })
                         .union()
                         .value();
@@ -612,6 +613,12 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                     return Promise.all(operationPromises)
                         .then(function (results) { return _.flatten(results); });
                 };
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Resource.prototype, "id", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Resource.prototype, "apiDocumentation", null);
                 return Resource;
             }());
             exports_1("Resource", Resource);
@@ -642,7 +649,7 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                 });
                 Object.defineProperty(PartialCollectionView.prototype, "collection", {
                     get: function () {
-                        var collectionLink = _.find(this.incomingLinks, function (linkArray) {
+                        var collectionLink = _.find(this.getIncomingLinks(), function (linkArray) {
                             return linkArray.predicate === Constants_1.Core.Vocab.view;
                         });
                         return collectionLink ? collectionLink.subject : null;
@@ -650,6 +657,21 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], PartialCollectionView.prototype, "first", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], PartialCollectionView.prototype, "previous", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], PartialCollectionView.prototype, "next", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], PartialCollectionView.prototype, "last", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], PartialCollectionView.prototype, "collection", null);
                 return PartialCollectionView;
             }(Resource));
             exports_1("PartialCollectionView", PartialCollectionView);
@@ -687,7 +709,7 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             resource = resourceFactory.createResource(obj, apiDoc, resourcified);
             resourcified[selfId] = resource;
         }
-        if (resource._processed === true) {
+        if (resource._processed() === true) {
             return resource;
         }
         _.forOwn(resource, function (value, key) {
@@ -697,7 +719,7 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             }
             resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
         });
-        resource._processed = true;
+        resource._processed(true);
         return resource;
     }
     return {
@@ -747,5 +769,5 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
 
 })
 (function(factory) {
-  define(["li","jsonld","lodash","jasnell/linkeddata-vocabs"], factory);
+  define(["li","jsonld","lodash","jasnell/linkeddata-vocabs","core-decorators"], factory);
 });

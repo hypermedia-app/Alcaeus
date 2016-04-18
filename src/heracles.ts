@@ -33,7 +33,7 @@ function getRequestedObject(uri, resources, resourceFactory) {
     return apiDocumentation => {
         var resourcified = {};
 
-        _.transform(resources, (acc, val, key) => {
+        _.transform(resources, (acc, val) => {
             var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
             acc[id] = resourceFactory.createResource(val, apiDocumentation, acc);
         }, resourcified);
@@ -64,7 +64,7 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
         resourcified[selfId] = resource;
     }
 
-    if(resource._processed === true){
+    if(resource._processed() === true){
         return resource;
     }
 
@@ -77,6 +77,6 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
         resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
     });
 
-    resource._processed = true;
+    resource._processed(true);
     return resource;
 }

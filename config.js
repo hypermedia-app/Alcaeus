@@ -22,6 +22,7 @@ System.config({
   },
 
   map: {
+    "core-decorators": "npm:core-decorators@0.12.2",
     "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@0.10.0",
     "jsonld": "npm:jsonld@0.4.6",
     "li": "npm:li@1.0.1",

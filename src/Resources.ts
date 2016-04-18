@@ -1,5 +1,6 @@
 'use strict';
 import * as _ from 'lodash';
+import { nonenumerable } from 'core-decorators';
 import {JsonLd, Core} from './Constants';
 
 var _apiDocumentation = new WeakMap();
@@ -16,23 +17,25 @@ export class Resource implements IHydraResource {
         _isProcessed.set(this, false);
     }
 
+    @nonenumerable
     get id() {
         return this[JsonLd.Id];
     }
 
+    @nonenumerable
     get apiDocumentation() {
         return _apiDocumentation.get(this);
     }
 
-    get incomingLinks() {
+    getIncomingLinks() {
         return _incomingLinks.get(this);
     }
 
-    get _processed() {
+    _processed() {
         return _isProcessed.get(this);
     }
 
-    set _processed(val:boolean) {
+    _processed(val:boolean) {
         _isProcessed.set(this, val);
     }
 
@@ -44,13 +47,13 @@ export class Resource implements IHydraResource {
             classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
         }
 
-        var propertyOperations = _.chain(this.incomingLinks)
+        var propertyOperations = _.chain(this.getIncomingLinks())
             .map(link => this.apiDocumentation.getOperations(link[0], link[1]))
             .union()
             .value();
 
         var operationPromises = [...classOperations, ...propertyOperations];
-
+        
         return Promise.all(operationPromises)
             .then(results => _.flatten(results));
     }
@@ -58,16 +61,21 @@ export class Resource implements IHydraResource {
 
 export class PartialCollectionView extends Resource {
 
+    @nonenumerable
     get first() { return this[Core.Vocab.first] || null; }
 
+    @nonenumerable
     get previous() { return this[Core.Vocab.previous] || null; }
 
+    @nonenumerable
     get next() { return this[Core.Vocab.next] || null; }
 
+    @nonenumerable
     get last() { return this[Core.Vocab.last] || null; }
 
+    @nonenumerable
     get collection() {
-        var collectionLink = _.find(this.incomingLinks, linkArray => {
+        var collectionLink = _.find(this.getIncomingLinks(), linkArray => {
             return linkArray.predicate === Core.Vocab.view
         });
 

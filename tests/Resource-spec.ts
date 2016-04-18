@@ -6,6 +6,24 @@ import {Bodies} from './test-objects';
 
 describe('Resource', () => {
 
+    describe('id', () => {
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id').enumerable)
+                .toBe(false);
+        });
+
+    });
+
+    describe('apiDocumentation', () => {
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'apiDocumentation').enumerable)
+                .toBe(false);
+        });
+
+    });
+    
     describe('getOperations', () => {
 
         it('should combine operations from class and property', done => {

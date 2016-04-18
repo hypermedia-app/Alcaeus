@@ -38,4 +38,28 @@ describe('PartialCollectionView', () => {
         expect(pcv.last).toBe('http://example.com/resource?page=58');
     });
 
+    it('first should be nonenumerable', () => {
+        expect(Object.getOwnPropertyDescriptor(Hydra.PartialCollectionView.prototype, 'first').enumerable)
+            .toBe(false);
+    });
+
+    it('last should be nonenumerable', () => {
+        expect(Object.getOwnPropertyDescriptor(Hydra.PartialCollectionView.prototype, 'last').enumerable)
+            .toBe(false);
+    });
+
+    it('next should be nonenumerable', () => {
+        expect(Object.getOwnPropertyDescriptor(Hydra.PartialCollectionView.prototype, 'next').enumerable)
+            .toBe(false);
+    });
+
+    it('previous should be nonenumerable', () => {
+        expect(Object.getOwnPropertyDescriptor(Hydra.PartialCollectionView.prototype, 'previous').enumerable)
+            .toBe(false);
+    });
+
+    it('collection should be nonenumerable', () => {
+        expect(Object.getOwnPropertyDescriptor(Hydra.PartialCollectionView.prototype, 'collection').enumerable)
+            .toBe(false);
+    });
 });

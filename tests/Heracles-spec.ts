@@ -115,7 +115,8 @@ describe('Hydra', () => {
             Hydra.loadResource('http://example.com/resource?page=3')
                 .then(res => {
                     expect(res.collection).toBeDefined();
-                    expect(res.collection instanceof Resource).toBe(true, 'Actual type is: ' + res.collection.constructor.name);
+                    expect(res.collection instanceof Resource)
+                        .toBe(true, 'Actual type is: ' + res.collection.constructor.name);
                     done();
                 })
                 .catch(done.fail);
@@ -139,9 +140,9 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(res => {
-                    expect(res['http://example.com/vocab#other'].incomingLinks.length).toBe(2);
+                    var incomingLinks = res['http://example.com/vocab#other'].getIncomingLinks();
 
-                    var incomingLinks = res['http://example.com/vocab#other'].incomingLinks;
+                    expect(incomingLinks.length).toBe(2);
                     expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other' })).toBe(true);
                     expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other_yet' })).toBe(true);
                     done();

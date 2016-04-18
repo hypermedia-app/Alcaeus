@@ -367,16 +367,12 @@ $__System.register("a", ["8", "b", "5", "9"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var _, Types, Constants_1, JsonLdUtil_1;
-    var ResourceFactory;
+    var ResourceFactory, IncomingLink;
     function findIncomingLinks(object, resources) {
         return _.transform(resources, function (acc, res, key) {
             _.forOwn(res, function (value, predicate) {
                 if (value && value[Constants_1.JsonLd.Id] && JsonLdUtil_1.JsonLdUtil.idsEqual(value[Constants_1.JsonLd.Id], object[Constants_1.JsonLd.Id])) {
-                    acc.push({
-                        subjectId: key,
-                        predicate: predicate,
-                        subject: resources[key]
-                    });
+                    acc.push(new IncomingLink(key, predicate, resources));
                 }
             });
         }, []);
@@ -410,6 +406,30 @@ $__System.register("a", ["8", "b", "5", "9"], function(exports_1, context_1) {
                 return ResourceFactory;
             }());
             exports_1("ResourceFactory", ResourceFactory);
+            IncomingLink = (function () {
+                function IncomingLink(id, predicate, resoruces) {
+                    this._id = id;
+                    this._predicate = predicate;
+                    Object.defineProperty(this, 'subject', {
+                        get: function () { return resoruces[id]; }
+                    });
+                }
+                Object.defineProperty(IncomingLink.prototype, "subjectId", {
+                    get: function () {
+                        return this._id;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(IncomingLink.prototype, "predicate", {
+                    get: function () {
+                        return this._predicate;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return IncomingLink;
+            }());
         }
     }
 });
@@ -518,7 +538,7 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var _, Constants_1;
-    var Resource, PartialCollectionView;
+    var _apiDocumentation, _incomingLinks, _isProcessed, Resource, PartialCollectionView;
     return {
         setters:[
             function (_1) {
@@ -528,11 +548,15 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                 Constants_1 = Constants_1_1;
             }],
         execute: function() {
+            _apiDocumentation = new WeakMap();
+            _incomingLinks = new WeakMap();
+            _isProcessed = new WeakMap();
             Resource = (function () {
                 function Resource(actualResource, apiDoc, incomingLinks) {
-                    this._apiDoc = apiDoc;
-                    this._incomingLinks = incomingLinks;
                     Object.assign(this, actualResource);
+                    _apiDocumentation.set(this, apiDoc);
+                    _incomingLinks.set(this, incomingLinks);
+                    _isProcessed.set(this, false);
                 }
                 Object.defineProperty(Resource.prototype, "id", {
                     get: function () {
@@ -543,19 +567,42 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                 });
                 Object.defineProperty(Resource.prototype, "apiDocumentation", {
                     get: function () {
-                        return this._apiDoc;
+                        return _apiDocumentation.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Resource.prototype, "incomingLinks", {
+                    get: function () {
+                        return _incomingLinks.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Resource.prototype, "_processed", {
+                    get: function () {
+                        return _isProcessed.get(this);
+                    },
+                    set: function (val) {
+                        _isProcessed.set(this, val);
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Resource.prototype.getOperations = function () {
                     var _this = this;
-                    var classOperations = this._apiDoc.getOperations(this['@type']);
-                    var propertyOperations = _.chain(this._incomingLinks)
-                        .map(function (link) { return _this._apiDoc.getOperations(link[0], link[1]); })
+                    var classOperations;
+                    if (_.isArray(this[Constants_1.JsonLd.Type])) {
+                        classOperations = _.map(this[Constants_1.JsonLd.Type], function (type) { return _this.apiDocumentation.getOperations(type); });
+                    }
+                    else {
+                        classOperations = [this.apiDocumentation.getOperations(this[Constants_1.JsonLd.Type])];
+                    }
+                    var propertyOperations = _.chain(this.incomingLinks)
+                        .map(function (link) { return _this.apiDocumentation.getOperations(link[0], link[1]); })
                         .union()
                         .value();
-                    var operationPromises = [classOperations].concat(propertyOperations);
+                    var operationPromises = classOperations.concat(propertyOperations);
                     return Promise.all(operationPromises)
                         .then(function (results) { return _.flatten(results); });
                 };
@@ -564,12 +611,8 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
             exports_1("Resource", Resource);
             PartialCollectionView = (function (_super) {
                 __extends(PartialCollectionView, _super);
-                function PartialCollectionView(actualResource, apiDoc, incomingLinks) {
-                    _super.call(this, actualResource, apiDoc, incomingLinks);
-                    var collectionLink = _.find(incomingLinks, function (linkArray) {
-                        return linkArray.predicate === Constants_1.Core.Vocab.view;
-                    });
-                    this.collection = collectionLink ? collectionLink.subject : null;
+                function PartialCollectionView() {
+                    _super.apply(this, arguments);
                 }
                 Object.defineProperty(PartialCollectionView.prototype, "first", {
                     get: function () { return this[Constants_1.Core.Vocab.first] || null; },
@@ -591,6 +634,16 @@ $__System.register("b", ["8", "5"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
+                Object.defineProperty(PartialCollectionView.prototype, "collection", {
+                    get: function () {
+                        var collectionLink = _.find(this.incomingLinks, function (linkArray) {
+                            return linkArray.predicate === Constants_1.Core.Vocab.view;
+                        });
+                        return collectionLink ? collectionLink.subject : null;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 return PartialCollectionView;
             }(Resource));
             exports_1("PartialCollectionView", PartialCollectionView);
@@ -606,11 +659,10 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
     function getRequestedObject(uri, resources, resourceFactory) {
         return function (apiDocumentation) {
             var groupedResources = _.chain(resources)
-                .map(function (resObj) { return resourceFactory.createResource(resObj, apiDocumentation, resources); })
                 .groupBy(function (res) { return JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(res[Constants_1.JsonLd.Id]); })
                 .mapValues(function (arr) { return arr[0]; })
                 .value();
-            _.forEach(groupedResources, function (g) { return resourcifyChildren(g, groupedResources, apiDocumentation, resourceFactory); });
+            _.forEach(groupedResources, function (g) { return resourcify(g, groupedResources, apiDocumentation, resourceFactory); });
             var resource = groupedResources[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
             if (!resource) {
                 return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
@@ -618,20 +670,21 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             return resource;
         };
     }
-    function resourcifyChildren(res, resources, apiDoc, resourceFactory) {
+    function resourcify(res, resources, apiDoc, resourceFactory) {
         var self = res;
-        if (!resources[res[Constants_1.JsonLd.Id]]) {
-            if (res instanceof Resources_1.Resource === false) {
-                res = resourceFactory.createResource(res, apiDoc, resources);
-            }
-            resources[res[Constants_1.JsonLd.Id]] = res;
+        if (self instanceof Resources_1.Resource === false) {
+            self = resourceFactory.createResource(res, apiDoc, resources);
+            resources[self[Constants_1.JsonLd.Id]] = self;
         }
-        resources[res[Constants_1.JsonLd.Id]]._isProcessed = true;
-        _.forOwn(res, function (value, key) {
+        if (!resources[self[Constants_1.JsonLd.Id]]) {
+            resources[self[Constants_1.JsonLd.Id]] = self;
+        }
+        resources[self[Constants_1.JsonLd.Id]]._isProcessed = true;
+        _.forOwn(self, function (value, key) {
             if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
                 return;
             if (_.isArray(value)) {
-                self[key] = _.map(value, function (el) { return resourcifyChildren(el, resources, apiDoc, resourceFactory); });
+                self[key] = _.map(value, function (el) { return resourcify(el, resources, apiDoc, resourceFactory); });
                 return;
             }
             if (_.isObject(value)) {
@@ -645,12 +698,12 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
                 if (value instanceof Resources_1.Resource === false) {
                     value = resourceFactory.createResource(value, apiDoc, resources);
                 }
-                self[key] = resourcifyChildren(value, resources, apiDoc, resourceFactory);
+                self[key] = resourcify(value, resources, apiDoc, resourceFactory);
                 return;
             }
             throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
         });
-        return resources[res[Constants_1.JsonLd.Id]];
+        return resources[self[Constants_1.JsonLd.Id]];
     }
     return {
         setters:[

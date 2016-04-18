@@ -25,6 +25,7 @@ describe('Hydra', () => {
             Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/resource');
+                    expect(res instanceof Resource).toBe(true);
                     done();
                 })
                 .catch(done.fail);

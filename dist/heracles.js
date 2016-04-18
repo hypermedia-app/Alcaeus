@@ -672,14 +672,15 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
     }
     function resourcify(res, resources, apiDoc, resourceFactory) {
         var self = res;
+        var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(self[Constants_1.JsonLd.Id]);
         if (self instanceof Resources_1.Resource === false) {
             self = resourceFactory.createResource(res, apiDoc, resources);
-            resources[self[Constants_1.JsonLd.Id]] = self;
+            resources[selfId] = self;
         }
-        if (!resources[self[Constants_1.JsonLd.Id]]) {
-            resources[self[Constants_1.JsonLd.Id]] = self;
+        if (!resources[selfId]) {
+            resources[selfId] = self;
         }
-        resources[self[Constants_1.JsonLd.Id]]._isProcessed = true;
+        resources[selfId]._isProcessed = true;
         _.forOwn(self, function (value, key) {
             if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
                 return;
@@ -687,9 +688,10 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
                 self[key] = _.map(value, function (el) { return resourcify(el, resources, apiDoc, resourceFactory); });
                 return;
             }
+            var valueId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(value[Constants_1.JsonLd.Id]);
             if (_.isObject(value)) {
-                if (resources[value['@id']]) {
-                    value = resources[value['@id']];
+                if (resources[valueId]) {
+                    value = resources[valueId];
                 }
                 if (value._isProcessed) {
                     self[key] = value;
@@ -703,7 +705,7 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             }
             throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
         });
-        return resources[self[Constants_1.JsonLd.Id]];
+        return resources[selfId];
     }
     return {
         setters:[

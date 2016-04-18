@@ -50,17 +50,18 @@ function getRequestedObject(uri, resources, resourceFactory) {
 
 function resourcify(res, resources, apiDoc, resourceFactory) {
     var self = res;
+    var selfId = JsonLdUtil.trimTrailingSlash(self[JsonLd.Id]);
 
     if (self instanceof Resource === false) {
         self = resourceFactory.createResource(res, apiDoc, resources);
-        resources[self[JsonLd.Id]] = self;
+        resources[selfId] = self;
     }
 
-    if (!resources[self[JsonLd.Id]]) {
-        resources[self[JsonLd.Id]] = self;
+    if (!resources[selfId]) {
+        resources[selfId] = self;
     }
 
-    resources[self[JsonLd.Id]]._isProcessed = true;
+    resources[selfId]._isProcessed = true;
     _.forOwn(self, (value, key) => {
         if (key.startsWith('_') || key.startsWith('@') || _.isString(value) || _.isNumber(value))
             return;
@@ -70,9 +71,11 @@ function resourcify(res, resources, apiDoc, resourceFactory) {
             return;
         }
 
+        var valueId = JsonLdUtil.trimTrailingSlash(value[JsonLd.Id]);
+
         if (_.isObject(value)) {
-            if(resources[value['@id']]){
-                value = resources[value['@id']];
+            if(resources[valueId]){
+                value = resources[valueId];
             }
 
             if(value._isProcessed) {
@@ -91,5 +94,5 @@ function resourcify(res, resources, apiDoc, resourceFactory) {
         throw new Error('Unexpected value ' + value + ' of type ' + typeof value);
     });
 
-    return resources[self[JsonLd.Id]];
+    return resources[selfId];
 }

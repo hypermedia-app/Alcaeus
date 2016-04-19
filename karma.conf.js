@@ -122,6 +122,8 @@ module.exports = function (config) {
             ]
         },
 
+        customLaunchers: customLaunchers,
+        
         sauceLabs: {
             testName: 'Web App Unit Tests'
         }

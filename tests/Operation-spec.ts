@@ -5,15 +5,17 @@ import {Core} from '../src/Constants';
 describe('Operation', () => {
 
     var apiDoc;
-    var operationJsonLd = {
+    var operationJsonLd;
+
+    beforeEach(() => operationJsonLd = {
         '@context': Core.Context,
         'title': 'The operation',
         'description': 'The operation description',
-        'expects':  'http://www.w3.org/2002/07/owl#Nothing',
+        'expects': 'http://www.w3.org/2002/07/owl#Nothing',
         'returns': 'http://example.com/Something',
         'method': 'TRACE'
-    };
-    
+    });
+
     beforeEach(() => apiDoc = new ApiDocumentation({}, '', {}));
 
     it('should expose operation method', () => {
@@ -34,27 +36,62 @@ describe('Operation', () => {
         expect(op.returns).toBe('http://example.com/Something');
     });
 
-    it('should expose expected class promise', done => {
-        var op = new Operation(operationJsonLd, apiDoc);
-        sinon.spy(apiDoc, 'getClass');
+    describe('getExpected', () => {
 
-        op.getExpected()
-            .then(() => {
-                expect(apiDoc.getClass.calledWithExactly('http://www.w3.org/2002/07/owl#Nothing')).toBe(true);
-                done();
-            })
-            .catch(done.fail);
+        it('should expose expected class promise', done => {
+            operationJsonLd.expects = 'http://example.com/Something';
+            var op = new Operation(operationJsonLd, apiDoc);
+            sinon.spy(apiDoc, 'getClass');
+
+            op.getExpected()
+                .then(() => {
+                    expect(apiDoc.getClass.calledWithExactly('http://example.com/Something')).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should reject if Operation expects owl:Nothing', done => {
+            var op = new Operation(operationJsonLd, apiDoc);
+            sinon.spy(apiDoc, 'getClass');
+            
+            op.getExpected()
+                .then(done.fail, () => {
+                    done();
+                })
+                .catch(done.fail);
+
+        });
+
     });
 
-    it('should expose returned class promise', done => {
-        var op = new Operation(operationJsonLd, apiDoc);
-        sinon.spy(apiDoc, 'getClass');
+    describe('getExpected', () => {
 
-        op.getReturned()
-            .then(() => {
-                expect(apiDoc.getClass.calledWithExactly('http://example.com/Something')).toBe(true);
-                done();
-            })
-            .catch(done.fail);
+        it('should expose returned class promise', done => {
+            var op = new Operation(operationJsonLd, apiDoc);
+            sinon.spy(apiDoc, 'getClass');
+
+            op.getReturned()
+                .then(() => {
+                    expect(apiDoc.getClass.calledWithExactly('http://example.com/Something')).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should reject in Operation return owl:Nothing', done => {
+            operationJsonLd.returns = 'http://www.w3.org/2002/07/owl#Nothing';
+            var op = new Operation(operationJsonLd, apiDoc);
+            sinon.spy(apiDoc, 'getClass');
+
+            op.getReturned()
+                .then(done.fail, () => {
+                    done();
+                })
+                .catch(done.fail);
+        });
+
     });
+
+
 });

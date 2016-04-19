@@ -5,7 +5,7 @@
 import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
-import {rdfs, schema} from 'jasnell/linkeddata-vocabs';
+import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 
@@ -139,10 +139,18 @@ export class Operation extends DocumentedResource implements IOperation {
     }
 
     getExpected():Promise<IClass> {
+        if(this.expects === owl.ns + 'Nothing') {
+            return Promise.reject(new Error('Operation expects nothing'));
+        }
+
         return this._apiDoc.getClass(this.expects);
     }
 
     getReturned():Promise<IClass> {
+        if(this.returns === owl.ns + 'Nothing') {
+            return Promise.reject(new Error('Operation returns nothing'));
+        }
+
         return this._apiDoc.getClass(this.returns);
     }
 }

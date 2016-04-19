@@ -9,12 +9,8 @@ describe('Operation', () => {
         '@context': Core.Context,
         'title': 'The operation',
         'description': 'The operation description',
-        'expects': {
-            '@id': 'http://www.w3.org/2002/07/owl#Nothing'
-        },
-        'returns': {
-            '@id': 'http://example.com/Something'
-        },
+        'expects':  'http://www.w3.org/2002/07/owl#Nothing',
+        'returns': 'http://example.com/Something',
         'method': 'TRACE'
     };
     

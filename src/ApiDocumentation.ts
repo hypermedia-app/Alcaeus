@@ -131,11 +131,11 @@ export class Operation extends DocumentedResource implements IOperation {
     }
 
     get expects():String {
-        return this._hydraOperation.expects[JsonLd.Id];
+        return this._hydraOperation.expects;
     }
 
     get returns():String {
-        return this._hydraOperation.returns[JsonLd.Id];
+        return this._hydraOperation.returns;
     }
 
     getExpected():Promise<IClass> {

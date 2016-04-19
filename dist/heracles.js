@@ -254,14 +254,14 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                 });
                 Object.defineProperty(Operation.prototype, "expects", {
                     get: function () {
-                        return this._hydraOperation.expects[Constants_1.JsonLd.Id];
+                        return this._hydraOperation.expects;
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(Operation.prototype, "returns", {
                     get: function () {
-                        return this._hydraOperation.returns[Constants_1.JsonLd.Id];
+                        return this._hydraOperation.returns;
                     },
                     enumerable: true,
                     configurable: true
@@ -687,7 +687,7 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
     function getRequestedObject(uri, resources, resourceFactory) {
         return function (apiDocumentation) {
             var resourcified = {};
-            _.transform(resources, function (acc, val, key) {
+            _.transform(resources, function (acc, val) {
                 var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(val[Constants_1.JsonLd.Id]);
                 acc[id] = resourceFactory.createResource(val, apiDocumentation, acc);
             }, resourcified);

@@ -6,11 +6,11 @@ import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
 import {JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
-import {ResourceFactory} from './ResourceFactory';
-import {Resource} from "./Resources";
+import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
+import {Resource as ResourceCtor} from "./Resources";
 
 class Heracles implements IHeracles {
-    public resourceFactory = new ResourceFactory();
+    public resourceFactory = new ResourceFactoryCtor();
 
     loadResource(uri:string):Promise<IHydraResource> {
         return FetchUtil.fetchResource(uri)
@@ -27,6 +27,8 @@ class Heracles implements IHeracles {
     }
 }
 
+export var ResourceFactory = ResourceFactoryCtor;
+export var Resource = ResourceCtor;
 export var Hydra = new Heracles();
 
 function getRequestedObject(uri, resources, resourceFactory) {

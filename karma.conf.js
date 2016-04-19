@@ -2,6 +2,37 @@
 // Generated on Sun Apr 10 2016 12:06:14 GMT+0200 (Central European Daylight Time)
 
 module.exports = function (config) {
+    if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
+        console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
+        process.exit(1);
+    }
+
+    var customLaunchers = {
+        sl_chrome: {
+            base: 'SauceLabs',
+            browserName: 'chrome',
+            platform: 'Windows 7',
+            version: '35'
+        },
+        sl_firefox: {
+            base: 'SauceLabs',
+            browserName: 'firefox',
+            version: '30'
+        },
+        sl_ios_safari: {
+            base: 'SauceLabs',
+            browserName: 'iphone',
+            platform: 'OS X 10.9',
+            version: '7.1'
+        },
+        sl_ie_11: {
+            base: 'SauceLabs',
+            browserName: 'internet explorer',
+            platform: 'Windows 8.1',
+            version: '11'
+        }
+    };
+
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -31,7 +62,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: process.env.TRAVIS ? ['progress', 'saucelabs'] : ['progress'],
 
 
         // web server port
@@ -53,12 +84,12 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
+        browsers: process.env.TRAVIS ? Object.keys(customLaunchers) :['Chrome'],
 
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,
+        singleRun: process.env.TRAVIS ? true : false,
 
         // Concurrency level
         // how many browser should be started simultaneous
@@ -89,6 +120,10 @@ module.exports = function (config) {
                 'tests/**/*.ts',
                 'jspm_packages/**/*'
             ]
+        },
+
+        sauceLabs: {
+            testName: 'Web App Unit Tests'
         }
     })
 };

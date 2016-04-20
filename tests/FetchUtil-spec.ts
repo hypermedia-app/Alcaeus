@@ -67,7 +67,7 @@ describe('FetchUtil', () => {
 
         it('should fail when resource returns non-success status code', done => {
             window.fetch.withArgs('http://example.com/not/there')
-                .returns(Promise.resolve(Responses.notFound()));
+                .returns(Promise.resolve(Responses.serverError()));
 
             FetchUtil.fetchResource('http://example.com/not/there')
                 .then(done.fail, err => {
@@ -78,6 +78,43 @@ describe('FetchUtil', () => {
                 })
                 .catch(done.fail);
         });
+
+        it('should fail when resource returns not found status code', done => {
+            window.fetch.withArgs('http://example.com/not/there')
+                .returns(Promise.resolve(Responses.notFound()));
+
+            FetchUtil.fetchResource('http://example.com/not/there')
+                .then(res => {
+                    expect(res).toBe(null);
+                    done();
+                })
+                .catch(done.fail);
+        });
+    });
+
+    describe('fetchDocumentation', () => {
+
+        it('should return null if ApiDocumentation returned 404 status', done => {
+            window.fetch.withArgs('http://example.com/doc')
+                .returns(Promise.resolve(Responses.notFound()));
+
+            FetchUtil.fetchDocumentation('http://example.com/doc')
+                .then(doc => {
+                    expect(doc).toBe(null);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should fail if ApiDocumentation request fails', done => {
+            window.fetch.withArgs('http://example.com/doc')
+                .returns(Promise.resolve(Responses.serverError()));
+
+            FetchUtil.fetchDocumentation('http://example.com/doc')
+                .then(done.fail)
+                .catch(done);
+        });
+
     });
 
     afterEach(() => {

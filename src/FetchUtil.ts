@@ -16,21 +16,33 @@ export class FetchUtil {
                     accept: FetchUtil._requestAcceptHeaders
                 }
             })
+            .then(rejectNotFoundStatus)
             .then((res:Response) => {
                 var apiDocsUri = getDocumentationUri(res);
 
                 return getFlattendGraph(res)
                     .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
-            });
+                },
+                () => null);
     }
 
     static fetchDocumentation(uri:string):Promise<Object> {
         return window.fetch(uri, <FetchOptions>{
-            headers: {
-                accept: FetchUtil._requestAcceptHeaders
-            }
-        }).then(getFlattendGraph);
+                headers: {
+                    accept: FetchUtil._requestAcceptHeaders
+                }
+            })
+            .then(rejectNotFoundStatus)
+            .then(getFlattendGraph, () => null);
     }
+}
+
+function rejectNotFoundStatus(res:Response) {
+    if (res.status === 404) {
+        return Promise.reject(null);
+    }
+
+    return res;
 }
 
 function getDocumentationUri(res:Response):string {

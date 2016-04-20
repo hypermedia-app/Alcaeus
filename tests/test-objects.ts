@@ -19,7 +19,7 @@ export namespace Bodies {
             '@id': 'http://example.com/linked'
         }
     };
-    
+
     export var idWithTrailingSlash = {
         '@context': {
             '@vocab': 'http://example.com/vocab#'
@@ -115,10 +115,16 @@ export namespace Responses {
 
     export var ntriples = (ntriples, includeDocsLink = true) => createResponse(ntriples, 'application/n-triples', includeDocsLink);
 
-    export var notFound = () => new Response('', {
-        status: 404,
-        ok: false
-    });
+    export var notFound = negativeResponse(404);
+
+    export var serverError = negativeResponse(500);
+
+    function negativeResponse(status) {
+        return () => new Response('', {
+            status: status,
+            ok: false
+        });
+    }
 
     function createResponse(body:string, contentType:string, includeDocsLink:boolean) {
         var headers = new Headers({
@@ -157,7 +163,7 @@ export namespace Documentations {
                         'title': 'The very important name',
                         'description': 'A short description thereof',
                         'readable': true,
-                        'readable': false,
+                        'writable': false,
                         'required': false,
                         'property': {
                             '@id': 'http://purl.org/dc/elements/1.1/partOf',
@@ -169,7 +175,7 @@ export namespace Documentations {
                         'title': 'The less important name',
                         'description': 'A pretty much longer description test',
                         'readable': true,
-                        'readable': false,
+                        'writable': false,
                         'required': true,
                         'property': {
                             '@id': 'http://schema.org/name',

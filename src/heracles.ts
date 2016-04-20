@@ -22,7 +22,7 @@ class Heracles implements IHeracles {
                             response.apiDocumentationLink,
                             docsObject
                         );
-                    }).then(getRequestedObject(uri, response.resources, this.resourceFactory));
+                    }, () => null).then(getRequestedObject(uri, response.resources, this.resourceFactory));
             })
     }
 }

@@ -6,17 +6,20 @@ import {Hydra} from '../src/heracles';
 import {Resource} from '../src/Resources';
 import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
-import {Bodies, Documentations} from './test-objects';
+import {Bodies, Documentations, Responses} from './test-objects';
 
 describe('Hydra', () => {
 
     beforeEach(() => {
         sinon.spy(Hydra.resourceFactory, 'createResource');
         sinon.stub(FetchUtil, 'fetchResource');
-        sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.resolve(Documentations.classWithOperation));
     });
 
     describe('loadResource', () => {
+
+        beforeEach(() => {
+            sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.resolve(Documentations.classWithOperation));
+        });
 
         it('should return object with matching @id', done => {
             FetchUtil.fetchResource.withArgs('http://example.com/resource')
@@ -179,13 +182,32 @@ describe('Hydra', () => {
                     done();
                 })
                 .catch(done.fail);
-        })
+        });
+    });
+
+    describe('loadResource with missing ApiDocumentation', () => {
+
+        beforeEach(() => {
+            sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.reject(null));
+        });
+
+        it('should succeed even if ApiDocumentation is not available', done => {
+            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse(Bodies.someJsonLd));
+
+            Hydra.loadResource('http://example.com/resource')
+                .then(res => {
+                    expect(res.apiDocumentation).toBe(null);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
     });
 
     afterEach(() => FetchUtil.fetchResource.restore());
-    afterEach(() => FetchUtil.fetchDocumentation.restore());
     afterEach(() => Hydra.resourceFactory.createResource.restore());
-
+    afterEach(() => FetchUtil.fetchDocumentation.restore());
 });
 
 function mockedResponse(resource) {

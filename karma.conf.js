@@ -7,31 +7,17 @@ module.exports = function (config) {
         process.exit(1);
     }
 
-    var customLaunchers = {
-        sl_chrome: {
-            base: 'SauceLabs',
-            browserName: 'chrome',
-            platform: 'Windows 7',
-            version: '35'
-        },
-        sl_firefox: {
-            base: 'SauceLabs',
-            browserName: 'firefox',
-            version: '30'
-        },
-        sl_ios_safari: {
-            base: 'SauceLabs',
-            browserName: 'iphone',
-            platform: 'OS X 10.9',
-            version: '7.1'
-        },
-        sl_ie_11: {
-            base: 'SauceLabs',
-            browserName: 'internet explorer',
-            platform: 'Windows 8.1',
-            version: '11'
-        }
-    };
+    var customLaunchers = new CustomLaunchers();
+
+    customLaunchers
+        .addChrome('35', '36', '44', '45')('Windows 8')
+        .addEdge('13.10586')('Windows 10')
+        .addOpera('12.12')('Windows 7')
+        .addSafari('7.0')('OS X 10.9')
+        .addSafari('8.0')('OS X 10.10')
+        .addSafari('9.0')('OS X 10.11')
+        .addFirefox('6.0', '33', '34')('Windows 8')
+        .addFirefox('6.0', '33', '34')();
 
     config.set({
 
@@ -129,3 +115,36 @@ module.exports = function (config) {
         }
     })
 };
+
+function CustomLaunchers() {
+    var self = this;
+
+    this.addChrome = addBrowser('chrome');
+    this.addEdge = addBrowser('MicrosoftEdge');
+    this.addOpera = addBrowser('opera');
+    this.addSafari = addBrowser('safari');
+    this.addFirefox = addBrowser('firefox');
+
+    function addBrowser(browser) {
+        return function () {
+            var versions = Array.from(arguments);
+            return function (system) {
+                versions.forEach(function (version) {
+                    var browserName = browser + '_' + version + '_' + (system || 'linux').replace(' ', '_');
+
+                    self[browserName] = {
+                        base: 'SauceLabs',
+                        browserName: browser,
+                        version: version
+                    };
+
+                    if (system) {
+                        self[browserName].platform = system;
+                    }
+                });
+
+                return self;
+            };
+        };
+    }
+}

@@ -1,6 +1,6 @@
 !function(e){function r(e,r,t){e in i||(i[e]={name:e,declarative:!0,deps:r,declare:t,normalizedDeps:r})}function t(e){return c[e]||(c[e]={name:e,dependencies:[],exports:{},importers:[]})}function n(r){if(!r.module){var o=r.module=t(r.name),a=r.module.exports,s=r.declare.call(e,function(e,r){if(o.locked=!0,"object"==typeof e)for(var t in e)a[t]=e[t];else a[e]=r;for(var n=0,u=o.importers.length;u>n;n++){var i=o.importers[n];if(!i.locked)for(var s=0;s<i.dependencies.length;++s)i.dependencies[s]===o&&i.setters[s](a)}return o.locked=!1,r},r.name);o.setters=s.setters,o.execute=s.execute;for(var l=0,d=r.normalizedDeps.length;d>l;l++){var f,p=r.normalizedDeps[l],v=i[p],m=c[p];m?f=m.exports:v&&!v.declarative?f=v.esModule:v?(n(v),m=v.module,f=m.exports):f=u(p),m&&m.importers?(m.importers.push(o),o.dependencies.push(m)):o.dependencies.push(null),o.setters[l]&&o.setters[l](f)}}}function o(e){var r={};if("object"==typeof e||"function"==typeof e)if(l){var t;for(var n in e)(t=Object.getOwnPropertyDescriptor(e,n))&&f(r,n,t)}else{var o=e&&e.hasOwnProperty;for(var n in e)(!o||e.hasOwnProperty(n))&&(r[n]=e[n])}return r["default"]=e,f(r,"__useDefault",{value:!0}),r}function a(r,t){var n=i[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,l=n.normalizedDeps.length;l>o;o++){var d=n.normalizedDeps[o];-1==s.call(t,d)&&(i[d]?a(d,t):u(d))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function u(e){if(v[e])return v[e];if("@node/"==e.substr(0,6))return p(e.substr(6));var r=i[e];if(!r)throw"Module "+e+" not present.";return n(i[e]),a(e,[]),i[e]=void 0,r.declarative&&f(r.module.exports,"__esModule",{value:!0}),v[e]=r.declarative?r.module.exports:r.esModule}var i={},s=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},l=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(d){l=!1}var f;!function(){try{Object.defineProperty({},"a",{})&&(f=Object.defineProperty)}catch(e){f=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var c={},p="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,v={"@empty":{}};return function(e,t,n){return function(a){a(function(a){for(var i=0;i<t.length;i++)(function(e,r){r&&r.__esModule?v[e]=r:v[e]=o(r)})(t[i],arguments[i]);n({register:r});var s=u(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)u(e[i]);return s.__useDefault?s["default"]:s})}}}("undefined"!=typeof self?self:global)
 
-(["1"], ["3","4","8","7","c"], function($__System, require) {
+(["1"], ["3","4","8","7","c"], function($__System) {
 
 $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     'use strict';
@@ -12,6 +12,12 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     };
     var li, jsonld_1, Constants;
     var FetchUtil, ExpandedWithDocs, FetchError;
+    function rejectNotFoundStatus(res) {
+        if (res.status === 404) {
+            return Promise.reject(null);
+        }
+        return res;
+    }
     function getDocumentationUri(res) {
         if (res.headers.has(Constants.Headers.Link)) {
             var linkHeaders = res.headers.get(Constants.Headers.Link);
@@ -63,18 +69,21 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
                             accept: FetchUtil._requestAcceptHeaders
                         }
                     })
+                        .then(rejectNotFoundStatus)
                         .then(function (res) {
                         var apiDocsUri = getDocumentationUri(res);
                         return getFlattendGraph(res)
                             .then(function (obj) { return new ExpandedWithDocs(obj, apiDocsUri); });
-                    });
+                    }, function () { return null; });
                 };
                 FetchUtil.fetchDocumentation = function (uri) {
                     return window.fetch(uri, {
                         headers: {
                             accept: FetchUtil._requestAcceptHeaders
                         }
-                    }).then(getFlattendGraph);
+                    })
+                        .then(rejectNotFoundStatus)
+                        .then(getFlattendGraph, function () { return null; });
                 };
                 FetchUtil._requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
                 return FetchUtil;
@@ -267,9 +276,15 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                     configurable: true
                 });
                 Operation.prototype.getExpected = function () {
+                    if (this.expects === linkeddata_vocabs_1.owl.ns + 'Nothing') {
+                        return Promise.reject(new Error('Operation expects nothing'));
+                    }
                     return this._apiDoc.getClass(this.expects);
                 };
                 Operation.prototype.getReturned = function () {
+                    if (this.returns === linkeddata_vocabs_1.owl.ns + 'Nothing') {
+                        return Promise.reject(new Error('Operation returns nothing'));
+                    }
                     return this._apiDoc.getClass(this.returns);
                 };
                 return Operation;
@@ -683,7 +698,7 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var _, FetchUtil_1, ApiDocumentation_1, Constants_1, JsonLdUtil_1, ResourceFactory_1, Resources_1;
-    var Heracles, Hydra;
+    var Heracles, ResourceFactory, Resource, Hydra;
     function getRequestedObject(uri, resources, resourceFactory) {
         return function (apiDocumentation) {
             var resourcified = {};
@@ -705,7 +720,7 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
         }
         var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
         var resource = resourcified[selfId];
-        if (resourcified[selfId] instanceof Resources_1.Resource === false) {
+        if (resourcified[selfId] instanceof Resource === false) {
             resource = resourceFactory.createResource(obj, apiDoc, resourcified);
             resourcified[selfId] = resource;
         }
@@ -757,11 +772,13 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
                         return FetchUtil_1.FetchUtil.fetchDocumentation(response.apiDocumentationLink)
                             .then(function (docsObject) {
                             return new ApiDocumentation_1.ApiDocumentation(_this, response.apiDocumentationLink, docsObject);
-                        }).then(getRequestedObject(uri, response.resources, _this.resourceFactory));
+                        }, function () { return null; }).then(getRequestedObject(uri, response.resources, _this.resourceFactory));
                     });
                 };
                 return Heracles;
             }());
+            exports_1("ResourceFactory", ResourceFactory = ResourceFactory_1.ResourceFactory);
+            exports_1("Resource", Resource = Resources_1.Resource);
             exports_1("Hydra", Hydra = new Heracles());
         }
     }

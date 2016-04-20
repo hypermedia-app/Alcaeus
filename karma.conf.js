@@ -12,6 +12,8 @@ module.exports = function (config) {
     customLaunchers
         .addChrome('35', '36', '44', '45')('Windows 8')
         .addEdge('13.10586')('Windows 10')
+        .addIE('9.0', '10.0', '11.0')('Windows 7')
+        .addIE('9.0', '10.0', '11.0')('Windows 8')
         .addOpera('12.12')('Windows 7')
         .addSafari('7.0')('OS X 10.9')
         .addSafari('8.0')('OS X 10.10')
@@ -124,13 +126,14 @@ function CustomLaunchers() {
     this.addOpera = addBrowser('opera');
     this.addSafari = addBrowser('safari');
     this.addFirefox = addBrowser('firefox');
+    this.addIE = addBrowser('internet explorer');
 
     function addBrowser(browser) {
         return function () {
             var versions = Array.from(arguments);
             return function (system) {
                 versions.forEach(function (version) {
-                    var browserName = browser + '_' + version + '_' + (system || 'linux').replace(' ', '_');
+                    var browserName = browser.replace(' ', '_') + '_' + version + '_' + (system || 'linux').replace(' ', '_');
 
                     self[browserName] = {
                         base: 'SauceLabs',

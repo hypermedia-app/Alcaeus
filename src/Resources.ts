@@ -10,7 +10,7 @@ var _isProcessed = new WeakMap();
 export class Resource implements IHydraResource {
 
     constructor(actualResource, apiDoc:IApiDocumentation, incomingLinks) {
-        Object.assign(this, actualResource);
+        _.extend(this, actualResource);
 
         _apiDocumentation.set(this, apiDoc);
         _incomingLinks.set(this, incomingLinks);

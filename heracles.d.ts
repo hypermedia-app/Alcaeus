@@ -46,6 +46,14 @@ interface IHydraResource extends IResource {
     apiDocumentation:IApiDocumentation;
 }
 
+interface IPartialCollectionView extends IHydraResource {
+    first:IHydraResource;
+    previous:IHydraResource;
+    next:IHydraResource;
+    last:IHydraResource;
+    collection:IHydraResource;
+}
+
 interface IResourceFactory {
     createResource(obj:Object, apiDocumentation:IApiDocumentation, resources):IHydraResource
 }

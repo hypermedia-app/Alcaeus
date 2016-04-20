@@ -59,7 +59,7 @@ export class Resource implements IHydraResource {
     }
 }
 
-export class PartialCollectionView extends Resource {
+export class PartialCollectionView extends Resource implements IPartialCollectionView {
 
     @nonenumerable
     get first() { return this[Core.Vocab.first] || null; }

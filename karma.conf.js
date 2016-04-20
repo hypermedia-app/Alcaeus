@@ -10,7 +10,7 @@ module.exports = function (config) {
     var customLaunchers = new CustomLaunchers();
 
     customLaunchers
-        .addChrome('35', '36', '44', '45')('Windows 8')
+        .addChrome('35', '36', '42', '43', '44', '45')('Windows 8')
         .addEdge('13.10586')('Windows 10')
         .addIE('9.0', '10.0', '11.0')('Windows 7')
         .addIE('9.0', '10.0', '11.0')('Windows 8')
@@ -18,8 +18,8 @@ module.exports = function (config) {
         .addSafari('7.0')('OS X 10.9')
         .addSafari('8.0')('OS X 10.10')
         .addSafari('9.0')('OS X 10.11')
-        .addFirefox('6.0', '33', '34')('Windows 8')
-        .addFirefox('6.0', '33', '34')();
+        .addFirefox('6.0', '33', '34', '38', '39')('Windows 8')
+        .addFirefox('6.0', '33', '34', '38', '39')();
 
     config.set({
 
@@ -49,7 +49,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['progress', 'saucelabs'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'saucelabs'] : ['progress'],
 
 
         // web server port

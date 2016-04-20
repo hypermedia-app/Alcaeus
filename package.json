@@ -39,7 +39,9 @@
       "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@^0.10.0",
       "jsonld": "npm:jsonld@^0.4.6",
       "li": "npm:li@^1.0.1",
-      "lodash": "npm:lodash@^4.9.0"
+      "lodash": "npm:lodash@^4.9.0",
+      "weakmap": "npm:weakmap@^0.0.6",
+      "whatwg-fetch": "npm:whatwg-fetch@^0.11.0"
     },
     "devDependencies": {
       "sinon": "npm:sinon@^1.17.3",

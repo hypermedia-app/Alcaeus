@@ -29,6 +29,8 @@ System.config({
     "lodash": "npm:lodash@4.9.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
+    "weakmap": "npm:weakmap@0.0.6",
+    "whatwg-fetch": "npm:whatwg-fetch@0.11.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
     },

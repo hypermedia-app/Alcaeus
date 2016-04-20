@@ -9,6 +9,14 @@ import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {Resource as ResourceCtor} from "./Resources";
 
+if(!window.fetch) {
+    System.import('whatwg-fetch');
+}
+
+if(!WeakMap || !WeakMap.constructor) {
+    System.import('weakmap');
+}
+
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
 

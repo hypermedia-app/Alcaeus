@@ -10,12 +10,11 @@ module.exports = function (config) {
     var customLaunchers = new CustomLaunchers();
 
     customLaunchers
-        .addChrome('35', '36', '42', '43', '44', '45')('Windows 8')
+        .addChrome('36', '42', '43', '44', '45')('Windows 8')
         .addEdge('13.10586')('Windows 10')
         .addIE('9.0', '10.0', '11.0')('Windows 7')
         .addIE('10.0')('Windows 8')
         .addIE('11.0')('Windows 8.1')
-        .addOpera('12.12')('Windows 7')
         .addSafari('7.0')('OS X 10.9')
         .addSafari('8.0')('OS X 10.10')
         .addSafari('9.0')('OS X 10.11')
@@ -130,22 +129,31 @@ function CustomLaunchers() {
     this.addIE = addBrowser('internet explorer');
 
     function addBrowser(browser) {
+        var browserName = browser.replace(' ', '_');
+        
         return function () {
             var versions = Array.from(arguments);
             return function (system) {
+                var systemName = (system || 'linux').replace(' ', '_');
+                
                 versions.forEach(function (version) {
-                    var browserName = browser.replace(' ', '_') + '_' + version + '_' + (system || 'linux').replace(' ', '_');
+                    var seleniumKey = browserName + '_' + version + '_' + systemName;
 
-                    self[browserName] = {
+                    self[seleniumKey] = {
                         base: 'SauceLabs',
-                        browserName: browser,
+                        seleniumKey: browser,
                         version: version
                     };
 
                     if (system) {
-                        self[browserName].platform = system;
+                        self[seleniumKey].platform = system;
                     }
                 });
+
+                self[browserName + '_' + lastest + '_' + systemName] = {
+                    base: 'SauceLabs',
+                    seleniumKey: browser
+                };
 
                 return self;
             };

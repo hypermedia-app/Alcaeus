@@ -1,4 +1,4 @@
-# heracles
+# heracles [![Build Status](https://travis-ci.org/wikibus/heracles.svg?branch=master)](https://travis-ci.org/wikibus/heracles)
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 
@@ -6,7 +6,7 @@ Heracles is a Promise-based library for consuming Hydra APIs
 
 ## Browser support
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://travis-ci.org/wikibus/heracles)
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://saucelabs.com/u/heracles-tcode)
 
 ## Installation
 

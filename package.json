@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs - core-decorators dist/heracles.js --skip-source-maps --global-name heracles --format amd"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs - whatwg-fetch - core-js - core-decorators dist/heracles.js --skip-source-maps --global-name heracles --format amd"
   },
   "repository": {
     "type": "git",
@@ -36,11 +36,11 @@
     },
     "dependencies": {
       "core-decorators": "npm:core-decorators@^0.12.2",
+      "core-js": "npm:core-js@^2.2.2",
       "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@^0.10.0",
       "jsonld": "npm:jsonld@^0.4.6",
       "li": "npm:li@^1.0.1",
       "lodash": "npm:lodash@^4.9.0",
-      "weakmap": "npm:weakmap@^0.0.6",
       "whatwg-fetch": "npm:whatwg-fetch@^0.11.0"
     },
     "devDependencies": {

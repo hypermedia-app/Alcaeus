@@ -583,7 +583,7 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
             _isProcessed = new WeakMap();
             Resource = (function () {
                 function Resource(actualResource, apiDoc, incomingLinks) {
-                    Object.assign(this, actualResource);
+                    _.extend(this, actualResource);
                     _apiDocumentation.set(this, apiDoc);
                     _incomingLinks.set(this, incomingLinks);
                     _isProcessed.set(this, false);

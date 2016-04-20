@@ -150,7 +150,7 @@ function CustomLaunchers() {
                     }
                 });
 
-                self[browserName + '_' + lastest + '_' + systemName] = {
+                self[browserName + '_latest_' + systemName] = {
                     base: 'SauceLabs',
                     seleniumKey: browser
                 };

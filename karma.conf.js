@@ -19,7 +19,14 @@ module.exports = function (config) {
         .addSafari('8.0')('OS X 10.10')
         .addSafari('9.0')('OS X 10.11')
         .addFirefox('6.0', '33', '34', '38', '39')('Windows 8')
-        .addFirefox('6.0', '33', '34', '38', '39')();
+        .addFirefox('6.0', '33', '34', '38', '39')()
+        .addLatest('chrome', 'OS X 10.11')
+        .addLatest('chrome', 'Windows 8')
+        .addLatest('chrome', 'linux')
+        .addLatest('firefox', 'linux')
+        .addLatest('firefox', 'Windows 10')
+        .addLatest('firefox', 'OS X 10.11')
+        .addLatest('MicrosoftEdge', 'Windows 10');
 
     config.set({
 
@@ -127,6 +134,16 @@ function CustomLaunchers() {
     this.addSafari = addBrowser('safari');
     this.addFirefox = addBrowser('firefox');
     this.addIE = addBrowser('internet explorer');
+    
+    function addLatest(browser, system) {
+        var browserName = browser.replace(' ', '_');
+        var systemName = system.replace(' ', '_');
+
+        self[browserName + '_latest_' + systemName] = {
+            base: 'SauceLabs',
+            seleniumKey: browser
+        };
+    }
 
     function addBrowser(browser) {
         var browserName = browser.replace(' ', '_');
@@ -149,11 +166,6 @@ function CustomLaunchers() {
                         self[seleniumKey].platform = system;
                     }
                 });
-
-                self[browserName + '_latest_' + systemName] = {
-                    base: 'SauceLabs',
-                    seleniumKey: browser
-                };
 
                 return self;
             };

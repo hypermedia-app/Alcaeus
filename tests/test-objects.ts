@@ -187,6 +187,4 @@ export namespace Documentations {
             }
         ]
     };
-
-    //export var operationSupportedByProperty =
 }

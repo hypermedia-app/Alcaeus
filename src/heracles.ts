@@ -1,6 +1,8 @@
 'use strict';
 /// <reference path="../typings/browser.d.ts" />
 
+import * as fetch from 'whatwg-fetch';
+import * as weakmap from 'weakmap';
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";
@@ -8,14 +10,6 @@ import {JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {Resource as ResourceCtor} from "./Resources";
-
-if(!window.fetch) {
-    System.import('whatwg-fetch');
-}
-
-if(!WeakMap || !WeakMap.constructor) {
-    System.import('weakmap');
-}
 
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();

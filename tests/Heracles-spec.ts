@@ -6,6 +6,7 @@ import {Resource} from '../src/Resources';
 import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations, Responses} from './test-objects';
+//noinspection TypeScriptCheckImport
 import {default as is} from 'core-js/es6/object';
 
 describe('Hydra', () => {

@@ -1,8 +1,6 @@
 'use strict';
 /// <reference path="../typings/browser.d.ts" />
 
-import * as fetch from 'whatwg-fetch';
-import * as weakmap from 'weakmap';
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {ApiDocumentation} from "./ApiDocumentation";

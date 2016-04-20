@@ -2,6 +2,7 @@
 import * as _ from 'lodash';
 import { nonenumerable } from 'core-decorators';
 import {JsonLd, Core} from './Constants';
+import {default} from 'core-js/es6/weak-map';
 
 var _apiDocumentation = new WeakMap();
 var _incomingLinks = new WeakMap();

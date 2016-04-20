@@ -135,26 +135,23 @@ function CustomLaunchers() {
     this.addFirefox = addBrowser('firefox');
     this.addIE = addBrowser('internet explorer');
     
-    function addLatest(browser, system) {
-        var browserName = browser.replace(' ', '_');
-        var systemName = system.replace(' ', '_');
-
-        self[browserName + '_latest_' + systemName] = {
+    this.addLatest = function(browser, system) {
+        self[browser + '_latest_' + system] = {
             base: 'SauceLabs',
-            seleniumKey: browser
+            seleniumKey: browser,
+            platform: system
         };
+
+        return self;
     }
 
-    function addBrowser(browser) {
-        var browserName = browser.replace(' ', '_');
-        
+    function addBrowser(browser) {        
         return function () {
             var versions = Array.from(arguments);
             return function (system) {
-                var systemName = (system || 'linux').replace(' ', '_');
                 
                 versions.forEach(function (version) {
-                    var seleniumKey = browserName + '_' + version + '_' + systemName;
+                    var seleniumKey = browser + '_' + version + '_' + system;
 
                     self[seleniumKey] = {
                         base: 'SauceLabs',

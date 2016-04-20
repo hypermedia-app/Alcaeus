@@ -155,7 +155,7 @@ function CustomLaunchers() {
 
                     self[seleniumKey] = {
                         base: 'SauceLabs',
-                        seleniumKey: browser,
+                        browserName: browser,
                         version: version
                     };
 

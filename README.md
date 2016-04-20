@@ -8,6 +8,14 @@ Heracles is a Promise-based library for consuming Hydra APIs
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://saucelabs.com/u/heracles-tcode)
 
+You will need polyfills for older browsers:
+
+|                     | Chrome | Firefox | IExplore | Safari | Opera |
+| -------------       |--------|---------|----------|--------|-------|
+| [window.fetch][p1]  | <42    | <39     | :x:      | :x:    | <29   |
+| [Object.assign][p2] | <45    | <34     | :x:      | <9     | <32   |
+| [WeakMap][p3]       | <36    | <6      | <11      | <7.1   | <23   |
+
 ## Installation
 
 ``` bash
@@ -41,3 +49,7 @@ Hydra.loadResource('http://example.com/resource')
 ## License
 
 MIT
+
+[p1]: https://github.com/github/fetch
+[p2]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+[p3]: https://developer.mozilla.org/pl/docs/Web/JavaScript/Reference/Global_Objects/WeakMap

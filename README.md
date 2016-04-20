@@ -6,7 +6,7 @@ Heracles is a Promise-based library for consuming Hydra APIs
 
 ## Browser support
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://saucelabs.com/u/heracles-tcode)
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://travis-ci.org/wikibus/heracles)
 
 ## Installation
 

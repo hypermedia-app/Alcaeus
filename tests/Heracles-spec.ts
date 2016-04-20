@@ -1,6 +1,5 @@
 'use strict';
 import * as sinon from 'sinon';
-//noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
 import {Hydra} from '../src/heracles';
 import {Resource} from '../src/Resources';

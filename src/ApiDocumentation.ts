@@ -1,7 +1,6 @@
 'use strict';
 /// <reference path="../typings/browser.d.ts" />
 
-//noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport

@@ -8,6 +8,7 @@
     "sinon": "registry:npm/sinon#1.16.0+20160309002336"
   },
   "dependencies": {
+    "jsonld": "github:tpluscode/jsonld-typings/jsonld.d.ts",
     "lodash": "registry:npm/lodash#4.0.0+20160305082308"
   }
 }

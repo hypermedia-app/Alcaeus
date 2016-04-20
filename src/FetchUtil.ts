@@ -2,7 +2,6 @@
 
 //noinspection TypeScriptCheckImport
 import * as li from 'li';
-//noinspection TypeScriptCheckImport
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 

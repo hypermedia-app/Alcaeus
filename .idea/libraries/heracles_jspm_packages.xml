@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="heracles jspm_packages" type="javaScript">
+    <properties>
+      <option name="frameworkName" value="jspm_packages" />
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/jspm_packages" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/jspm_packages" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

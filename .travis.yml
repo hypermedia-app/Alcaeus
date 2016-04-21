@@ -1,4 +1,5 @@
 language: node_js
 before_install:
-  - npm install -g jspm karma karma-jasmine jasmine-core karma-systemjs karma-sauce-launcher systemjs
+  - npm install -g jspm
+  - npm install karma karma-jasmine jasmine-core karma-systemjs karma-sauce-launcher systemjs
 install: jspm install

@@ -1,5 +1,6 @@
 /// <reference path="../typings/main.d.ts" />
 
+import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
@@ -12,7 +13,7 @@ describe('ApiDocumentation', () => {
     
     describe('getting operations', () => {
 
-        it('should get operation\'s method and description given a type', done => {
+        it('should get operation\'s method and description given a type', (done:any) => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
@@ -25,7 +26,7 @@ describe('ApiDocumentation', () => {
                 .catch(done.fail);
         });
 
-        it('should return empty array for missing supported class', done => {
+        it('should return empty array for missing supported class', (done:any) => {
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             docs.getOperations('http://example.com/api#UndomcumentedClass')
@@ -41,7 +42,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting properties', () => {
 
-        it('should get properties for a given class type', done => {
+        it('should get properties for a given class type', (done:any) => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
@@ -53,7 +54,7 @@ describe('ApiDocumentation', () => {
                 .catch(done.fail);
         });
 
-        it('should return empty array for missing supported class', done => {
+        it('should return empty array for missing supported class', (done:any) => {
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             docs.getProperties('http://example.com/api#UndomcumentedClass')
@@ -69,7 +70,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting classes', () => {
 
-        it('should return classes from documentation', done => {
+        it('should return classes from documentation', (done:any) => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
@@ -82,7 +83,7 @@ describe('ApiDocumentation', () => {
                 .catch(done.fail);
         });
 
-        it('should return selected class by @id', done => {
+        it('should return selected class by @id', (done:any) => {
 
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
@@ -94,7 +95,7 @@ describe('ApiDocumentation', () => {
                 .catch(done.fail);
         });
 
-        it('should return null for missing supported class', done => {
+        it('should return null for missing supported class', (done:any) => {
             var docs = new ApiDocumentation(heracles, '', Documentations.classWithOperation);
 
             docs.getClass('http://example.com/api#UndomcumentedClass')
@@ -109,14 +110,14 @@ describe('ApiDocumentation', () => {
 
     describe('getting entrypoint', () => {
 
-        var heracles:IHeracles;
+        var heracles;
         beforeEach(() => {
-            heracles = <IHeracles>{
+            heracles = {
                 loadResource: sinon.stub()
             }
         });
 
-        it('should invoke Resource.load', done => {
+        it('should invoke Resource.load', (done:any) => {
             var docs = new ApiDocumentation(heracles, 'http://api.example.com.doc', Documentations.classWithOperation);
             heracles.loadResource.returns(Promise.resolve(null));
 

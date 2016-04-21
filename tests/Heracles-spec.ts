@@ -1,4 +1,5 @@
 'use strict';
+import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
 import {Hydra} from '../src/heracles';
@@ -11,19 +12,21 @@ import {default as is} from 'core-js/es6/object';
 
 describe('Hydra', () => {
 
+    var fetchResource, fetchDocumentation, createResource:sinon.SinonSpy;
+    
     beforeEach(() => {
-        sinon.spy(Hydra.resourceFactory, 'createResource');
-        sinon.stub(FetchUtil, 'fetchResource');
+        createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
+        fetchResource = sinon.stub(FetchUtil, 'fetchResource');
     });
 
     describe('loadResource', () => {
 
         beforeEach(() => {
-            sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.resolve(Documentations.classWithOperation));
+            fetchDocumentation = sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.resolve(Documentations.classWithOperation));
         });
 
-        it('should return object with matching @id', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should return object with matching @id', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource')
@@ -35,8 +38,8 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should return object with matching @id, trailing slash ignored', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource/')
+        it('should return object with matching @id, trailing slash ignored', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource/')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource/')
@@ -47,8 +50,8 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should return object with matching @id, trailing slash ignored', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should return object with matching @id, trailing slash ignored', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.idWithTrailingSlash));
 
             Hydra.loadResource('http://example.com/resource')
@@ -59,20 +62,20 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should load documentation', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should load documentation', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    expect(FetchUtil.fetchDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true);
+                    expect(fetchDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true);
                     done();
                 })
                 .catch(done.fail);
         });
 
-        it('should turn JSON-LD into a graph of objects', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should turn JSON-LD into a graph of objects', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource')
@@ -84,8 +87,8 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should turn object with arrays into matching object graph', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should turn object with arrays into matching object graph', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
             Hydra.loadResource('http://example.com/resource')
@@ -99,8 +102,8 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should make each nested object a Resource', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should make each nested object a Resource', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
             Hydra.loadResource('http://example.com/resource')
@@ -112,12 +115,12 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should load parent of collection view as Resource', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource?page=3')
+        it('should load parent of collection view as Resource', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource?page=3')
                 .returns(mockedResponse(Bodies.hydraCollectionWithView));
 
             Hydra.loadResource('http://example.com/resource?page=3')
-                .then(res => {
+                .then((res:IPartialCollectionView) => {
                     expect(res.collection).toBeDefined();
                     expect(res.collection instanceof Resource)
                         .toBe(true, 'Actual type is: ' + res.collection.constructor.name);
@@ -126,8 +129,8 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should fail when resource with given @id doesn\'t exist in the representation', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/not/there')
+        it('should fail when resource with given @id doesn\'t exist in the representation', (done:any) =>{
+            fetchResource.withArgs('http://example.com/not/there')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/not/there')
@@ -138,8 +141,8 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should discover incoming links for resources', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should discover incoming links for resources', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource')
@@ -154,24 +157,24 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should pass each object through ResourceFactory', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should pass each object through ResourceFactory', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
             Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    var ids = _.map(Hydra.resourceFactory.createResource.getCalls(), call => {
+                    var ids = _.map(createResource.getCalls(), call => {
                         return call.args[0]['@id'];
                     });
-                    expect(Hydra.resourceFactory.createResource.callCount)
+                    expect(createResource.callCount)
                         .toBe(6, 'Actual calls for: ' + ids);
                     done();
                 })
                 .catch(done.fail);
         });
 
-        it('should load resource with deep blank node structure', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/root')
+        it('should load resource with deep blank node structure', (done:any) => {
+            fetchResource.withArgs('http://example.com/root')
                 .returns(mockedResponse(Bodies.deepBlankNodes));
 
             Hydra.loadResource('http://example.com/root')
@@ -192,8 +195,8 @@ describe('Hydra', () => {
             sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.reject(null));
         });
 
-        it('should succeed even if ApiDocumentation is not available', done => {
-            FetchUtil.fetchResource.withArgs('http://example.com/resource')
+        it('should succeed even if ApiDocumentation is not available', (done:any) =>{
+            fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
 
             Hydra.loadResource('http://example.com/resource')
@@ -206,9 +209,9 @@ describe('Hydra', () => {
 
     });
 
-    afterEach(() => FetchUtil.fetchResource.restore());
-    afterEach(() => Hydra.resourceFactory.createResource.restore());
-    afterEach(() => FetchUtil.fetchDocumentation.restore());
+    afterEach(() => fetchResource.restore());
+    afterEach(() => createResource.restore());
+    afterEach(() => fetchDocumentation.restore());
 });
 
 function mockedResponse(resource) {

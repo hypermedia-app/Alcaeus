@@ -16,7 +16,7 @@ describe('Operation', () => {
         'method': 'TRACE'
     });
 
-    beforeEach(() => apiDoc = new ApiDocumentation({}, '', {}));
+    beforeEach(() => apiDoc = new ApiDocumentation(<IHeracles>{}, '', {}));
 
     it('should expose operation method', () => {
         var op = new Operation(operationJsonLd, apiDoc);
@@ -38,7 +38,7 @@ describe('Operation', () => {
 
     describe('getExpected', () => {
 
-        it('should expose expected class promise', done => {
+        it('should expose expected class promise', (done:any) => {
             operationJsonLd.expects = 'http://example.com/Something';
             var op = new Operation(operationJsonLd, apiDoc);
             sinon.spy(apiDoc, 'getClass');
@@ -51,7 +51,7 @@ describe('Operation', () => {
                 .catch(done.fail);
         });
 
-        it('should reject if Operation expects owl:Nothing', done => {
+        it('should reject if Operation expects owl:Nothing', (done:any) => {
             var op = new Operation(operationJsonLd, apiDoc);
             sinon.spy(apiDoc, 'getClass');
             
@@ -67,7 +67,7 @@ describe('Operation', () => {
 
     describe('getExpected', () => {
 
-        it('should expose returned class promise', done => {
+        it('should expose returned class promise', (done:any) => {
             var op = new Operation(operationJsonLd, apiDoc);
             sinon.spy(apiDoc, 'getClass');
 
@@ -79,7 +79,7 @@ describe('Operation', () => {
                 .catch(done.fail);
         });
 
-        it('should reject in Operation return owl:Nothing', done => {
+        it('should reject in Operation return owl:Nothing', (done:any) => {
             operationJsonLd.returns = 'http://www.w3.org/2002/07/owl#Nothing';
             var op = new Operation(operationJsonLd, apiDoc);
             sinon.spy(apiDoc, 'getClass');

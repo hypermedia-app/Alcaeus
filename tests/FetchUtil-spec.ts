@@ -3,8 +3,9 @@
 import * as sinon from 'sinon';
 import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
+import 'whatwg-fetch';
 
-System.import('whatwg-fetch').then(() => {
+System.import('').then(() => {
 
     describe('FetchUtil', () => {
 
@@ -14,7 +15,7 @@ System.import('whatwg-fetch').then(() => {
 
         describe('fetchResource', () => {
 
-            it('should load resource with RDF accept header', done => {
+            it('should load resource with RDF accept header', (done:any) => {
                 window.fetch.withArgs('http://example.com/resource')
                     .returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
 
@@ -31,7 +32,7 @@ System.import('whatwg-fetch').then(() => {
                     .catch(done.fail);
             });
 
-            it('should expand json-ld', done => {
+            it('should expand json-ld', (done:any) => {
                 window.fetch.withArgs('http://example.com/resource')
                     .returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, false)));
 
@@ -43,7 +44,7 @@ System.import('whatwg-fetch').then(() => {
                     .catch(done.fail);
             });
 
-            it('should get documentation link', done => {
+            it('should get documentation link', (done:any) => {
                 window.fetch.withArgs('http://example.com/resource')
                     .returns(Promise.resolve(Responses.jsonLd(Bodies.someJsonLd, true)));
 
@@ -55,7 +56,7 @@ System.import('whatwg-fetch').then(() => {
                     .catch(done.fail);
             });
 
-            it('should parse non-json-ld response', done => {
+            it('should parse non-json-ld response', (done:any) => {
                 window.fetch.withArgs('http://example.com/resource')
                     .returns(Promise.resolve(Responses.ntriples(Bodies.ntriples, false)));
 
@@ -70,7 +71,7 @@ System.import('whatwg-fetch').then(() => {
                     });
             });
 
-            it('should fail when resource returns non-success status code', done => {
+            it('should fail when resource returns non-success status code', (done:any) => {
                 window.fetch.withArgs('http://example.com/not/there')
                     .returns(Promise.resolve(Responses.serverError()));
 
@@ -84,7 +85,7 @@ System.import('whatwg-fetch').then(() => {
                     .catch(done.fail);
             });
 
-            it('should fail when resource returns not found status code', done => {
+            it('should fail when resource returns not found status code', (done:any) => {
                 window.fetch.withArgs('http://example.com/not/there')
                     .returns(Promise.resolve(Responses.notFound()));
 
@@ -99,7 +100,7 @@ System.import('whatwg-fetch').then(() => {
 
         describe('fetchDocumentation', () => {
 
-            it('should return null if ApiDocumentation returned 404 status', done => {
+            it('should return null if ApiDocumentation returned 404 status', (done:any) => {
                 window.fetch.withArgs('http://example.com/doc')
                     .returns(Promise.resolve(Responses.notFound()));
 
@@ -111,7 +112,7 @@ System.import('whatwg-fetch').then(() => {
                     .catch(done.fail);
             });
 
-            it('should fail if ApiDocumentation request fails', done => {
+            it('should fail if ApiDocumentation request fails', (done:any) => {
                 window.fetch.withArgs('http://example.com/doc')
                     .returns(Promise.resolve(Responses.serverError()));
 

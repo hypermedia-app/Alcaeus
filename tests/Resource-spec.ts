@@ -26,35 +26,37 @@ describe('Resource', () => {
     
     describe('getOperations', () => {
 
-        it('should combine operations from class and property', done => {
+        it('should combine operations from class and property', (done:any) => {
+            var getOperations = sinon.stub();
             var apiDoc = <IApiDocumentation>{
-                getOperations: sinon.stub()
+                getOperations: getOperations
             };
-            apiDoc.getOperations.returns(Promise.resolve([]));
+            getOperations.returns(Promise.resolve([]));
             var resource = new Resource(Bodies.someJsonLdExpanded, apiDoc, [
                 ['http://example.com/vocab#Resource', 'http://example.com/vocab#other']
             ]);
 
             resource.getOperations()
                 .then(() => {
-                    expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
-                    expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#Resource', 'http://example.com/vocab#other')).toBe(true);
+                    expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
+                    expect(getOperations.calledWithExactly('http://example.com/vocab#Resource', 'http://example.com/vocab#other')).toBe(true);
                     done();
                 })
                 .catch(done.fail);
         });
 
-        it('should combine operations for multiple @types', done => {
+        it('should combine operations for multiple @types', (done:any) => {
+            var getOperations = sinon.stub();
             var apiDoc = <IApiDocumentation>{
-                getOperations: sinon.stub()
+                getOperations: getOperations
             };
-            apiDoc.getOperations.returns(Promise.resolve([]));
+            getOperations.returns(Promise.resolve([]));
             var resource = new Resource(Bodies.multipleTypesExpanded, apiDoc, [ ]);
 
             resource.getOperations()
                 .then(() => {
-                    expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
-                    expect(apiDoc.getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
+                    expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
+                    expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
                     done();
                 })
                 .catch(done.fail);

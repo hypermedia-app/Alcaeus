@@ -54,7 +54,7 @@ describe('DocumentedResource', () => {
         expect(op.description).toBe('The title descr with schema');
     });
 
-    it('should expose raw operation as promise of compacted object', done => {
+    it('should expose raw operation as promise of compacted object', (done:any) => {
         var op = new DocumentedResource(hydraDescriptionJsonLd);
 
         op.compact()
@@ -66,7 +66,7 @@ describe('DocumentedResource', () => {
             .catch(done.fail);
     });
 
-    it('should expose raw operation as compactable promise', done => {
+    it('should expose raw operation as compactable promise', (done:any) => {
         var op = new DocumentedResource(hydraDescriptionJsonLd);
         var customContext = {
             hydra: 'http://www.w3.org/ns/hydra/core#',

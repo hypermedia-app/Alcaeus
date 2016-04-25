@@ -32,7 +32,7 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
             return Promise.reject(new FetchError(res));
         }
         if (mediaType === Constants.MediaTypes.jsonLd) {
-            return res.json().then(flatten);
+            return res.json().then(flatten(res.url));
         }
         else {
             if (mediaType === Constants.MediaTypes.ntriples ||
@@ -40,13 +40,20 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
                 mediaType = 'application/nquads';
             }
             return res.text().then(function (rdf) {
-                return jsonld_1.promises.fromRDF(rdf, { format: mediaType }).then(flatten);
+                return jsonld_1.promises.fromRDF(rdf, { format: mediaType }).then(flatten(res.url));
             });
         }
     }
-    function flatten(json) {
-        return jsonld_1.promises.flatten(json, {})
-            .then(function (flattened) { return flattened[Constants.JsonLd.Graph]; });
+    function flatten(url) {
+        return function (json) {
+            var opts = {};
+            if (url) {
+                opts.base = url;
+            }
+            return jsonld_1.promises.expand(json, opts)
+                .then(function (expanded) { return jsonld_1.promises.flatten(expanded, {}); })
+                .then(function (flattened) { return flattened[Constants.JsonLd.Graph]; });
+        };
     }
     return {
         setters:[

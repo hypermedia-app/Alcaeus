@@ -4,6 +4,7 @@
 import * as li from 'li';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
+import {FlatteningOptions} from "jsonld";
 
 export class FetchUtil {
     static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
@@ -17,10 +18,10 @@ export class FetchUtil {
             })
             .then(rejectNotFoundStatus)
             .then((res:Response) => {
-                var apiDocsUri = getDocumentationUri(res);
+                    var apiDocsUri = getDocumentationUri(res);
 
-                return getFlattendGraph(res)
-                    .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+                    return getFlattendGraph(res)
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
                 },
                 () => null);
     }
@@ -87,7 +88,7 @@ function getFlattendGraph(res:Response) {
     }
 
     if (mediaType === Constants.MediaTypes.jsonLd) {
-        return res.json().then(flatten);
+        return res.json().then(flatten(res.url));
     } else {
 
         if (mediaType === Constants.MediaTypes.ntriples ||
@@ -96,12 +97,20 @@ function getFlattendGraph(res:Response) {
         }
 
         return res.text().then(rdf => {
-            return jsonld.fromRDF(rdf, {format: mediaType}).then(flatten);
+            return jsonld.fromRDF(rdf, {format: mediaType}).then(flatten(res.url));
         });
     }
 }
 
-function flatten(json) {
-    return jsonld.flatten(json, {})
-        .then(flattened => flattened[Constants.JsonLd.Graph]);
+function flatten(url) {
+    return json => {
+        var opts:FlatteningOptions = {};
+        if (url) {
+            opts.base = url;
+        }
+
+        return jsonld.expand(json, opts)
+            .then(expanded => jsonld.flatten(expanded, {}))
+            .then(flattened => flattened[Constants.JsonLd.Graph]);
+    }
 }

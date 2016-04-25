@@ -57,3 +57,5 @@ interface IPartialCollectionView extends IHydraResource {
 interface IResourceFactory {
     createResource(obj:Object, apiDocumentation:IApiDocumentation, resources):IHydraResource
 }
+
+var Hydra:IHeracles;

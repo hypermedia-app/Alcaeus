@@ -131,7 +131,7 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var jsonld_1, _, linkeddata_vocabs_1, Constants_1, JsonLdUtil_1;
-    var ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
+    var flattenedDocs, ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
     return {
         setters:[
             function (jsonld_1_1) {
@@ -150,6 +150,7 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                 JsonLdUtil_1 = JsonLdUtil_1_1;
             }],
         execute: function() {
+            flattenedDocs = new WeakMap();
             ApiDocumentation = (function () {
                 function ApiDocumentation(heracles, docId, apiDoc) {
                     this.id = docId;
@@ -212,8 +213,15 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
                     });
                 };
                 ApiDocumentation.prototype._getFlattened = function () {
+                    var _this = this;
+                    if (flattenedDocs.has(this)) {
+                        return Promise.resolve(flattenedDocs.get(this));
+                    }
                     return jsonld_1.promises.flatten(this._original, Constants_1.Core.Context)
-                        .then(function (flat) { return flat[Constants_1.JsonLd.Graph]; });
+                        .then(function (flat) {
+                        flattenedDocs.set(_this, flat[Constants_1.JsonLd.Graph]);
+                        return flat[Constants_1.JsonLd.Graph];
+                    });
                 };
                 return ApiDocumentation;
             }());

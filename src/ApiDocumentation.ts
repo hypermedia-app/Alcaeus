@@ -8,6 +8,8 @@ import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 
+var flattenedDocs = new WeakMap();
+
 export class ApiDocumentation implements IApiDocumentation {
     id:string;
     private _original;
@@ -81,8 +83,15 @@ export class ApiDocumentation implements IApiDocumentation {
     }
 
     _getFlattened() {
+        if(flattenedDocs.has(this)) {
+            return Promise.resolve(flattenedDocs.get(this));
+        }
+
         return jsonld.flatten(this._original, Core.Context)
-            .then(flat => flat[JsonLd.Graph]);
+            .then(flat => {
+                flattenedDocs.set(this, flat[JsonLd.Graph]);
+                return flat[JsonLd.Graph];
+            });
     }
 }
 

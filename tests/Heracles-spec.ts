@@ -187,6 +187,27 @@ describe('Hydra', () => {
                 })
                 .catch(done.fail);
         });
+
+        it('should return typed string literals as their values', done => {
+            fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse(Bodies.typedLiteral));
+
+            Hydra.loadResource('http://example.com/resource').then(res => {
+                expect(res['http://schema.org/image']['http://schema.org/contentUrl'])
+                    .toBe('http://wikibus-test.gear.host/book/1936/image');
+                done();
+            }).catch(done.fail);
+        });
+
+        it('should return typed numeric literals as their values', done => {
+            fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse(Bodies.typedNumericLiteral));
+
+            Hydra.loadResource('http://example.com/resource').then(res => {
+                expect(res['http://schema.org/age']).toBe(21);
+                done();
+            }).catch(done.fail);
+        });
     });
 
     describe('loadResource with missing ApiDocumentation', () => {

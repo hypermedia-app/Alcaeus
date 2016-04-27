@@ -57,6 +57,10 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
     if (_.isObject(obj) === false) {
         return obj;
     }
+    
+    if (obj[JsonLd.Value]){
+        return obj[JsonLd.Value];
+    }
 
     var selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
 

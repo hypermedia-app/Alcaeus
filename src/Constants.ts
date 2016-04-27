@@ -71,6 +71,7 @@ export namespace JsonLd {
     export var Graph = '@graph';
     export var Context = '@context';
     export var Id = '@id';
+    export var Value = '@value';
     export var Type = '@type';
 }
 

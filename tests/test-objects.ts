@@ -42,6 +42,24 @@ export namespace Bodies {
         }
     };
 
+    export var typedLiteral = {
+        "@id": "http://example.com/resource",
+        "http://schema.org/image": {
+            "http://schema.org/contentUrl": {
+                "@type": "http://schema.org/URL",
+                "@value": "http://wikibus-test.gear.host/book/1936/image"
+            }
+        }
+    };
+
+    export var typedNumericLiteral = {
+        "@id": "http://example.com/resource",
+        "http://schema.org/age": {
+            "@type": xsd.integer,
+            "@value": 21
+        }
+    };
+
     export var multipleTypesExpanded = {
         '@id': 'http://example.com/resource',
         '@type': [

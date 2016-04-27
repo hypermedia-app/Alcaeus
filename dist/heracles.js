@@ -547,6 +547,7 @@ $__System.register("5", [], function(exports_1, context_1) {
                 JsonLd.Graph = '@graph';
                 JsonLd.Context = '@context';
                 JsonLd.Id = '@id';
+                JsonLd.Value = '@value';
                 JsonLd.Type = '@type';
             })(JsonLd = JsonLd || (JsonLd = {}));
             exports_1("JsonLd", JsonLd);
@@ -732,6 +733,9 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
     function resourcify(obj, resourcified, apiDoc, resourceFactory) {
         if (_.isObject(obj) === false) {
             return obj;
+        }
+        if (obj[Constants_1.JsonLd.Value]) {
+            return obj[Constants_1.JsonLd.Value];
         }
         var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
         var resource = resourcified[selfId];

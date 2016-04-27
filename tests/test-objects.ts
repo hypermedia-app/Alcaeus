@@ -42,6 +42,15 @@ export namespace Bodies {
         }
     };
 
+    export var cycledResource = {
+        '@id': 'http://example.com/resource',
+        'http://example.com/vocab#prop': {
+            'http://example.com/vocab#top': {
+                '@id': 'http://example.com/resource'
+            }
+        }
+    };
+
     export var typedLiteral = {
         "@id": "http://example.com/resource",
         "http://schema.org/image": {

@@ -33,11 +33,13 @@ export class Resource implements IHydraResource {
         return _incomingLinks.get(this);
     }
 
-    _processed() {
+    @nonenumerable
+    get _processed() {
         return _isProcessed.get(this);
     }
 
-    _processed(val:boolean) {
+    @nonenumerable
+    set _processed(val:boolean) {
         _isProcessed.set(this, val);
     }
 

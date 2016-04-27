@@ -621,12 +621,16 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                 Resource.prototype.getIncomingLinks = function () {
                     return _incomingLinks.get(this);
                 };
-                Resource.prototype._processed = function () {
-                    return _isProcessed.get(this);
-                };
-                Resource.prototype._processed = function (val) {
-                    _isProcessed.set(this, val);
-                };
+                Object.defineProperty(Resource.prototype, "_processed", {
+                    get: function () {
+                        return _isProcessed.get(this);
+                    },
+                    set: function (val) {
+                        _isProcessed.set(this, val);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Resource.prototype.getOperations = function () {
                     var _this = this;
                     var classOperations;
@@ -650,6 +654,9 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                 __decorate([
                     core_decorators_1.nonenumerable
                 ], Resource.prototype, "apiDocumentation", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Resource.prototype, "_processed", null);
                 return Resource;
             }());
             exports_1("Resource", Resource);
@@ -743,9 +750,10 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             resource = resourceFactory.createResource(obj, apiDoc, resourcified);
             resourcified[selfId] = resource;
         }
-        if (resource._processed() === true) {
+        if (resource._processed === true) {
             return resource;
         }
+        resource._processed = true;
         _.forOwn(resource, function (value, key) {
             if (_.isArray(value)) {
                 resource[key] = _.map(value, function (el) { return resourcify(el, resourcified, apiDoc, resourceFactory); });
@@ -753,7 +761,6 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             }
             resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
         });
-        resource._processed(true);
         return resource;
     }
     return {

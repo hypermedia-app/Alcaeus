@@ -57,7 +57,7 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
     if (_.isObject(obj) === false) {
         return obj;
     }
-    
+
     if (obj[JsonLd.Value]){
         return obj[JsonLd.Value];
     }
@@ -70,10 +70,11 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
         resourcified[selfId] = resource;
     }
 
-    if(resource._processed() === true){
+    if(resource._processed === true){
         return resource;
     }
 
+    resource._processed = true;
     _.forOwn(resource, (value, key) => {
         if (_.isArray(value)) {
             resource[key] = _.map(value, el => resourcify(el, resourcified, apiDoc, resourceFactory));
@@ -83,6 +84,5 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
         resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
     });
 
-    resource._processed(true);
     return resource;
 }

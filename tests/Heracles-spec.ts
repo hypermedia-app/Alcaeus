@@ -188,7 +188,7 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should return typed string literals as their values', done => {
+        it('should return typed string literals as their values', (done:any) => {
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.typedLiteral));
 
@@ -199,12 +199,23 @@ describe('Hydra', () => {
             }).catch(done.fail);
         });
 
-        it('should return typed numeric literals as their values', done => {
+        it('should return typed numeric literals as their values', (done:any) => {
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.typedNumericLiteral));
 
             Hydra.loadResource('http://example.com/resource').then(res => {
                 expect(res['http://schema.org/age']).toBe(21);
+                done();
+            }).catch(done.fail);
+        });
+
+        it('should handle cycles', (done:any) => {
+            fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse(Bodies.cycledResource));
+
+            Hydra.loadResource('http://example.com/resource').then(res => {
+                var objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top']);
+                expect(objectsAreSame).toBeTruthy();
                 done();
             }).catch(done.fail);
         });

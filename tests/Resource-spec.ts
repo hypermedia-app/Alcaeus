@@ -15,6 +15,29 @@ describe('Resource', () => {
 
     });
 
+    describe('types', () => {
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'types').enumerable)
+                .toBe(false);
+        });
+
+        it('should return array for single @type', () => {
+
+            var resource = new Resource(Bodies.someJsonLdExpanded, <IApiDocumentation>{}, []);
+
+            expect(resource.types.length).toBe(1);
+        });
+
+        it('should return all @types', () => {
+
+            var resource = new Resource(Bodies.multipleTypesExpanded, <IApiDocumentation>{}, []);
+
+            expect(resource.types.length).toBe(2);
+        });
+
+    });
+
     describe('apiDocumentation', () => {
 
         it('should be non-enumerable', () => {

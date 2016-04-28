@@ -621,6 +621,17 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                 Resource.prototype.getIncomingLinks = function () {
                     return _incomingLinks.get(this);
                 };
+                Object.defineProperty(Resource.prototype, "types", {
+                    get: function () {
+                        var types = this[Constants_1.JsonLd.Type];
+                        if (typeof types === 'string') {
+                            return [types];
+                        }
+                        return types;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Object.defineProperty(Resource.prototype, "_processed", {
                     get: function () {
                         return _isProcessed.get(this);
@@ -654,6 +665,9 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                 __decorate([
                     core_decorators_1.nonenumerable
                 ], Resource.prototype, "apiDocumentation", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Resource.prototype, "types", null);
                 __decorate([
                     core_decorators_1.nonenumerable
                 ], Resource.prototype, "_processed", null);

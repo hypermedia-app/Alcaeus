@@ -34,6 +34,17 @@ export class Resource implements IHydraResource {
     }
 
     @nonenumerable
+    get types() {
+        var types = this[JsonLd.Type];
+
+        if(typeof types === 'string'){
+            return [ types ];
+        }
+
+        return types;
+    }
+
+    @nonenumerable
     get _processed() {
         return _isProcessed.get(this);
     }

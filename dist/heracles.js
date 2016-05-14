@@ -146,10 +146,10 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
                 }
                 Object.defineProperty(ApiDocumentation.prototype, "classes", {
                     get: function () {
-                        if (typeof this[Constants_1.Core.Vocab.supportedClass] === 'object') {
-                            return [this[Constants_1.Core.Vocab.supportedClass]];
+                        if (Array.isArray(this[Constants_1.Core.Vocab.supportedClass])) {
+                            return this[Constants_1.Core.Vocab.supportedClass];
                         }
-                        return this[Constants_1.Core.Vocab.supportedClass];
+                        return [this[Constants_1.Core.Vocab.supportedClass]];
                     },
                     enumerable: true,
                     configurable: true

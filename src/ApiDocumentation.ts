@@ -17,11 +17,11 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     get classes():Array<IClass> {
-        if (typeof this[Core.Vocab.supportedClass] === 'object') {
-            return [this[Core.Vocab.supportedClass]];
+        if (Array.isArray(this[Core.Vocab.supportedClass])) {
+            return this[Core.Vocab.supportedClass];
         }
 
-        return this[Core.Vocab.supportedClass];
+        return [ this[Core.Vocab.supportedClass] ];
     }
 
     getOperations(classUri:string):Array<IOperation> {

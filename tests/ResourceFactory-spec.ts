@@ -27,7 +27,7 @@ describe('ResourceFactory', () => {
                         '@type': typeId
                     };
 
-                    var resource = factory.createResource(jsonLd, apiDoc, []);
+                    var resource = factory.createResource(null, jsonLd, apiDoc, []);
 
                     expect(isOfCorrectType(resource)).toBe(true);
                 });

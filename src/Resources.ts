@@ -23,6 +23,17 @@ export class Resource implements IResource {
     }
 
     @nonenumerable
+    get types() {
+        var types = this[JsonLd.Type];
+
+        if(typeof types === 'string'){
+            return [ types ];
+        }
+
+        return types;
+    }
+
+    @nonenumerable
     get _processed() {
         return _isProcessed.get(this);
     }
@@ -52,17 +63,6 @@ export class HydraResource extends Resource implements IHydraResource {
 
     getIncomingLinks() {
         return _incomingLinks.get(this);
-    }
-
-    @nonenumerable
-    get types() {
-        var types = this[JsonLd.Type];
-
-        if(typeof types === 'string'){
-            return [ types ];
-        }
-
-        return types;
     }
 
     @nonenumerable

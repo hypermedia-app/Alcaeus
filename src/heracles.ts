@@ -13,7 +13,7 @@ class Heracles implements IHeracles {
         return FetchUtil.fetchResource(uri)
             .then(response => {
                 return this.loadDocumentation(response.apiDocumentationLink)
-                    .then(getRequestedObject(uri, response.resources, this.resourceFactory));
+                    .then(getRequestedObject(this, uri, response.resources, this.resourceFactory));
             });
     }
     
@@ -23,7 +23,7 @@ class Heracles implements IHeracles {
                 var typeOverrides = {};
                 typeOverrides[JsonLdUtil.trimTrailingSlash(uri)] = Core.Vocab.ApiDocumentation;
 
-                return getRequestedObject(uri, response.resources, this.resourceFactory, typeOverrides)(null);
+                return getRequestedObject(this, uri, response.resources, this.resourceFactory, typeOverrides)(null);
             }, () => null);
     }
 }
@@ -32,13 +32,13 @@ export var ResourceFactory = ResourceFactoryCtor;
 export var Resource = ResourceCtor;
 export var Hydra = new Heracles();
 
-function getRequestedObject(uri, resources, resourceFactory, typeOverrides? = {}) {
+function getRequestedObject(heracles, uri, resources, resourceFactory, typeOverrides? = {}) {
     return apiDocumentation => {
         var resourcified = {};
 
         _.transform(resources, (acc, val) => {
             var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
-            acc[id] = resourceFactory.createResource(val, apiDocumentation, acc, typeOverrides[id]);
+            acc[id] = resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
         }, resourcified);
 
         _.each(resourcified, g => resourcify(g, resourcified, apiDocumentation, resourceFactory));

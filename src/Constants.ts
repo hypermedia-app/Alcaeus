@@ -66,8 +66,12 @@ export namespace Core {
         previous: Context['hydra'] + 'previous',
         entrypoint: Context['hydra'] + 'entrypoint',
         SupportedProperty: Context['hydra'] + 'SupportedProperty',
+        supportedProperty: Context['hydra'] + 'supportedProperty',
         Operation: Context['hydra'] + 'Operation',
         supportedClass: Context['hydra'] + 'supportedClass',
+        supportedOperation: Context['hydra'] + 'supportedOperation',
+        expects: Context['hydra'] + 'expects',
+        returns: Context['hydra'] + 'returns',
     };
 }
 

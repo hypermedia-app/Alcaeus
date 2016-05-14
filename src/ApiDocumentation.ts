@@ -24,11 +24,19 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     getOperations(classUri:string):Array<IOperation> {
-        return this.getClass(classUri).supportedOperations;
+        var clas = this.getClass(classUri);
+        if(!clas){
+            return [];
+        }
+        return clas.supportedOperations;
     }
 
     getProperties(classUri:string):Array<ISupportedProperty> {
-        return this.getClass(classUri).supportedProperties;
+        var clas = this.getClass(classUri);
+        if(!clas){
+            return [];
+        }
+        return clas.supportedProperties;
     }
 
     getClass(classId):IClass {
@@ -40,71 +48,39 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 }
 
-export class DocumentedResource implements IDocumentedResource {
-    private _hydraResource:any;
-
-    constructor(hydraResource:any) {
-        this._hydraResource = hydraResource;
-    }
-
-    get id() {
-        return this._hydraResource['@id'];
+export class DocumentedResource extends Resource implements IDocumentedResource {
+    constructor(heracles, hydraResource:any) {
+        super(heracles, hydraResource);
     }
 
     get description():String {
-        return this._hydraResource.description ||
-            this._hydraResource[rdfs.ns + 'comment'] ||
-            this._hydraResource[schema.description]
+        return this[Core.Vocab.description] ||
+            this[rdfs.ns + 'comment'] ||
+            this[schema.description]
     }
 
     get title():String {
-        return this._hydraResource.title ||
-            this._hydraResource[rdfs.ns + 'label'] ||
-            this._hydraResource[schema.title];
-    }
-
-    compact(context:any = null) {
-        return jsonld.compact(this._hydraResource, context || Core.Context);
+        return this[Core.Vocab.title] ||
+            this[rdfs.ns + 'label'] ||
+            this[schema.title];
     }
 }
 
 export class Operation extends DocumentedResource implements IOperation {
-    private _hydraOperation;
-    private _apiDoc;
-
-    constructor(hydraOperation:any, apiDoc:IApiDocumentation) {
-        super(hydraOperation);
-
-        this._hydraOperation = hydraOperation;
-        this._apiDoc = apiDoc;
+    constructor(heracles:IHeracles, hydraOperation:any) {
+        super(heracles, hydraOperation);
     }
 
     get method():String {
-        return this._hydraOperation.method;
+        return this[Core.Vocab.method];
     }
 
-    get expects():String {
-        return this._hydraOperation.expects;
+    get expects():IClass {
+        return this[Core.Vocab.expects];
     }
 
-    get returns():String {
-        return this._hydraOperation.returns;
-    }
-
-    getExpected():Promise<IClass> {
-        if(this.expects === owl.ns + 'Nothing') {
-            return Promise.reject(new Error('Operation expects nothing'));
-        }
-
-        return this._apiDoc.getClass(this.expects);
-    }
-
-    getReturned():Promise<IClass> {
-        if(this.returns === owl.ns + 'Nothing') {
-            return Promise.reject(new Error('Operation returns nothing'));
-        }
-
-        return this._apiDoc.getClass(this.returns);
+    get returns():IClass {
+        return this[Core.Vocab.returns];
     }
 }
 
@@ -149,21 +125,16 @@ export class SupportedProperty extends DocumentedResource implements ISupportedP
 }
 
 export class Class extends DocumentedResource implements IClass {
-    private _hydraClass;
-    private _apiDoc;
 
-    constructor(hydraClass:Object, apiDoc:IApiDocumentation) {
-        super(hydraClass);
-
-        this._hydraClass = hydraClass;
-        this._apiDoc = apiDoc;
+    constructor(heracles, hydraClass:Object) {
+        super(heracles, hydraClass);
     }
 
-    getSupportedOperations():Promise<Array<IOperation>> {
-        return this._apiDoc.getOperations(this.id);
+    get supportedOperations():Array<IOperation> {
+        return this[Core.Vocab.supportedOperation];
     }
 
-    getSupportedProperties():Promise<Array<ISupportedProperty>> {
-        return this._apiDoc.getProperties(this.id);
+    get supportedProperties():Array<ISupportedProperty> {
+        return this[Core.Vocab.supportedProperty];
     }
 }

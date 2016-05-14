@@ -69,4 +69,26 @@ describe('ApiDocumentation', () => {
         });
 
     });
+    
+    describe('getting operations', () => {
+        
+        it('should return empty array for missing supported class', () => {
+            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+
+            var ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
+            expect(_.isArray(ops)).toBe(true);
+            expect(ops.length).toBe(0);
+        });
+    });
+
+    describe('getting properties', () => {
+
+        it('should return empty array for missing supported class', () => {
+            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+
+            var props = docs.getProperties('http://example.com/api#UndomcumentedClass');
+            expect(_.isArray(props)).toBe(true);
+            expect(props.length).toBe(0);
+        });
+    });
 });

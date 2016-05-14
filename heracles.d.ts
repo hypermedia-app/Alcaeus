@@ -12,7 +12,7 @@ interface IApiDocumentation extends IResource {
     getClass(classId:string):IClass;
     getOperations(classUri:string):Array<IOperation>;
     getProperties(classUri:string):Array<ISupportedProperty>;
-    getEntrypoint:Promise<IHydraResource>
+    getEntrypoint():Promise<IHydraResource>
 }
 
 interface IClass extends IResource {
@@ -35,14 +35,12 @@ interface ISupportedProperty extends IDocumentedResource {
 
 interface IOperation extends IDocumentedResource {
     method:string;
-    expects:string;
-    returns:string;
-    getExpected():Promise<IClass>;
-    getReturned():Promise<IClass>;
+    expects:IClass;
+    returns:IClass;
 }
 
 interface IHydraResource extends IResource {
-    getOperations():Promise<Array<IOperation>>
+    operations:Array<IOperation>
     apiDocumentation:IApiDocumentation;
 }
 

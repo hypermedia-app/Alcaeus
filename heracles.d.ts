@@ -8,16 +8,16 @@ interface IResource {
 }
 
 interface IApiDocumentation extends IResource {
-    getClasses():Promise<Array<IClass>>;
-    getClass(classId:string):Promise<IClass>;
-    getOperations(classUri:string):Promise<Array<IOperation>>;
-    getProperties(classUri:string):Promise<Array<ISupportedProperty>>;
-    getEntrypoint():Promise<IHydraResource>
+    classes:Array<IClass>;
+    getClass(classId:string):IClass;
+    getOperations(classUri:string):Array<IOperation>;
+    getProperties(classUri:string):Array<ISupportedProperty>;
+    getEntrypoint:Promise<IHydraResource>
 }
 
 interface IClass extends IResource {
-    getSupportedOperations():Promise<Array<IOperation>>
-    getSupportedProperties():Promise<Array<ISupportedProperty>>
+    supportedOperations:Array<IOperation>;
+    supportedProperties:Array<ISupportedProperty>;
 }
 
 interface IDocumentedResource extends IResource {
@@ -55,7 +55,7 @@ interface IPartialCollectionView extends IHydraResource {
 }
 
 interface IResourceFactory {
-    createResource(obj:Object, apiDocumentation:IApiDocumentation, resources):IHydraResource
+    createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):IResource
 }
 
 var Hydra:IHeracles;

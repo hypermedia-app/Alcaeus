@@ -1,22 +1,39 @@
 'use strict';
 
+import * as _ from 'lodash';
 import {Core} from '../src/Constants';
 import {ResourceFactory} from '../src/ResourceFactory';
 import * as resources from '../src/Resources';
+import * as documentationTypes from '../src/ApiDocumentation';
 
 describe('ResourceFactory', () => {
 
     var apiDoc;
     var factory = new ResourceFactory();
 
-    it('should create PartialCollectionView', () => {
-        var pcv = {
-            '@type': Core.Vocab.PartialCollectionView
-        };
+    describe('createResource', () => {
 
-        var resource = factory.createResource(pcv, apiDoc, []);
+        var constructedTypes = {};
+        constructedTypes[Core.Vocab.PartialCollectionView] = res => res instanceof resources.PartialCollectionView;
+        constructedTypes[Core.Vocab.ApiDocumentation] = res => res instanceof documentationTypes.ApiDocumentation;
+        constructedTypes[Core.Vocab.Class] = res => res instanceof documentationTypes.Class;
+        constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;
+        constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.Operation;
 
-        expect(resource instanceof resources.PartialCollectionView).toBe(true);
+        _.toPairs(constructedTypes).forEach(typePair => {
+            (function(typeId, isOfCorrectType) {
+                it('should create typed instance for ' + typeId, function() {
+                    var jsonLd = {
+                        '@type': typeId
+                    };
+
+                    var resource = factory.createResource(jsonLd, apiDoc, []);
+
+                    expect(isOfCorrectType(resource)).toBe(true);
+                });
+            })(typePair[0], typePair[1]);
+        });
+
     });
 
 });

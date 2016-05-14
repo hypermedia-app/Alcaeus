@@ -4,7 +4,7 @@ import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {Resource as ResourceCtor} from "./Resources";
+import {HydraResource as ResourceCtor} from "./Resources";
 
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();

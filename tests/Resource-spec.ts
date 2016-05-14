@@ -1,7 +1,7 @@
 /// <reference path="../typings/main.d.ts" />
 
 import * as sinon from 'sinon';
-import {Resource} from '../src/Resources';
+import {HydraResource} from '../src/Resources';
 import {Bodies} from './test-objects';
 
 describe('Resource', () => {
@@ -9,7 +9,7 @@ describe('Resource', () => {
     describe('id', () => {
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id').enumerable)
+            expect(Object.getOwnPropertyDescriptor(HydraResource.prototype, 'id').enumerable)
                 .toBe(false);
         });
 
@@ -18,20 +18,20 @@ describe('Resource', () => {
     describe('types', () => {
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'types').enumerable)
+            expect(Object.getOwnPropertyDescriptor(HydraResource.prototype, 'types').enumerable)
                 .toBe(false);
         });
 
         it('should return array for single @type', () => {
 
-            var resource = new Resource(Bodies.someJsonLdExpanded, <IApiDocumentation>{}, []);
+            var resource = new HydraResource(Bodies.someJsonLdExpanded, <IApiDocumentation>{}, []);
 
             expect(resource.types.length).toBe(1);
         });
 
         it('should return all @types', () => {
 
-            var resource = new Resource(Bodies.multipleTypesExpanded, <IApiDocumentation>{}, []);
+            var resource = new HydraResource(Bodies.multipleTypesExpanded, <IApiDocumentation>{}, []);
 
             expect(resource.types.length).toBe(2);
         });
@@ -41,7 +41,7 @@ describe('Resource', () => {
     describe('apiDocumentation', () => {
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'apiDocumentation').enumerable)
+            expect(Object.getOwnPropertyDescriptor(HydraResource.prototype, 'apiDocumentation').enumerable)
                 .toBe(false);
         });
 
@@ -55,7 +55,7 @@ describe('Resource', () => {
                 getOperations: getOperations
             };
             getOperations.returns(Promise.resolve([]));
-            var resource = new Resource(Bodies.someJsonLdExpanded, apiDoc, [
+            var resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc, [
                 ['http://example.com/vocab#Resource', 'http://example.com/vocab#other']
             ]);
 
@@ -74,7 +74,7 @@ describe('Resource', () => {
                 getOperations: getOperations
             };
             getOperations.returns(Promise.resolve([]));
-            var resource = new Resource(Bodies.multipleTypesExpanded, apiDoc, [ ]);
+            var resource = new HydraResource(Bodies.multipleTypesExpanded, apiDoc, [ ]);
 
             resource.getOperations()
                 .then(() => {

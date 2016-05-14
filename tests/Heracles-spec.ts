@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
 import {Hydra} from '../src/heracles';
-import {Resource} from '../src/Resources';
+import {HydraResource} from '../src/Resources';
 import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations, Responses} from './test-objects';
@@ -33,7 +33,7 @@ describe('Hydra', () => {
             Hydra.loadResource('http://example.com/resource')
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/resource');
-                    expect(res instanceof Resource).toBe(true);
+                    expect(res instanceof HydraResource).toBe(true);
                     done();
                 })
                 .catch(done.fail);
@@ -96,7 +96,7 @@ describe('Hydra', () => {
                 .then(res => {
                     expect(res[Core.Vocab.member].length).toBe(4);
                     _.each(res[Core.Vocab.member], member => {
-                        expect(member instanceof Resource).toBe(true);
+                        expect(member instanceof HydraResource).toBe(true);
                     });
                     done();
                 })
@@ -109,7 +109,7 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(res => {
-                    expect(res['http://example.vocab/managedBy'] instanceof Resource)
+                    expect(res['http://example.vocab/managedBy'] instanceof HydraResource)
                         .toBe(true, 'was ' + JSON.stringify(res['http://example.vocab/managedBy']));
                     done();
                 })
@@ -123,7 +123,7 @@ describe('Hydra', () => {
             Hydra.loadResource('http://example.com/resource?page=3')
                 .then((res:IPartialCollectionView) => {
                     expect(res.collection).toBeDefined();
-                    expect(res.collection instanceof Resource)
+                    expect(res.collection instanceof HydraResource)
                         .toBe(true, 'Actual type is: ' + res.collection.constructor.name);
                     done();
                 })

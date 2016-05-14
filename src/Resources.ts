@@ -5,23 +5,44 @@ import {JsonLd, Core} from './Constants';
 //noinspection TypeScriptCheckImport
 import {default} from 'core-js/es6/weak-map';
 
-var _apiDocumentation = new WeakMap();
-var _incomingLinks = new WeakMap();
 var _isProcessed = new WeakMap();
+var _heracles = new WeakMap();
 
-export class Resource implements IHydraResource {
+export class Resource implements IResource {
 
-    constructor(actualResource, apiDoc:IApiDocumentation, incomingLinks) {
+    constructor(heracles:IHeracles, actualResource) {
         _.extend(this, actualResource);
 
-        _apiDocumentation.set(this, apiDoc);
-        _incomingLinks.set(this, incomingLinks);
         _isProcessed.set(this, false);
+        _heracles.set(this, heracles);
     }
 
     @nonenumerable
     get id() {
         return this[JsonLd.Id];
+    }
+
+    @nonenumerable
+    get _processed() {
+        return _isProcessed.get(this);
+    }
+    
+    @nonenumerable
+    get _heracles() {
+        return _heracles.get(this);
+    }
+}
+
+var _apiDocumentation = new WeakMap();
+var _incomingLinks = new WeakMap();
+
+export class HydraResource extends Resource implements IHydraResource {
+
+    constructor(heracles:IHeracles, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
+        super(heracles, actualResource);
+
+        _apiDocumentation.set(this, apiDoc);
+        _incomingLinks.set(this, incomingLinks);
     }
 
     @nonenumerable
@@ -42,11 +63,6 @@ export class Resource implements IHydraResource {
         }
 
         return types;
-    }
-
-    @nonenumerable
-    get _processed() {
-        return _isProcessed.get(this);
     }
 
     @nonenumerable
@@ -74,7 +90,7 @@ export class Resource implements IHydraResource {
     }
 }
 
-export class PartialCollectionView extends Resource implements IPartialCollectionView {
+export class PartialCollectionView extends HydraResource implements IPartialCollectionView {
 
     @nonenumerable
     get first() { return this[Core.Vocab.first] || null; }

@@ -29,4 +29,45 @@ describe('Class', () => {
         expect(getProperties.calledWithExactly('http://example.com/vocab#SomeClass')).toBe(true);
     });
 
+    describe('getting operations', () => {
+
+        it('should get operation\'s method and description given a type', () => {
+
+            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+
+            var op = docs.getOperations('http://example.com/api#Class');
+            expect(op[0].description).toBe('Gets the api#Class');
+            expect(op[0].method).toBe('GET');
+        });
+
+        it('should return empty array for missing supported class', () => {
+            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+
+            var ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
+            expect(_.isArray(ops)).toBe(true);
+            expect(ops.length).toBe(0);
+        });
+
+    });
+
+    describe('getting properties', () => {
+
+        it('should get properties for a given class type', () => {
+
+            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+
+            var props = docs.getProperties('http://example.com/api#Class');
+            expect(props.length).toBe(2);
+        });
+
+        it('should return empty array for missing supported class', () => {
+            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+
+            var props = docs.getProperties('http://example.com/api#UndomcumentedClass');
+            expect(_.isArray(props)).toBe(true);
+            expect(props.length).toBe(0);
+        });
+
+    });
+
 });

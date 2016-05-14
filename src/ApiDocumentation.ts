@@ -7,91 +7,36 @@ import * as _ from 'lodash';
 import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
+import {Resource} from "./Resources";
 
-var flattenedDocs = new WeakMap();
+export class ApiDocumentation extends Resource implements IApiDocumentation {
 
-export class ApiDocumentation implements IApiDocumentation {
-    id:string;
-    private _original;
-    private _heracles:IHeracles;
-
-    constructor(heracles:IHeracles, docId:string, apiDoc:any) {
-        this.id = docId;
-        this._original = apiDoc;
-        this._heracles = heracles;
+    constructor(heracles:IHeracles, apiDoc:any) {
+        super(heracles, apiDoc);
     }
 
-    getOperations(classUri:string):Promise<Array<IOperation>> {
-        return this._getFlattened()
-            .then(graph => {
-                var supportedClass = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], classUri));
+    get classes():Array<IClass> {
+        if(typeof this[Core.Vocab.supportedClass] === 'object') {
+            return [ this[Core.Vocab.supportedClass] ];
+        }
 
-                if(!supportedClass) {
-                    return [];
-                }
-
-                return _.chain(graph)
-                    .filter(obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], supportedClass.supportedOperation) || _.some(supportedClass.supportedOperation, sp => JsonLdUtil.idsEqual(sp, obj[JsonLd.Id])))
-                    .map(op => {
-                        op[JsonLd.Context] = Core.Context;
-                        return new Operation(op, this);
-                    })
-                    .value();
-            });
+        return this[Core.Vocab.supportedClass];
     }
 
-    getProperties(classUri:string):Promise<Array<ISupportedProperty>> {
-        return this._getFlattened()
-            .then(graph => {
-                var supportedClass = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], classUri));
-
-                if(!supportedClass) {
-                    return [];
-                }
-
-                return _.chain(graph)
-                    .filter(obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], supportedClass.supportedProperty) || _.some(supportedClass.supportedProperty, sp => JsonLdUtil.idsEqual(sp, obj[JsonLd.Id])))
-                    .map(prop => {
-                        prop[JsonLd.Context] = Core.Context;
-                        return new SupportedProperty(prop, this);
-                    })
-                    .value();
-            });
+    getOperations(classUri:string):Array<IOperation> {
+        return this.getClass(classUri).supportedOperations;
     }
 
-    getClasses():Promise<Array<IClass>> {
-        return this._getFlattened()
-            .then(graph => {
-                return _.chain(graph)
-                    .filter(obj => obj[JsonLd.Type] === 'Class')
-                    .map(sc => new Class(sc, this))
-                    .value();
-            });
+    getProperties(classUri:string):Array<ISupportedProperty> {
+        return this.getClass(classUri).supportedProperties;
     }
 
-    getClass(classId):Promise<IClass> {
-        return this.getClasses().then(cs => _.find(cs, ['id', classId]) || null);
+    getClass(classId):IClass {
+        return _.find(this.classes, [ JsonLd.Id, classId ]);
     }
 
     getEntrypoint():Promise<IHydraResource> {
-        return this._getFlattened()
-            .then(graph => {
-                var doc = _.find(graph, obj => JsonLdUtil.idsEqual(obj[JsonLd.Id], this.id));
-
-                return this._heracles.loadResource(doc.entrypoint)
-            });
-    }
-
-    _getFlattened() {
-        if(flattenedDocs.has(this)) {
-            return Promise.resolve(flattenedDocs.get(this));
-        }
-
-        return jsonld.flatten(this._original, Core.Context)
-            .then(flat => {
-                flattenedDocs.set(this, flat[JsonLd.Graph]);
-                return flat[JsonLd.Graph];
-            });
+        return this._heracles.loadResource(this[Core.Vocab.entrypoint][JsonLd.Id]);
     }
 }
 

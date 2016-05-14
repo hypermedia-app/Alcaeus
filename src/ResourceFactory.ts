@@ -7,17 +7,27 @@ import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 
 export class ResourceFactory implements IResourceFactory {
-    public createResource(obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
+
+    factories = {};
+
+    constructor() {
+        this.factories[Core.Vocab.ApiDocumentation] =
+            (heracles, obj, apiDocumentation, incomingLinks)
+                => new DocTypes.ApiDocumentation(heracles, obj);
+        this.factories[Core.Vocab.PartialCollectionView] =
+            (heracles, obj, apiDocumentation, incomingLinks)
+                => new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
+    }
+
+    public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
         var incomingLinks = findIncomingLinks(obj, resources);
 
-        switch(typeOverride || obj[JsonLd.Type]){
-            case Core.Vocab.PartialCollectionView:
-                return new Types.PartialCollectionView(obj, apiDocumentation, incomingLinks);
-            case Core.Vocab.ApiDocumentation:
-                return new DocTypes.ApiDocumentation();
+        var factory = this.factories[typeOverride || obj[JsonLd.Type]];
+        if(factory) {
+            return factory.apply(this, Array.slice(arguments, 0, 4));
         }
 
-        return new Types.Resource(obj, apiDocumentation, incomingLinks);
+        return new Types.HydraResource(heracles, obj, apiDocumentation, incomingLinks);
     }
 }
 

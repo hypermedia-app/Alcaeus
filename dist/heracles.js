@@ -83,15 +83,6 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
                             .then(function (obj) { return new ExpandedWithDocs(obj, apiDocsUri); });
                     }, function () { return null; });
                 };
-                FetchUtil.fetchDocumentation = function (uri) {
-                    return window.fetch(uri, {
-                        headers: {
-                            accept: FetchUtil._requestAcceptHeaders
-                        }
-                    })
-                        .then(rejectNotFoundStatus)
-                        .then(getFlattendGraph, function () { return null; });
-                };
                 FetchUtil._requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
                 return FetchUtil;
             }());
@@ -122,7 +113,7 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1) {
+$__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -130,13 +121,10 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var jsonld_1, _, linkeddata_vocabs_1, Constants_1, JsonLdUtil_1;
-    var flattenedDocs, ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
+    var _, linkeddata_vocabs_1, Constants_1, Resources_1;
+    var ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
     return {
         setters:[
-            function (jsonld_1_1) {
-                jsonld_1 = jsonld_1_1;
-            },
             function (_1) {
                 _ = _1;
             },
@@ -146,205 +134,142 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
             function (Constants_1_1) {
                 Constants_1 = Constants_1_1;
             },
-            function (JsonLdUtil_1_1) {
-                JsonLdUtil_1 = JsonLdUtil_1_1;
+            function (Resources_1_1) {
+                Resources_1 = Resources_1_1;
             }],
         execute: function() {
-            flattenedDocs = new WeakMap();
-            ApiDocumentation = (function () {
-                function ApiDocumentation(heracles, docId, apiDoc) {
-                    this.id = docId;
-                    this._original = apiDoc;
+            ApiDocumentation = (function (_super) {
+                __extends(ApiDocumentation, _super);
+                function ApiDocumentation(heracles, apiDoc) {
+                    _super.call(this, apiDoc);
                     this._heracles = heracles;
                 }
-                ApiDocumentation.prototype.getOperations = function (classUri) {
-                    var _this = this;
-                    return this._getFlattened()
-                        .then(function (graph) {
-                        var supportedClass = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], classUri); });
-                        if (!supportedClass) {
-                            return [];
-                        }
-                        return _.chain(graph)
-                            .filter(function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], supportedClass.supportedOperation) || _.some(supportedClass.supportedOperation, function (sp) { return JsonLdUtil_1.JsonLdUtil.idsEqual(sp, obj[Constants_1.JsonLd.Id]); }); })
-                            .map(function (op) {
-                            op[Constants_1.JsonLd.Context] = Constants_1.Core.Context;
-                            return new Operation(op, _this);
-                        })
-                            .value();
-                    });
-                };
-                ApiDocumentation.prototype.getProperties = function (classUri) {
-                    var _this = this;
-                    return this._getFlattened()
-                        .then(function (graph) {
-                        var supportedClass = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], classUri); });
-                        if (!supportedClass) {
-                            return [];
-                        }
-                        return _.chain(graph)
-                            .filter(function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], supportedClass.supportedProperty) || _.some(supportedClass.supportedProperty, function (sp) { return JsonLdUtil_1.JsonLdUtil.idsEqual(sp, obj[Constants_1.JsonLd.Id]); }); })
-                            .map(function (prop) {
-                            prop[Constants_1.JsonLd.Context] = Constants_1.Core.Context;
-                            return new SupportedProperty(prop, _this);
-                        })
-                            .value();
-                    });
-                };
-                ApiDocumentation.prototype.getClasses = function () {
-                    var _this = this;
-                    return this._getFlattened()
-                        .then(function (graph) {
-                        return _.chain(graph)
-                            .filter(function (obj) { return obj[Constants_1.JsonLd.Type] === 'Class'; })
-                            .map(function (sc) { return new Class(sc, _this); })
-                            .value();
-                    });
-                };
-                ApiDocumentation.prototype.getClass = function (classId) {
-                    return this.getClasses().then(function (cs) { return _.find(cs, ['id', classId]) || null; });
-                };
-                ApiDocumentation.prototype.getEntrypoint = function () {
-                    var _this = this;
-                    return this._getFlattened()
-                        .then(function (graph) {
-                        var doc = _.find(graph, function (obj) { return JsonLdUtil_1.JsonLdUtil.idsEqual(obj[Constants_1.JsonLd.Id], _this.id); });
-                        return _this._heracles.loadResource(doc.entrypoint);
-                    });
-                };
-                ApiDocumentation.prototype._getFlattened = function () {
-                    var _this = this;
-                    if (flattenedDocs.has(this)) {
-                        return Promise.resolve(flattenedDocs.get(this));
-                    }
-                    return jsonld_1.promises.flatten(this._original, Constants_1.Core.Context)
-                        .then(function (flat) {
-                        flattenedDocs.set(_this, flat[Constants_1.JsonLd.Graph]);
-                        return flat[Constants_1.JsonLd.Graph];
-                    });
-                };
-                return ApiDocumentation;
-            }());
-            exports_1("ApiDocumentation", ApiDocumentation);
-            DocumentedResource = (function () {
-                function DocumentedResource(hydraResource) {
-                    this._hydraResource = hydraResource;
-                }
-                Object.defineProperty(DocumentedResource.prototype, "id", {
+                Object.defineProperty(ApiDocumentation.prototype, "classes", {
                     get: function () {
-                        return this._hydraResource['@id'];
+                        if (typeof this[Constants_1.Core.Vocab.supportedClass] === 'object') {
+                            return [this[Constants_1.Core.Vocab.supportedClass]];
+                        }
+                        return this[Constants_1.Core.Vocab.supportedClass];
                     },
                     enumerable: true,
                     configurable: true
                 });
+                ApiDocumentation.prototype.getOperations = function (classUri) {
+                    var clas = this.getClass(classUri);
+                    if (!clas) {
+                        return [];
+                    }
+                    return clas.supportedOperations;
+                };
+                ApiDocumentation.prototype.getProperties = function (classUri) {
+                    var clas = this.getClass(classUri);
+                    if (!clas) {
+                        return [];
+                    }
+                    return clas.supportedProperties;
+                };
+                ApiDocumentation.prototype.getClass = function (classId) {
+                    return _.find(this.classes, [Constants_1.JsonLd.Id, classId]) || null;
+                };
+                ApiDocumentation.prototype.getEntrypoint = function () {
+                    return this._heracles.loadResource(this[Constants_1.Core.Vocab.entrypoint][Constants_1.JsonLd.Id]);
+                };
+                return ApiDocumentation;
+            }(Resources_1.Resource));
+            exports_1("ApiDocumentation", ApiDocumentation);
+            DocumentedResource = (function (_super) {
+                __extends(DocumentedResource, _super);
+                function DocumentedResource(hydraResource) {
+                    _super.call(this, hydraResource);
+                }
                 Object.defineProperty(DocumentedResource.prototype, "description", {
                     get: function () {
-                        return this._hydraResource.description ||
-                            this._hydraResource[linkeddata_vocabs_1.rdfs.ns + 'comment'] ||
-                            this._hydraResource[linkeddata_vocabs_1.schema.description];
+                        return this[Constants_1.Core.Vocab.description] ||
+                            this[linkeddata_vocabs_1.rdfs.ns + 'comment'] ||
+                            this[linkeddata_vocabs_1.schema.description];
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(DocumentedResource.prototype, "title", {
                     get: function () {
-                        return this._hydraResource.title ||
-                            this._hydraResource[linkeddata_vocabs_1.rdfs.ns + 'label'] ||
-                            this._hydraResource[linkeddata_vocabs_1.schema.title];
+                        return this[Constants_1.Core.Vocab.title] ||
+                            this[linkeddata_vocabs_1.rdfs.ns + 'label'] ||
+                            this[linkeddata_vocabs_1.schema.title];
                     },
                     enumerable: true,
                     configurable: true
                 });
-                DocumentedResource.prototype.compact = function (context) {
-                    if (context === void 0) { context = null; }
-                    return jsonld_1.promises.compact(this._hydraResource, context || Constants_1.Core.Context);
-                };
                 return DocumentedResource;
-            }());
+            }(Resources_1.Resource));
             exports_1("DocumentedResource", DocumentedResource);
             Operation = (function (_super) {
                 __extends(Operation, _super);
-                function Operation(hydraOperation, apiDoc) {
+                function Operation(hydraOperation) {
                     _super.call(this, hydraOperation);
-                    this._hydraOperation = hydraOperation;
-                    this._apiDoc = apiDoc;
                 }
                 Object.defineProperty(Operation.prototype, "method", {
                     get: function () {
-                        return this._hydraOperation.method;
+                        return this[Constants_1.Core.Vocab.method];
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(Operation.prototype, "expects", {
                     get: function () {
-                        return this._hydraOperation.expects;
+                        return this[Constants_1.Core.Vocab.expects];
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(Operation.prototype, "returns", {
                     get: function () {
-                        return this._hydraOperation.returns;
+                        return this[Constants_1.Core.Vocab.returns];
                     },
                     enumerable: true,
                     configurable: true
                 });
-                Operation.prototype.getExpected = function () {
-                    if (this.expects === linkeddata_vocabs_1.owl.ns + 'Nothing') {
-                        return Promise.reject(new Error('Operation expects nothing'));
-                    }
-                    return this._apiDoc.getClass(this.expects);
-                };
-                Operation.prototype.getReturned = function () {
-                    if (this.returns === linkeddata_vocabs_1.owl.ns + 'Nothing') {
-                        return Promise.reject(new Error('Operation returns nothing'));
-                    }
-                    return this._apiDoc.getClass(this.returns);
-                };
                 return Operation;
             }(DocumentedResource));
             exports_1("Operation", Operation);
             SupportedProperty = (function (_super) {
                 __extends(SupportedProperty, _super);
-                function SupportedProperty(hydraSupportedProperty, apiDoc) {
+                function SupportedProperty(hydraSupportedProperty) {
                     _super.call(this, hydraSupportedProperty);
-                    this._hydraSupportedProperty = hydraSupportedProperty;
-                    this._apiDoc = apiDoc;
                 }
                 Object.defineProperty(SupportedProperty.prototype, "readable", {
                     get: function () {
-                        if (typeof this._hydraSupportedProperty.readable === 'undefined') {
-                            return true;
+                        if (typeof this[Constants_1.Core.Vocab.readable] === 'boolean') {
+                            return this[Constants_1.Core.Vocab.readable];
                         }
-                        return this._hydraSupportedProperty.readable;
+                        return true;
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(SupportedProperty.prototype, "writable", {
                     get: function () {
-                        if (typeof this._hydraSupportedProperty.writable === 'undefined') {
-                            return true;
+                        if (typeof this[Constants_1.Core.Vocab.writable] === 'boolean') {
+                            return this[Constants_1.Core.Vocab.writable];
                         }
-                        return this._hydraSupportedProperty.writable;
+                        return true;
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(SupportedProperty.prototype, "required", {
                     get: function () {
-                        if (typeof this._hydraSupportedProperty.required === 'undefined') {
-                            return false;
+                        if (typeof this[Constants_1.Core.Vocab.required] === 'boolean') {
+                            return this[Constants_1.Core.Vocab.required];
                         }
-                        return this._hydraSupportedProperty.required;
+                        return false;
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(SupportedProperty.prototype, "property", {
                     get: function () {
-                        return this._hydraSupportedProperty.property;
+                        return this[Constants_1.Core.Vocab.property];
                     },
                     enumerable: true,
                     configurable: true
@@ -354,17 +279,29 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
             exports_1("SupportedProperty", SupportedProperty);
             Class = (function (_super) {
                 __extends(Class, _super);
-                function Class(hydraClass, apiDoc) {
+                function Class(hydraClass) {
                     _super.call(this, hydraClass);
-                    this._hydraClass = hydraClass;
-                    this._apiDoc = apiDoc;
                 }
-                Class.prototype.getSupportedOperations = function () {
-                    return this._apiDoc.getOperations(this.id);
-                };
-                Class.prototype.getSupportedProperties = function () {
-                    return this._apiDoc.getProperties(this.id);
-                };
+                Object.defineProperty(Class.prototype, "supportedOperations", {
+                    get: function () {
+                        if (Array.isArray(this[Constants_1.Core.Vocab.supportedOperation])) {
+                            return this[Constants_1.Core.Vocab.supportedOperation];
+                        }
+                        return [this[Constants_1.Core.Vocab.supportedOperation]];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Class.prototype, "supportedProperties", {
+                    get: function () {
+                        if (Array.isArray(this[Constants_1.Core.Vocab.supportedProperty])) {
+                            return this[Constants_1.Core.Vocab.supportedProperty];
+                        }
+                        return [this[Constants_1.Core.Vocab.supportedProperty]];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 return Class;
             }(DocumentedResource));
             exports_1("Class", Class);
@@ -372,7 +309,7 @@ $__System.register("6", ["4", "8", "7", "5", "9"], function(exports_1, context_1
     }
 });
 
-$__System.register("9", [], function(exports_1, context_1) {
+$__System.register("a", [], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var JsonLdUtil;
@@ -399,10 +336,10 @@ $__System.register("9", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("a", ["8", "b", "5", "9"], function(exports_1, context_1) {
+$__System.register("b", ["8", "9", "6", "5", "a"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var _, Types, Constants_1, JsonLdUtil_1;
+    var _, Types, DocTypes, Constants_1, JsonLdUtil_1;
     var ResourceFactory, IncomingLink;
     function findIncomingLinks(object, resources) {
         return _.transform(resources, function (acc, res, key) {
@@ -421,6 +358,9 @@ $__System.register("a", ["8", "b", "5", "9"], function(exports_1, context_1) {
             function (Types_1) {
                 Types = Types_1;
             },
+            function (DocTypes_1) {
+                DocTypes = DocTypes_1;
+            },
             function (Constants_1_1) {
                 Constants_1 = Constants_1_1;
             },
@@ -430,14 +370,35 @@ $__System.register("a", ["8", "b", "5", "9"], function(exports_1, context_1) {
         execute: function() {
             ResourceFactory = (function () {
                 function ResourceFactory() {
+                    this.factories = {};
+                    this.factories[Constants_1.Core.Vocab.ApiDocumentation] =
+                        function (heracles, obj, apiDocumentation, incomingLinks) {
+                            return new DocTypes.ApiDocumentation(heracles, obj);
+                        };
+                    this.factories[Constants_1.Core.Vocab.PartialCollectionView] =
+                        function (heracles, obj, apiDocumentation, incomingLinks) {
+                            return new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
+                        };
+                    this.factories[Constants_1.Core.Vocab.Class] =
+                        function (heracles, obj, apiDocumentation, incomingLinks) {
+                            return new DocTypes.Class(obj);
+                        };
+                    this.factories[Constants_1.Core.Vocab.SupportedProperty] =
+                        function (heracles, obj, apiDocumentation, incomingLinks) {
+                            return new DocTypes.SupportedProperty(obj);
+                        };
+                    this.factories[Constants_1.Core.Vocab.Operation] =
+                        function (heracles, obj, apiDocumentation, incomingLinks) {
+                            return new DocTypes.Operation(obj);
+                        };
                 }
-                ResourceFactory.prototype.createResource = function (obj, apiDocumentation, resources) {
+                ResourceFactory.prototype.createResource = function (heracles, obj, apiDocumentation, resources, typeOverride) {
                     var incomingLinks = findIncomingLinks(obj, resources);
-                    switch (obj[Constants_1.JsonLd.Type]) {
-                        case Constants_1.Core.Vocab.PartialCollectionView:
-                            return new Types.PartialCollectionView(obj, apiDocumentation, incomingLinks);
+                    var factory = this.factories[typeOverride || obj[Constants_1.JsonLd.Type]];
+                    if (factory) {
+                        return factory.call(this, heracles, obj, apiDocumentation, incomingLinks);
                     }
-                    return new Types.Resource(obj, apiDocumentation, incomingLinks);
+                    return new Types.HydraResource(heracles, obj, apiDocumentation, incomingLinks);
                 };
                 return ResourceFactory;
             }());
@@ -528,6 +489,7 @@ $__System.register("5", [], function(exports_1, context_1) {
                 };
                 Core.Vocab = {
                     apiDocumentation: Core.Context['hydra'] + 'apiDocumentation',
+                    ApiDocumentation: Core.Context['hydra'] + 'ApiDocumentation',
                     title: Core.Context['hydra'] + 'title',
                     description: Core.Context['hydra'] + 'description',
                     method: Core.Context['hydra'] + 'method',
@@ -539,7 +501,18 @@ $__System.register("5", [], function(exports_1, context_1) {
                     next: Core.Context['hydra'] + 'next',
                     last: Core.Context['hydra'] + 'last',
                     previous: Core.Context['hydra'] + 'previous',
-                    entrypoint: Core.Context['hydra'] + 'entrypoint'
+                    entrypoint: Core.Context['hydra'] + 'entrypoint',
+                    SupportedProperty: Core.Context['hydra'] + 'SupportedProperty',
+                    supportedProperty: Core.Context['hydra'] + 'supportedProperty',
+                    Operation: Core.Context['hydra'] + 'Operation',
+                    supportedClass: Core.Context['hydra'] + 'supportedClass',
+                    supportedOperation: Core.Context['hydra'] + 'supportedOperation',
+                    expects: Core.Context['hydra'] + 'expects',
+                    returns: Core.Context['hydra'] + 'returns',
+                    readable: Core.Context['hydra'] + 'readable',
+                    writable: Core.Context['hydra'] + 'writable',
+                    required: Core.Context['hydra'] + 'required',
+                    property: Core.Context['hydra'] + 'property',
                 };
             })(Core = Core || (Core = {}));
             exports_1("Core", Core);
@@ -566,7 +539,7 @@ $__System.register("5", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
+$__System.register("9", ["8", "4", "c", "5"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -580,12 +553,15 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var _, core_decorators_1, Constants_1;
-    var _apiDocumentation, _incomingLinks, _isProcessed, Resource, PartialCollectionView;
+    var _, jsonld_1, core_decorators_1, Constants_1;
+    var _isProcessed, Resource, _apiDocumentation, _incomingLinks, HydraResource, PartialCollectionView;
     return {
         setters:[
             function (_1) {
                 _ = _1;
+            },
+            function (jsonld_1_1) {
+                jsonld_1 = jsonld_1_1;
             },
             function (core_decorators_1_1) {
                 core_decorators_1 = core_decorators_1_1;
@@ -594,14 +570,10 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                 Constants_1 = Constants_1_1;
             }],
         execute: function() {
-            _apiDocumentation = new WeakMap();
-            _incomingLinks = new WeakMap();
             _isProcessed = new WeakMap();
             Resource = (function () {
-                function Resource(actualResource, apiDoc, incomingLinks) {
+                function Resource(actualResource) {
                     _.extend(this, actualResource);
-                    _apiDocumentation.set(this, apiDoc);
-                    _incomingLinks.set(this, incomingLinks);
                     _isProcessed.set(this, false);
                 }
                 Object.defineProperty(Resource.prototype, "id", {
@@ -611,16 +583,6 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
-                Object.defineProperty(Resource.prototype, "apiDocumentation", {
-                    get: function () {
-                        return _apiDocumentation.get(this);
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                Resource.prototype.getIncomingLinks = function () {
-                    return _incomingLinks.get(this);
-                };
                 Object.defineProperty(Resource.prototype, "types", {
                     get: function () {
                         var types = this[Constants_1.JsonLd.Type];
@@ -642,29 +604,13 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
-                Resource.prototype.getOperations = function () {
-                    var _this = this;
-                    var classOperations;
-                    if (_.isArray(this[Constants_1.JsonLd.Type])) {
-                        classOperations = _.map(this[Constants_1.JsonLd.Type], function (type) { return _this.apiDocumentation.getOperations(type); });
-                    }
-                    else {
-                        classOperations = [this.apiDocumentation.getOperations(this[Constants_1.JsonLd.Type])];
-                    }
-                    var propertyOperations = _.chain(this.getIncomingLinks())
-                        .map(function (link) { return _this.apiDocumentation.getOperations(link[0], link[1]); })
-                        .union()
-                        .value();
-                    var operationPromises = classOperations.concat(propertyOperations);
-                    return Promise.all(operationPromises)
-                        .then(function (results) { return _.flatten(results); });
+                Resource.prototype.compact = function (context) {
+                    if (context === void 0) { context = null; }
+                    return jsonld_1.promises.compact(this, context || Constants_1.Core.Context);
                 };
                 __decorate([
                     core_decorators_1.nonenumerable
                 ], Resource.prototype, "id", null);
-                __decorate([
-                    core_decorators_1.nonenumerable
-                ], Resource.prototype, "apiDocumentation", null);
                 __decorate([
                     core_decorators_1.nonenumerable
                 ], Resource.prototype, "types", null);
@@ -674,6 +620,54 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                 return Resource;
             }());
             exports_1("Resource", Resource);
+            _apiDocumentation = new WeakMap();
+            _incomingLinks = new WeakMap();
+            HydraResource = (function (_super) {
+                __extends(HydraResource, _super);
+                function HydraResource(heracles, actualResource, apiDoc, incomingLinks) {
+                    _super.call(this, actualResource);
+                    _apiDocumentation.set(this, apiDoc);
+                    _incomingLinks.set(this, incomingLinks);
+                }
+                Object.defineProperty(HydraResource.prototype, "apiDocumentation", {
+                    get: function () {
+                        return _apiDocumentation.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                HydraResource.prototype.getIncomingLinks = function () {
+                    return _incomingLinks.get(this);
+                };
+                Object.defineProperty(HydraResource.prototype, "operations", {
+                    get: function () {
+                        var _this = this;
+                        var classOperations;
+                        if (_.isArray(this[Constants_1.JsonLd.Type])) {
+                            classOperations = _.map(this[Constants_1.JsonLd.Type], function (type) { return _this.apiDocumentation.getOperations(type); });
+                        }
+                        else {
+                            classOperations = [this.apiDocumentation.getOperations(this[Constants_1.JsonLd.Type])];
+                        }
+                        var propertyOperations = _.chain(this.getIncomingLinks())
+                            .map(function (link) { return _this.apiDocumentation.getOperations(link[0], link[1]); })
+                            .union()
+                            .value();
+                        var operations = classOperations.concat(propertyOperations);
+                        return _.flatten(operations);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], HydraResource.prototype, "apiDocumentation", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], HydraResource.prototype, "operations", null);
+                return HydraResource;
+            }(Resource));
+            exports_1("HydraResource", HydraResource);
             PartialCollectionView = (function (_super) {
                 __extends(PartialCollectionView, _super);
                 function PartialCollectionView() {
@@ -725,33 +719,35 @@ $__System.register("b", ["8", "c", "5"], function(exports_1, context_1) {
                     core_decorators_1.nonenumerable
                 ], PartialCollectionView.prototype, "collection", null);
                 return PartialCollectionView;
-            }(Resource));
+            }(HydraResource));
             exports_1("PartialCollectionView", PartialCollectionView);
         }
     }
 });
 
-$__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1, context_1) {
+$__System.register("1", ["8", "2", "5", "a", "b", "9"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var _, FetchUtil_1, ApiDocumentation_1, Constants_1, JsonLdUtil_1, ResourceFactory_1, Resources_1;
+    var _, FetchUtil_1, Constants_1, JsonLdUtil_1, ResourceFactory_1, Resources_1;
     var Heracles, ResourceFactory, Resource, Hydra;
-    function getRequestedObject(uri, resources, resourceFactory) {
+    function getRequestedObject(heracles, uri, resources, resourceFactory, typeOverrides) {
+        if (typeOverrides === void 0) { typeOverrides = {}; }
         return function (apiDocumentation) {
             var resourcified = {};
             _.transform(resources, function (acc, val) {
                 var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(val[Constants_1.JsonLd.Id]);
-                acc[id] = resourceFactory.createResource(val, apiDocumentation, acc);
+                acc[id] = resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
             }, resourcified);
-            _.each(resourcified, function (g) { return resourcify(g, resourcified, apiDocumentation, resourceFactory); });
-            var resource = resourcified[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
+            _.each(resourcified, function (g) { return resourcify(heracles, g, resourcified, apiDocumentation, resourceFactory, typeOverrides); });
+            uri = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri);
+            var resource = resourcified[uri];
             if (!resource) {
                 return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
             }
             return resource;
         };
     }
-    function resourcify(obj, resourcified, apiDoc, resourceFactory) {
+    function resourcify(heracles, obj, resourcified, apiDoc, resourceFactory, typeOverrides) {
         if (_.isObject(obj) === false) {
             return obj;
         }
@@ -760,8 +756,9 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
         }
         var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
         var resource = resourcified[selfId];
-        if (resourcified[selfId] instanceof Resource === false) {
-            resource = resourceFactory.createResource(obj, apiDoc, resourcified);
+        if (!resource || typeof resource._processed === 'undefined') {
+            var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
+            resource = resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
             resourcified[selfId] = resource;
         }
         if (resource._processed === true) {
@@ -770,10 +767,10 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
         resource._processed = true;
         _.forOwn(resource, function (value, key) {
             if (_.isArray(value)) {
-                resource[key] = _.map(value, function (el) { return resourcify(el, resourcified, apiDoc, resourceFactory); });
+                resource[key] = _.map(value, function (el) { return resourcify(heracles, el, resourcified, apiDoc, resourceFactory, typeOverrides); });
                 return;
             }
-            resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
+            resource[key] = resourcify(heracles, value, resourcified, apiDoc, resourceFactory, typeOverrides);
         });
         return resource;
     }
@@ -784,9 +781,6 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
             },
             function (FetchUtil_1_1) {
                 FetchUtil_1 = FetchUtil_1_1;
-            },
-            function (ApiDocumentation_1_1) {
-                ApiDocumentation_1 = ApiDocumentation_1_1;
             },
             function (Constants_1_1) {
                 Constants_1 = Constants_1_1;
@@ -809,16 +803,23 @@ $__System.register("1", ["8", "2", "6", "5", "9", "a", "b"], function(exports_1,
                     var _this = this;
                     return FetchUtil_1.FetchUtil.fetchResource(uri)
                         .then(function (response) {
-                        return FetchUtil_1.FetchUtil.fetchDocumentation(response.apiDocumentationLink)
-                            .then(function (docsObject) {
-                            return new ApiDocumentation_1.ApiDocumentation(_this, response.apiDocumentationLink, docsObject);
-                        }, function () { return null; }).then(getRequestedObject(uri, response.resources, _this.resourceFactory));
+                        return _this.loadDocumentation(response.apiDocumentationLink)
+                            .then(getRequestedObject(_this, uri, response.resources, _this.resourceFactory));
                     });
+                };
+                Heracles.prototype.loadDocumentation = function (uri) {
+                    var _this = this;
+                    return FetchUtil_1.FetchUtil.fetchResource(uri)
+                        .then(function (response) {
+                        var typeOverrides = {};
+                        typeOverrides[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)] = Constants_1.Core.Vocab.ApiDocumentation;
+                        return getRequestedObject(_this, uri, response.resources, _this.resourceFactory, typeOverrides)(null);
+                    }, function () { return null; });
                 };
                 return Heracles;
             }());
             exports_1("ResourceFactory", ResourceFactory = ResourceFactory_1.ResourceFactory);
-            exports_1("Resource", Resource = Resources_1.Resource);
+            exports_1("Resource", Resource = Resources_1.HydraResource);
             exports_1("Hydra", Hydra = new Heracles());
         }
     }

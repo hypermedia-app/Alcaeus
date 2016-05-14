@@ -22,7 +22,7 @@ describe('Hydra', () => {
     describe('loadResource', () => {
 
         beforeEach(() => {
-            fetchDocumentation = sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.resolve(Documentations.classWithOperation));
+            fetchDocumentation = sinon.stub(FetchUtil, 'fetchDocumentation', () => Responses.flattened(Documentations.classWithOperation));
         });
 
         it('should return object with matching @id', (done:any) =>{

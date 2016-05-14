@@ -1,6 +1,8 @@
 //noinspection TypeScriptCheckImport
 import {rdf, xsd} from 'jasnell/linkeddata-vocabs';
 import {Core} from '../src/Constants';
+import {promises as jsonld} from 'jsonld';
+import {JsonLd} from '../src/Constants';
 
 export namespace Bodies {
     export var someJsonLd = {
@@ -146,6 +148,11 @@ export namespace Responses {
 
     export var serverError = negativeResponse(500);
 
+    export function flattened(res) {
+        return jsonld.flatten(res, {})
+            .then(flat => flat[JsonLd.Graph]);
+    }
+
     function negativeResponse(status) {
         return () => new Response('', {
             status: status,
@@ -172,7 +179,7 @@ export namespace Responses {
 
 export namespace Documentations {
     export var classWithOperation = {
-        '@id': 'http://api.example.com.doc',
+        '@id': 'http://api.example.com/doc',
         '@context': Core.Context,
         'entrypoint': 'http://example.com/home',
         'supportedClass': [

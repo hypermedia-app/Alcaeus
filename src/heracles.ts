@@ -1,9 +1,6 @@
 'use strict';
-/// <reference path="../typings/browser.d.ts" />
-
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
-import {ApiDocumentation} from "./ApiDocumentation";
 import {JsonLd} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
@@ -17,11 +14,7 @@ class Heracles implements IHeracles {
             .then(response => {
                 return FetchUtil.fetchDocumentation(response.apiDocumentationLink)
                     .then(docsObject => {
-                        return new ApiDocumentation(
-                            this,
-                            response.apiDocumentationLink,
-                            docsObject
-                        );
+                        return getRequestedObject(response.apiDocumentationLink, docsObject, this.resourceFactory)(null);
                     }, () => null).then(getRequestedObject(uri, response.resources, this.resourceFactory));
             })
     }

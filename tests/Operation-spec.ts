@@ -15,28 +15,31 @@ describe('Operation', () => {
         'method': 'TRACE'
     });
 
-    it('should expose operation method', () => {
+    it('should expose operation method', (done:any) => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new Operation(null, compacted);
+            var op = new Operation(compacted);
 
             expect(op.method).toBe('TRACE');
-        });
+            done();
+        }).catch(done.fail);
     });
 
-    it('should expose expected class id', () => {
+    it('should expose expected class id', (done:any) => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new Operation(null, compacted);
+            var op = new Operation(compacted);
 
             expect(op.expects['@id']).toBe('http://www.w3.org/2002/07/owl#Nothing');
-        });
+            done();
+        }).catch(done.fail);
     });
 
-    it('should expose returned class id', () => {
+    it('should expose returned class id', (done:any) => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new Operation(null, compacted);
+            var op = new Operation(compacted);
 
             expect(op.returns['@id']).toBe('http://example.com/Something');
-        });
+            done();
+        }).catch(done.fail);
     });
 
 });

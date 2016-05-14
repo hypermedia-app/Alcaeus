@@ -1,5 +1,6 @@
 import {Core} from '../src/Constants';
 import {DocumentedResource} from "../src/ApiDocumentation";
+import {promises as jsonld} from 'jsonld';
 
 describe('DocumentedResource', () => {
 
@@ -10,16 +11,22 @@ describe('DocumentedResource', () => {
         'http://some/custom/property': 'The value'
     };    
     
-    it('should use hydra:title for title property', () => {
-        var op = new DocumentedResource(hydraDescriptionJsonLd);
+    it('should use hydra:title for title property', (done:any) => {
+        jsonld.compact(hydraDescriptionJsonLd, {}).then(compacted => {
+            var op = new DocumentedResource(compacted);
 
-        expect(op.title).toBe('The title');
+            expect(op.title).toBe('The title');
+            done();
+        }).catch(done.fail);
     });
 
-    it('should use hydra:description for title property', () => {
-        var op = new DocumentedResource(hydraDescriptionJsonLd);
+    it('should use hydra:description for title property', (done:any) => {
+        jsonld.compact(hydraDescriptionJsonLd, {}).then(compacted => {
+            var op = new DocumentedResource(compacted);
 
-        expect(op.description).toBe('The longer description');
+            expect(op.description).toBe('The longer description');
+            done();
+        }).catch(done.fail);
     });
 
     it('should use rdfs:label for title property as fallback', () => {
@@ -52,37 +59,6 @@ describe('DocumentedResource', () => {
         });
 
         expect(op.description).toBe('The title descr with schema');
-    });
-
-    it('should expose raw operation as promise of compacted object', (done:any) => {
-        var op = new DocumentedResource(hydraDescriptionJsonLd);
-
-        op.compact()
-            .then(compacted => {
-                expect(compacted['title']).toBe('The title');
-                expect(compacted['description']).toBe('The longer description');
-                done();
-            })
-            .catch(done.fail);
-    });
-
-    it('should expose raw operation as compactable promise', (done:any) => {
-        var op = new DocumentedResource(hydraDescriptionJsonLd);
-        var customContext = {
-            hydra: 'http://www.w3.org/ns/hydra/core#',
-            title: { '@id': 'hydra:title' },
-            description: { '@id': 'hydra:description' },
-            prop: 'http://some/custom/property'
-        };
-
-        op.compact(customContext)
-            .then(compacted => {
-                expect(compacted.title).toBe('The title');
-                expect(compacted.description).toBe('The longer description');
-                expect(compacted.prop).toBe('The value');
-                done();
-            })
-            .catch(done.fail);
     });
 
 });

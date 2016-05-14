@@ -4,7 +4,7 @@ interface IHeracles {
 }
 
 interface IResource {
-    id:string
+    id:string;
 }
 
 interface IApiDocumentation extends IResource {
@@ -23,7 +23,6 @@ interface IClass extends IResource {
 interface IDocumentedResource extends IResource {
     title:string;
     description:string;
-    compact(context:any = null):Object;
 }
 
 interface ISupportedProperty extends IDocumentedResource {

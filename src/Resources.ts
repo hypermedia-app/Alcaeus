@@ -1,20 +1,19 @@
 'use strict';
 import * as _ from 'lodash';
+import {promises as jsonld} from 'jsonld';
 import { nonenumerable } from 'core-decorators';
 import {JsonLd, Core} from './Constants';
 //noinspection TypeScriptCheckImport
 import {default} from 'core-js/es6/weak-map';
 
 var _isProcessed = new WeakMap();
-var _heracles = new WeakMap();
 
 export class Resource implements IResource {
 
-    constructor(heracles:IHeracles, actualResource) {
+    constructor(actualResource) {
         _.extend(this, actualResource);
 
         _isProcessed.set(this, false);
-        _heracles.set(this, heracles);
     }
 
     @nonenumerable
@@ -42,10 +41,9 @@ export class Resource implements IResource {
     set _processed(val:boolean) {
         _isProcessed.set(this, val);
     }
-    
-    @nonenumerable
-    get _heracles() {
-        return _heracles.get(this);
+
+    compact(context:any = null) {
+        return jsonld.compact(this, context || Core.Context);
     }
 }
 
@@ -55,7 +53,7 @@ var _incomingLinks = new WeakMap();
 export class HydraResource extends Resource implements IHydraResource {
 
     constructor(heracles:IHeracles, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
-        super(heracles, actualResource);
+        super(actualResource);
 
         _apiDocumentation.set(this, apiDoc);
         _incomingLinks.set(this, incomingLinks);
@@ -70,7 +68,8 @@ export class HydraResource extends Resource implements IHydraResource {
         return _incomingLinks.get(this);
     }
 
-    getOperations() {
+    @nonenumerable
+    get operations() {
         var classOperations;
         if(_.isArray(this[JsonLd.Type])) {
             classOperations = _.map(this[JsonLd.Type], type => this.apiDocumentation.getOperations(type));
@@ -83,10 +82,8 @@ export class HydraResource extends Resource implements IHydraResource {
             .union()
             .value();
 
-        var operationPromises = [...classOperations, ...propertyOperations];
-        
-        return Promise.all(operationPromises)
-            .then(results => _.flatten(results));
+        var operations = [...classOperations, ...propertyOperations];
+        return _.flatten(operations);
     }
 }
 

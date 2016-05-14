@@ -14,33 +14,36 @@ describe('ApiDocumentation', () => {
 
     describe('getting classes', () => {
 
-        it('should return classes from documentation', () => {
+        it('should return classes from documentation', (done) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
                 var docs = new ApiDocumentation(heracles, expanded);
 
                 expect(docs.classes.length).toBe(1);
                 expect(docs.classes[0]['@id']).toBe('http://example.com/api#Class');
-            });
+                done();
+            }).catch(done.fail);
         });
 
-        it('should return selected class by @id', () => {
+        it('should return selected class by @id', (done) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
                 var docs = new ApiDocumentation(heracles, expanded);
 
                 var clas = docs.getClass('http://example.com/api#Class');
                 expect(clas['@id']).toBe('http://example.com/api#Class');
-            });
+                done();
+            }).catch(done.fail);
         });
 
-        it('should return null for missing supported class', () => {
+        it('should return null for missing supported class', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
                 var docs = new ApiDocumentation(heracles, expanded);
 
                 var clas = docs.getClass('http://example.com/api#UndomcumentedClass');
                 expect(clas).toBe(null);
-            });
+                done()
+            }).catch(done.fail);
         });
 
     });
@@ -67,7 +70,6 @@ describe('ApiDocumentation', () => {
                     .catch(done.fail);
             });
         });
-
     });
     
     describe('getting operations', () => {

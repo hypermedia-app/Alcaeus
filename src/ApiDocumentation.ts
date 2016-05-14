@@ -1,23 +1,24 @@
 'use strict';
 /// <reference path="../typings/browser.d.ts" />
 
-import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
 import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
-import {JsonLdUtil} from "./JsonLdUtil";
-import {Resource} from "./Resources";
+import {Resource} from './Resources';
 
 export class ApiDocumentation extends Resource implements IApiDocumentation {
+    private _heracles;
 
     constructor(heracles:IHeracles, apiDoc:any) {
-        super(heracles, apiDoc);
+        super(apiDoc);
+
+        this._heracles = heracles;
     }
 
     get classes():Array<IClass> {
-        if(typeof this[Core.Vocab.supportedClass] === 'object') {
-            return [ this[Core.Vocab.supportedClass] ];
+        if (typeof this[Core.Vocab.supportedClass] === 'object') {
+            return [this[Core.Vocab.supportedClass]];
         }
 
         return this[Core.Vocab.supportedClass];
@@ -25,7 +26,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
 
     getOperations(classUri:string):Array<IOperation> {
         var clas = this.getClass(classUri);
-        if(!clas){
+        if (!clas) {
             return [];
         }
         return clas.supportedOperations;
@@ -33,14 +34,14 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
 
     getProperties(classUri:string):Array<ISupportedProperty> {
         var clas = this.getClass(classUri);
-        if(!clas){
+        if (!clas) {
             return [];
         }
         return clas.supportedProperties;
     }
 
     getClass(classId):IClass {
-        return _.find(this.classes, [ JsonLd.Id, classId ]);
+        return _.find(this.classes, [JsonLd.Id, classId]) || null;
     }
 
     getEntrypoint():Promise<IHydraResource> {
@@ -49,8 +50,8 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
 }
 
 export class DocumentedResource extends Resource implements IDocumentedResource {
-    constructor(heracles, hydraResource:any) {
-        super(heracles, hydraResource);
+    constructor(hydraResource:any) {
+        super(hydraResource);
     }
 
     get description():String {
@@ -67,8 +68,8 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
 }
 
 export class Operation extends DocumentedResource implements IOperation {
-    constructor(heracles:IHeracles, hydraOperation:any) {
-        super(heracles, hydraOperation);
+    constructor(hydraOperation:any) {
+        super(hydraOperation);
     }
 
     get method():String {
@@ -85,56 +86,59 @@ export class Operation extends DocumentedResource implements IOperation {
 }
 
 export class SupportedProperty extends DocumentedResource implements ISupportedProperty {
-    private _hydraSupportedProperty:any;
-    private _apiDoc:IApiDocumentation;
 
-    constructor(hydraSupportedProperty:any, apiDoc:IApiDocumentation) {
+    constructor(hydraSupportedProperty:any) {
         super(hydraSupportedProperty);
-
-        this._hydraSupportedProperty = hydraSupportedProperty;
-        this._apiDoc = apiDoc;
     }
 
     get readable() {
-        if (typeof this._hydraSupportedProperty.readable === 'undefined') {
-            return true;
+        if (typeof this[Core.Vocab.readable] === 'boolean') {
+            return this[Core.Vocab.readable];
         }
 
-        return this._hydraSupportedProperty.readable;
+        return true;
     }
 
     get writable() {
-        if (typeof this._hydraSupportedProperty.writable === 'undefined') {
-            return true;
+        if (typeof this[Core.Vocab.writable] === 'boolean') {
+            return this[Core.Vocab.writable];
         }
 
-        return this._hydraSupportedProperty.writable;
+        return true;
     }
 
     get required() {
-        if (typeof this._hydraSupportedProperty.required === 'undefined') {
-            return false;
+        if (typeof this[Core.Vocab.required] === 'boolean') {
+            return this[Core.Vocab.required];
         }
 
-        return this._hydraSupportedProperty.required;
+        return false;
     }
 
     get property() {
-        return this._hydraSupportedProperty.property;
+        return this[Core.Vocab.property];
     }
 }
 
 export class Class extends DocumentedResource implements IClass {
 
-    constructor(heracles, hydraClass:Object) {
-        super(heracles, hydraClass);
+    constructor(hydraClass:Object) {
+        super(hydraClass);
     }
 
     get supportedOperations():Array<IOperation> {
-        return this[Core.Vocab.supportedOperation];
+        if(Array.isArray(this[Core.Vocab.supportedOperation])) {
+            return this[Core.Vocab.supportedOperation];
+        }
+
+        return [ this[Core.Vocab.supportedOperation] ];
     }
 
     get supportedProperties():Array<ISupportedProperty> {
-        return this[Core.Vocab.supportedProperty];
+        if(Array.isArray(this[Core.Vocab.supportedProperty])) {
+            return this[Core.Vocab.supportedProperty];
+        }
+
+        return [ this[Core.Vocab.supportedProperty] ];
     }
 }

@@ -47,9 +47,9 @@ describe('Resource', () => {
 
     });
     
-    describe('getOperations', () => {
+    describe('get operations', () => {
 
-        it('should combine operations from class and property', (done:any) => {
+        it('should combine operations from class and property', () => {
             var getOperations = sinon.stub();
             var apiDoc = <IApiDocumentation>{
                 getOperations: getOperations
@@ -59,16 +59,12 @@ describe('Resource', () => {
                 ['http://example.com/vocab#Resource', 'http://example.com/vocab#other']
             ]);
 
-            resource.getOperations()
-                .then(() => {
-                    expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
-                    expect(getOperations.calledWithExactly('http://example.com/vocab#Resource', 'http://example.com/vocab#other')).toBe(true);
-                    done();
-                })
-                .catch(done.fail);
+            var ops = resource.operations;
+            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
+            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource', 'http://example.com/vocab#other')).toBe(true);
         });
 
-        it('should combine operations for multiple @types', (done:any) => {
+        it('should combine operations for multiple @types', () => {
             var getOperations = sinon.stub();
             var apiDoc = <IApiDocumentation>{
                 getOperations: getOperations
@@ -76,13 +72,9 @@ describe('Resource', () => {
             getOperations.returns(Promise.resolve([]));
             var resource = new HydraResource(null, Bodies.multipleTypesExpanded, apiDoc, [ ]);
 
-            resource.getOperations()
-                .then(() => {
-                    expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
-                    expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
-                    done();
-                })
-                .catch(done.fail);
+            var ops = resource.operations;
+            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
+            expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
         });
 
     });

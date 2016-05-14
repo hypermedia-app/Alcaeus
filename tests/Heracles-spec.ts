@@ -123,6 +123,7 @@ describe('Hydra', () => {
             Hydra.loadResource('http://example.com/resource?page=3')
                 .then((res:IPartialCollectionView) => {
                     expect(res.collection).toBeDefined();
+                    expect(res.collection).not.toBeNull();
                     expect(res.collection instanceof HydraResource)
                         .toBe(true, 'Actual type is: ' + res.collection.constructor.name);
                     done();

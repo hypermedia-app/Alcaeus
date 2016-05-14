@@ -19,13 +19,13 @@ export class ResourceFactory implements IResourceFactory {
                 => new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
         this.factories[Core.Vocab.Class] =
             (heracles, obj, apiDocumentation, incomingLinks)
-                => new DocTypes.Class(heracles, obj);
+                => new DocTypes.Class(obj);
         this.factories[Core.Vocab.SupportedProperty] =
             (heracles, obj, apiDocumentation, incomingLinks)
-                => new DocTypes.SupportedProperty(heracles, obj);
+                => new DocTypes.SupportedProperty(obj);
         this.factories[Core.Vocab.Operation] =
             (heracles, obj, apiDocumentation, incomingLinks)
-                => new DocTypes.Operation(heracles, obj);
+                => new DocTypes.Operation(obj);
     }
 
     public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
@@ -33,7 +33,7 @@ export class ResourceFactory implements IResourceFactory {
 
         var factory = this.factories[typeOverride || obj[JsonLd.Type]];
         if(factory) {
-            return factory.apply(this, arguments);
+            return factory.call(this, heracles, obj, apiDocumentation, incomingLinks);
         }
 
         return new Types.HydraResource(heracles, obj, apiDocumentation, incomingLinks);

@@ -72,6 +72,10 @@ export namespace Core {
         supportedOperation: Context['hydra'] + 'supportedOperation',
         expects: Context['hydra'] + 'expects',
         returns: Context['hydra'] + 'returns',
+        readable: Context['hydra'] + 'readable',
+        writable: Context['hydra'] + 'writable',
+        required: Context['hydra'] + 'required',
+        property: Context['hydra'] + 'property',
     };
 }
 

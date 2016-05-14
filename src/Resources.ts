@@ -37,6 +37,11 @@ export class Resource implements IResource {
     get _processed() {
         return _isProcessed.get(this);
     }
+
+    @nonenumerable
+    set _processed(val:boolean) {
+        _isProcessed.set(this, val);
+    }
     
     @nonenumerable
     get _heracles() {
@@ -63,11 +68,6 @@ export class HydraResource extends Resource implements IHydraResource {
 
     getIncomingLinks() {
         return _incomingLinks.get(this);
-    }
-
-    @nonenumerable
-    set _processed(val:boolean) {
-        _isProcessed.set(this, val);
     }
 
     getOperations() {

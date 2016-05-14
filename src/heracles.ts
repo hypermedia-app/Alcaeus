@@ -41,7 +41,7 @@ function getRequestedObject(heracles, uri, resources, resourceFactory, typeOverr
             acc[id] = resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
         }, resourcified);
 
-        _.each(resourcified, g => resourcify(g, resourcified, apiDocumentation, resourceFactory));
+        _.each(resourcified, g => resourcify(heracles, g, resourcified, apiDocumentation, resourceFactory, typeOverrides));
 
         uri = JsonLdUtil.trimTrailingSlash(uri);
         var resource = resourcified[uri];
@@ -54,7 +54,7 @@ function getRequestedObject(heracles, uri, resources, resourceFactory, typeOverr
     };
 }
 
-function resourcify(obj, resourcified, apiDoc, resourceFactory) {
+function resourcify(heracles, obj, resourcified, apiDoc, resourceFactory, typeOverrides) {
 
     if (_.isObject(obj) === false) {
         return obj;
@@ -67,8 +67,9 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
     var selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
 
     var resource = resourcified[selfId];
-    if (resourcified[selfId] instanceof Resource === false) {
-        resource = resourceFactory.createResource(obj, apiDoc, resourcified);
+    if (!resource || typeof resource._processed === 'undefined') {
+        var id = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
+        resource = resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
         resourcified[selfId] = resource;
     }
 
@@ -79,11 +80,11 @@ function resourcify(obj, resourcified, apiDoc, resourceFactory) {
     resource._processed = true;
     _.forOwn(resource, (value, key) => {
         if (_.isArray(value)) {
-            resource[key] = _.map(value, el => resourcify(el, resourcified, apiDoc, resourceFactory));
+            resource[key] = _.map(value, el => resourcify(heracles, el, resourcified, apiDoc, resourceFactory, typeOverrides));
             return;
         }
 
-        resource[key] = resourcify(value, resourcified, apiDoc, resourceFactory);
+        resource[key] = resourcify(heracles, value, resourcified, apiDoc, resourceFactory, typeOverrides);
     });
 
     return resource;

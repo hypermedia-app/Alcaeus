@@ -52,6 +52,7 @@ export namespace Core {
 
     export var Vocab = {
         apiDocumentation: Context['hydra'] + 'apiDocumentation',
+        ApiDocumentation: Context['hydra'] + 'ApiDocumentation',
         title: Context['hydra'] + 'title',
         description: Context['hydra'] + 'description',
         method: Context['hydra'] + 'method',

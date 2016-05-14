@@ -7,12 +7,13 @@ import {Resource} from '../src/Resources';
 import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations, Responses} from './test-objects';
+import {ApiDocumentation} from "../src/ApiDocumentation";
 //noinspection TypeScriptCheckImport
 import {default as is} from 'core-js/es6/object';
 
 describe('Hydra', () => {
 
-    var fetchResource, fetchDocumentation, createResource:sinon.SinonSpy;
+    var fetchResource, createResource:sinon.SinonSpy;
     
     beforeEach(() => {
         createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
@@ -22,7 +23,7 @@ describe('Hydra', () => {
     describe('loadResource', () => {
 
         beforeEach(() => {
-            fetchDocumentation = sinon.stub(FetchUtil, 'fetchDocumentation', () => Responses.flattened(Documentations.classWithOperation));
+            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.classWithOperation));
         });
 
         it('should return object with matching @id', (done:any) =>{
@@ -68,7 +69,7 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    expect(fetchDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true);
+                    expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
                     done();
                 })
                 .catch(done.fail);
@@ -157,7 +158,9 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
-        it('should pass each object through ResourceFactory', (done:any) =>{
+        it('should pass each object through ResourceFactory', (done:any) => {
+            fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
+
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
 
@@ -219,12 +222,42 @@ describe('Hydra', () => {
                 done();
             }).catch(done.fail);
         });
+
+        afterEach(() => fetchResource.restore());
+    });
+    
+    describe('loadDocumentation', () => {
+
+        it('should return type ApiDocumentation', (done:any) => {
+            fetchResource.withArgs('http://api.example.com/doc').returns(mockedResponse(Documentations.classWithOperation, false));
+
+            Hydra.loadDocumentation('http://api.example.com/doc')
+                .then(doc => {
+                    expect(doc instanceof ApiDocumentation).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        it('should return type ApiDocumentation when @type is not defined', (done:any) => {
+
+            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.untyped, false));
+
+            Hydra.loadDocumentation('http://api.example.com/doc/')
+                .then(doc => {
+                    expect(doc instanceof ApiDocumentation).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
+        afterEach(() => fetchResource.restore());
     });
 
     describe('loadResource with missing ApiDocumentation', () => {
 
         beforeEach(() => {
-            sinon.stub(FetchUtil, 'fetchDocumentation', () => Promise.reject(null));
+            fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
         });
 
         it('should succeed even if ApiDocumentation is not available', (done:any) =>{
@@ -239,17 +272,17 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
+        afterEach(() => fetchResource.restore());
+
     });
 
-    afterEach(() => fetchResource.restore());
     afterEach(() => createResource.restore());
-    afterEach(() => fetchDocumentation.restore());
 });
 
-function mockedResponse(resource) {
+function mockedResponse(resource, includeDocsLink = true) {
     return jsonld.flatten(resource, {})
         .then(expanded => ({
             resources: expanded[JsonLd.Graph],
-            apiDocumentationLink: 'http://api.example.com/doc/'
+            apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null
         }));
 }

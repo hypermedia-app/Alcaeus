@@ -5,7 +5,6 @@ import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
 import 'whatwg-fetch';
 
-
 describe('FetchUtil', () => {
 
     beforeEach(() => {
@@ -95,31 +94,6 @@ describe('FetchUtil', () => {
                 })
                 .catch(done.fail);
         });
-    });
-
-    describe('fetchDocumentation', () => {
-
-        it('should return null if ApiDocumentation returned 404 status', (done:any) => {
-            window.fetch.withArgs('http://example.com/doc')
-                .returns(Promise.resolve(Responses.notFound()));
-
-            FetchUtil.fetchDocumentation('http://example.com/doc')
-                .then(doc => {
-                    expect(doc).toBe(null);
-                    done();
-                })
-                .catch(done.fail);
-        });
-
-        it('should fail if ApiDocumentation request fails', (done:any) => {
-            window.fetch.withArgs('http://example.com/doc')
-                .returns(Promise.resolve(Responses.serverError()));
-
-            FetchUtil.fetchDocumentation('http://example.com/doc')
-                .then(done.fail)
-                .catch(done);
-        });
-
     });
 
     afterEach(() => {

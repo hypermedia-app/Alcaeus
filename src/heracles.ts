@@ -1,7 +1,7 @@
 'use strict';
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
-import {JsonLd} from './Constants';
+import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {Resource as ResourceCtor} from "./Resources";
@@ -12,11 +12,19 @@ class Heracles implements IHeracles {
     loadResource(uri:string):Promise<IHydraResource> {
         return FetchUtil.fetchResource(uri)
             .then(response => {
-                return FetchUtil.fetchDocumentation(response.apiDocumentationLink)
-                    .then(docsObject => {
-                        return getRequestedObject(response.apiDocumentationLink, docsObject, this.resourceFactory)(null);
-                    }, () => null).then(getRequestedObject(uri, response.resources, this.resourceFactory));
-            })
+                return this.loadDocumentation(response.apiDocumentationLink)
+                    .then(getRequestedObject(uri, response.resources, this.resourceFactory));
+            });
+    }
+    
+    loadDocumentation(uri:string):Promise<IApiDocumentation> {
+        return FetchUtil.fetchResource(uri)
+            .then(response => {
+                var typeOverrides = {};
+                typeOverrides[JsonLdUtil.trimTrailingSlash(uri)] = Core.Vocab.ApiDocumentation;
+
+                return getRequestedObject(uri, response.resources, this.resourceFactory, typeOverrides)(null);
+            }, () => null);
     }
 }
 
@@ -24,18 +32,19 @@ export var ResourceFactory = ResourceFactoryCtor;
 export var Resource = ResourceCtor;
 export var Hydra = new Heracles();
 
-function getRequestedObject(uri, resources, resourceFactory) {
+function getRequestedObject(uri, resources, resourceFactory, typeOverrides? = {}) {
     return apiDocumentation => {
         var resourcified = {};
 
         _.transform(resources, (acc, val) => {
             var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
-            acc[id] = resourceFactory.createResource(val, apiDocumentation, acc);
+            acc[id] = resourceFactory.createResource(val, apiDocumentation, acc, typeOverrides[id]);
         }, resourcified);
 
         _.each(resourcified, g => resourcify(g, resourcified, apiDocumentation, resourceFactory));
 
-        var resource = resourcified[JsonLdUtil.trimTrailingSlash(uri)];
+        uri = JsonLdUtil.trimTrailingSlash(uri);
+        var resource = resourcified[uri];
 
         if (!resource) {
             return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));

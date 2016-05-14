@@ -180,6 +180,7 @@ export namespace Responses {
 export namespace Documentations {
     export var classWithOperation = {
         '@id': 'http://api.example.com/doc',
+        '@type': Core.Vocab.ApiDocumentation,
         '@context': Core.Context,
         'entrypoint': 'http://example.com/home',
         'supportedClass': [
@@ -223,4 +224,10 @@ export namespace Documentations {
             }
         ]
     };
+
+    export var untyped = {
+        '@context': Core.Context,
+        '@id': 'http://api.example.com/doc',
+        'entrypoint': 'http://example.com/home'
+    }
 }

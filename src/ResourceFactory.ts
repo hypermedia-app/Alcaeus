@@ -2,16 +2,19 @@
 
 import * as _ from 'lodash';
 import * as Types from './Resources';
+import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 
 export class ResourceFactory implements IResourceFactory {
-    public createResource(obj:Object, apiDocumentation:IApiDocumentation, resources):Types.Resource {
+    public createResource(obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
         var incomingLinks = findIncomingLinks(obj, resources);
 
-        switch(obj[JsonLd.Type]){
+        switch(typeOverride || obj[JsonLd.Type]){
             case Core.Vocab.PartialCollectionView:
                 return new Types.PartialCollectionView(obj, apiDocumentation, incomingLinks);
+            case Core.Vocab.ApiDocumentation:
+                return new DocTypes.ApiDocumentation();
         }
 
         return new Types.Resource(obj, apiDocumentation, incomingLinks);

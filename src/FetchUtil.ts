@@ -25,16 +25,6 @@ export class FetchUtil {
                 },
                 () => null);
     }
-
-    static fetchDocumentation(uri:string):Promise<Object> {
-        return window.fetch(uri, <FetchOptions>{
-                headers: {
-                    accept: FetchUtil._requestAcceptHeaders
-                }
-            })
-            .then(rejectNotFoundStatus)
-            .then(getFlattendGraph, () => null);
-    }
 }
 
 function rejectNotFoundStatus(res:Response) {

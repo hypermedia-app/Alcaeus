@@ -34,7 +34,7 @@ export var Hydra = new Heracles();
 
 function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides? = {}) {
     return apiDocumentation => {
-        var resourcified = {};
+        var resourcified = _.keyBy(resources, res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]));
         uri = JsonLdUtil.trimTrailingSlash(uri);
 
         _.transform(resources, (acc, val) => {

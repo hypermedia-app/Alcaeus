@@ -838,7 +838,7 @@ $__System.register("1", ["9", "2", "5", "b", "c", "a"], function(exports_1, cont
     function getRequestedObject(heracles, uri, resources, typeOverrides) {
         if (typeOverrides === void 0) { typeOverrides = {}; }
         return function (apiDocumentation) {
-            var resourcified = {};
+            var resourcified = _.keyBy(resources, function (res) { return JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(res[Constants_1.JsonLd.Id]); });
             uri = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri);
             _.transform(resources, function (acc, val) {
                 var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(val[Constants_1.JsonLd.Id]);

@@ -38,6 +38,16 @@ describe('ResourceFactory', () => {
             })(typePair[0], typePair[1]);
         });
 
+        it('should create typed instance for type expressed as array', function () {
+            var jsonLd = {
+                '@type': [ Core.Vocab.SupportedProperty, Core.Vocab.Class ]
+            };
+
+            var resource = factory.createResource(null, jsonLd, apiDoc, []);
+
+            expect(resource instanceof documentationTypes.SupportedProperty).toBe(true);
+        });
+
         it('should created typed instance when inferred from incoming link', () => {
             var property = {'@id': '_:b1'};
             var supportedClass = {};

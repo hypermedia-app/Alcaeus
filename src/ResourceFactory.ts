@@ -24,6 +24,15 @@ export class ResourceFactory implements IResourceFactory {
         addInferredTypes.call(this, obj, incomingLinks);
 
         var factory = this.factories[typeOverride || obj[JsonLd.Type]];
+        if(!factory && Array.isArray(obj[JsonLd.Type])) {
+            for (var i=0; i<obj[JsonLd.Type].length; i++) {
+                factory = this.factories[obj[JsonLd.Type][i]];
+                if(factory) {
+                    break;
+                }
+            }
+        }
+
         if (factory) {
             return factory.call(this, heracles, obj, apiDocumentation, incomingLinks);
         }

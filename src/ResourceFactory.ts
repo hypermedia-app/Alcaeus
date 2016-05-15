@@ -102,6 +102,7 @@ function setUpDefaultFactories() {
     this.factories[Core.Vocab.Class] = createClass;
     this.factories[Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Core.Vocab.Operation] = createOperation;
+    this.factories[Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
 }
 
 function setUpDefaultRangeMappings() {
@@ -131,4 +132,7 @@ function createSupportedProperty(obj) {
 }
 function createOperation(obj) {
     return new DocTypes.Operation(obj);
+}
+function createStatusCodeDescription(obj) {
+    return new DocTypes.StatusCodeDescription(obj);
 }

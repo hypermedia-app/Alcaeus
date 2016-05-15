@@ -55,4 +55,9 @@ interface IResourceFactory {
     createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):IResource
 }
 
+interface IStatusCodeDescription {
+    code:number,
+    description:string;
+}
+
 var Hydra:IHeracles;

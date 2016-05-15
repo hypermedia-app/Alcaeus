@@ -161,3 +161,14 @@ export class Class extends DocumentedResource implements IClass {
         return [ properties ];
     }
 }
+
+export class StatusCodeDescription extends Resource implements IStatusCodeDescription {
+    
+    get code():number {
+        return this[Core.Vocab.code];
+    }
+    
+    get description():string {
+        return this[Core.Vocab.description] || '';
+    }
+}

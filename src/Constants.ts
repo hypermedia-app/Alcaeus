@@ -81,6 +81,7 @@ export namespace Core {
         mapping: Context['hydra'] + 'mapping',
         StatusCodeDescription: Context['hydra'] + 'StatusCodeDescription',
         IriTemplateMapping: Context['hydra'] + 'IriTemplateMapping',
+        code: Context['hydra'] + 'code',
     };
 }
 

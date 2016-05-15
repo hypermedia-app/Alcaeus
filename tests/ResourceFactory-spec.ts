@@ -23,6 +23,7 @@ describe('ResourceFactory', () => {
         constructedTypes[Core.Vocab.Class] = res => res instanceof documentationTypes.Class;
         constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;
         constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.Operation;
+        constructedTypes[Core.Vocab.StatusCodeDescription] = res => res instanceof documentationTypes.StatusCodeDescription;
 
         _.toPairs(constructedTypes).forEach(typePair => {
             (function (typeId, isOfCorrectType) {

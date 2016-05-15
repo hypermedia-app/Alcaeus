@@ -76,6 +76,11 @@ export namespace Core {
         writable: Context['hydra'] + 'writable',
         required: Context['hydra'] + 'required',
         property: Context['hydra'] + 'property',
+        statusCodes: Context['hydra'] + 'statusCodes',
+        operation: Context['hydra'] + 'operation',
+        mapping: Context['hydra'] + 'mapping',
+        StatusCodeDescription: Context['hydra'] + 'StatusCodeDescription',
+        IriTemplateMapping: Context['hydra'] + 'IriTemplateMapping',
     };
 }
 

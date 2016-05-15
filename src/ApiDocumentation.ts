@@ -127,18 +127,30 @@ export class Class extends DocumentedResource implements IClass {
     }
 
     get supportedOperations():Array<IOperation> {
-        if(Array.isArray(this[Core.Vocab.supportedOperation])) {
+        var operations = this[Core.Vocab.supportedOperation];
+        
+        if(typeof operations ==='undefined' || operations === null) {
+            return [];
+        }
+        
+        if(Array.isArray(operations)) {
             return this[Core.Vocab.supportedOperation];
         }
 
-        return [ this[Core.Vocab.supportedOperation] ];
+        return [ operations ];
     }
 
     get supportedProperties():Array<ISupportedProperty> {
-        if(Array.isArray(this[Core.Vocab.supportedProperty])) {
-            return this[Core.Vocab.supportedProperty];
+        var properties = this[Core.Vocab.supportedProperty];
+        
+        if(typeof properties === 'undefined' || properties === null ) {
+            return [];
+        }
+        
+        if(Array.isArray(properties)) {
+            return properties;
         }
 
-        return [ this[Core.Vocab.supportedProperty] ];
+        return [ properties ];
     }
 }

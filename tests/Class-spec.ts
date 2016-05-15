@@ -21,6 +21,23 @@ describe('Class', () => {
             }).catch(done.fail);
         });
 
+        it('should return empty array if property is missing', () => {
+            var clas = new Class({
+                '@id': 'http://example.com/vocab#SomeClass'
+            });
+
+            expect(clas.supportedOperations.length).toBe(0);
+        });
+
+        it('should return empty array if property is null', () => {
+            var clas = new Class({
+                '@id': 'http://example.com/vocab#SomeClass',
+                'http://www.w3.org/ns/hydra/core#supportedOperation': null
+            });
+
+            expect(clas.supportedOperations.length).toBe(0);
+        });
+
     });
 
     describe('getting properties', () => {
@@ -31,6 +48,23 @@ describe('Class', () => {
                 expect(clas.supportedProperties.length).toBe(1);
                 done();
             }).catch(done.fail);
+        });
+
+        it('should return empty array if property is missing', () => {
+            var clas = new Class({
+                '@id': 'http://example.com/vocab#SomeClass'
+            });
+
+            expect(clas.supportedProperties.length).toBe(0);
+        });
+
+        it('should return empty array if property is null', () => {
+            var clas = new Class({
+                '@id': 'http://example.com/vocab#SomeClass',
+                'http://www.w3.org/ns/hydra/core#supportedProperty': null
+            });
+
+            expect(clas.supportedProperties.length).toBe(0);
         });
     });
 

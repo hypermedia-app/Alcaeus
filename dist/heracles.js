@@ -284,20 +284,28 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
                 }
                 Object.defineProperty(Class.prototype, "supportedOperations", {
                     get: function () {
-                        if (Array.isArray(this[Constants_1.Core.Vocab.supportedOperation])) {
+                        var operations = this[Constants_1.Core.Vocab.supportedOperation];
+                        if (typeof operations === 'undefined' || operations === null) {
+                            return [];
+                        }
+                        if (Array.isArray(operations)) {
                             return this[Constants_1.Core.Vocab.supportedOperation];
                         }
-                        return [this[Constants_1.Core.Vocab.supportedOperation]];
+                        return [operations];
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(Class.prototype, "supportedProperties", {
                     get: function () {
-                        if (Array.isArray(this[Constants_1.Core.Vocab.supportedProperty])) {
-                            return this[Constants_1.Core.Vocab.supportedProperty];
+                        var properties = this[Constants_1.Core.Vocab.supportedProperty];
+                        if (typeof properties === 'undefined' || properties === null) {
+                            return [];
                         }
-                        return [this[Constants_1.Core.Vocab.supportedProperty]];
+                        if (Array.isArray(properties)) {
+                            return properties;
+                        }
+                        return [properties];
                     },
                     enumerable: true,
                     configurable: true

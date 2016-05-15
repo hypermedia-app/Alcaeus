@@ -6,14 +6,16 @@ import * as _ from 'lodash';
 import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd} from './Constants';
 import {Resource} from './Resources';
+import {nonenumerable} from "core-decorators";
+
+var heraclesWeakMap = new WeakMap();
 
 export class ApiDocumentation extends Resource implements IApiDocumentation {
-    private _heracles;
 
     constructor(heracles:IHeracles, apiDoc:any) {
         super(apiDoc);
 
-        this._heracles = heracles;
+        heraclesWeakMap.set(this, heracles);
     }
 
     get classes():Array<IClass> {
@@ -22,6 +24,11 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
         }
 
         return [ this[Core.Vocab.supportedClass] ];
+    }
+
+    @nonenumerable
+    get _heracles() {
+        return heraclesWeakMap.get(this);
     }
 
     getOperations(classUri:string):Array<IOperation> {

@@ -13,7 +13,7 @@ class Heracles implements IHeracles {
         return FetchUtil.fetchResource(uri)
             .then(response => {
                 return this.loadDocumentation(response.apiDocumentationLink)
-                    .then(getRequestedObject(this, uri, response.resources, this.resourceFactory));
+                    .then(getRequestedObject(this, uri, response.resources));
             });
     }
     
@@ -23,7 +23,7 @@ class Heracles implements IHeracles {
                 var typeOverrides = {};
                 typeOverrides[JsonLdUtil.trimTrailingSlash(uri)] = Core.Vocab.ApiDocumentation;
 
-                return getRequestedObject(this, uri, response.resources, this.resourceFactory, typeOverrides)(null);
+                return getRequestedObject(this, uri, response.resources, typeOverrides)(null);
             }, () => null);
     }
 }
@@ -32,30 +32,27 @@ export var ResourceFactory = ResourceFactoryCtor;
 export var Resource = ResourceCtor;
 export var Hydra = new Heracles();
 
-function getRequestedObject(heracles, uri, resources, resourceFactory, typeOverrides? = {}) {
+function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides? = {}) {
     return apiDocumentation => {
         var resourcified = {};
+        uri = JsonLdUtil.trimTrailingSlash(uri);
 
         _.transform(resources, (acc, val) => {
             var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
-            acc[id] = resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
+            acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
         }, resourcified);
 
-        _.each(resourcified, g => resourcify(heracles, g, resourcified, apiDocumentation, resourceFactory, typeOverrides));
-
-        uri = JsonLdUtil.trimTrailingSlash(uri);
-        var resource = resourcified[uri];
-
-        if (!resource) {
+        if (!resourcified[uri]) {
             return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
         }
 
-        return resource;
+        _.each(resourcified, g => resourcify(heracles, g, resourcified, apiDocumentation, typeOverrides));
+
+        return resourcified[uri];
     };
 }
 
-function resourcify(heracles, obj, resourcified, apiDoc, resourceFactory, typeOverrides) {
-
+function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
     if (_.isObject(obj) === false) {
         return obj;
     }
@@ -66,10 +63,14 @@ function resourcify(heracles, obj, resourcified, apiDoc, resourceFactory, typeOv
 
     var selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
 
+    if(!selfId) {
+        return obj;
+    }
+
     var resource = resourcified[selfId];
     if (!resource || typeof resource._processed === 'undefined') {
         var id = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
-        resource = resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
+        resource = heracles.resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
         resourcified[selfId] = resource;
     }
 
@@ -80,11 +81,11 @@ function resourcify(heracles, obj, resourcified, apiDoc, resourceFactory, typeOv
     resource._processed = true;
     _.forOwn(resource, (value, key) => {
         if (_.isArray(value)) {
-            resource[key] = _.map(value, el => resourcify(heracles, el, resourcified, apiDoc, resourceFactory, typeOverrides));
+            resource[key] = _.map(value, el => resourcify(heracles, el, resourcified, apiDoc, typeOverrides));
             return;
         }
 
-        resource[key] = resourcify(heracles, value, resourcified, apiDoc, resourceFactory, typeOverrides);
+        resource[key] = resourcify(heracles, value, resourcified, apiDoc, typeOverrides);
     });
 
     return resource;

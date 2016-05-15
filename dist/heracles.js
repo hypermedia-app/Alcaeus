@@ -1,6 +1,6 @@
 !function(e){function r(e,r,t){e in i||(i[e]={name:e,declarative:!0,deps:r,declare:t,normalizedDeps:r})}function t(e){return c[e]||(c[e]={name:e,dependencies:[],exports:{},importers:[]})}function n(r){if(!r.module){var o=r.module=t(r.name),a=r.module.exports,s=r.declare.call(e,function(e,r){if(o.locked=!0,"object"==typeof e)for(var t in e)a[t]=e[t];else a[e]=r;for(var n=0,u=o.importers.length;u>n;n++){var i=o.importers[n];if(!i.locked)for(var s=0;s<i.dependencies.length;++s)i.dependencies[s]===o&&i.setters[s](a)}return o.locked=!1,r},r.name);o.setters=s.setters,o.execute=s.execute;for(var l=0,d=r.normalizedDeps.length;d>l;l++){var f,p=r.normalizedDeps[l],v=i[p],m=c[p];m?f=m.exports:v&&!v.declarative?f=v.esModule:v?(n(v),m=v.module,f=m.exports):f=u(p),m&&m.importers?(m.importers.push(o),o.dependencies.push(m)):o.dependencies.push(null),o.setters[l]&&o.setters[l](f)}}}function o(e){var r={};if("object"==typeof e||"function"==typeof e)if(l){var t;for(var n in e)(t=Object.getOwnPropertyDescriptor(e,n))&&f(r,n,t)}else{var o=e&&e.hasOwnProperty;for(var n in e)(!o||e.hasOwnProperty(n))&&(r[n]=e[n])}return r["default"]=e,f(r,"__useDefault",{value:!0}),r}function a(r,t){var n=i[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,l=n.normalizedDeps.length;l>o;o++){var d=n.normalizedDeps[o];-1==s.call(t,d)&&(i[d]?a(d,t):u(d))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function u(e){if(v[e])return v[e];if("@node/"==e.substr(0,6))return p(e.substr(6));var r=i[e];if(!r)throw"Module "+e+" not present.";return n(i[e]),a(e,[]),i[e]=void 0,r.declarative&&f(r.module.exports,"__esModule",{value:!0}),v[e]=r.declarative?r.module.exports:r.esModule}var i={},s=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},l=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(d){l=!1}var f;!function(){try{Object.defineProperty({},"a",{})&&(f=Object.defineProperty)}catch(e){f=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var c={},p="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,v={"@empty":{}};return function(e,t,n){return function(a){a(function(a){for(var i=0;i<t.length;i++)(function(e,r){r&&r.__esModule?v[e]=r:v[e]=o(r)})(t[i],arguments[i]);n({register:r});var s=u(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)u(e[i]);return s.__useDefault?s["default"]:s})}}}("undefined"!=typeof self?self:global)
 
-(["1"], ["3","4","8","7","c"], function($__System) {
+(["1"], ["3","4","9","7","8"], function($__System) {
 
 $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     'use strict';
@@ -113,7 +113,7 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
+$__System.register("6", ["9", "7", "5", "a", "8"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -121,8 +121,14 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var _, linkeddata_vocabs_1, Constants_1, Resources_1;
-    var ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class;
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var _, linkeddata_vocabs_1, Constants_1, Resources_1, core_decorators_1;
+    var heraclesWeakMap, ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class, StatusCodeDescription;
     return {
         setters:[
             function (_1) {
@@ -136,13 +142,17 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
             },
             function (Resources_1_1) {
                 Resources_1 = Resources_1_1;
+            },
+            function (core_decorators_1_1) {
+                core_decorators_1 = core_decorators_1_1;
             }],
         execute: function() {
+            heraclesWeakMap = new WeakMap();
             ApiDocumentation = (function (_super) {
                 __extends(ApiDocumentation, _super);
                 function ApiDocumentation(heracles, apiDoc) {
                     _super.call(this, apiDoc);
-                    this._heracles = heracles;
+                    heraclesWeakMap.set(this, heracles);
                 }
                 Object.defineProperty(ApiDocumentation.prototype, "classes", {
                     get: function () {
@@ -150,6 +160,13 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
                             return this[Constants_1.Core.Vocab.supportedClass];
                         }
                         return [this[Constants_1.Core.Vocab.supportedClass]];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(ApiDocumentation.prototype, "_heracles", {
+                    get: function () {
+                        return heraclesWeakMap.get(this);
                     },
                     enumerable: true,
                     configurable: true
@@ -174,6 +191,9 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
                 ApiDocumentation.prototype.getEntrypoint = function () {
                     return this._heracles.loadResource(this[Constants_1.Core.Vocab.entrypoint][Constants_1.JsonLd.Id]);
                 };
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], ApiDocumentation.prototype, "_heracles", null);
                 return ApiDocumentation;
             }(Resources_1.Resource));
             exports_1("ApiDocumentation", ApiDocumentation);
@@ -313,11 +333,33 @@ $__System.register("6", ["8", "7", "5", "9"], function(exports_1, context_1) {
                 return Class;
             }(DocumentedResource));
             exports_1("Class", Class);
+            StatusCodeDescription = (function (_super) {
+                __extends(StatusCodeDescription, _super);
+                function StatusCodeDescription() {
+                    _super.apply(this, arguments);
+                }
+                Object.defineProperty(StatusCodeDescription.prototype, "code", {
+                    get: function () {
+                        return this[Constants_1.Core.Vocab.code];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(StatusCodeDescription.prototype, "description", {
+                    get: function () {
+                        return this[Constants_1.Core.Vocab.description] || '';
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return StatusCodeDescription;
+            }(Resources_1.Resource));
+            exports_1("StatusCodeDescription", StatusCodeDescription);
         }
     }
 });
 
-$__System.register("a", [], function(exports_1, context_1) {
+$__System.register("b", [], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var JsonLdUtil;
@@ -344,10 +386,10 @@ $__System.register("a", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("b", ["8", "9", "6", "5", "a"], function(exports_1, context_1) {
+$__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var _, Types, DocTypes, Constants_1, JsonLdUtil_1;
+    var _, linkeddata_vocabs_1, Types, DocTypes, Constants_1, JsonLdUtil_1;
     var ResourceFactory, IncomingLink;
     function findIncomingLinks(object, resources) {
         return _.transform(resources, function (acc, res, key) {
@@ -358,10 +400,67 @@ $__System.register("b", ["8", "9", "6", "5", "a"], function(exports_1, context_1
             });
         }, []);
     }
+    function addInferredTypes(obj, incomingLinks) {
+        var _this = this;
+        if (typeof obj[Constants_1.JsonLd.Type] === 'undefined') {
+            obj[Constants_1.JsonLd.Type] = [];
+        }
+        if (_.isArray(obj[Constants_1.JsonLd.Type]) === false) {
+            obj[Constants_1.JsonLd.Type] = [obj[Constants_1.JsonLd.Type]];
+        }
+        _.each(incomingLinks, function (link) {
+            if (_this.propertyRangeMappings[link.predicate]) {
+                var range = _this.propertyRangeMappings[link.predicate];
+                if (obj[Constants_1.JsonLd.Type].indexOf(range) === -1) {
+                    obj[Constants_1.JsonLd.Type].push(range);
+                }
+            }
+        });
+    }
+    function setUpDefaultFactories() {
+        this.factories[Constants_1.Core.Vocab.ApiDocumentation] = createApiDocumentation;
+        this.factories[Constants_1.Core.Vocab.PartialCollectionView] = createPartialCollectionView;
+        this.factories[Constants_1.Core.Vocab.Class] = createClass;
+        this.factories[Constants_1.Core.Vocab.SupportedProperty] = createSupportedProperty;
+        this.factories[Constants_1.Core.Vocab.Operation] = createOperation;
+        this.factories[Constants_1.Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
+    }
+    function setUpDefaultRangeMappings() {
+        this.propertyRangeMappings[Constants_1.Core.Vocab.supportedClass] = Constants_1.Core.Vocab.Class;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.statusCodes] = Constants_1.Core.Vocab.StatusCodeDescription;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.supportedProperty] = Constants_1.Core.Vocab.SupportedProperty;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.supportedOperation] = Constants_1.Core.Vocab.Operation;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.operation] = Constants_1.Core.Vocab.Operation;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.expects] = Constants_1.Core.Vocab.Operation;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.returns] = Constants_1.Core.Vocab.Operation;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.mapping] = Constants_1.Core.Vocab.IriTemplateMapping;
+        this.propertyRangeMappings[Constants_1.Core.Vocab.property] = linkeddata_vocabs_1.rdf.ns + 'Property';
+    }
+    function createApiDocumentation(heracles, obj) {
+        return new DocTypes.ApiDocumentation(heracles, obj);
+    }
+    function createPartialCollectionView(heracles, obj, apiDocumentation, incomingLinks) {
+        return new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
+    }
+    function createClass(obj) {
+        return new DocTypes.Class(obj);
+    }
+    function createSupportedProperty(obj) {
+        return new DocTypes.SupportedProperty(obj);
+    }
+    function createOperation(obj) {
+        return new DocTypes.Operation(obj);
+    }
+    function createStatusCodeDescription(obj) {
+        return new DocTypes.StatusCodeDescription(obj);
+    }
     return {
         setters:[
             function (_1) {
                 _ = _1;
+            },
+            function (linkeddata_vocabs_1_1) {
+                linkeddata_vocabs_1 = linkeddata_vocabs_1_1;
             },
             function (Types_1) {
                 Types = Types_1;
@@ -379,30 +478,22 @@ $__System.register("b", ["8", "9", "6", "5", "a"], function(exports_1, context_1
             ResourceFactory = (function () {
                 function ResourceFactory() {
                     this.factories = {};
-                    this.factories[Constants_1.Core.Vocab.ApiDocumentation] =
-                        function (heracles, obj, apiDocumentation, incomingLinks) {
-                            return new DocTypes.ApiDocumentation(heracles, obj);
-                        };
-                    this.factories[Constants_1.Core.Vocab.PartialCollectionView] =
-                        function (heracles, obj, apiDocumentation, incomingLinks) {
-                            return new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
-                        };
-                    this.factories[Constants_1.Core.Vocab.Class] =
-                        function (heracles, obj, apiDocumentation, incomingLinks) {
-                            return new DocTypes.Class(obj);
-                        };
-                    this.factories[Constants_1.Core.Vocab.SupportedProperty] =
-                        function (heracles, obj, apiDocumentation, incomingLinks) {
-                            return new DocTypes.SupportedProperty(obj);
-                        };
-                    this.factories[Constants_1.Core.Vocab.Operation] =
-                        function (heracles, obj, apiDocumentation, incomingLinks) {
-                            return new DocTypes.Operation(obj);
-                        };
+                    this.propertyRangeMappings = {};
+                    setUpDefaultFactories.call(this);
+                    setUpDefaultRangeMappings.call(this);
                 }
                 ResourceFactory.prototype.createResource = function (heracles, obj, apiDocumentation, resources, typeOverride) {
                     var incomingLinks = findIncomingLinks(obj, resources);
+                    addInferredTypes.call(this, obj, incomingLinks);
                     var factory = this.factories[typeOverride || obj[Constants_1.JsonLd.Type]];
+                    if (!factory && Array.isArray(obj[Constants_1.JsonLd.Type])) {
+                        for (var i = 0; i < obj[Constants_1.JsonLd.Type].length; i++) {
+                            factory = this.factories[obj[Constants_1.JsonLd.Type][i]];
+                            if (factory) {
+                                break;
+                            }
+                        }
+                    }
                     if (factory) {
                         return factory.call(this, heracles, obj, apiDocumentation, incomingLinks);
                     }
@@ -521,6 +612,12 @@ $__System.register("5", [], function(exports_1, context_1) {
                     writable: Core.Context['hydra'] + 'writable',
                     required: Core.Context['hydra'] + 'required',
                     property: Core.Context['hydra'] + 'property',
+                    statusCodes: Core.Context['hydra'] + 'statusCodes',
+                    operation: Core.Context['hydra'] + 'operation',
+                    mapping: Core.Context['hydra'] + 'mapping',
+                    StatusCodeDescription: Core.Context['hydra'] + 'StatusCodeDescription',
+                    IriTemplateMapping: Core.Context['hydra'] + 'IriTemplateMapping',
+                    code: Core.Context['hydra'] + 'code',
                 };
             })(Core = Core || (Core = {}));
             exports_1("Core", Core);
@@ -547,7 +644,7 @@ $__System.register("5", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("9", ["8", "4", "c", "5"], function(exports_1, context_1) {
+$__System.register("a", ["9", "4", "8", "5"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -733,29 +830,28 @@ $__System.register("9", ["8", "4", "c", "5"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("1", ["8", "2", "5", "a", "b", "9"], function(exports_1, context_1) {
+$__System.register("1", ["9", "2", "5", "b", "c", "a"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var _, FetchUtil_1, Constants_1, JsonLdUtil_1, ResourceFactory_1, Resources_1;
     var Heracles, ResourceFactory, Resource, Hydra;
-    function getRequestedObject(heracles, uri, resources, resourceFactory, typeOverrides) {
+    function getRequestedObject(heracles, uri, resources, typeOverrides) {
         if (typeOverrides === void 0) { typeOverrides = {}; }
         return function (apiDocumentation) {
             var resourcified = {};
+            uri = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri);
             _.transform(resources, function (acc, val) {
                 var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(val[Constants_1.JsonLd.Id]);
-                acc[id] = resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
+                acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
             }, resourcified);
-            _.each(resourcified, function (g) { return resourcify(heracles, g, resourcified, apiDocumentation, resourceFactory, typeOverrides); });
-            uri = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri);
-            var resource = resourcified[uri];
-            if (!resource) {
+            if (!resourcified[uri]) {
                 return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
             }
-            return resource;
+            _.each(resourcified, function (g) { return resourcify(heracles, g, resourcified, apiDocumentation, typeOverrides); });
+            return resourcified[uri];
         };
     }
-    function resourcify(heracles, obj, resourcified, apiDoc, resourceFactory, typeOverrides) {
+    function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
         if (_.isObject(obj) === false) {
             return obj;
         }
@@ -763,10 +859,13 @@ $__System.register("1", ["8", "2", "5", "a", "b", "9"], function(exports_1, cont
             return obj[Constants_1.JsonLd.Value];
         }
         var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
+        if (!selfId) {
+            return obj;
+        }
         var resource = resourcified[selfId];
         if (!resource || typeof resource._processed === 'undefined') {
             var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
-            resource = resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
+            resource = heracles.resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
             resourcified[selfId] = resource;
         }
         if (resource._processed === true) {
@@ -775,10 +874,10 @@ $__System.register("1", ["8", "2", "5", "a", "b", "9"], function(exports_1, cont
         resource._processed = true;
         _.forOwn(resource, function (value, key) {
             if (_.isArray(value)) {
-                resource[key] = _.map(value, function (el) { return resourcify(heracles, el, resourcified, apiDoc, resourceFactory, typeOverrides); });
+                resource[key] = _.map(value, function (el) { return resourcify(heracles, el, resourcified, apiDoc, typeOverrides); });
                 return;
             }
-            resource[key] = resourcify(heracles, value, resourcified, apiDoc, resourceFactory, typeOverrides);
+            resource[key] = resourcify(heracles, value, resourcified, apiDoc, typeOverrides);
         });
         return resource;
     }
@@ -812,7 +911,7 @@ $__System.register("1", ["8", "2", "5", "a", "b", "9"], function(exports_1, cont
                     return FetchUtil_1.FetchUtil.fetchResource(uri)
                         .then(function (response) {
                         return _this.loadDocumentation(response.apiDocumentationLink)
-                            .then(getRequestedObject(_this, uri, response.resources, _this.resourceFactory));
+                            .then(getRequestedObject(_this, uri, response.resources));
                     });
                 };
                 Heracles.prototype.loadDocumentation = function (uri) {
@@ -821,7 +920,7 @@ $__System.register("1", ["8", "2", "5", "a", "b", "9"], function(exports_1, cont
                         .then(function (response) {
                         var typeOverrides = {};
                         typeOverrides[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)] = Constants_1.Core.Vocab.ApiDocumentation;
-                        return getRequestedObject(_this, uri, response.resources, _this.resourceFactory, typeOverrides)(null);
+                        return getRequestedObject(_this, uri, response.resources, typeOverrides)(null);
                     }, function () { return null; });
                 };
                 return Heracles;

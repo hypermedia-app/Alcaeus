@@ -124,15 +124,15 @@ function createApiDocumentation(heracles, obj) {
 function createPartialCollectionView(heracles, obj, apiDocumentation, incomingLinks) {
     return new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
 }
-function createClass(obj) {
+function createClass(heracles, obj) {
     return new DocTypes.Class(obj);
 }
-function createSupportedProperty(obj) {
+function createSupportedProperty(heracles, obj) {
     return new DocTypes.SupportedProperty(obj);
 }
-function createOperation(obj) {
+function createOperation(heracles, obj) {
     return new DocTypes.Operation(obj);
 }
-function createStatusCodeDescription(obj) {
+function createStatusCodeDescription(heracles, obj) {
     return new DocTypes.StatusCodeDescription(obj);
 }

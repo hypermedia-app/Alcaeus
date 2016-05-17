@@ -9,8 +9,6 @@ import {FlatteningOptions} from "jsonld";
 //noinspection TypeScriptCheckImport
 import * as $rdf from 'rdf-ext';
 //noinspection TypeScriptCheckImport
-import {default as RdfStore} from 'rdf-store-singlegraph';
-//noinspection TypeScriptCheckImport
 import {default as formats} from 'rdf-formats-common';
 //noinspection TypeScriptCheckImport
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'

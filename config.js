@@ -30,6 +30,7 @@ System.config({
     "lodash": "npm:lodash@4.9.0",
     "rdf-ext": "npm:rdf-ext@0.3.0",
     "rdf-formats-common": "npm:rdf-formats-common@0.3.0",
+    "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
     "whatwg-fetch": "npm:whatwg-fetch@0.11.0",

@@ -1,8 +1,8 @@
 !function(e){function r(e,r,t){e in i||(i[e]={name:e,declarative:!0,deps:r,declare:t,normalizedDeps:r})}function t(e){return c[e]||(c[e]={name:e,dependencies:[],exports:{},importers:[]})}function n(r){if(!r.module){var o=r.module=t(r.name),a=r.module.exports,s=r.declare.call(e,function(e,r){if(o.locked=!0,"object"==typeof e)for(var t in e)a[t]=e[t];else a[e]=r;for(var n=0,u=o.importers.length;u>n;n++){var i=o.importers[n];if(!i.locked)for(var s=0;s<i.dependencies.length;++s)i.dependencies[s]===o&&i.setters[s](a)}return o.locked=!1,r},r.name);o.setters=s.setters,o.execute=s.execute;for(var l=0,d=r.normalizedDeps.length;d>l;l++){var f,p=r.normalizedDeps[l],v=i[p],m=c[p];m?f=m.exports:v&&!v.declarative?f=v.esModule:v?(n(v),m=v.module,f=m.exports):f=u(p),m&&m.importers?(m.importers.push(o),o.dependencies.push(m)):o.dependencies.push(null),o.setters[l]&&o.setters[l](f)}}}function o(e){var r={};if("object"==typeof e||"function"==typeof e)if(l){var t;for(var n in e)(t=Object.getOwnPropertyDescriptor(e,n))&&f(r,n,t)}else{var o=e&&e.hasOwnProperty;for(var n in e)(!o||e.hasOwnProperty(n))&&(r[n]=e[n])}return r["default"]=e,f(r,"__useDefault",{value:!0}),r}function a(r,t){var n=i[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,l=n.normalizedDeps.length;l>o;o++){var d=n.normalizedDeps[o];-1==s.call(t,d)&&(i[d]?a(d,t):u(d))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function u(e){if(v[e])return v[e];if("@node/"==e.substr(0,6))return p(e.substr(6));var r=i[e];if(!r)throw"Module "+e+" not present.";return n(i[e]),a(e,[]),i[e]=void 0,r.declarative&&f(r.module.exports,"__esModule",{value:!0}),v[e]=r.declarative?r.module.exports:r.esModule}var i={},s=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},l=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(d){l=!1}var f;!function(){try{Object.defineProperty({},"a",{})&&(f=Object.defineProperty)}catch(e){f=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var c={},p="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,v={"@empty":{}};return function(e,t,n){return function(a){a(function(a){for(var i=0;i<t.length;i++)(function(e,r){r&&r.__esModule?v[e]=r:v[e]=o(r)})(t[i],arguments[i]);n({register:r});var s=u(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)u(e[i]);return s.__useDefault?s["default"]:s})}}}("undefined"!=typeof self?self:global)
 
-(["1"], ["3","4","9","7","8"], function($__System) {
+(["1"], ["3","5","6","7","8","9","4","c"], function($__System) {
 
-$__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
+$__System.register("2", ["3", "5", "6", "a", "7", "8", "9", "4"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,7 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var li, jsonld_1, Constants;
+    var li, _, jsonld_1, Constants, $rdf, rdf_formats_common_1, JsonLdSerializer, linkeddata_vocabs_1;
     var FetchUtil, ExpandedWithDocs, FetchError;
     function rejectNotFoundStatus(res) {
         if (res.status === 404) {
@@ -31,18 +31,20 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
         if (res.ok === false) {
             return Promise.reject(new FetchError(res));
         }
-        if (mediaType === Constants.MediaTypes.jsonLd) {
-            return res.json().then(flatten(res.url));
-        }
-        else {
-            if (mediaType === Constants.MediaTypes.ntriples ||
-                mediaType === Constants.MediaTypes.ntriples) {
-                mediaType = 'application/nquads';
-            }
-            return res.text().then(function (rdf) {
-                return jsonld_1.promises.fromRDF(rdf, { format: mediaType }).then(flatten(res.url));
+        return res.text()
+            .then(function (jsonld) { return $rdf.parsers.parse(mediaType, jsonld); })
+            .then(runInference)
+            .then(function (graph) { return JsonLdSerializer.serialize(graph); })
+            .then(flatten(res.url));
+    }
+    function runInference(graph) {
+        _.map(FetchUtil._propertyRangeMappings, function (mapping) {
+            var matches = graph.match(null, mapping[0], null, null);
+            _.forEach(matches.toArray(), function (triple) {
+                graph.add(new $rdf.Triple(triple.object, new $rdf.NamedNode(linkeddata_vocabs_1.rdf.type), new $rdf.NamedNode(mapping[1])));
             });
-        }
+        });
+        return graph;
     }
     function flatten(url) {
         return function (json) {
@@ -60,13 +62,29 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
             function (li_1) {
                 li = li_1;
             },
+            function (_1) {
+                _ = _1;
+            },
             function (jsonld_1_1) {
                 jsonld_1 = jsonld_1_1;
             },
             function (Constants_1) {
                 Constants = Constants_1;
+            },
+            function ($rdf_1) {
+                $rdf = $rdf_1;
+            },
+            function (rdf_formats_common_1_1) {
+                rdf_formats_common_1 = rdf_formats_common_1_1;
+            },
+            function (JsonLdSerializer_1) {
+                JsonLdSerializer = JsonLdSerializer_1;
+            },
+            function (linkeddata_vocabs_1_1) {
+                linkeddata_vocabs_1 = linkeddata_vocabs_1_1;
             }],
         execute: function() {
+            rdf_formats_common_1.default($rdf);
             FetchUtil = (function () {
                 function FetchUtil() {
                 }
@@ -84,6 +102,17 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
                     }, function () { return null; });
                 };
                 FetchUtil._requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
+                FetchUtil._propertyRangeMappings = [
+                    [Constants.Core.Vocab.supportedClass, Constants.Core.Vocab.Class],
+                    [Constants.Core.Vocab.expects, Constants.Core.Vocab.Class],
+                    [Constants.Core.Vocab.returns, Constants.Core.Vocab.Class],
+                    [Constants.Core.Vocab.supportedOperation, Constants.Core.Vocab.Operation],
+                    [Constants.Core.Vocab.operation, Constants.Core.Vocab.Operation],
+                    [Constants.Core.Vocab.supportedProperty, Constants.Core.Vocab.SupportedProperty],
+                    [Constants.Core.Vocab.statusCodes, Constants.Core.Vocab.StatusCodeDescription],
+                    [Constants.Core.Vocab.property, linkeddata_vocabs_1.rdf.ns + 'Property'],
+                    [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
+                ];
                 return FetchUtil;
             }());
             exports_1("FetchUtil", FetchUtil);
@@ -113,7 +142,7 @@ $__System.register("2", ["3", "4", "5"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("6", ["9", "7", "5", "a", "8"], function(exports_1, context_1) {
+$__System.register("b", ["5", "4", "a", "d", "c"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -359,7 +388,7 @@ $__System.register("6", ["9", "7", "5", "a", "8"], function(exports_1, context_1
     }
 });
 
-$__System.register("b", [], function(exports_1, context_1) {
+$__System.register("e", [], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var JsonLdUtil;
@@ -386,10 +415,10 @@ $__System.register("b", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, context_1) {
+$__System.register("f", ["5", "d", "b", "a", "e"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var _, linkeddata_vocabs_1, Types, DocTypes, Constants_1, JsonLdUtil_1;
+    var _, Types, DocTypes, Constants_1, JsonLdUtil_1;
     var ResourceFactory, IncomingLink;
     function findIncomingLinks(object, resources) {
         return _.transform(resources, function (acc, res, key) {
@@ -400,23 +429,6 @@ $__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, cont
             });
         }, []);
     }
-    function addInferredTypes(obj, incomingLinks) {
-        var _this = this;
-        if (typeof obj[Constants_1.JsonLd.Type] === 'undefined') {
-            obj[Constants_1.JsonLd.Type] = [];
-        }
-        if (_.isArray(obj[Constants_1.JsonLd.Type]) === false) {
-            obj[Constants_1.JsonLd.Type] = [obj[Constants_1.JsonLd.Type]];
-        }
-        _.each(incomingLinks, function (link) {
-            if (_this.propertyRangeMappings[link.predicate]) {
-                var range = _this.propertyRangeMappings[link.predicate];
-                if (obj[Constants_1.JsonLd.Type].indexOf(range) === -1) {
-                    obj[Constants_1.JsonLd.Type].push(range);
-                }
-            }
-        });
-    }
     function setUpDefaultFactories() {
         this.factories[Constants_1.Core.Vocab.ApiDocumentation] = createApiDocumentation;
         this.factories[Constants_1.Core.Vocab.PartialCollectionView] = createPartialCollectionView;
@@ -424,17 +436,6 @@ $__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, cont
         this.factories[Constants_1.Core.Vocab.SupportedProperty] = createSupportedProperty;
         this.factories[Constants_1.Core.Vocab.Operation] = createOperation;
         this.factories[Constants_1.Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
-    }
-    function setUpDefaultRangeMappings() {
-        this.propertyRangeMappings[Constants_1.Core.Vocab.supportedClass] = Constants_1.Core.Vocab.Class;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.statusCodes] = Constants_1.Core.Vocab.StatusCodeDescription;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.supportedProperty] = Constants_1.Core.Vocab.SupportedProperty;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.supportedOperation] = Constants_1.Core.Vocab.Operation;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.operation] = Constants_1.Core.Vocab.Operation;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.expects] = Constants_1.Core.Vocab.Operation;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.returns] = Constants_1.Core.Vocab.Operation;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.mapping] = Constants_1.Core.Vocab.IriTemplateMapping;
-        this.propertyRangeMappings[Constants_1.Core.Vocab.property] = linkeddata_vocabs_1.rdf.ns + 'Property';
     }
     function createApiDocumentation(heracles, obj) {
         return new DocTypes.ApiDocumentation(heracles, obj);
@@ -459,9 +460,6 @@ $__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, cont
             function (_1) {
                 _ = _1;
             },
-            function (linkeddata_vocabs_1_1) {
-                linkeddata_vocabs_1 = linkeddata_vocabs_1_1;
-            },
             function (Types_1) {
                 Types = Types_1;
             },
@@ -478,13 +476,10 @@ $__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, cont
             ResourceFactory = (function () {
                 function ResourceFactory() {
                     this.factories = {};
-                    this.propertyRangeMappings = {};
                     setUpDefaultFactories.call(this);
-                    setUpDefaultRangeMappings.call(this);
                 }
                 ResourceFactory.prototype.createResource = function (heracles, obj, apiDocumentation, resources, typeOverride) {
                     var incomingLinks = findIncomingLinks(obj, resources);
-                    addInferredTypes.call(this, obj, incomingLinks);
                     var factory = this.factories[typeOverride || obj[Constants_1.JsonLd.Type]];
                     if (!factory && Array.isArray(obj[Constants_1.JsonLd.Type])) {
                         for (var i = 0; i < obj[Constants_1.JsonLd.Type].length; i++) {
@@ -530,7 +525,7 @@ $__System.register("c", ["9", "7", "a", "6", "5", "b"], function(exports_1, cont
     }
 });
 
-$__System.register("5", [], function(exports_1, context_1) {
+$__System.register("a", [], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var Core, JsonLd, MediaTypes, Headers;
@@ -644,7 +639,7 @@ $__System.register("5", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("a", ["9", "4", "8", "5"], function(exports_1, context_1) {
+$__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -830,7 +825,7 @@ $__System.register("a", ["9", "4", "8", "5"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("1", ["9", "2", "5", "b", "c", "a"], function(exports_1, context_1) {
+$__System.register("1", ["5", "2", "a", "e", "f", "d"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var _, FetchUtil_1, Constants_1, JsonLdUtil_1, ResourceFactory_1, Resources_1;
@@ -934,5 +929,5 @@ $__System.register("1", ["9", "2", "5", "b", "c", "a"], function(exports_1, cont
 
 })
 (function(factory) {
-  define(["li","jsonld","lodash","jasnell/linkeddata-vocabs","core-decorators"], factory);
+  define(["li","lodash","jsonld","rdf-ext","rdf-formats-common","rdf-serializer-jsonld","jasnell/linkeddata-vocabs","core-decorators"], factory);
 });

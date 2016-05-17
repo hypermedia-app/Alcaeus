@@ -48,44 +48,7 @@ describe('ResourceFactory', () => {
 
             expect(resource instanceof documentationTypes.SupportedProperty).toBe(true);
         });
-
-        it('should created typed instance when inferred from incoming link', () => {
-            var property = {'@id': '_:b1'};
-            var supportedClass = {};
-            supportedClass[Core.Vocab.supportedProperty] = {'@id': '_:b1'};
-            factory.propertyRangeMappings = {};
-            factory.propertyRangeMappings[Core.Vocab.supportedProperty] = Core.Vocab.SupportedProperty;
-
-            var resource = factory.createResource(null, property, apiDoc, [supportedClass]);
-
-            expect(resource instanceof documentationTypes.SupportedProperty).toBe(true);
-        });
-
-    });
-
-    describe('propertyRangeMappings', () => {
-
-        var mappedProperties = [
-            [Core.Vocab.supportedClass, Core.Vocab.Class],
-            [Core.Vocab.statusCodes, Core.Vocab.StatusCodeDescription],
-            [Core.Vocab.supportedProperty, Core.Vocab.SupportedProperty],
-            [Core.Vocab.supportedOperation, Core.Vocab.Operation],
-            [Core.Vocab.operation, Core.Vocab.Operation],
-            [Core.Vocab.expects, Core.Vocab.Operation],
-            [Core.Vocab.returns, Core.Vocab.Operation],
-            [Core.Vocab.mapping, Core.Vocab.IriTemplateMapping],
-            [Core.Vocab.property, rdf.ns + 'Property']
-        ];
-
-        _.forEach(mappedProperties, typePair => {
-            (function (predicate, expectedRange) {
-                it('should include map for ' + predicate, function () {
-                    var range = factory.propertyRangeMappings[predicate];
-
-                    expect(range).toBe(expectedRange);
-                });
-            })(typePair[0], typePair[1]);
-        });
+        
     });
 
 });

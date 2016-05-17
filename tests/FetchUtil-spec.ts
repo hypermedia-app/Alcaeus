@@ -1,9 +1,13 @@
 'use strict';
 
+import * as _ from 'lodash';
 import * as sinon from 'sinon';
+import {Core} from '../src/Constants';
 import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
 import 'whatwg-fetch';
+//noinspection TypeScriptCheckImport
+import {rdf} from 'jasnell/linkeddata-vocabs';
 
 describe('FetchUtil', () => {
 
@@ -93,6 +97,43 @@ describe('FetchUtil', () => {
                     done();
                 })
                 .catch(done.fail);
+        });
+
+        describe('fetching api documentation', () => {
+
+            var inferredTypes = [
+                [Core.Vocab.supportedClass, Core.Vocab.Class],
+                [Core.Vocab.expects, Core.Vocab.Class],
+                [Core.Vocab.returns, Core.Vocab.Class],
+                [Core.Vocab.supportedOperation, Core.Vocab.Operation],
+                [Core.Vocab.operation, Core.Vocab.Operation],
+                [Core.Vocab.supportedProperty, Core.Vocab.SupportedProperty],
+                [Core.Vocab.statusCodes, Core.Vocab.StatusCodeDescription],
+                [Core.Vocab.property, rdf.ns + 'Property'],
+                [Core.Vocab.mapping, Core.Vocab.IriTemplateMapping],
+            ];
+
+            _.forEach(inferredTypes, typePair => {
+                (function(prop, type) {
+                    it('should add inferences for property ' + prop, (done:any) => {
+                        var obj = { '@id': 'http://example.com/resource' };
+                        obj[prop] = { '@id': 'http://example.com/child' };
+                        window.fetch.withArgs('http://example.com/resource')
+                            .returns(Promise.resolve(Responses.jsonLd(obj)));
+
+                        FetchUtil.fetchResource('http://example.com/resource')
+                            .then(res => {
+                                var child = _.find(res.resources, [ '@id', 'http://example.com/child']);
+
+                                expect(child['@type']).toBeDefined();
+                                expect(child['@type']).toBe(type);
+                                done();
+                            })
+                            .catch(done.fail);
+                    });
+                })(typePair[0], typePair[1]);
+            });
+
         });
     });
 

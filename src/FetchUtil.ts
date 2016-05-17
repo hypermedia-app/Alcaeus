@@ -2,12 +2,37 @@
 
 //noinspection TypeScriptCheckImport
 import * as li from 'li';
+import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlatteningOptions} from "jsonld";
+//noinspection TypeScriptCheckImport
+import * as $rdf from 'rdf-ext';
+//noinspection TypeScriptCheckImport
+import {default as RdfStore} from 'rdf-store-singlegraph';
+//noinspection TypeScriptCheckImport
+import {default as formats} from 'rdf-formats-common';
+//noinspection TypeScriptCheckImport
+import * as JsonLdSerializer from 'rdf-serializer-jsonld'
+//noinspection TypeScriptCheckImport
+import {rdf} from 'jasnell/linkeddata-vocabs';
+
+formats($rdf);
 
 export class FetchUtil {
     static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
+
+    static _propertyRangeMappings = [
+        [Constants.Core.Vocab.supportedClass, Constants.Core.Vocab.Class],
+        [Constants.Core.Vocab.expects, Constants.Core.Vocab.Class],
+        [Constants.Core.Vocab.returns, Constants.Core.Vocab.Class],
+        [Constants.Core.Vocab.supportedOperation, Constants.Core.Vocab.Operation],
+        [Constants.Core.Vocab.operation, Constants.Core.Vocab.Operation],
+        [Constants.Core.Vocab.supportedProperty, Constants.Core.Vocab.SupportedProperty],
+        [Constants.Core.Vocab.statusCodes, Constants.Core.Vocab.StatusCodeDescription],
+        [Constants.Core.Vocab.property, rdf.ns + 'Property'],
+        [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
+    ];
 
     static fetchResource(uri:string):Promise<ExpandedWithDocs> {
 
@@ -77,19 +102,26 @@ function getFlattendGraph(res:Response) {
         return Promise.reject(new FetchError(res))
     }
 
-    if (mediaType === Constants.MediaTypes.jsonLd) {
-        return res.json().then(flatten(res.url));
-    } else {
+    return res.text()
+        .then(jsonld => $rdf.parsers.parse(mediaType, jsonld))
+        .then(runInference)
+        .then(graph => JsonLdSerializer.serialize(graph))
+        .then(flatten(res.url));
+}
 
-        if (mediaType === Constants.MediaTypes.ntriples ||
-            mediaType === Constants.MediaTypes.ntriples) {
-            mediaType = 'application/nquads';
-        }
-
-        return res.text().then(rdf => {
-            return jsonld.fromRDF(rdf, {format: mediaType}).then(flatten(res.url));
+function runInference(graph) {
+    _.map(FetchUtil._propertyRangeMappings, mapping => {
+        var matches = graph.match(null, mapping[0], null, null);
+        _.forEach(matches.toArray(), triple => {
+            graph.add(new $rdf.Triple(
+                triple.object,
+                new $rdf.NamedNode(rdf.type),
+                new $rdf.NamedNode(mapping[1])
+            ));
         });
-    }
+    });
+
+    return graph;
 }
 
 function flatten(url) {

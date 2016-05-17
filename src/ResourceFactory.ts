@@ -11,17 +11,13 @@ import {JsonLdUtil} from './JsonLdUtil';
 export class ResourceFactory implements IResourceFactory {
 
     factories = {};
-    propertyRangeMappings = {};
 
     constructor() {
         setUpDefaultFactories.call(this);
-        setUpDefaultRangeMappings.call(this);
     }
 
     public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
         var incomingLinks = findIncomingLinks(obj, resources);
-
-        addInferredTypes.call(this, obj, incomingLinks);
 
         var factory = this.factories[typeOverride || obj[JsonLd.Type]];
         if(!factory && Array.isArray(obj[JsonLd.Type])) {
@@ -76,26 +72,6 @@ function findIncomingLinks(object, resources) {
     }, []);
 }
 
-function addInferredTypes(obj:Object, incomingLinks:Array<IncomingLink>) {
-    if (typeof obj[JsonLd.Type] === 'undefined') {
-        obj[JsonLd.Type] = [];
-    }
-
-    if (_.isArray(obj[JsonLd.Type]) === false) {
-        obj[JsonLd.Type] = [obj[JsonLd.Type]];
-    }
-
-    _.each(incomingLinks, (link:IncomingLink) => {
-        if (this.propertyRangeMappings[link.predicate]) {
-            var range = this.propertyRangeMappings[link.predicate];
-
-            if (obj[JsonLd.Type].indexOf(range) === -1) {
-                obj[JsonLd.Type].push(range);
-            }
-        }
-    });
-}
-
 function setUpDefaultFactories() {
     this.factories[Core.Vocab.ApiDocumentation] = createApiDocumentation;
     this.factories[Core.Vocab.PartialCollectionView] = createPartialCollectionView;
@@ -103,18 +79,6 @@ function setUpDefaultFactories() {
     this.factories[Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Core.Vocab.Operation] = createOperation;
     this.factories[Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
-}
-
-function setUpDefaultRangeMappings() {
-    this.propertyRangeMappings[Core.Vocab.supportedClass] = Core.Vocab.Class;
-    this.propertyRangeMappings[Core.Vocab.statusCodes] = Core.Vocab.StatusCodeDescription;
-    this.propertyRangeMappings[Core.Vocab.supportedProperty] = Core.Vocab.SupportedProperty;
-    this.propertyRangeMappings[Core.Vocab.supportedOperation] = Core.Vocab.Operation;
-    this.propertyRangeMappings[Core.Vocab.operation] = Core.Vocab.Operation;
-    this.propertyRangeMappings[Core.Vocab.expects] = Core.Vocab.Operation;
-    this.propertyRangeMappings[Core.Vocab.returns] = Core.Vocab.Operation;
-    this.propertyRangeMappings[Core.Vocab.mapping] = Core.Vocab.IriTemplateMapping;
-    this.propertyRangeMappings[Core.Vocab.property] = rdf.ns + 'Property';
 }
 
 function createApiDocumentation(heracles, obj) {

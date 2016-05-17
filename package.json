@@ -40,6 +40,8 @@
       "jsonld": "npm:jsonld@^0.4.6",
       "li": "npm:li@^1.0.1",
       "lodash": "npm:lodash@^4.9.0",
+      "rdf-ext": "npm:rdf-ext@^0.3.0",
+      "rdf-formats-common": "npm:rdf-formats-common@^0.3.0",
       "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@^0.3.0"
     },
     "devDependencies": {

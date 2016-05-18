@@ -101,7 +101,7 @@ function getFlattendGraph(res:Response) {
     }
 
     return res.text()
-        .then(jsonld => $rdf.parsers.parse(mediaType, jsonld))
+        .then(jsonld => $rdf.parsers.parse(mediaType, jsonld, null, res.url))
         .then(runInference)
         .then(graph => JsonLdSerializer.serialize(graph))
         .then(flatten(res.url));

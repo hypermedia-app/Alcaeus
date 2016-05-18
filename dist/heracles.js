@@ -32,7 +32,7 @@ $__System.register("2", ["3", "5", "6", "a", "7", "8", "9", "4"], function(expor
             return Promise.reject(new FetchError(res));
         }
         return res.text()
-            .then(function (jsonld) { return $rdf.parsers.parse(mediaType, jsonld); })
+            .then(function (jsonld) { return $rdf.parsers.parse(mediaType, jsonld, null, res.url); })
             .then(runInference)
             .then(function (graph) { return JsonLdSerializer.serialize(graph); })
             .then(flatten(res.url));

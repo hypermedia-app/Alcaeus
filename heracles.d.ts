@@ -15,7 +15,7 @@ interface IApiDocumentation extends IResource {
     getEntrypoint():Promise<IHydraResource>
 }
 
-interface IClass extends IResource {
+interface IClass extends IDocumentedResource {
     supportedOperations:Array<IOperation>;
     supportedProperties:Array<ISupportedProperty>;
 }

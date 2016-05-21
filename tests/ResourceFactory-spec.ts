@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
-import {rdf, rdfs} from 'jasnell/linkeddata-vocabs';
+import {rdf} from 'jasnell/linkeddata-vocabs';
 import {Core} from '../src/Constants';
 import {ResourceFactory} from '../src/ResourceFactory';
 import * as resources from '../src/Resources';
@@ -24,7 +24,7 @@ describe('ResourceFactory', () => {
         constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;
         constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.Operation;
         constructedTypes[Core.Vocab.StatusCodeDescription] = res => res instanceof documentationTypes.StatusCodeDescription;
-        constructedTypes[rdfs.ns + 'Property'] = res => res instanceof documentationTypes.RdfProperty;
+        constructedTypes[rdf.ns + 'Property'] = res => res instanceof documentationTypes.RdfProperty;
 
         _.toPairs(constructedTypes).forEach(typePair => {
             (function (typeId, isOfCorrectType) {

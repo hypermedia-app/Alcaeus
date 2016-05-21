@@ -4,7 +4,7 @@ import {Core} from '../src/Constants';
 //noinspection TypeScriptCheckImport
 import {rdf, rdfs, xsd} from 'jasnell/linkeddata-vocabs';
 
-fdescribe('RdfProperty', () => {
+describe('RdfProperty', () => {
 
     var testProperty = {
         '@context': [

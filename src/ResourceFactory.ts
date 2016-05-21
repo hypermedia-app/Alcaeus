@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import {rdf, rdfs} from 'jasnell/linkeddata-vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
@@ -79,6 +79,11 @@ function setUpDefaultFactories() {
     this.factories[Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Core.Vocab.Operation] = createOperation;
     this.factories[Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
+    this.factories[rdfs.ns + 'Property'] = createRdfProperty;
+}
+
+function createRdfProperty(heracles, obj) {
+    return new DocTypes.RdfProperty(obj);
 }
 
 function createApiDocumentation(heracles, obj) {

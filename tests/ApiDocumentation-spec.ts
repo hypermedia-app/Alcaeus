@@ -74,23 +74,29 @@ describe('ApiDocumentation', () => {
     
     describe('getting operations', () => {
         
-        it('should return empty array for missing supported class', () => {
-            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+        it('should return empty array for missing supported class', (done:any) => {
+            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
+                var docs = new ApiDocumentation(heracles, expanded);
 
-            var ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
-            expect(_.isArray(ops)).toBe(true);
-            expect(ops.length).toBe(0);
+                var ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
+                expect(_.isArray(ops)).toBe(true);
+                expect(ops.length).toBe(0);
+                done();
+            }).catch(done.fail);
         });
     });
 
     describe('getting properties', () => {
 
-        it('should return empty array for missing supported class', () => {
-            var docs = new ApiDocumentation(heracles, Documentations.classWithOperation);
+        it('should return empty array for missing supported class', (done:any) => {
+            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
+                var docs = new ApiDocumentation(heracles, expanded);
 
-            var props = docs.getProperties('http://example.com/api#UndomcumentedClass');
-            expect(_.isArray(props)).toBe(true);
-            expect(props.length).toBe(0);
+                var props = docs.getProperties('http://example.com/api#UndomcumentedClass');
+                expect(_.isArray(props)).toBe(true);
+                expect(props.length).toBe(0);
+                done();
+            }).catch(done.fail);
         });
     });
 });

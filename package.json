@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --skip-source-maps --global-name heracles --format amd"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --minify --global-name heracles --format amd"
   },
   "repository": {
     "type": "git",

@@ -205,7 +205,15 @@ export namespace Documentations {
                         'property': {
                             '@id': 'http://purl.org/dc/elements/1.1/partOf',
                             '@type': rdf.ns + 'Property',
-                            'range': xsd.string
+                            'range': xsd.string,
+                            'supportedOperation': [
+                                {
+                                    'description': 'Update this property',
+                                    'expects': xsd.string,
+                                    'method': 'POST',
+                                    'returns': 'owl:Nothing'
+                                }
+                            ]
                         }
                     },
                     {

@@ -172,3 +172,27 @@ export class StatusCodeDescription extends Resource implements IStatusCodeDescri
         return this[Core.Vocab.description] || '';
     }
 }
+
+export class RdfProperty extends DocumentedResource implements IRdfProperty {
+    get range():IClass {
+        return this[rdfs.ns + 'range'];
+    }
+
+    get domain():IClass {
+        return this[rdfs.ns + 'domain'];
+    }
+
+    get supportedOperations():Array<IOperation> {
+        var value = this[Core.Vocab.supportedOperation];
+
+        if(typeof value === 'undefined'){
+            return [];
+        }
+
+        if(Array.isArray(value) === false) {
+            return [ value ];
+        }
+
+        return this[Core.Vocab.supportedOperation];
+    }
+}

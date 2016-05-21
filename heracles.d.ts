@@ -29,7 +29,13 @@ interface ISupportedProperty extends IDocumentedResource {
     readable:boolean;
     writable:boolean;
     required:boolean;
-    property:Object;
+    property:IRdfProperty;
+}
+
+interface IRdfProperty extends IDocumentedResource {
+    range:IClass;
+    domain:IClass;
+    supportedOperations:Array<IOperation>;
 }
 
 interface IOperation extends IDocumentedResource {
@@ -39,7 +45,7 @@ interface IOperation extends IDocumentedResource {
 }
 
 interface IHydraResource extends IResource {
-    operations:Array<IOperation>
+    operations:Array<IOperation>;
     apiDocumentation:IApiDocumentation;
 }
 

@@ -42,12 +42,12 @@ class IncomingLink {
     private _predicate;
     private _linkSubject;
 
-    constructor(id, predicate, resoruces) {
+    constructor(id, predicate, resources) {
         this._id = id;
         this._predicate = predicate;
 
         Object.defineProperty(this, 'subject', <PropertyDescriptor>{
-            get: () => resoruces[id]
+            get: () => resources[id]
         });
     }
 

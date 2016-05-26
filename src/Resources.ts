@@ -78,7 +78,9 @@ export class HydraResource extends Resource implements IHydraResource {
         }
 
         var propertyOperations = _.chain(this.getIncomingLinks())
-            .map(link => this.apiDocumentation.getOperations(link[0], link[1]))
+            .map(link => _.map(link.subject.types, type => ({ type: type, predicate: link.predicate })))
+            .flatten()
+            .map(link => this.apiDocumentation.getOperations(link.type, link.predicate))
             .union()
             .value();
 

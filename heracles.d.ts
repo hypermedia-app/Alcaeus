@@ -11,6 +11,7 @@ interface IApiDocumentation extends IResource {
     classes:Array<IClass>;
     getClass(classId:string):IClass;
     getOperations(classUri:string):Array<IOperation>;
+    getOperations(classUri:string, predicateUri:string):Array<IOperation>;
     getProperties(classUri:string):Array<ISupportedProperty>;
     getEntrypoint():Promise<IHydraResource>
 }

@@ -71,9 +71,9 @@ describe('ApiDocumentation', () => {
             });
         });
     });
-    
-    describe('getting operations', () => {
-        
+
+    describe('getting class operations', () => {
+
         it('should return empty array for missing supported class', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
                 var docs = new ApiDocumentation(heracles, expanded);
@@ -81,6 +81,20 @@ describe('ApiDocumentation', () => {
                 var ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
                 expect(_.isArray(ops)).toBe(true);
                 expect(ops.length).toBe(0);
+                done();
+            }).catch(done.fail);
+        });
+    });
+
+    describe('getting property operations', () => {
+
+        it('should return a value', (done:any) => {
+            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
+                var docs = new ApiDocumentation(heracles, expanded);
+
+                var ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
+                expect(ops).toBeDefined();
+                expect(ops).not.toBeNull();
                 done();
             }).catch(done.fail);
         });

@@ -31,12 +31,26 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
         return heraclesWeakMap.get(this);
     }
 
-    getOperations(classUri:string):Array<IOperation> {
+    getOperations(classUri:string):Array<IOperation>;
+
+    getOperations(classUri:string, predicateUri?:string):Array<IOperation> {
         var clas = this.getClass(classUri);
         if (!clas) {
             return [];
         }
-        return clas.supportedOperations;
+        
+        if(!predicateUri) {
+            return clas.supportedOperations;
+        }
+
+        var supportedProperty = _.find(clas.supportedProperties, prop => {
+            return prop.property && prop.property.id === predicateUri;
+        });
+        if(!supportedProperty) {
+            return [];
+        }
+
+        return supportedProperty.property.supportedOperations;
     }
 
     getProperties(classUri:string):Array<ISupportedProperty> {

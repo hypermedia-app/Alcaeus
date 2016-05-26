@@ -54,14 +54,18 @@ describe('Resource', () => {
             var apiDoc = <IApiDocumentation>{
                 getOperations: getOperations
             };
-            getOperations.returns(Promise.resolve([]));
+            getOperations.returns([]);
             var resource = new HydraResource(null, Bodies.someJsonLdExpanded, apiDoc, [
-                ['http://example.com/vocab#Resource', 'http://example.com/vocab#other']
+                {
+                    subject: { types: [ 'http://example.com/vocab#Resource2', 'http://example.com/vocab#Resource3' ] },
+                    predicate: 'http://example.com/vocab#other'
+                }
             ]);
 
             var ops = resource.operations;
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
-            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource', 'http://example.com/vocab#other')).toBe(true);
+            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource2', 'http://example.com/vocab#other')).toBe(true);
+            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource3', 'http://example.com/vocab#other')).toBe(true);
         });
 
         it('should combine operations for multiple @types', () => {

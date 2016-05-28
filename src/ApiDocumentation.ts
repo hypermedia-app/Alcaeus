@@ -110,6 +110,15 @@ export class Operation extends DocumentedResource implements IOperation {
         return this[Core.Vocab.returns];
     }
 
+    get requiresInput():boolean {
+        const method = this.method || '';
+        var methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE';
+
+        var operationExpectsBody = !!this.expects && this.expects.id !== owl.ns + 'Nothing';
+
+        return methodExpectsBody || operationExpectsBody;
+    }
+
     invoke(uri:string, body:any, mediaType? = MediaTypes.jsonLd) {
         return heraclesWeakMap.get(this).invokeOperation(this, uri, body, mediaType);
     }

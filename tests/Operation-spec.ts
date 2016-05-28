@@ -2,6 +2,8 @@ import {promises as jsonld} from 'jsonld';
 import * as sinon from 'sinon';
 import {Operation, ApiDocumentation} from '../src/ApiDocumentation';
 import {Core} from '../src/Constants';
+//noinspection TypeScriptCheckImport
+import {owl} from 'jasnell/linkeddata-vocabs';
 
 describe('Operation', () => {
 
@@ -83,5 +85,67 @@ describe('Operation', () => {
             }).catch(done.fail);
         });
 
+    });
+    
+    describe('requiresInput', () => {
+
+        it('should return false for GET operation', done => {
+            var operation = {
+                '@context': Core.Context,
+                'method': 'GET'
+            };
+
+            jsonld.compact(operation, {}).then(compacted => {
+                var op = new Operation(compacted, <IHeracles>{});
+
+                expect(op.requiresInput).toBe(false);
+                done();
+            }).catch(done.fail);
+        });
+
+        it('should return false for DELETE operation', done => {
+            var operation = {
+                '@context': Core.Context,
+                'method': 'DELETE'
+            };
+
+            jsonld.compact(operation, {}).then(compacted => {
+                var op = new Operation(compacted, <IHeracles>{});
+
+                expect(op.requiresInput).toBe(false);
+                done();
+            }).catch(done.fail);
+        });
+
+        it('should return true if operation expects a body', done => {
+            var operation = {
+                '@context': Core.Context,
+                'method': 'POST'
+            };
+
+            jsonld.compact(operation, {}).then(compacted => {
+                var op = new Operation(compacted, <IHeracles>{});
+
+                expect(op.requiresInput).toBe(true);
+                done();
+            }).catch(done.fail);
+        });
+
+        it('should return true if operation expects nothing', done => {
+            var operation = {
+                '@context': Core.Context,
+                'method': 'POST'
+            };
+
+            jsonld.compact(operation, {}).then(compacted => {
+
+                compacted[Core.Vocab.expects] = { id: owl.ns + 'Nothing' };
+                var op = new Operation(compacted, <IHeracles>{});
+
+                expect(op.requiresInput).toBe(true);
+                done();
+            }).catch(done.fail);
+        });
+        
     });
 });

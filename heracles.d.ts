@@ -44,6 +44,7 @@ interface IOperation extends IDocumentedResource {
     method:string;
     expects:IClass;
     returns:IClass;
+    requiresInput:boolean;
 }
 
 interface IHydraResource extends IResource {

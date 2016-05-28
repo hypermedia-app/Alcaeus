@@ -48,6 +48,25 @@ export class FetchUtil {
                 },
                 () => null);
     }
+
+    static invokeOperation(method:string, uri:string, body?:any, mediaType? = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
+
+        return window.fetch(uri, <FetchOptions>{
+                method: method,
+                headers: {
+                    'Content-Type': mediaType,
+                    Accept: FetchUtil._requestAcceptHeaders
+                }
+            })
+            .then(rejectNotFoundStatus)
+            .then((res:Response) => {
+                    var apiDocsUri = getDocumentationUri(res);
+
+                    return getFlattendGraph(res)
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+                },
+                () => null);
+    }
 }
 
 function rejectNotFoundStatus(res:Response) {

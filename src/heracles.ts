@@ -11,12 +11,9 @@ class Heracles implements IHeracles {
 
     loadResource(uri:string):Promise<IHydraResource> {
         return FetchUtil.fetchResource(uri)
-            .then(response => {
-                return this.loadDocumentation(response.apiDocumentationLink)
-                    .then(getRequestedObject(this, uri, response.resources));
-            });
+            .then(processFetchUtilResponse.call(this, uri));
     }
-    
+
     loadDocumentation(uri:string):Promise<IApiDocumentation> {
         return FetchUtil.fetchResource(uri)
             .then(response => {
@@ -26,11 +23,22 @@ class Heracles implements IHeracles {
                 return getRequestedObject(this, uri, response.resources, typeOverrides)(null);
             }, () => null);
     }
+
+    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource> {
+        return FetchUtil.invokeOperation(operation.method, uri, body, mediaType)
+            .then(processFetchUtilResponse.call(this, uri));
+    }
 }
 
 export var ResourceFactory = ResourceFactoryCtor;
 export var Resource = ResourceCtor;
 export var Hydra = new Heracles();
+
+function processFetchUtilResponse(uri) {
+    return response =>
+        this.loadDocumentation(response.apiDocumentationLink)
+            .then(getRequestedObject(this, uri, response.resources));
+}
 
 function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides? = {}) {
     return apiDocumentation => {
@@ -57,13 +65,13 @@ function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
         return obj;
     }
 
-    if (obj[JsonLd.Value]){
+    if (obj[JsonLd.Value]) {
         return obj[JsonLd.Value];
     }
 
     var selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
 
-    if(!selfId) {
+    if (!selfId) {
         return obj;
     }
 
@@ -74,7 +82,7 @@ function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
         resourcified[selfId] = resource;
     }
 
-    if(resource._processed === true){
+    if (resource._processed === true) {
         return resource;
     }
 

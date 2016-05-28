@@ -40,7 +40,6 @@ export class ResourceFactory implements IResourceFactory {
 class IncomingLink {
     private _id;
     private _predicate;
-    private _linkSubject;
 
     constructor(id, predicate, resources) {
         this._id = id;
@@ -100,7 +99,7 @@ function createSupportedProperty(heracles, obj) {
     return new DocTypes.SupportedProperty(obj);
 }
 function createOperation(heracles, obj) {
-    return new DocTypes.Operation(obj);
+    return new DocTypes.Operation(obj, heracles);
 }
 function createStatusCodeDescription(heracles, obj) {
     return new DocTypes.StatusCodeDescription(obj);

@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
 import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
-import {Core, JsonLd} from './Constants';
+import {Core, JsonLd, MediaTypes} from './Constants';
 import {Resource} from './Resources';
 import {nonenumerable} from "core-decorators";
 
@@ -70,6 +70,8 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 }
 
+var heraclesWeakMap = new WeakMap();
+
 export class DocumentedResource extends Resource implements IDocumentedResource {
     constructor(hydraResource:any) {
         super(hydraResource);
@@ -89,7 +91,10 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
 }
 
 export class Operation extends DocumentedResource implements IOperation {
-    constructor(hydraOperation:any) {
+
+    constructor(hydraOperation:any, heracles:IHeracles) {
+        heraclesWeakMap.set(this, heracles);
+
         super(hydraOperation);
     }
 
@@ -103,6 +108,10 @@ export class Operation extends DocumentedResource implements IOperation {
 
     get returns():IClass {
         return this[Core.Vocab.returns];
+    }
+
+    invoke(uri:string, body:any, mediaType? = MediaTypes.jsonLd) {
+        return heraclesWeakMap.get(this).invokeOperation(this, uri, body, mediaType);
     }
 }
 

@@ -1,6 +1,7 @@
 interface IHeracles {
     resourceFactory:IResourceFactory;
     loadResource(uri:string):Promise<IHydraResource>;
+    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource>;
 }
 
 interface IResource {

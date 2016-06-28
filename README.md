@@ -1,4 +1,4 @@
-# heracles [![Build Status](https://travis-ci.org/wikibus/heracles.svg?branch=master)](https://travis-ci.org/wikibus/heracles)
+# heracles [![Build Status](https://saucelabs.com/open_sauce/build_status/heracles-tcode.svg)](https://saucelabs.com/beta/builds/a60789d9b2e24f10b6209c42ec58a10d)
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 
@@ -6,7 +6,7 @@ Heracles is a Promise-based library for consuming Hydra APIs
 
 ## Browser support
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://saucelabs.com/u/heracles-tcode)
+[![Build Status](https://saucelabs.com/open_sauce/build_matrix/heracles-tcode.svg)](https://saucelabs.com/beta/builds/a60789d9b2e24f10b6209c42ec58a10d)
 
 You will need polyfills for older browsers:
 

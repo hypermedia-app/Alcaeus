@@ -21,9 +21,10 @@ module.exports = function (config) {
         //.addFirefox('6.0', '33', '34', '38', '39')('Windows 8')
         //.addFirefox('6.0', '33', '34', '38', '39')()
         //.addLatest('chrome', 'OS X 10.11')
-        .addLatest('chrome', 'Windows 8')
+        .addChrome('36', '45')('Windows 8')
+        //.addLatest('chrome', 'Windows 8')
         //.addLatest('chrome', 'linux')
-        .addLatest('firefox', 'linux')
+        //.addLatest('firefox', 'linux')
         //.addLatest('firefox', 'Windows 10')
         //.addLatest('firefox', 'OS X 10.11')
         .addLatest('MicrosoftEdge', 'Windows 10');

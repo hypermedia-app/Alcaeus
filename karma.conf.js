@@ -10,22 +10,22 @@ module.exports = function (config) {
     var customLaunchers = new CustomLaunchers();
 
     customLaunchers
-        .addChrome('36', '42', '43', '44', '45')('Windows 8')
-        .addEdge('13.10586')('Windows 10')
-        .addIE('9.0', '10.0', '11.0')('Windows 7')
-        .addIE('10.0')('Windows 8')
-        .addIE('11.0')('Windows 8.1')
-        .addSafari('7.0')('OS X 10.9')
-        .addSafari('8.0')('OS X 10.10')
-        .addSafari('9.0')('OS X 10.11')
-        .addFirefox('6.0', '33', '34', '38', '39')('Windows 8')
-        .addFirefox('6.0', '33', '34', '38', '39')()
-        .addLatest('chrome', 'OS X 10.11')
+        //.addChrome('36', '42', '43', '44', '45')('Windows 8')
+        //.addEdge('13.10586')('Windows 10')
+        //.addIE('9.0', '10.0', '11.0')('Windows 7')
+        //.addIE('10.0')('Windows 8')
+        //.addIE('11.0')('Windows 8.1')
+        //.addSafari('7.0')('OS X 10.9')
+        //.addSafari('8.0')('OS X 10.10')
+        //.addSafari('9.0')('OS X 10.11')
+        //.addFirefox('6.0', '33', '34', '38', '39')('Windows 8')
+        //.addFirefox('6.0', '33', '34', '38', '39')()
+        //.addLatest('chrome', 'OS X 10.11')
         .addLatest('chrome', 'Windows 8')
-        .addLatest('chrome', 'linux')
+        //.addLatest('chrome', 'linux')
         .addLatest('firefox', 'linux')
-        .addLatest('firefox', 'Windows 10')
-        .addLatest('firefox', 'OS X 10.11')
+        //.addLatest('firefox', 'Windows 10')
+        //.addLatest('firefox', 'OS X 10.11')
         .addLatest('MicrosoftEdge', 'Windows 10');
 
     config.set({

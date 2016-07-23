@@ -78,10 +78,9 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: //process.env.TRAVIS
-            //? Object.keys(customLaunchers).filter(function(key) { return !key.startsWith('add'); })
-            //:
-            ['Chrome'],
+        browsers: process.env.TRAVIS
+            ? Object.keys(customLaunchers).filter(function(key) { return !key.startsWith('add'); })
+            :['Chrome'],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
@@ -89,7 +88,7 @@ module.exports = function (config) {
 
         // Concurrency level
         // how many browser should be started simultaneous
-        concurrency: 4,
+        concurrency: 1,
 
 
         systemjs: {

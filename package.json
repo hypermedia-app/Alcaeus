@@ -61,6 +61,7 @@
     "karma-jasmine": "^1.0.2",
     "karma-sauce-launcher": "^1.0.0",
     "karma-systemjs": "^0.14.0",
+    "karma-testingbot-launcher": "^0.1.1",
     "systemjs": "^0.19.31"
   }
 }

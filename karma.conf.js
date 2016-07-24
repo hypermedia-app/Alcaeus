@@ -2,7 +2,7 @@
 // Generated on Sun Apr 10 2016 12:06:14 GMT+0200 (Central European Daylight Time)
 
 module.exports = function (config) {
-    if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
+    if (process.env.TRAVIS && (!process.env.TB_KEY || !process.env.TB_SECRET)) {
         console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
         process.exit(1);
     }
@@ -56,7 +56,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'saucelabs'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'testingbot'] : ['progress'],
 
 
         // web server port
@@ -106,7 +106,11 @@ module.exports = function (config) {
         sauceLabs: {
             testName: 'Web App Unit Tests'
         },
-        
+
+        testingbot: {
+            testName: 'Web App Unit Tests'
+        },
+
         browserNoActivityTimeout: 60000
     })
 };
@@ -123,8 +127,8 @@ function CustomLaunchers() {
     
     this.addLatest = function(browser, system) {
         self[browser + '_latest_' + system] = {
-            base: 'SauceLabs',
-            seleniumKey: browser,
+            base: 'TestingBot',
+            browserName: browser,
             platform: system
         };
 
@@ -140,7 +144,7 @@ function CustomLaunchers() {
                     var seleniumKey = browser + '_' + version + '_' + system;
 
                     self[seleniumKey] = {
-                        base: 'SauceLabs',
+                        base: 'TestingBot',
                         browserName: browser,
                         version: version
                     };

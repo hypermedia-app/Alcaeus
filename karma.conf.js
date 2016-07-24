@@ -108,7 +108,8 @@ module.exports = function (config) {
         },
 
         testingbot: {
-            testName: 'Web App Unit Tests'
+            testName: 'Web App Unit Tests',
+            connectOptions: { verbose: true }
         },
 
         browserNoActivityTimeout: 60000

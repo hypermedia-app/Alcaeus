@@ -78,9 +78,9 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: process.env.TRAVIS
-            ? Object.keys(customLaunchers).filter(function(key) { return !key.startsWith('add'); })
-            :['Chrome'],
+       // browsers: process.env.TRAVIS
+       //     ? Object.keys(customLaunchers).filter(function(key) { return !key.startsWith('add'); })
+       //     :['Chrome'],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
@@ -101,7 +101,17 @@ module.exports = function (config) {
             ]
         },
 
-        customLaunchers: JSON.parse(JSON.stringify(customLaunchers)),
+        customLaunchers: {
+            chrome: {
+                base: 'BrowserStack',
+                browser: 'chrome',
+                browser_version: '45',
+                os: 'windows',
+                os_version: '8'
+            }
+        },
+
+        browsers: ['chrome'],
         
         sauceLabs: {
             testName: 'Web App Unit Tests'
@@ -128,8 +138,8 @@ function CustomLaunchers() {
     
     this.addLatest = function(browser, system) {
         self[browser + '_latest_' + system] = {
-            base: 'TestingBot',
-            browserName: browser,
+            base: 'BrowserStack',
+            browser: browser,
             platform: system
         };
 
@@ -145,13 +155,13 @@ function CustomLaunchers() {
                     var seleniumKey = browser + '_' + version + '_' + system;
 
                     self[seleniumKey] = {
-                        base: 'TestingBot',
-                        browserName: browser,
-                        version: version
+                        base: 'BrowserStack',
+                        browser: browser,
+                        browser_version: version
                     };
 
                     if (system) {
-                        self[seleniumKey].platform = system;
+                        self[seleniumKey].os = system;
                     }
                 });
 

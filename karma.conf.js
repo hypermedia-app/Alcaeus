@@ -56,9 +56,9 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'testingbot'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots'] : ['progress'],
 
-        plugins: ['karma-browserstack-launcher'],
+        plugins: ['karma-systemjs', 'karma-jasmine', 'karma-browserstack-launcher'],
 
         // web server port
         port: 9876,

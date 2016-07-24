@@ -105,7 +105,9 @@ module.exports = function (config) {
         
         sauceLabs: {
             testName: 'Web App Unit Tests'
-        }
+        },
+        
+        browserNoActivityTimeout: 60000
     })
 };
 

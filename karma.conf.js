@@ -129,7 +129,7 @@ function CustomLaunchers() {
         };
 
         return self;
-    }
+    };
 
     function addBrowser(browser) {        
         return function () {

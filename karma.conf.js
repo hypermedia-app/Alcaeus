@@ -103,27 +103,22 @@ module.exports = function (config) {
         },
 
         customLaunchers: {
-            chrome: {
+            bs_firefox_mac: {
                 base: 'BrowserStack',
-                browser: 'chrome',
-                browser_version: '45',
-                os: 'windows',
-                os_version: '8'
+                browser: 'firefox',
+                browser_version: '21.0',
+                os: 'OS X',
+                os_version: 'Mountain Lion'
+            },
+            bs_iphone5: {
+                base: 'BrowserStack',
+                device: 'iPhone 5',
+                os: 'ios',
+                os_version: '6.0'
             }
         },
 
-        browsers: ['chrome'],
-        
-        sauceLabs: {
-            testName: 'Web App Unit Tests'
-        },
-
-        testingbot: {
-            testName: 'Web App Unit Tests',
-            connectOptions: { verbose: true }
-        },
-
-        browserNoActivityTimeout: 60000
+        browsers: ['bs_firefox_mac', 'bs_iphone5']
     })
 };
 

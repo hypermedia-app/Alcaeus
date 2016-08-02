@@ -84,6 +84,16 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: true,
+    
+    systemjs: {
+             configFile: 'config.js',
+             serveFiles: [
+                 'src/**/*.ts',
+                 'tests/**/*.ts',
+                 'jspm_packages/**/*',
+                 'node_modules/**/*'
+             ]
+ -        }
   })
 }

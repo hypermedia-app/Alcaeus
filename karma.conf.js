@@ -1,168 +1,89 @@
 // Karma configuration
-// Generated on Sun Apr 10 2016 12:06:14 GMT+0200 (Central European Daylight Time)
+// Generated on Wed Oct 07 2015 12:43:21 GMT+0530 (IST)
 
-module.exports = function (config) {
-    if (process.env.TRAVIS && (!process.env.TB_KEY || !process.env.TB_SECRET)) {
-        console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
-        process.exit(1);
-    }
+module.exports = function(config) {
+  config.set({
 
-    var customLaunchers = new CustomLaunchers();
-
-    customLaunchers
-        .addChrome('36', '42', '43', '44', '45')('Windows 8')
-        .addEdge('13.10586')('Windows 10')
-        .addIE('9.0', '10.0', '11.0')('Windows 7')
-        .addIE('10.0')('Windows 8')
-        .addIE('11.0')('Windows 8.1')
-        .addSafari('7.0')('OS X 10.9')
-        .addSafari('8.0')('OS X 10.10')
-        .addSafari('9.0')('OS X 10.11')
-        .addFirefox('6.0', '33', '34', '38', '39')('Windows 8')
-        .addFirefox('6.0', '33', '34', '38', '39')()
-        .addLatest('chrome', 'OS X 10.11')
-        .addLatest('chrome', 'Windows 8')
-        .addLatest('chrome', 'linux')
-        .addLatest('firefox', 'linux')
-        .addLatest('firefox', 'Windows 10')
-        .addLatest('firefox', 'OS X 10.11')
-        .addLatest('MicrosoftEdge', 'Windows 10');
-
-    config.set({
-
-        // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
-
-        // frameworks to use
-        // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['systemjs', 'jasmine'],
+    // base path that will be used to resolve all patterns (eg. files, exclude)
+    basePath: '',
 
 
-        // list of files / patterns to load in the browser
-        files: [
-            'tests/*-spec.ts',
-            'tests/*-specs.ts'
-        ],
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: ['systemjs', 'jasmine'],
+
+    //plugins
+    plugins: ['karma-systemjs', 'karma-jasmine', 'karma-browserstack-launcher'],
 
 
-        // list of files to exclude
-        exclude: [],
+    // list of files / patterns to load in the browser
+    files: [
+      'tests/*-spec.ts',
+      'tests/*-specs.ts'
+    ],
 
 
-        // preprocess matching files before serving them to the browser
-        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {},
-
-        // test results reporter to use
-        // possible values: 'dots', 'progress'
-        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
-
-        plugins: ['karma-systemjs', 'karma-jasmine', 'karma-browserstack-launcher'],
-
-        // web server port
-        port: 9876,
+    // list of files to exclude
+    exclude: [
+    ],
 
 
-        // enable / disable colors in the output (reporters and logs)
-        colors: true,
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {
+    },
 
 
-        // level of logging
-        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['progress'],
 
 
-        // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: true,
+    // web server port
+    port: 9876,
 
 
-        // start these browsers
-        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-       // browsers: process.env.TRAVIS
-       //     ? Object.keys(customLaunchers).filter(function(key) { return !key.startsWith('add'); })
-       //     :['Chrome'],
-
-        // Continuous Integration mode
-        // if true, Karma captures browsers, runs the tests and exits
-        singleRun: process.env.TRAVIS ? true : false,
-
-        // Concurrency level
-        // how many browser should be started simultaneous
-        concurrency: 1,
+    // enable / disable colors in the output (reporters and logs)
+    colors: true,
 
 
-        systemjs: {
-            configFile: 'config.js',
-            serveFiles: [
-                'src/**/*.ts',
-                'tests/**/*.ts',
-                'jspm_packages/**/*',
-                'node_modules/**/*'
-            ]
-        },
+    // level of logging
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    logLevel: config.LOG_INFO,
 
-        customLaunchers: {
-            bs_firefox_mac: {
-                base: 'BrowserStack',
-                browser: 'firefox',
-                browser_version: '21.0',
-                os: 'OS X',
-                os_version: 'Mountain Lion'
-            },
-            bs_iphone5: {
-                base: 'BrowserStack',
-                device: 'iPhone 5',
-                os: 'ios',
-                os_version: '6.0'
-            }
-        },
 
-        browsers: ['bs_firefox_mac', 'bs_iphone5']
-    })
-};
-
-function CustomLaunchers() {
-    var self = this;
-
-    this.addChrome = addBrowser('chrome');
-    this.addEdge = addBrowser('MicrosoftEdge');
-    this.addOpera = addBrowser('opera');
-    this.addSafari = addBrowser('safari');
-    this.addFirefox = addBrowser('firefox');
-    this.addIE = addBrowser('internet explorer');
+    // enable / disable watching file and executing tests whenever any file changes
+    autoWatch: false,
     
-    this.addLatest = function(browser, system) {
-        self[browser + '_latest_' + system] = {
-            base: 'BrowserStack',
-            browser: browser,
-            platform: system
-        };
+    browserStack: {
+      username: process.env.BROWSERSTACK_USERNAME,
+      accessKey: process.env.BROWSERSTACK_KEY
+    },
 
-        return self;
-    };
+    // define browsers
+    customLaunchers: {
+      bs_firefox_mac: {
+        base: 'BrowserStack',
+        browser: 'firefox',
+        browser_version: '21.0',
+        os: 'OS X',
+        os_version: 'Mountain Lion'
+      },
+      bs_iphone5: {
+        base: 'BrowserStack',
+        device: 'iPhone 5',
+        os: 'ios',
+        os_version: '6.0'
+      }
+    },
 
-    function addBrowser(browser) {        
-        return function () {
-            var versions = Array.from(arguments);
-            return function (system) {
-                
-                versions.forEach(function (version) {
-                    var seleniumKey = browser + '_' + version + '_' + system;
+    browsers: ['bs_firefox_mac', 'bs_iphone5'],
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
 
-                    self[seleniumKey] = {
-                        base: 'BrowserStack',
-                        browser: browser,
-                        browser_version: version
-                    };
-
-                    if (system) {
-                        self[seleniumKey].os = system;
-                    }
-                });
-
-                return self;
-            };
-        };
-    }
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: true
+  })
 }

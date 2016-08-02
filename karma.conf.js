@@ -94,6 +94,6 @@ module.exports = function(config) {
                  'jspm_packages/**/*',
                  'node_modules/**/*'
              ]
- -        }
+         }
   })
-}
+};

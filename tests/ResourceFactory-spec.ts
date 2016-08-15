@@ -22,7 +22,7 @@ describe('ResourceFactory', () => {
         constructedTypes[Core.Vocab.ApiDocumentation] = res => res instanceof documentationTypes.ApiDocumentation;
         constructedTypes[Core.Vocab.Class] = res => res instanceof documentationTypes.Class;
         constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;
-        constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.Operation;
+        constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.SupportedOperation;
         constructedTypes[Core.Vocab.StatusCodeDescription] = res => res instanceof documentationTypes.StatusCodeDescription;
         constructedTypes[rdf.ns + 'Property'] = res => res instanceof documentationTypes.RdfProperty;
 

@@ -99,7 +99,7 @@ function createSupportedProperty(heracles, obj) {
     return new DocTypes.SupportedProperty(obj);
 }
 function createOperation(heracles, obj) {
-    return new DocTypes.Operation(obj, heracles);
+    return new DocTypes.SupportedOperation(obj, heracles);
 }
 function createStatusCodeDescription(heracles, obj) {
     return new DocTypes.StatusCodeDescription(obj);

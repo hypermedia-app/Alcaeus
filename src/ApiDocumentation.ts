@@ -31,9 +31,9 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
         return heraclesWeakMap.get(this);
     }
 
-    getOperations(classUri:string):Array<IOperation>;
+    getOperations(classUri:string):Array<ISupportedOperation>;
 
-    getOperations(classUri:string, predicateUri?:string):Array<IOperation> {
+    getOperations(classUri:string, predicateUri?:string):Array<ISupportedOperation> {
         var clas = this.getClass(classUri);
         if (!clas) {
             return [];
@@ -70,8 +70,6 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 }
 
-var heraclesWeakMap = new WeakMap();
-
 export class DocumentedResource extends Resource implements IDocumentedResource {
     constructor(hydraResource:any) {
         super(hydraResource);
@@ -90,7 +88,7 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
     }
 }
 
-export class Operation extends DocumentedResource implements IOperation {
+export class SupportedOperation extends DocumentedResource implements ISupportedOperation {
 
     constructor(hydraOperation:any, heracles:IHeracles) {
         heraclesWeakMap.set(this, heracles);
@@ -165,7 +163,7 @@ export class Class extends DocumentedResource implements IClass {
         super(hydraClass);
     }
 
-    get supportedOperations():Array<IOperation> {
+    get supportedOperations():Array<ISupportedOperation> {
         var operations = this[Core.Vocab.supportedOperation];
         
         if(typeof operations ==='undefined' || operations === null) {
@@ -214,7 +212,7 @@ export class RdfProperty extends DocumentedResource implements IRdfProperty {
         return this[rdfs.ns + 'domain'];
     }
 
-    get supportedOperations():Array<IOperation> {
+    get supportedOperations():Array<ISupportedOperation> {
         var value = this[Core.Vocab.supportedOperation];
 
         if(typeof value === 'undefined'){

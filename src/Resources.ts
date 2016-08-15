@@ -85,8 +85,47 @@ export class HydraResource extends Resource implements IHydraResource {
             .value();
 
         var operations = [...classOperations, ...propertyOperations];
-        return _.flatten(operations);
+        return _.flatten(operations).map((supportedOperation:ISupportedOperation) => {
+            return new Operation(supportedOperation, this);
+        });
     }
+}
+
+export class Operation implements IOperation {
+    private _supportedOperation: ISupportedOperation;
+
+    constructor(supportedOperation:ISupportedOperation, resource:IHydraResource) {
+        this._supportedOperation = supportedOperation;
+
+    }
+
+    get method():string {
+        return this._supportedOperation.method;
+    }
+
+    get expects():IClass {
+        return this._supportedOperation.expects;
+    }
+
+    get returns():IClass {
+        return this._supportedOperation.returns;
+    }
+
+    get requiresInput():boolean {
+        return this._supportedOperation.requiresInput;
+    }
+
+    get title():string {
+        return this._supportedOperation.title;
+    }
+
+    get description():string {
+        return this._supportedOperation.description;
+    }
+
+    invoke() {
+    }
+
 }
 
 export class PartialCollectionView extends HydraResource implements IPartialCollectionView {

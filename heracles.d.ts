@@ -11,14 +11,14 @@ interface IResource {
 interface IApiDocumentation extends IResource {
     classes:Array<IClass>;
     getClass(classId:string):IClass;
-    getOperations(classUri:string):Array<IOperation>;
-    getOperations(classUri:string, predicateUri:string):Array<IOperation>;
+    getOperations(classUri:string):Array<ISupportedOperation>;
+    getOperations(classUri:string, predicateUri:string):Array<ISupportedOperation>;
     getProperties(classUri:string):Array<ISupportedProperty>;
     getEntrypoint():Promise<IHydraResource>
 }
 
 interface IClass extends IDocumentedResource {
-    supportedOperations:Array<IOperation>;
+    supportedOperations:Array<ISupportedOperation>;
     supportedProperties:Array<ISupportedProperty>;
 }
 
@@ -34,17 +34,27 @@ interface ISupportedProperty extends IDocumentedResource {
     property:IRdfProperty;
 }
 
-interface IRdfProperty extends IDocumentedResource {
-    range:IClass;
-    domain:IClass;
-    supportedOperations:Array<IOperation>;
-}
-
-interface IOperation extends IDocumentedResource {
+interface ISupportedOperation extends IDocumentedResource {
     method:string;
     expects:IClass;
     returns:IClass;
     requiresInput:boolean;
+}
+
+interface IRdfProperty extends IDocumentedResource {
+    range:IClass;
+    domain:IClass;
+    supportedOperations:Array<ISupportedOperation>;
+}
+
+interface IOperation {
+    title:string;
+    description:string;
+    method:string;
+    expects:IClass;
+    returns:IClass;
+    requiresInput:boolean;
+    invoke();
 }
 
 interface IHydraResource extends IResource {

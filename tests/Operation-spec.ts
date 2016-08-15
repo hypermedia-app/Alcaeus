@@ -1,48 +1,54 @@
 import {promises as jsonld} from 'jsonld';
-import * as sinon from 'sinon';
-import {Operation, ApiDocumentation} from '../src/ApiDocumentation';
-import {Core} from '../src/Constants';
-//noinspection TypeScriptCheckImport
-import {owl} from 'jasnell/linkeddata-vocabs';
+import {Operation} from "../src/Resources";
 
 describe('Operation', () => {
 
-    var operationJsonLd;
+    var supportedOperation:ISupportedOperation;
 
-    beforeEach(() => operationJsonLd = {
-        '@context': Core.Context,
-        'title': 'The operation',
-        'description': 'The operation description',
-        'expects': 'http://www.w3.org/2002/07/owl#Nothing',
-        'returns': 'http://example.com/Something',
-        'method': 'TRACE'
+    describe('constructor', () => {
+
+        it('should require supported operation', () => {
+
+            expect(() => new Operation(null, <IHydraResource>{}))
+                .toThrow(new Error('Missing supportedOperation parameter'));
+            expect(() => new Operation(undefined, <IHydraResource>{}))
+                .toThrow(new Error('Missing supportedOperation parameter'));
+        });
+
     });
 
-    it('should expose operation method', (done:any) => {
-        jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new Operation(compacted, <IHeracles>{});
+    describe('property', () => {
 
-            expect(op.method).toBe('TRACE');
-            done();
-        }).catch(done.fail);
-    });
+        var operation:IOperation;
+        var expects:IClass = <IClass>{};
+        var returns:IClass = <IClass>{};
 
-    it('should expose expected class id', (done:any) => {
-        jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new Operation(compacted, <IHeracles>{});
+        beforeEach(() => {
+            operation = new Operation(<ISupportedOperation>{
+                method: 'POST',
+                expects: expects,
+                returns: returns,
+                title: 'the title',
+                description: 'the description'
+            }, null);
+        });
 
-            expect(op.expects['@id']).toBe('http://www.w3.org/2002/07/owl#Nothing');
-            done();
-        }).catch(done.fail);
-    });
+        it('method should delegate to operation', () => {
+            expect(operation.method).toBe('POST');
+        });
 
-    it('should expose returned class id', (done:any) => {
-        jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new Operation(compacted, <IHeracles>{});
+        it('expects should delegate to operation', () => {
+            expect(operation.expects).toBe(expects);
+        });
 
-            expect(op.returns['@id']).toBe('http://example.com/Something');
-            done();
-        }).catch(done.fail);
+        it('returns should delegate to operation', () => {
+            expect(operation.returns).toBe(returns);
+        });
+
+        it('description should delegate to operation', () => {
+            expect(operation.description).toBe('the description');
+        });
+
     });
 
     describe('invoke', () => {
@@ -60,7 +66,7 @@ describe('Operation', () => {
         it('should execute through heracles with JSON-LD media type', (done) => {
 
             jsonld.compact(operation, {}).then(compacted => {
-                var op = new Operation(compacted, <IHeracles>heracles);
+                var op = new SupportedOperation(compacted, <IHeracles>heracles);
                 var payload = {};
 
                 op.invoke('http://target/address', payload);
@@ -74,7 +80,7 @@ describe('Operation', () => {
         it('should execute through heracles with changed media type', (done) => {
 
             jsonld.compact(operation, {}).then(compacted => {
-                var op = new Operation(compacted, <IHeracles>heracles);
+                var op = new SupportedOperation(compacted, <IHeracles>heracles);
                 var payload = {};
 
                 op.invoke('http://target/address', payload, 'text/turtle');
@@ -85,67 +91,15 @@ describe('Operation', () => {
             }).catch(done.fail);
         });
 
-    });
-    
-    describe('requiresInput', () => {
-
-        it('should return false for GET operation', done => {
-            var operation = {
-                '@context': Core.Context,
-                'method': 'GET'
-            };
-
+        it('should throw when uri is missing', (done) => {
             jsonld.compact(operation, {}).then(compacted => {
-                var op = new Operation(compacted, <IHeracles>{});
+                var op = new SupportedOperation(compacted, <IHeracles>heracles);
+                var payload = {};
 
-                expect(op.requiresInput).toBe(false);
+                expect(() => op.invoke(null, {}))
+                    .toThrow(new Error('Target URI is missing'));
                 done();
             }).catch(done.fail);
         });
-
-        it('should return false for DELETE operation', done => {
-            var operation = {
-                '@context': Core.Context,
-                'method': 'DELETE'
-            };
-
-            jsonld.compact(operation, {}).then(compacted => {
-                var op = new Operation(compacted, <IHeracles>{});
-
-                expect(op.requiresInput).toBe(false);
-                done();
-            }).catch(done.fail);
-        });
-
-        it('should return true if operation expects a body', done => {
-            var operation = {
-                '@context': Core.Context,
-                'method': 'POST'
-            };
-
-            jsonld.compact(operation, {}).then(compacted => {
-                var op = new Operation(compacted, <IHeracles>{});
-
-                expect(op.requiresInput).toBe(true);
-                done();
-            }).catch(done.fail);
-        });
-
-        it('should return true if operation expects nothing', done => {
-            var operation = {
-                '@context': Core.Context,
-                'method': 'POST'
-            };
-
-            jsonld.compact(operation, {}).then(compacted => {
-
-                compacted[Core.Vocab.expects] = { id: owl.ns + 'Nothing' };
-                var op = new Operation(compacted, <IHeracles>{});
-
-                expect(op.requiresInput).toBe(true);
-                done();
-            }).catch(done.fail);
-        });
-        
     });
 });

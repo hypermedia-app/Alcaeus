@@ -1,7 +1,9 @@
-// Karma configuration
-// Generated on Wed Oct 07 2015 12:43:21 GMT+0530 (IST)
-
 module.exports = function (config) {
+    if (process.env.TRAVIS && (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY)) {
+        console.log('Make sure the BROWSER_STACK_USERNAME and BROWSER_STACK_ACCESS_KEY environment variables are set.');
+        process.exit(1);
+    }
+
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -13,7 +15,9 @@ module.exports = function (config) {
         frameworks: ['systemjs', 'jasmine'],
 
         //plugins
-        plugins: ['karma-systemjs', 'karma-jasmine', 'karma-browserstack-launcher'],
+        plugins: process.env.TRAVIS
+            ? ['karma-systemjs', 'karma-jasmine', 'karma-browserstack-launcher']
+            : ['karma-systemjs', 'karma-jasmine', 'karma-chrome-launcher'],
 
 
         // list of files / patterns to load in the browser
@@ -60,29 +64,15 @@ module.exports = function (config) {
         },
 
         // define browsers
-        customLaunchers: {
-            bs_firefox_mac: {
-                base: 'BrowserStack',
-                browser: 'firefox',
-                browser_version: '21.0',
-                os: 'OS X',
-                os_version: 'Mountain Lion'
-            },
-            bs_iphone5: {
-                base: 'BrowserStack',
-                device: 'iPhone 5',
-                os: 'ios',
-                os_version: '6.0'
-            }
-        },
+        customLaunchers: getCustomLaunchers(),
 
-        browsers: ['bs_firefox_mac', 'bs_iphone5'],
-        // start these browsers
-        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+        browsers: process.env.TRAVIS
+            ? Object.keys(getCustomLaunchers()).filter(function(key) { return !key.startsWith('add'); })
+            : ['Chrome'],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true,
+        singleRun: process.env.TRAVIS ? true : false,
 
         systemjs: {
             configFile: 'config.js',
@@ -93,5 +83,57 @@ module.exports = function (config) {
                 'node_modules/**/*'
             ]
         }
-    })
+    });
+
+    function getCustomLaunchers() {
+        return Object.assign(
+            getLaunchers('firefox')('6.0', '33', '34', '38', '39')('Windows', '8.1'),
+            getLaunchers('chrome')('36', '42', '43', '44', '45')('Windows', '8'),
+            getLaunchers('internet explorer')('9', '10', '11')('Windows', '7'),
+            getLaunchers('safari')('8')('OS X', 'Yosemite'),
+            getLaunchers('safari')('7.1')('OS X', 'Mavericks'),
+            getLaunchers('safari')('9.1')('OS X', 'El Capitan'),
+            getLatest('firefox')('Windows', '8.1'),
+            getLatest('chrome')('Windows', '7'),
+            getLatest('internet explorer')('Windows', '8.1'),
+            getLatest('edge')('Windows', '10')
+        );
+    }
+
+    function getLaunchers(browser) {
+        return function() {
+            var browser_versions = Array.from(arguments);
+
+            return function(os, os_version) {
+                var launchers = {};
+
+                browser_versions.forEach(function(browser_version) {
+                    launchers[browser + '_' + os + '_' + os_version] = {
+                        base: 'BrowserStack',
+                        browser: browser,
+                        browser_version: browser_version,
+                        os: os,
+                        os_version: os_version
+                    };
+                });
+
+                return launchers;
+            }
+        }
+    }
+
+    function getLatest(browser) {
+        return function(os, os_version) {
+            var launcher = {};
+
+            launcher[browser + '_' + os + '_' + os_version] = {
+                base: 'BrowserStack',
+                browser: browser,
+                os: os,
+                os_version: os_version
+            };
+
+            return launcher;
+        }
+    }
 };

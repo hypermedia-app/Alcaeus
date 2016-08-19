@@ -54,7 +54,7 @@ interface IOperation {
     expects:IClass;
     returns:IClass;
     requiresInput:boolean;
-    invoke();
+    invoke(body:any, mediaType?:string);
 }
 
 interface IHydraResource extends IResource {

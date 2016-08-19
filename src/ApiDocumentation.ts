@@ -116,10 +116,6 @@ export class SupportedOperation extends DocumentedResource implements ISupported
 
         return methodExpectsBody || operationExpectsBody;
     }
-
-    invoke(uri:string, body:any, mediaType? = MediaTypes.jsonLd) {
-        return heraclesWeakMap.get(this).invokeOperation(this, uri, body, mediaType);
-    }
 }
 
 export class SupportedProperty extends DocumentedResource implements ISupportedProperty {

@@ -173,7 +173,7 @@ $__System.register("b", ["5", "4", "a", "d", "c"], function(exports_1, context_1
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var _, linkeddata_vocabs_1, Constants_1, Resources_1, core_decorators_1;
-    var heraclesWeakMap, ApiDocumentation, DocumentedResource, Operation, SupportedProperty, Class, StatusCodeDescription, RdfProperty;
+    var heraclesWeakMap, ApiDocumentation, DocumentedResource, SupportedOperation, SupportedProperty, Class, StatusCodeDescription, RdfProperty;
     return {
         setters:[
             function (_1) {
@@ -251,7 +251,6 @@ $__System.register("b", ["5", "4", "a", "d", "c"], function(exports_1, context_1
                 return ApiDocumentation;
             }(Resources_1.Resource));
             exports_1("ApiDocumentation", ApiDocumentation);
-            heraclesWeakMap = new WeakMap();
             DocumentedResource = (function (_super) {
                 __extends(DocumentedResource, _super);
                 function DocumentedResource(hydraResource) {
@@ -278,34 +277,34 @@ $__System.register("b", ["5", "4", "a", "d", "c"], function(exports_1, context_1
                 return DocumentedResource;
             }(Resources_1.Resource));
             exports_1("DocumentedResource", DocumentedResource);
-            Operation = (function (_super) {
-                __extends(Operation, _super);
-                function Operation(hydraOperation, heracles) {
+            SupportedOperation = (function (_super) {
+                __extends(SupportedOperation, _super);
+                function SupportedOperation(hydraOperation, heracles) {
                     heraclesWeakMap.set(this, heracles);
                     _super.call(this, hydraOperation);
                 }
-                Object.defineProperty(Operation.prototype, "method", {
+                Object.defineProperty(SupportedOperation.prototype, "method", {
                     get: function () {
                         return this[Constants_1.Core.Vocab.method];
                     },
                     enumerable: true,
                     configurable: true
                 });
-                Object.defineProperty(Operation.prototype, "expects", {
+                Object.defineProperty(SupportedOperation.prototype, "expects", {
                     get: function () {
                         return this[Constants_1.Core.Vocab.expects];
                     },
                     enumerable: true,
                     configurable: true
                 });
-                Object.defineProperty(Operation.prototype, "returns", {
+                Object.defineProperty(SupportedOperation.prototype, "returns", {
                     get: function () {
                         return this[Constants_1.Core.Vocab.returns];
                     },
                     enumerable: true,
                     configurable: true
                 });
-                Object.defineProperty(Operation.prototype, "requiresInput", {
+                Object.defineProperty(SupportedOperation.prototype, "requiresInput", {
                     get: function () {
                         var method = this.method || '';
                         var methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE';
@@ -315,13 +314,13 @@ $__System.register("b", ["5", "4", "a", "d", "c"], function(exports_1, context_1
                     enumerable: true,
                     configurable: true
                 });
-                Operation.prototype.invoke = function (uri, body, mediaType) {
+                SupportedOperation.prototype.invoke = function (uri, body, mediaType) {
                     if (mediaType === void 0) { mediaType = Constants_1.MediaTypes.jsonLd; }
                     return heraclesWeakMap.get(this).invokeOperation(this, uri, body, mediaType);
                 };
-                return Operation;
+                return SupportedOperation;
             }(DocumentedResource));
-            exports_1("Operation", Operation);
+            exports_1("SupportedOperation", SupportedOperation);
             SupportedProperty = (function (_super) {
                 __extends(SupportedProperty, _super);
                 function SupportedProperty(hydraSupportedProperty) {
@@ -531,7 +530,7 @@ $__System.register("f", ["5", "4", "d", "b", "a", "e"], function(exports_1, cont
         return new DocTypes.SupportedProperty(obj);
     }
     function createOperation(heracles, obj) {
-        return new DocTypes.Operation(obj, heracles);
+        return new DocTypes.SupportedOperation(obj, heracles);
     }
     function createStatusCodeDescription(heracles, obj) {
         return new DocTypes.StatusCodeDescription(obj);
@@ -738,7 +737,7 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var _, jsonld_1, core_decorators_1, Constants_1;
-    var _isProcessed, Resource, _apiDocumentation, _incomingLinks, HydraResource, PartialCollectionView;
+    var _isProcessed, Resource, _apiDocumentation, _incomingLinks, HydraResource, Operation, PartialCollectionView;
     return {
         setters:[
             function (_1) {
@@ -840,7 +839,9 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                             .union()
                             .value();
                         var operations = classOperations.concat(propertyOperations);
-                        return _.flatten(operations);
+                        return _.flatten(operations).map(function (supportedOperation) {
+                            return new Operation(supportedOperation, _this);
+                        });
                     },
                     enumerable: true,
                     configurable: true
@@ -854,6 +855,60 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                 return HydraResource;
             }(Resource));
             exports_1("HydraResource", HydraResource);
+            Operation = (function () {
+                function Operation(supportedOperation, resource) {
+                    if (!supportedOperation) {
+                        throw new Error('Missing supportedOperation parameter');
+                    }
+                    this._supportedOperation = supportedOperation;
+                }
+                Object.defineProperty(Operation.prototype, "method", {
+                    get: function () {
+                        return this._supportedOperation.method;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "expects", {
+                    get: function () {
+                        return this._supportedOperation.expects;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "returns", {
+                    get: function () {
+                        return this._supportedOperation.returns;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "requiresInput", {
+                    get: function () {
+                        return this._supportedOperation.requiresInput;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "title", {
+                    get: function () {
+                        return this._supportedOperation.title;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "description", {
+                    get: function () {
+                        return this._supportedOperation.description;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Operation.prototype.invoke = function () {
+                };
+                return Operation;
+            }());
+            exports_1("Operation", Operation);
             PartialCollectionView = (function (_super) {
                 __extends(PartialCollectionView, _super);
                 function PartialCollectionView() {

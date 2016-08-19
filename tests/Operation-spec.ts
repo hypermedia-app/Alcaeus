@@ -1,5 +1,6 @@
-import {promises as jsonld} from 'jsonld';
+import * as sinon from 'sinon';
 import {Operation} from "../src/Resources";
+import {Core} from '../src/Constants'
 
 describe('Operation', () => {
 
@@ -9,10 +10,10 @@ describe('Operation', () => {
 
         it('should require supported operation', () => {
 
-            expect(() => new Operation(null, <IHydraResource>{}))
-                .toThrow(new Error('Missing supportedOperation parameter'));
-            expect(() => new Operation(undefined, <IHydraResource>{}))
-                .toThrow(new Error('Missing supportedOperation parameter'));
+            expect(() => new Operation(null, <IHydraResource>{}, <IHeracles>{}))
+                .toThrowError('Missing supportedOperation parameter');
+            expect(() => new Operation(undefined, <IHydraResource>{}, <IHeracles>{}))
+                .toThrowError('Missing supportedOperation parameter');
         });
 
     });
@@ -54,52 +55,36 @@ describe('Operation', () => {
     describe('invoke', () => {
 
         var heracles;
-        var operation = {
-            '@context': Core.Context,
-            'method': 'PUT'
+        var supportedOperation = <ISupportedOperation>{
+        };
+        var resource = <IHydraResource>{
+            id: 'http://target/resource'
         };
 
         beforeEach(() => heracles = {
             invokeOperation: sinon.stub()
         });
 
-        it('should execute through heracles with JSON-LD media type', (done) => {
+        it('should execute through heracles with JSON-LD media type', () => {
 
-            jsonld.compact(operation, {}).then(compacted => {
-                var op = new SupportedOperation(compacted, <IHeracles>heracles);
-                var payload = {};
+            var op = new Operation(supportedOperation, resource, heracles);
+            var payload = {};
 
-                op.invoke('http://target/address', payload);
+            op.invoke(payload);
 
-                expect(heracles.invokeOperation.calledWithExactly(op, 'http://target/address', payload, 'application/ld+json'))
-                    .toBeTruthy();
-                done();
-            }).catch(done.fail);
+            expect(heracles.invokeOperation.calledWithExactly(op, 'http://target/resource', payload, 'application/ld+json'))
+                .toBeTruthy();
         });
 
-        it('should execute through heracles with changed media type', (done) => {
+        it('should execute through heracles with changed media type', () => {
 
-            jsonld.compact(operation, {}).then(compacted => {
-                var op = new SupportedOperation(compacted, <IHeracles>heracles);
+                var op = new Operation(supportedOperation, resource, heracles);
                 var payload = {};
 
-                op.invoke('http://target/address', payload, 'text/turtle');
+                op.invoke(payload, 'text/turtle');
 
                 expect(heracles.invokeOperation.firstCall.args[3])
                     .toBeTruthy('text/turtle');
-                done();
-            }).catch(done.fail);
-        });
-
-        it('should throw when uri is missing', (done) => {
-            jsonld.compact(operation, {}).then(compacted => {
-                var op = new SupportedOperation(compacted, <IHeracles>heracles);
-                var payload = {};
-
-                expect(() => op.invoke(null, {}))
-                    .toThrow(new Error('Target URI is missing'));
-                done();
-            }).catch(done.fail);
         });
     });
 });

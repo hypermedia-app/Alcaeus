@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 import { nonenumerable } from 'core-decorators';
-import {JsonLd, Core} from './Constants';
+import {JsonLd, Core, MediaTypes} from './Constants';
 //noinspection TypeScriptCheckImport
 import {default} from 'core-js/es6/weak-map';
 
@@ -51,12 +51,14 @@ var _apiDocumentation = new WeakMap();
 var _incomingLinks = new WeakMap();
 
 export class HydraResource extends Resource implements IHydraResource {
+    private _heracles;
 
     constructor(heracles:IHeracles, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
         super(actualResource);
 
         _apiDocumentation.set(this, apiDoc);
         _incomingLinks.set(this, incomingLinks);
+        this._heracles = heracles;
     }
 
     @nonenumerable
@@ -86,17 +88,24 @@ export class HydraResource extends Resource implements IHydraResource {
 
         var operations = [...classOperations, ...propertyOperations];
         return _.flatten(operations).map((supportedOperation:ISupportedOperation) => {
-            return new Operation(supportedOperation, this);
+            return new Operation(supportedOperation, this, this._heracles);
         });
     }
 }
 
 export class Operation implements IOperation {
     private _supportedOperation: ISupportedOperation;
+    private _heracles: IHeracles;
+    private _resource: IHydraResource;
 
-    constructor(supportedOperation:ISupportedOperation, resource:IHydraResource) {
+    constructor(supportedOperation:ISupportedOperation, resource:IHydraResource, heracles:IHeracles) {
+        if(!supportedOperation) {
+            throw new Error('Missing supportedOperation parameter');
+        }
+
         this._supportedOperation = supportedOperation;
-
+        this._heracles = heracles;
+        this._resource = resource;
     }
 
     get method():string {
@@ -123,9 +132,9 @@ export class Operation implements IOperation {
         return this._supportedOperation.description;
     }
 
-    invoke() {
+    invoke(body:any, mediaType? = MediaTypes.jsonLd) {
+        return this._heracles.invokeOperation(this, this._resource.id, body, mediaType);
     }
-
 }
 
 export class PartialCollectionView extends HydraResource implements IPartialCollectionView {

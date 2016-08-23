@@ -7,6 +7,11 @@ import {JsonLd, Core, MediaTypes} from './Constants';
 import {default} from 'core-js/es6/weak-map';
 
 var _isProcessed = new WeakMap();
+var _apiDocumentation = new WeakMap();
+var _incomingLinks = new WeakMap();
+var _heracles = new WeakMap();
+var _supportedOperation = new WeakMap();
+var _resource = new WeakMap();
 
 export class Resource implements IResource {
 
@@ -47,23 +52,23 @@ export class Resource implements IResource {
     }
 }
 
-var _apiDocumentation = new WeakMap();
-var _incomingLinks = new WeakMap();
-
 export class HydraResource extends Resource implements IHydraResource {
-    private _heracles;
-
     constructor(heracles:IHeracles, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
         super(actualResource);
 
         _apiDocumentation.set(this, apiDoc);
         _incomingLinks.set(this, incomingLinks);
-        this._heracles = heracles;
+        _heracles.set(this, heracles);
     }
 
     @nonenumerable
     get apiDocumentation() {
         return _apiDocumentation.get(this);
+    }
+
+    @nonenumerable
+    get _heracles() {
+        return _heracles.get(this);
     }
 
     getIncomingLinks() {
@@ -94,9 +99,6 @@ export class HydraResource extends Resource implements IHydraResource {
 }
 
 export class Operation implements IOperation {
-    private _supportedOperation: ISupportedOperation;
-    private _heracles: IHeracles;
-    private _resource: IHydraResource;
 
     constructor(supportedOperation: ISupportedOperation, heracles: IHeracles, resource: IHydraResource) {
         if(!supportedOperation) {
@@ -107,9 +109,9 @@ export class Operation implements IOperation {
             throw new Error('Missing heracles parameter');
         }
 
-        this._supportedOperation = supportedOperation;
-        this._heracles = heracles;
-        this._resource = resource;
+        _supportedOperation.set(this, supportedOperation);
+        _resource.set(this, resource);
+        _heracles.set(this, heracles);
     }
 
     get method():string {
@@ -134,6 +136,21 @@ export class Operation implements IOperation {
 
     get description():string {
         return this._supportedOperation.description;
+    }
+
+    @nonenumerable
+    get _supportedOperation():ISupportedOperation {
+        return _supportedOperation.get(this);
+    }
+
+    @nonenumerable
+    get _resource():IResource {
+        return _resource.get(this);
+    }
+
+    @nonenumerable
+    get _heracles():IHeracles {
+        return _heracles.get(this);
     }
 
     invoke(body:any, mediaType? = MediaTypes.jsonLd) {

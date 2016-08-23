@@ -733,7 +733,7 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var _, jsonld_1, core_decorators_1, Constants_1;
-    var _isProcessed, Resource, _apiDocumentation, _incomingLinks, HydraResource, Operation, PartialCollectionView;
+    var _isProcessed, _apiDocumentation, _incomingLinks, _heracles, _supportedOperation, _resource, Resource, HydraResource, Operation, PartialCollectionView;
     return {
         setters:[
             function (_1) {
@@ -750,6 +750,11 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
             }],
         execute: function() {
             _isProcessed = new WeakMap();
+            _apiDocumentation = new WeakMap();
+            _incomingLinks = new WeakMap();
+            _heracles = new WeakMap();
+            _supportedOperation = new WeakMap();
+            _resource = new WeakMap();
             Resource = (function () {
                 function Resource(actualResource) {
                     _.extend(this, actualResource);
@@ -799,19 +804,24 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                 return Resource;
             }());
             exports_1("Resource", Resource);
-            _apiDocumentation = new WeakMap();
-            _incomingLinks = new WeakMap();
             HydraResource = (function (_super) {
                 __extends(HydraResource, _super);
                 function HydraResource(heracles, actualResource, apiDoc, incomingLinks) {
                     _super.call(this, actualResource);
                     _apiDocumentation.set(this, apiDoc);
                     _incomingLinks.set(this, incomingLinks);
-                    this._heracles = heracles;
+                    _heracles.set(this, heracles);
                 }
                 Object.defineProperty(HydraResource.prototype, "apiDocumentation", {
                     get: function () {
                         return _apiDocumentation.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(HydraResource.prototype, "_heracles", {
+                    get: function () {
+                        return _heracles.get(this);
                     },
                     enumerable: true,
                     configurable: true
@@ -848,6 +858,9 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                 ], HydraResource.prototype, "apiDocumentation", null);
                 __decorate([
                     core_decorators_1.nonenumerable
+                ], HydraResource.prototype, "_heracles", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
                 ], HydraResource.prototype, "operations", null);
                 return HydraResource;
             }(Resource));
@@ -860,9 +873,9 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                     if (!heracles) {
                         throw new Error('Missing heracles parameter');
                     }
-                    this._supportedOperation = supportedOperation;
-                    this._heracles = heracles;
-                    this._resource = resource;
+                    _supportedOperation.set(this, supportedOperation);
+                    _resource.set(this, resource);
+                    _heracles.set(this, heracles);
                 }
                 Object.defineProperty(Operation.prototype, "method", {
                     get: function () {
@@ -906,10 +919,40 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
+                Object.defineProperty(Operation.prototype, "_supportedOperation", {
+                    get: function () {
+                        return _supportedOperation.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "_resource", {
+                    get: function () {
+                        return _resource.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Operation.prototype, "_heracles", {
+                    get: function () {
+                        return _heracles.get(this);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Operation.prototype.invoke = function (body, mediaType) {
                     if (mediaType === void 0) { mediaType = Constants_1.MediaTypes.jsonLd; }
                     return this._heracles.invokeOperation(this, this._resource.id, body, mediaType);
                 };
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Operation.prototype, "_supportedOperation", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Operation.prototype, "_resource", null);
+                __decorate([
+                    core_decorators_1.nonenumerable
+                ], Operation.prototype, "_heracles", null);
                 return Operation;
             }());
             exports_1("Operation", Operation);

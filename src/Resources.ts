@@ -88,7 +88,7 @@ export class HydraResource extends Resource implements IHydraResource {
 
         var operations = [...classOperations, ...propertyOperations];
         return _.flatten(operations).map((supportedOperation:ISupportedOperation) => {
-            return new Operation(supportedOperation, this, this._heracles);
+            return new Operation(supportedOperation, this._heracles, this);
         });
     }
 }
@@ -98,9 +98,13 @@ export class Operation implements IOperation {
     private _heracles: IHeracles;
     private _resource: IHydraResource;
 
-    constructor(supportedOperation:ISupportedOperation, resource:IHydraResource, heracles:IHeracles) {
+    constructor(supportedOperation: ISupportedOperation, heracles: IHeracles, resource: IHydraResource) {
         if(!supportedOperation) {
             throw new Error('Missing supportedOperation parameter');
+        }
+
+        if(!heracles) {
+            throw new Error('Missing heracles parameter');
         }
 
         this._supportedOperation = supportedOperation;

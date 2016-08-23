@@ -10,10 +10,17 @@ describe('Operation', () => {
 
         it('should require supported operation', () => {
 
-            expect(() => new Operation(null, <IHydraResource>{}, <IHeracles>{}))
+            expect(() => new Operation(null, <IHeracles>{}, <IHydraResource>{}))
                 .toThrowError('Missing supportedOperation parameter');
-            expect(() => new Operation(undefined, <IHydraResource>{}, <IHeracles>{}))
+            expect(() => new Operation(undefined, <IHeracles>{}, <IHydraResource>{}))
                 .toThrowError('Missing supportedOperation parameter');
+        });
+
+        it('should require heracles', () => {
+            expect(() => new Operation(<ISupportedOperation>{}, null, <IHydraResource>{}))
+                .toThrowError('Missing heracles parameter');
+            expect(() => new Operation(<ISupportedOperation>{}, undefined, <IHydraResource>{}))
+                .toThrowError('Missing heracles parameter');
         });
 
     });
@@ -31,7 +38,7 @@ describe('Operation', () => {
                 returns: returns,
                 title: 'the title',
                 description: 'the description'
-            }, null);
+            }, <IHeracles>{}, <IHydraResource>{});
         });
 
         it('method should delegate to operation', () => {
@@ -67,7 +74,7 @@ describe('Operation', () => {
 
         it('should execute through heracles with JSON-LD media type', () => {
 
-            var op = new Operation(supportedOperation, resource, heracles);
+            var op = new Operation(supportedOperation, heracles, resource);
             var payload = {};
 
             op.invoke(payload);
@@ -78,7 +85,7 @@ describe('Operation', () => {
 
         it('should execute through heracles with changed media type', () => {
 
-                var op = new Operation(supportedOperation, resource, heracles);
+                var op = new Operation(supportedOperation, heracles, resource);
                 var payload = {};
 
                 op.invoke(payload, 'text/turtle');

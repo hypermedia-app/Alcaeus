@@ -314,10 +314,6 @@ $__System.register("b", ["5", "4", "a", "d", "c"], function(exports_1, context_1
                     enumerable: true,
                     configurable: true
                 });
-                SupportedOperation.prototype.invoke = function (uri, body, mediaType) {
-                    if (mediaType === void 0) { mediaType = Constants_1.MediaTypes.jsonLd; }
-                    return heraclesWeakMap.get(this).invokeOperation(this, uri, body, mediaType);
-                };
                 return SupportedOperation;
             }(DocumentedResource));
             exports_1("SupportedOperation", SupportedOperation);
@@ -811,6 +807,7 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                     _super.call(this, actualResource);
                     _apiDocumentation.set(this, apiDoc);
                     _incomingLinks.set(this, incomingLinks);
+                    this._heracles = heracles;
                 }
                 Object.defineProperty(HydraResource.prototype, "apiDocumentation", {
                     get: function () {
@@ -840,7 +837,7 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                             .value();
                         var operations = classOperations.concat(propertyOperations);
                         return _.flatten(operations).map(function (supportedOperation) {
-                            return new Operation(supportedOperation, _this);
+                            return new Operation(supportedOperation, _this._heracles, _this);
                         });
                     },
                     enumerable: true,
@@ -856,11 +853,16 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
             }(Resource));
             exports_1("HydraResource", HydraResource);
             Operation = (function () {
-                function Operation(supportedOperation, resource) {
+                function Operation(supportedOperation, heracles, resource) {
                     if (!supportedOperation) {
                         throw new Error('Missing supportedOperation parameter');
                     }
+                    if (!heracles) {
+                        throw new Error('Missing heracles parameter');
+                    }
                     this._supportedOperation = supportedOperation;
+                    this._heracles = heracles;
+                    this._resource = resource;
                 }
                 Object.defineProperty(Operation.prototype, "method", {
                     get: function () {
@@ -904,7 +906,9 @@ $__System.register("d", ["5", "6", "c", "a"], function(exports_1, context_1) {
                     enumerable: true,
                     configurable: true
                 });
-                Operation.prototype.invoke = function () {
+                Operation.prototype.invoke = function (body, mediaType) {
+                    if (mediaType === void 0) { mediaType = Constants_1.MediaTypes.jsonLd; }
+                    return this._heracles.invokeOperation(this, this._resource.id, body, mediaType);
                 };
                 return Operation;
             }());

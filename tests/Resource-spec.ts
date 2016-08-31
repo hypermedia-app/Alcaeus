@@ -74,7 +74,7 @@ describe('Resource', () => {
                 getOperations: getOperations
             };
             getOperations.returns(Promise.resolve([]));
-            var resource = new HydraResource(null, Bodies.multipleTypesExpanded, apiDoc, [ ]);
+            var resource = new HydraResource(<IHeracles>{}, Bodies.multipleTypesExpanded, apiDoc, [ ]);
 
             var ops = resource.operations;
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);

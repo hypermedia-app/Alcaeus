@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - jasnell/linkeddata-vocabs - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format amd"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format amd"
   },
   "repository": {
     "type": "git",
@@ -50,6 +50,15 @@
       "typescript": "npm:typescript@^1.6.2",
       "whatwg-fetch": "npm:whatwg-fetch@^0.11.0"
     }
+  },
+  "dependencies": {
+    "core-decorators": "^0.12.2",
+    "jsonld": "^0.4.6",
+    "li": "^1.0.1",
+    "lodash": "^4.9.0",
+    "rdf-ext": "^0.3.0",
+    "rdf-formats-common": "^0.3.0",
+    "rdf-serializer-jsonld": "^0.3.0"
   },
   "devDependencies": {
     "jasmine-core": "^2.4.1",

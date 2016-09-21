@@ -1,6 +1,6 @@
 {
   "name": "heracles",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/heracles.js",
   "directories": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format amd"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format cjs --skip-source-maps"
   },
   "repository": {
     "type": "git",
@@ -29,27 +29,8 @@
   },
   "homepage": "https://github.com/wikibus/heracles#readme",
   "jspm": {
-    "registry": "jspm",
-    "format": "amd",
-    "directories": {
-      "test": "tests"
-    },
-    "dependencies": {
-      "core-decorators": "npm:core-decorators@^0.12.2",
-      "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@^0.10.0",
-      "jsonld": "npm:jsonld@^0.4.6",
-      "li": "npm:li@^1.0.1",
-      "lodash": "npm:lodash@^4.9.0",
-      "rdf-ext": "npm:rdf-ext@^0.3.0",
-      "rdf-formats-common": "npm:rdf-formats-common@^0.3.0",
-      "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@^0.3.0"
-    },
-    "devDependencies": {
-      "core-js": "npm:core-js@^2.2.2",
-      "sinon": "npm:sinon@^1.17.3",
-      "typescript": "npm:typescript@^1.6.2",
-      "whatwg-fetch": "npm:whatwg-fetch@^0.11.0"
-    }
+    "registry": "npm",
+    "format": "cjs"
   },
   "dependencies": {
     "core-decorators": "^0.12.2",
@@ -68,6 +49,10 @@
     "karma-sauce-launcher": "^1.0.0",
     "karma-systemjs": "^0.14.0",
     "karma-testingbot-launcher": "^0.1.1",
-    "systemjs": "^0.19.31"
+    "systemjs": "^0.19.31",
+    "core-js": "^2.2.2",
+    "sinon": "^1.17.3",
+    "typescript": "^1.6.2",
+    "whatwg-fetch": "^0.11.0"
   }
 }

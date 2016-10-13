@@ -3,7 +3,7 @@
 
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
-import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
+import {rdfs, schema, owl} from 'linkeddata-vocabs';
 import {Core, JsonLd, MediaTypes} from './Constants';
 import {Resource} from './Resources';
 import {nonenumerable} from "core-decorators";

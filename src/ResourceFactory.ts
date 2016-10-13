@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import {rdf} from 'linkeddata-vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';

@@ -13,7 +13,7 @@ import {default as formats} from 'rdf-formats-common';
 //noinspection TypeScriptCheckImport
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
 //noinspection TypeScriptCheckImport
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import {rdf} from 'linkeddata-vocabs';
 
 formats($rdf);
 

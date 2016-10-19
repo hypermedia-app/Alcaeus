@@ -30,7 +30,33 @@
   "homepage": "https://github.com/wikibus/heracles#readme",
   "jspm": {
     "registry": "npm",
-    "format": "cjs"
+    "format": "cjs",
+    "directories": {
+      "test": "tests"
+    },
+    "dependencies": {
+      "core-decorators": "^0.12.2",
+      "jsonld": "^0.4.6",
+      "li": "^1.0.1",
+      "lodash": "^4.9.0",
+      "rdf-ext": "^0.3.0",
+      "rdf-formats-common": "^0.3.0",
+      "rdf-serializer-jsonld": "^0.3.0"
+    },
+    "devDependencies": {
+      "core-js": "^2.2.2",
+      "jasmine-core": "^2.4.1",
+      "karma": "^0.13.22",
+      "karma-browserstack-launcher": "^1.0.1",
+      "karma-jasmine": "^1.0.2",
+      "karma-sauce-launcher": "^1.0.0",
+      "karma-systemjs": "^0.14.0",
+      "karma-testingbot-launcher": "^0.1.1",
+      "sinon": "^1.17.3",
+      "systemjs": "^0.19.31",
+      "typescript": "^1.6.2",
+      "whatwg-fetch": "^0.11.0"
+    }
   },
   "dependencies": {
     "core-decorators": "^0.12.2",

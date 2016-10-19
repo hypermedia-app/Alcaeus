@@ -8,6 +8,8 @@ import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 
+import { IResourceFactory, IHeracles, IApiDocumentation } from './interfaces';
+
 export class ResourceFactory implements IResourceFactory {
 
     factories = {};

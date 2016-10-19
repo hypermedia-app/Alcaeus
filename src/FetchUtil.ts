@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlatteningOptions} from "jsonld";
+import 'rxjs/add/operator/toPromise';
 //noinspection TypeScriptCheckImport
 import * as $rdf from 'rdf-ext';
 //noinspection TypeScriptCheckImport

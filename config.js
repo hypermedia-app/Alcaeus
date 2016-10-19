@@ -18,6 +18,12 @@ System.config({
     },
     "tests": {
       "defaultExtension": "ts"
+    },
+    "rxjs": {
+      "defaultExtension": "js"
+    },
+    "core-decorators": {
+      "defaultExtension": "js"
     }
   },
 
@@ -38,6 +44,7 @@ System.config({
     "rdf-ext": "npm:rdf-ext@0.3.0",
     "rdf-formats-common": "npm:rdf-formats-common@0.3.1",
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
+    "rxjs": "npm:rxjs@5.0.0-rc.1",
     "sinon": "npm:sinon@1.17.6",
     "systemjs": "npm:systemjs@0.19.39",
     "typescript": "npm:typescript@1.8.10",
@@ -1601,6 +1608,11 @@ System.config({
     "npm:ripemd160@1.0.1": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:rxjs@5.0.0-rc.1": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "symbol-observable": "npm:symbol-observable@1.0.4"
     },
     "npm:sauce-connect-launcher@0.13.0": {
       "adm-zip": "npm:adm-zip@0.4.7",

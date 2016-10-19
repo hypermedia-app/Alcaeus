@@ -7,6 +7,8 @@ import {rdfs, schema, owl} from 'linkeddata-vocabs';
 import {Core, JsonLd, MediaTypes} from './Constants';
 import {Resource} from './Resources';
 import {nonenumerable} from "core-decorators";
+import 'rxjs/add/operator/toPromise';
+import {IApiDocumentation,IHeracles,IClass,ISupportedOperation,ISupportedProperty,IHydraResource,IDocumentedResource,} from './interfaces';
 
 var heraclesWeakMap = new WeakMap();
 
@@ -74,14 +76,13 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
     constructor(hydraResource:any) {
         super(hydraResource);
     }
-
-    get description():String {
+    get description():string {
         return this[Core.Vocab.description] ||
             this[rdfs.ns + 'comment'] ||
             this[schema.description]
     }
 
-    get title():String {
+    get title():string {
         return this[Core.Vocab.title] ||
             this[rdfs.ns + 'label'] ||
             this[schema.title];
@@ -96,7 +97,7 @@ export class SupportedOperation extends DocumentedResource implements ISupported
         super(hydraOperation);
     }
 
-    get method():String {
+    get method():string {
         return this[Core.Vocab.method];
     }
 

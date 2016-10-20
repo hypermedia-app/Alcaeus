@@ -17,11 +17,20 @@ You will need polyfills for older browsers:
 
 ## Installation
 
+Heracles uses JSPM for development and is probably best used with it:
+
 ``` bash
-jspm install npm:wikibus/heracles
+jspm install npm:heracles
 ```
 
-It should also be possible to install from NPM directly, but jspm makes it much easier to then use in ES6 code.
+However, it is also possible to install from NPM directly. 
+
+``` bash
+npm install heracles
+```
+
+Heracles is bundled as a CommonJS module and has been verified to work fine with Webpack. Please let me know if you have any issues 
+with other tools like Browserify, server-side NodeJS, etc.
 
 ## Usage
 

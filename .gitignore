@@ -1,3 +1,9 @@
 typings
 node_modules
 jspm_packages
+
+src/**/*.js
+src/**/*.map
+
+tests/**/*.js
+tests/**/*.map

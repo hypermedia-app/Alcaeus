@@ -2,11 +2,13 @@
 
 import * as _ from 'lodash';
 //noinspection TypeScriptCheckImport
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import {rdf} from 'linkeddata-vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
+
+import { IResourceFactory, IHeracles, IApiDocumentation } from './interfaces';
 
 export class ResourceFactory implements IResourceFactory {
 

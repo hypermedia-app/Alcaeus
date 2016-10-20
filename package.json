@@ -6,9 +6,14 @@
   "directories": {
     "test": "tests"
   },
+  "typescript": {
+    "definition": "index.d.ts"
+  },
+  "_where": "D:\\dev\\ws\\bizSys\\bizsys-prototype",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format cjs --skip-source-maps"
+    "test": "karma start --single-run",
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - core-js - core-decorators - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format cjs --skip-source-maps",
+    "buildbig": "jspm bundle-sfx src/heracles + jsonld + li + lodash + core-js + core-decorators + rdf-ext + rdf-formats-common + rdf-serializer-jsonld dist/heracles.js --global-name heracles --format cjs --skip-source-maps"
   },
   "repository": {
     "type": "git",
@@ -35,50 +40,63 @@
       "test": "tests"
     },
     "dependencies": {
-      "core-decorators": "^0.12.2",
+      "core-decorators": "^0.13.0",
       "jsonld": "^0.4.6",
       "li": "^1.0.1",
+      "linkeddata-vocabs": "^1.0.0",
       "lodash": "^4.9.0",
       "rdf-ext": "^0.3.0",
       "rdf-formats-common": "^0.3.0",
-      "rdf-serializer-jsonld": "^0.3.0"
+      "rdf-serializer-jsonld": "^0.3.0",
+      "rxjs": "^5.0.0-rc.1"
     },
     "devDependencies": {
       "core-js": "^2.2.2",
       "jasmine-core": "^2.4.1",
-      "karma": "^0.13.22",
+      "karma": "^1.3.0",
       "karma-browserstack-launcher": "^1.0.1",
       "karma-jasmine": "^1.0.2",
       "karma-sauce-launcher": "^1.0.0",
-      "karma-systemjs": "^0.14.0",
+      "karma-systemjs": "^0.15.0",
       "karma-testingbot-launcher": "^0.1.1",
       "sinon": "^1.17.3",
       "systemjs": "^0.19.31",
       "typescript": "^1.6.2",
-      "whatwg-fetch": "^0.11.0"
+      "whatwg-fetch": "^1.0.0"
+    },
+    "buildConfig": {
+      "transpileES6": true,
+      "minify": false
     }
   },
+  "peerDependencies": {
+    "core-js": "^2.4.1"
+  },
   "dependencies": {
-    "core-decorators": "^0.12.2",
+    "core-decorators": "^0.13.0",
     "jsonld": "^0.4.6",
     "li": "^1.0.1",
+    "linkeddata-vocabs": "^1.0.0",
     "lodash": "^4.9.0",
     "rdf-ext": "^0.3.0",
     "rdf-formats-common": "^0.3.0",
-    "rdf-serializer-jsonld": "^0.3.0"
+    "rdf-serializer-jsonld": "^0.3.0",
+    "rxjs": "^5.0.0-rc.1"
   },
   "devDependencies": {
+    "core-js": "^2.2.2",
     "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
+    "karma": "^1.3.0",
     "karma-browserstack-launcher": "^1.0.1",
+    "karma-chrome-launcher": "^2.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-sauce-launcher": "^1.0.0",
-    "karma-systemjs": "^0.14.0",
+    "karma-systemjs": "^0.15.0",
     "karma-testingbot-launcher": "^0.1.1",
-    "systemjs": "^0.19.31",
-    "core-js": "^2.2.2",
     "sinon": "^1.17.3",
-    "typescript": "^1.6.2",
-    "whatwg-fetch": "^0.11.0"
+    "systemjs": "^0.19.31",
+    "typings": "^1.4.0",
+    "typescript": "^2.0.3",
+    "whatwg-fetch": "^1.0.0"
   }
 }

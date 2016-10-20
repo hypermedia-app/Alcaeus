@@ -1,14 +1,16 @@
-interface IHeracles {
+/// < reference path="../typings/globals/core-js/index.d.ts" />
+
+export declare interface IHeracles {
     resourceFactory:IResourceFactory;
     loadResource(uri:string):Promise<IHydraResource>;
     invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource>;
 }
 
-interface IResource {
+export declare interface IResource {
     id:string;
 }
 
-interface IApiDocumentation extends IResource {
+export declare interface IApiDocumentation extends IResource {
     classes:Array<IClass>;
     getClass(classId:string):IClass;
     getOperations(classUri:string):Array<ISupportedOperation>;
@@ -17,37 +19,37 @@ interface IApiDocumentation extends IResource {
     getEntrypoint():Promise<IHydraResource>
 }
 
-interface IClass extends IDocumentedResource {
+export interface IClass extends IDocumentedResource {
     supportedOperations:Array<ISupportedOperation>;
     supportedProperties:Array<ISupportedProperty>;
 }
 
-interface IDocumentedResource extends IResource {
+export interface IDocumentedResource extends IResource {
     title:string;
     description:string;
 }
 
-interface ISupportedProperty extends IDocumentedResource {
+export interface ISupportedProperty extends IDocumentedResource {
     readable:boolean;
     writable:boolean;
     required:boolean;
     property:IRdfProperty;
 }
 
-interface ISupportedOperation extends IDocumentedResource {
+export interface ISupportedOperation extends IDocumentedResource {
     method:string;
     expects:IClass;
     returns:IClass;
     requiresInput:boolean;
 }
 
-interface IRdfProperty extends IDocumentedResource {
+export interface IRdfProperty extends IDocumentedResource {
     range:IClass;
     domain:IClass;
     supportedOperations:Array<ISupportedOperation>;
 }
 
-interface IOperation {
+export interface IOperation {
     title:string;
     description:string;
     method:string;
@@ -57,12 +59,12 @@ interface IOperation {
     invoke(body:any, mediaType?:string);
 }
 
-interface IHydraResource extends IResource {
+export interface IHydraResource extends IResource {
     operations:Array<IOperation>;
     apiDocumentation:IApiDocumentation;
 }
 
-interface IPartialCollectionView extends IHydraResource {
+export interface IPartialCollectionView extends IHydraResource {
     first:IHydraResource;
     previous:IHydraResource;
     next:IHydraResource;
@@ -70,13 +72,19 @@ interface IPartialCollectionView extends IHydraResource {
     collection:IHydraResource;
 }
 
-interface IResourceFactory {
+export interface IResourceFactory {
     createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):IResource
 }
 
-interface IStatusCodeDescription {
+export interface IStatusCodeDescription {
     code:number,
     description:string;
 }
 
-var Hydra:IHeracles;
+export default IHeracles;
+
+export * from './heracles';
+export * from './ApiDocumentation';
+export * from './Constants';
+export * from './FetchUtil';
+export * from './JsonLdUtil';

@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import {SupportedOperation, ApiDocumentation} from '../src/ApiDocumentation';
 import {Core} from '../src/Constants';
 //noinspection TypeScriptCheckImport
-import {owl} from 'jasnell/linkeddata-vocabs';
+import {owl} from 'linkeddata-vocabs';
 
 describe('SupportedOperation', () => {
 

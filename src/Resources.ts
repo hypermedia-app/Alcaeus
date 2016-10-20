@@ -4,7 +4,8 @@ import {promises as jsonld} from 'jsonld';
 import { nonenumerable } from 'core-decorators';
 import {JsonLd, Core, MediaTypes} from './Constants';
 //noinspection TypeScriptCheckImport
-import {default} from 'core-js/es6/weak-map';
+import { WeakMap } from 'core-js/es6/weak-map';
+import { IResource, IOperation, IApiDocumentation } from './interfaces';
 
 var _isProcessed = new WeakMap();
 var _apiDocumentation = new WeakMap();

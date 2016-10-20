@@ -1,8 +1,9 @@
 {
-  "ambientDependencies": {
+  "globalDependencies": {
     "core-decorators": "github:retyped/core-decorators-tsd-ambient/core-decorators.d.ts",
     "core-js": "registry:dt/core-js#0.0.0+20160317120654",
     "fetch.js": "github:ryan-codingintrigue/typescript-fetch/fetch.js.d.ts",
+    "node": "registry:dt/node#6.0.0+20160909174046",
     "jasmine": "registry:dt/jasmine#2.2.0+20160505161446"
   },
   "devDependencies": {

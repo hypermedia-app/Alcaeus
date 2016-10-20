@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlatteningOptions} from "jsonld";
+import 'rxjs/add/operator/toPromise';
 //noinspection TypeScriptCheckImport
 import * as $rdf from 'rdf-ext';
 //noinspection TypeScriptCheckImport
@@ -13,7 +14,7 @@ import {default as formats} from 'rdf-formats-common';
 //noinspection TypeScriptCheckImport
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
 //noinspection TypeScriptCheckImport
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import {ns, type} from 'vocabs-rdf';
 
 formats($rdf);
 
@@ -28,7 +29,7 @@ export class FetchUtil {
         [Constants.Core.Vocab.operation, Constants.Core.Vocab.Operation],
         [Constants.Core.Vocab.supportedProperty, Constants.Core.Vocab.SupportedProperty],
         [Constants.Core.Vocab.statusCodes, Constants.Core.Vocab.StatusCodeDescription],
-        [Constants.Core.Vocab.property, rdf.ns + 'Property'],
+        [Constants.Core.Vocab.property, ns + 'Property'],
         [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
     ];
 
@@ -132,7 +133,7 @@ function runInference(graph) {
         _.forEach(matches.toArray(), triple => {
             graph.add(new $rdf.Triple(
                 triple.object,
-                new $rdf.NamedNode(rdf.type),
+                new $rdf.NamedNode(type),
                 new $rdf.NamedNode(mapping[1])
             ));
         });

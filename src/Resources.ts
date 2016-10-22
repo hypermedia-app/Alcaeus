@@ -1,7 +1,8 @@
 'use strict';
 import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
-import { nonenumerable } from 'core-decorators';
+//noinspection TypeScriptCheckImport
+import * as nonenumerable from 'core-decorators/lib/nonenumerable';
 import {JsonLd, Core, MediaTypes} from './Constants';
 //noinspection TypeScriptCheckImport
 import { WeakMap } from 'core-js/es6/weak-map';

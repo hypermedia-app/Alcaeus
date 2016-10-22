@@ -1,8 +1,35 @@
 module.exports = function (config) {
-    if (process.env.TRAVIS && (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY)) {
-        console.log('Make sure the BROWSER_STACK_USERNAME and BROWSER_STACK_ACCESS_KEY environment variables are set.');
+    if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
+        console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
         process.exit(1);
     }
+
+    var customLaunchers = {
+        sl_chrome: {
+            base: 'SauceLabs',
+            browserName: 'chrome',
+            platform: 'Windows 7'
+        },
+        sl_firefox: {
+            base: 'SauceLabs',
+            browserName: 'firefox'
+        },
+        sl_safari: {
+            base: 'SauceLabs',
+            browserName: 'iphone',
+            platform: 'OS X 10.9'
+        },
+        sl_ie: {
+            base: 'SauceLabs',
+            browserName: 'internet explorer',
+            platform: 'Windows 8.1'
+        },
+        sl_edge: {
+            base: 'SauceLabs',
+            browserName: 'edge',
+            platform: 'Windows 10'
+        }
+    };
 
     config.set({
 
@@ -16,7 +43,7 @@ module.exports = function (config) {
 
         //plugins
         plugins: process.env.TRAVIS
-            ? ['karma-systemjs', 'karma-jasmine', 'karma-browserstack-launcher']
+            ? ['karma-systemjs', 'karma-jasmine', 'karma-sauce-launcher']
             : ['karma-systemjs', 'karma-jasmine', 'karma-chrome-launcher'],
 
 
@@ -39,7 +66,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'saucelabs'] : ['progress'],
 
 
         // web server port
@@ -58,16 +85,11 @@ module.exports = function (config) {
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: false,
 
-        browserStack: {
-            username: process.env.BROWSERSTACK_USERNAME,
-            accessKey: process.env.BROWSERSTACK_KEY
-        },
-
         // define browsers
-        customLaunchers: getCustomLaunchers(),
+        customLaunchers: customLaunchers,
 
         browsers: process.env.TRAVIS
-            ? Object.keys(getCustomLaunchers()).filter(function(key) { return !key.startsWith('add'); })
+            ? Object.keys(customLaunchers)
             : ['Chrome'],
 
         // Continuous Integration mode
@@ -84,56 +106,4 @@ module.exports = function (config) {
             ]
         }
     });
-
-    function getCustomLaunchers() {
-        return Object.assign(
-            getLaunchers('firefox')('6.0', '33', '34', '38', '39')('Windows', '8.1'),
-            getLaunchers('chrome')('36', '42', '43', '44', '45')('Windows', '8'),
-            getLaunchers('internet explorer')('9', '10', '11')('Windows', '7'),
-            getLaunchers('safari')('8')('OS X', 'Yosemite'),
-            getLaunchers('safari')('7.1')('OS X', 'Mavericks'),
-            getLaunchers('safari')('9.1')('OS X', 'El Capitan'),
-            getLatest('firefox')('Windows', '8.1'),
-            getLatest('chrome')('Windows', '7'),
-            getLatest('internet explorer')('Windows', '8.1'),
-            getLatest('edge')('Windows', '10')
-        );
-    }
-
-    function getLaunchers(browser) {
-        return function() {
-            var browser_versions = Array.from(arguments);
-
-            return function(os, os_version) {
-                var launchers = {};
-
-                browser_versions.forEach(function(browser_version) {
-                    launchers[browser + '_' + os + '_' + os_version] = {
-                        base: 'BrowserStack',
-                        browser: browser,
-                        browser_version: browser_version,
-                        os: os,
-                        os_version: os_version
-                    };
-                });
-
-                return launchers;
-            }
-        }
-    }
-
-    function getLatest(browser) {
-        return function(os, os_version) {
-            var launcher = {};
-
-            launcher[browser + '_' + os + '_' + os_version] = {
-                base: 'BrowserStack',
-                browser: browser,
-                os: os,
-                os_version: os_version
-            };
-
-            return launcher;
-        }
-    }
 };

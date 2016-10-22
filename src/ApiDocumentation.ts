@@ -7,7 +7,7 @@ import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
 import {Core, JsonLd, MediaTypes} from './Constants';
 import {Resource} from './Resources';
 //noinspection TypeScriptCheckImport
-import * as nonenumerable from "core-decorators/lib/nonenumerable";
+import {default as nonenumerable} from "core-decorators/lib/nonenumerable";
 
 var heraclesWeakMap = new WeakMap();
 

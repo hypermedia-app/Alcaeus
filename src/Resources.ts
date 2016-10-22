@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 //noinspection TypeScriptCheckImport
-import * as nonenumerable from 'core-decorators/lib/nonenumerable';
+import {default as nonenumerable} from 'core-decorators/lib/nonenumerable';
 import {JsonLd, Core, MediaTypes} from './Constants';
 //noinspection TypeScriptCheckImport
 import {default} from 'core-js/es6/weak-map';

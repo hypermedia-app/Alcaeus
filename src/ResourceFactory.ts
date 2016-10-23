@@ -1,7 +1,7 @@
 'use strict';
 
 import * as _ from 'lodash';
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import * as rdf from 'vocabs-rdf';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';

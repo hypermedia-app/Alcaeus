@@ -2,7 +2,7 @@ import {promises as jsonld} from 'jsonld';
 import {RdfProperty} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';
 //noinspection TypeScriptCheckImport
-import {rdf, rdfs, xsd} from 'jasnell/linkeddata-vocabs';
+import {rdf, rdfs, xsd} from 'linkeddata-vocabs';
 
 describe('RdfProperty', () => {
 

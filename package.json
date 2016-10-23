@@ -39,13 +39,17 @@
       "test": "tests"
     },
     "dependencies": {
-      "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@^0.10.0",
       "jsonld": "^0.4.6",
       "li": "^1.0.1",
+      "linkeddata-vocabs": "^1.0.0",
       "lodash": "^4.9.0",
       "rdf-ext": "^0.3.0",
       "rdf-formats-common": "^0.3.0",
-      "rdf-serializer-jsonld": "^0.3.0"
+      "rdf-serializer-jsonld": "^0.3.0",
+      "vocabs-owl": "^0.11.1",
+      "vocabs-rdf": "^0.11.1",
+      "vocabs-rdfs": "^0.11.1",
+      "vocabs-schema": "^0.11.1"
     },
     "devDependencies": {
       "core-decorators": "^0.12.2",

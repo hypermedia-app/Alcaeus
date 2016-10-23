@@ -8,7 +8,7 @@ import {FlattenOptions} from "jsonld";
 import * as $rdf from 'rdf-ext';
 import * as formats from 'rdf-formats-common';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import * as rdf from 'vocabs-rdf';
 
 formats($rdf);
 

@@ -1,4 +1,4 @@
-import {rdf, xsd} from 'jasnell/linkeddata-vocabs';
+import {rdf, xsd} from 'linkeddata-vocabs';
 import {Core} from '../src/Constants';
 import {promises as jsonld} from 'jsonld';
 import {JsonLd} from '../src/Constants';

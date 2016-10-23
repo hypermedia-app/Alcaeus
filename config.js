@@ -15,18 +15,22 @@ System.config({
   map: {
     "core-decorators": "npm:core-decorators@0.12.2",
     "core-js": "npm:core-js@2.2.2",
-    "jasnell/linkeddata-vocabs": "github:jasnell/linkeddata-vocabs@0.10.0",
     "jsonld": "npm:jsonld@0.4.11",
     "li": "npm:li@1.0.1",
+    "linkeddata-vocabs": "npm:linkeddata-vocabs@1.0.0",
     "lodash": "npm:lodash@4.9.0",
     "rdf-ext": "npm:rdf-ext@0.3.0",
     "rdf-formats-common": "npm:rdf-formats-common@0.3.0",
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
+    "vocabs-owl": "npm:vocabs-owl@0.11.1",
+    "vocabs-rdf": "npm:vocabs-rdf@0.11.1",
+    "vocabs-rdfs": "npm:vocabs-rdfs@0.11.1",
+    "vocabs-schema": "npm:vocabs-schema@0.11.1",
     "whatwg-fetch": "npm:whatwg-fetch@0.11.0",
     "github:jspm/nodelibs-assert@0.1.0": {
-      "assert": "npm:assert@1.3.0"
+      "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
       "buffer": "npm:buffer@3.6.0"
@@ -58,7 +62,7 @@ System.config({
       "path-browserify": "npm:path-browserify@0.0.0"
     },
     "github:jspm/nodelibs-process@0.1.2": {
-      "process": "npm:process@0.11.3"
+      "process": "npm:process@0.11.9"
     },
     "github:jspm/nodelibs-stream@0.1.0": {
       "stream-browserify": "npm:stream-browserify@1.0.0"
@@ -75,6 +79,9 @@ System.config({
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
     },
+    "npm:activitystreams-context@1.0.0": {
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
     "npm:asn1.js@4.6.0": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "bn.js": "npm:bn.js@4.11.3",
@@ -84,7 +91,10 @@ System.config({
       "minimalistic-assert": "npm:minimalistic-assert@1.0.0",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
-    "npm:assert@1.3.0": {
+    "npm:assert@1.4.1": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "npm:util@0.10.3"
     },
     "npm:bn.js@4.11.3": {
@@ -142,7 +152,7 @@ System.config({
       "base64-js": "npm:base64-js@0.0.8",
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "ieee754": "npm:ieee754@1.1.6",
+      "ieee754": "npm:ieee754@1.1.8",
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -254,6 +264,17 @@ System.config({
       "es6-promise": "npm:es6-promise@2.3.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:linkeddata-vocabs@1.0.0": {
+      "vocabs-as": "npm:vocabs-as@1.0.0",
+      "vocabs-asx": "npm:vocabs-asx@0.11.1",
+      "vocabs-interval": "npm:vocabs-interval@0.11.1",
+      "vocabs-owl": "npm:vocabs-owl@0.11.1",
+      "vocabs-rdf": "npm:vocabs-rdf@0.11.1",
+      "vocabs-rdfs": "npm:vocabs-rdfs@0.11.1",
+      "vocabs-schema": "npm:vocabs-schema@0.11.1",
+      "vocabs-social": "npm:vocabs-social@0.11.1",
+      "vocabs-xsd": "npm:vocabs-xsd@0.11.1"
+    },
     "npm:lodash@4.9.0": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -302,8 +323,10 @@ System.config({
     "npm:process-nextick-args@1.0.7": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:process@0.11.3": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0"
+    "npm:process@0.11.9": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
     "npm:public-encrypt@4.0.0": {
       "bn.js": "npm:bn.js@4.11.3",
@@ -486,6 +509,35 @@ System.config({
     },
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
+    },
+    "npm:vocabs-as@1.0.0": {
+      "activitystreams-context": "npm:activitystreams-context@1.0.0",
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-asx@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-interval@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-owl@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-rdf@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-rdfs@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-schema@0.11.1": {
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-social@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
+    },
+    "npm:vocabs-xsd@0.11.1": {
+      "vocabs": "npm:vocabs@0.11.1"
     },
     "npm:xmldom@0.1.22": {
       "process": "github:jspm/nodelibs-process@0.1.2"

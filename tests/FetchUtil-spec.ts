@@ -7,7 +7,7 @@ import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
 import 'whatwg-fetch';
 //noinspection TypeScriptCheckImport
-import {rdf} from 'jasnell/linkeddata-vocabs';
+import * as rdf from 'vocabs-rdf';
 
 describe('FetchUtil', () => {
 

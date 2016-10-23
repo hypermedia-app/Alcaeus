@@ -1,7 +1,9 @@
 'use strict';
 
 import * as _ from 'lodash';
-import {rdfs, schema, owl} from 'jasnell/linkeddata-vocabs';
+import * as owl from 'vocabs-owl';
+import * as schema from 'vocabs-schema';
+import * as rdfs from 'vocabs-rdfs';
 import {Core, JsonLd, MediaTypes} from './Constants';
 import {Resource} from './Resources';
 import {default as nonenumerable} from "core-decorators/lib/nonenumerable";

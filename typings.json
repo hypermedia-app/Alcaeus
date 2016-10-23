@@ -1,15 +1,15 @@
 {
-  "ambientDependencies": {
-    "core-decorators": "github:retyped/core-decorators-tsd-ambient/core-decorators.d.ts",
+  "globalDependencies": {
     "core-js": "registry:dt/core-js#0.0.0+20160317120654",
-    "fetch.js": "github:ryan-codingintrigue/typescript-fetch/fetch.js.d.ts",
-    "jasmine": "registry:dt/jasmine#2.2.0+20160505161446"
+    "es6-map-polyfill": "github:nozzlegear/es6-map-polyfill.d.ts",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",
+    "whatwg-fetch": "registry:dt/whatwg-fetch#0.0.0+20161004182750"
   },
   "devDependencies": {
     "sinon": "registry:npm/sinon#1.16.0+20160309002336"
   },
   "dependencies": {
-    "jsonld": "registry:npm/jsonld#0.4.0+20160504133022",
+    "jsonld": "registry:npm/jsonld#0.4.0+20161011204827",
     "lodash": "registry:npm/lodash#4.0.0+20160305082308"
   }
 }

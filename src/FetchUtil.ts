@@ -1,18 +1,13 @@
 'use strict';
 
-//noinspection TypeScriptCheckImport
 import * as li from 'li';
 import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
-import {FlatteningOptions} from "jsonld";
-//noinspection TypeScriptCheckImport
+import {FlattenOptions} from "jsonld";
 import * as $rdf from 'rdf-ext';
-//noinspection TypeScriptCheckImport
-import {default as formats} from 'rdf-formats-common';
-//noinspection TypeScriptCheckImport
+import * as formats from 'rdf-formats-common';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
-//noinspection TypeScriptCheckImport
 import {rdf} from 'jasnell/linkeddata-vocabs';
 
 formats($rdf);
@@ -34,7 +29,7 @@ export class FetchUtil {
 
     static fetchResource(uri:string):Promise<ExpandedWithDocs> {
 
-        return window.fetch(uri, <FetchOptions>{
+        return window.fetch(uri, {
                 headers: {
                     accept: FetchUtil._requestAcceptHeaders
                 }
@@ -49,9 +44,9 @@ export class FetchUtil {
                 () => null);
     }
 
-    static invokeOperation(method:string, uri:string, body?:any, mediaType? = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
+    static invokeOperation(method:string, uri:string, body?:any, mediaType = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
 
-        return window.fetch(uri, <FetchOptions>{
+        return window.fetch(uri, {
                 method: method,
                 headers: {
                     'Content-Type': mediaType,
@@ -69,12 +64,12 @@ export class FetchUtil {
     }
 }
 
-function rejectNotFoundStatus(res:Response) {
+function rejectNotFoundStatus(res:Response):Promise<any> {
     if (res.status === 404) {
         return Promise.reject(null);
     }
 
-    return res;
+    return Promise.resolve(res);
 }
 
 function getDocumentationUri(res:Response):string {
@@ -143,7 +138,7 @@ function runInference(graph) {
 
 function flatten(url) {
     return json => {
-        var opts:FlatteningOptions = {};
+        var opts:FlattenOptions = {};
         if (url) {
             opts.base = url;
         }

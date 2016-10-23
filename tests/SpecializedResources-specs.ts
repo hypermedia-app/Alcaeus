@@ -4,7 +4,7 @@ import * as Hydra from '../src/Resources';
 import {Core} from '../src/Constants';
 import {Bodies} from './test-objects';
 //noinspection TypeScriptCheckImport
-import {default as Object} from 'core-js/es6/object';
+import * as Object from 'core-js/es6/object';
 
 describe('PartialCollectionView', () => {
 

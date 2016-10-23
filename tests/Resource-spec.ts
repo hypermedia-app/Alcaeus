@@ -1,8 +1,7 @@
-/// <reference path="../typings/main.d.ts" />
-
 import * as sinon from 'sinon';
 import {HydraResource, Resource} from '../src/Resources';
 import {Bodies} from './test-objects';
+import {IApiDocumentation, IHeracles} from "../src/interfaces";
 
 describe('Resource', () => {
 

@@ -1,4 +1,3 @@
-//noinspection TypeScriptCheckImport
 import {rdf, xsd} from 'jasnell/linkeddata-vocabs';
 import {Core} from '../src/Constants';
 import {promises as jsonld} from 'jsonld';

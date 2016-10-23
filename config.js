@@ -12,15 +12,6 @@ System.config({
     "npm:*": "jspm_packages/npm/*"
   },
 
-  packages: {
-    "src": {
-      "defaultExtension": "ts"
-    },
-    "tests": {
-      "defaultExtension": "ts"
-    }
-  },
-
   map: {
     "core-decorators": "npm:core-decorators@0.12.2",
     "core-js": "npm:core-js@2.2.2",

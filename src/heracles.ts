@@ -1,3 +1,5 @@
+/// <reference path="../typings/index.d.ts" />
+
 'use strict';
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
@@ -5,6 +7,7 @@ import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {HydraResource as ResourceCtor} from "./Resources";
+import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
 
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
@@ -40,7 +43,7 @@ function processFetchUtilResponse(uri) {
             .then(getRequestedObject(this, uri, response.resources));
 }
 
-function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides? = {}) {
+function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = {}) {
     return apiDocumentation => {
         var resourcified = _.keyBy(resources, res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]));
         uri = JsonLdUtil.trimTrailingSlash(uri);

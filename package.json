@@ -6,7 +6,11 @@
   "directories": {
     "test": "tests"
   },
+  "typescript": {
+    "definition": "index.d.ts"
+  },
   "scripts": {
+    "pretest": "tsc",
     "test": "./node_modules/karma/bin/karma start --single-run",
     "build": "jspm bundle-sfx src/heracles - jsonld - li - lodash - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format cjs --skip-source-maps"
   },

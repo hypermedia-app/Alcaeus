@@ -1,13 +1,15 @@
 'use strict';
 import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
-//noinspection TypeScriptCheckImport
-import {default as nonenumerable} from 'core-decorators/lib/nonenumerable';
+import * as nonenumerable from 'core-decorators/lib/nonenumerable';
 import {JsonLd, Core, MediaTypes} from './Constants';
-//noinspection TypeScriptCheckImport
-import {default} from 'core-js/es6/weak-map';
+import {
+    IOperation, ISupportedOperation, IHeracles, IHydraResource, IClass, IResource,
+    IPartialCollectionView, IApiDocumentation
+} from "./interfaces";
+import {IIncomingLink} from "./internals";
 
-var _isProcessed = new WeakMap();
+var _isProcessed = new WeakMap<IResource, boolean>();
 var _apiDocumentation = new WeakMap();
 var _incomingLinks = new WeakMap();
 var _heracles = new WeakMap();
@@ -43,7 +45,6 @@ export class Resource implements IResource {
         return _isProcessed.get(this);
     }
 
-    @nonenumerable
     set _processed(val:boolean) {
         _isProcessed.set(this, val);
     }
@@ -63,7 +64,7 @@ export class HydraResource extends Resource implements IHydraResource {
     }
 
     @nonenumerable
-    get apiDocumentation() {
+    get apiDocumentation(): IApiDocumentation {
         return _apiDocumentation.get(this);
     }
 
@@ -72,7 +73,7 @@ export class HydraResource extends Resource implements IHydraResource {
         return _heracles.get(this);
     }
 
-    getIncomingLinks() {
+    getIncomingLinks():Array<IIncomingLink> {
         return _incomingLinks.get(this);
     }
 
@@ -154,7 +155,7 @@ export class Operation implements IOperation {
         return _heracles.get(this);
     }
 
-    invoke(body:any, mediaType? = MediaTypes.jsonLd) {
+    invoke(body:any, mediaType = MediaTypes.jsonLd) {
         return this._heracles.invokeOperation(this, this._resource.id, body, mediaType);
     }
 }
@@ -174,8 +175,8 @@ export class PartialCollectionView extends HydraResource implements IPartialColl
     get last() { return this[Core.Vocab.last] || null; }
 
     @nonenumerable
-    get collection() {
-        var collectionLink = _.find(this.getIncomingLinks(), linkArray => {
+    get collection():IHydraResource {
+        var collectionLink = _.find(this.getIncomingLinks(), (linkArray:IIncomingLink) => {
             return linkArray.predicate === Core.Vocab.view
         });
 

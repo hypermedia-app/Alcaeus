@@ -1,3 +1,5 @@
+'use strict';
+
 export class JsonLdUtil{
     static idsEqual(id1, id2):boolean {
         return JsonLdUtil.trimTrailingSlash(id1) === JsonLdUtil.trimTrailingSlash(id2);

@@ -49,8 +49,8 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/*-spec.ts',
-            'tests/*-specs.ts'
+            'tests/*-spec.js',
+            'tests/*-specs.js'
         ],
 
 
@@ -99,8 +99,8 @@ module.exports = function (config) {
         systemjs: {
             configFile: 'config.js',
             serveFiles: [
-                'src/**/*.ts',
-                'tests/**/*.ts',
+                'src/**/*',
+                'tests/**/*',
                 'jspm_packages/**/*',
                 'node_modules/**/*'
             ]

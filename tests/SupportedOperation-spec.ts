@@ -2,8 +2,8 @@ import {promises as jsonld} from 'jsonld';
 import * as sinon from 'sinon';
 import {SupportedOperation, ApiDocumentation} from '../src/ApiDocumentation';
 import {Core} from '../src/Constants';
-//noinspection TypeScriptCheckImport
 import {owl} from 'jasnell/linkeddata-vocabs';
+import {IHeracles} from "../src/interfaces";
 
 describe('SupportedOperation', () => {
 

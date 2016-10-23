@@ -8,8 +8,7 @@ import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations, Responses} from './test-objects';
 import {ApiDocumentation} from "../src/ApiDocumentation";
-//noinspection TypeScriptCheckImport
-import {default as is} from 'core-js/es6/object';
+import {IPartialCollectionView} from "../src/interfaces";
 
 describe('Hydra', () => {
 
@@ -167,7 +166,7 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    var ids = _.map(createResource.getCalls(), call => {
+                    var ids = _.map(createResource.getCalls(), (call:sinon.SinonSpyCall) => {
                         return call.args[0]['@id'];
                     });
                     expect(createResource.callCount)

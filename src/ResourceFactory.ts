@@ -1,12 +1,13 @@
 'use strict';
 
 import * as _ from 'lodash';
-//noinspection TypeScriptCheckImport
 import {rdf} from 'jasnell/linkeddata-vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
+import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
+import {IIncomingLink} from "./internals";
 
 export class ResourceFactory implements IResourceFactory {
 
@@ -37,7 +38,7 @@ export class ResourceFactory implements IResourceFactory {
     }
 }
 
-class IncomingLink {
+class IncomingLink implements IIncomingLink {
     private _id;
     private _predicate;
 

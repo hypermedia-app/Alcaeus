@@ -49,7 +49,7 @@ module.exports = function (config) {
         //plugins
         plugins: process.env.TRAVIS
             ? ['karma-systemjs', 'karma-jasmine', 'karma-sauce-launcher']
-            : ['karma-systemjs', 'karma-jasmine', 'karma-chrome-launcher'],
+            : ['karma-systemjs', 'karma-jasmine', 'karma-chrome-launcher', 'karma-firefox-launcher', 'karma-ie-launcher'],
 
 
         // list of files / patterns to load in the browser
@@ -95,7 +95,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome'],
+            : ['Chrome', 'IE', 'Firefox'],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
@@ -109,7 +109,8 @@ module.exports = function (config) {
                 'src/**/*',
                 'tests/**/*',
                 'jspm_packages/**/*',
-                'node_modules/**/*'
+                'node_modules/**/*',
+                'build.js'
             ]
         }
     });

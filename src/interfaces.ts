@@ -1,13 +1,14 @@
-/// < reference path="../typings/globals/core-js/index.d.ts" />
-
 export declare interface IHeracles {
     resourceFactory:IResourceFactory;
     loadResource(uri:string):Promise<IHydraResource>;
     invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource>;
 }
 
+export type JsonLdTypes = string | string[];
+
 export declare interface IResource {
     id:string;
+    types:JsonLdTypes;
 }
 
 export declare interface IApiDocumentation extends IResource {

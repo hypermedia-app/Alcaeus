@@ -1,12 +1,13 @@
 'use strict';
 
 import * as _ from 'lodash';
-//noinspection TypeScriptCheckImport
-import {rdf} from 'linkeddata-vocabs';
+import * as rdf from 'vocabs-rdf';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
+import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
+import {IIncomingLink} from "./internals";
 
 import { IResourceFactory, IHeracles, IApiDocumentation } from './interfaces';
 

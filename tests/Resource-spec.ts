@@ -1,8 +1,7 @@
-/// <reference path="../typings/main.d.ts" />
-
 import * as sinon from 'sinon';
 import {HydraResource, Resource} from '../src/Resources';
 import {Bodies} from './test-objects';
+import {IApiDocumentation, IHeracles} from "../src/interfaces";
 
 describe('Resource', () => {
 
@@ -51,7 +50,7 @@ describe('Resource', () => {
 
         it('should combine operations from class and property', () => {
             var getOperations = sinon.stub();
-            var apiDoc = <IApiDocumentation>{
+            var apiDoc = <any>{
                 getOperations: getOperations
             };
             getOperations.returns([]);
@@ -70,7 +69,7 @@ describe('Resource', () => {
 
         it('should combine operations for multiple @types', () => {
             var getOperations = sinon.stub();
-            var apiDoc = <IApiDocumentation>{
+            var apiDoc = <any>{
                 getOperations: getOperations
             };
             getOperations.returns(Promise.resolve([]));

@@ -1,17 +1,15 @@
 'use strict';
-/// <reference path="../typings/browser.d.ts" />
 
 import * as _ from 'lodash';
-//noinspection TypeScriptCheckImport
-import {rdfs, schema, owl} from 'linkeddata-vocabs';
+import * as owl from 'vocabs-owl';
+import * as schema from 'vocabs-schema';
+import * as rdfs from 'vocabs-rdfs';
 import {Core, JsonLd, MediaTypes} from './Constants';
 import {Resource} from './Resources';
-//noinspection TypeScriptCheckImport
-import * as nonenumerable from "core-decorators/lib/nonenumerable";
-import 'rxjs/add/operator/toPromise';
+import {default as nonenumerable} from "core-decorators/lib/nonenumerable";
 import {
     IApiDocumentation, IHeracles, IClass, ISupportedOperation, ISupportedProperty, IHydraResource,
-    IDocumentedResource, IRdfProperty, IStatusCodeDescription,
+    IDocumentedResource, IStatusCodeDescription, IRdfProperty
 } from './interfaces';
 
 var heraclesWeakMap = new WeakMap();
@@ -33,7 +31,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     @nonenumerable
-    get _heracles() {
+    get _heracles():IHeracles {
         return heraclesWeakMap.get(this);
     }
 
@@ -49,7 +47,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
             return clas.supportedOperations;
         }
 
-        var supportedProperty = _.find(clas.supportedProperties, prop => {
+        var supportedProperty = _.find(clas.supportedProperties, (prop:ISupportedProperty) => {
             return prop.property && prop.property.id === predicateUri;
         });
         if(!supportedProperty) {
@@ -80,6 +78,7 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
     constructor(hydraResource:any) {
         super(hydraResource);
     }
+
     get description():string {
         return this[Core.Vocab.description] ||
             this[rdfs.ns + 'comment'] ||
@@ -96,9 +95,8 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
 export class SupportedOperation extends DocumentedResource implements ISupportedOperation {
 
     constructor(hydraOperation:any, heracles:IHeracles) {
-        heraclesWeakMap.set(this, heracles);
-
         super(hydraOperation);
+        heraclesWeakMap.set(this, heracles);
     }
 
     get method():string {

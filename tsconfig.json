@@ -9,5 +9,15 @@
     "removeComments": false,
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": false
-  }
+  },
+  "include": [
+    "src/**/*",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "jspm_packages",
+    "typings",
+    "index.d.ts"
+  ]
 }

@@ -1,3 +1,5 @@
+/// <reference path="../typings/index.d.ts" />
+
 'use strict';
 import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';

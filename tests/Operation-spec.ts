@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
 import {Operation} from "../src/Resources";
-import {Core} from '../src/Constants'
+import {ISupportedOperation, IHeracles, IHydraResource, IOperation, IClass} from "../src/interfaces";
 
 describe('Operation', () => {
 

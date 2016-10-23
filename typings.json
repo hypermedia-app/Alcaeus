@@ -6,7 +6,7 @@
     "whatwg-fetch": "registry:dt/whatwg-fetch#0.0.0+20161004182750"
   },
   "devDependencies": {
-    "sinon": "registry:npm/sinon#1.16.0+20160309002336"
+    "sinon": "registry:npm/sinon#1.16.0+20160723033700"
   },
   "dependencies": {
     "jsonld": "registry:npm/jsonld#0.4.0+20161011204827",

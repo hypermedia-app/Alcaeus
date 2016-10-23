@@ -166,7 +166,7 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    var ids = _.map(createResource.getCalls(), (call:sinon.SinonSpyCall) => {
+                    var ids = _.map(createResource.getCalls(), call => {
                         return call.args[0]['@id'];
                     });
                     expect(createResource.callCount)

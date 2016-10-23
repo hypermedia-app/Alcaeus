@@ -50,7 +50,7 @@ describe('Resource', () => {
 
         it('should combine operations from class and property', () => {
             var getOperations = sinon.stub();
-            var apiDoc = <IApiDocumentation>{
+            var apiDoc = <any>{
                 getOperations: getOperations
             };
             getOperations.returns([]);
@@ -69,7 +69,7 @@ describe('Resource', () => {
 
         it('should combine operations for multiple @types', () => {
             var getOperations = sinon.stub();
-            var apiDoc = <IApiDocumentation>{
+            var apiDoc = <any>{
                 getOperations: getOperations
             };
             getOperations.returns(Promise.resolve([]));

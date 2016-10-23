@@ -153,7 +153,7 @@ export namespace Responses {
     }
 
     function negativeResponse(status) {
-        return () => new Response('', {
+        return () => new Response('', <any>{
             status: status,
             ok: false
         });
@@ -168,7 +168,7 @@ export namespace Responses {
             headers.append('Link', '<http://api.example.com/doc/>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         }
 
-        return new Response(body, {
+        return new Response(body, <any>{
             status: 200,
             ok: true,
             headers: headers

@@ -107,7 +107,7 @@ class FetchError extends Error {
     }
 }
 
-function getFlattendGraph(res:Response) {
+function getFlattendGraph(res:Response):Promise<any> {
     var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
 
     if (res.ok === false) {

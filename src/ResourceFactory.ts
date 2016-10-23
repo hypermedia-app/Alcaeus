@@ -38,7 +38,7 @@ export class ResourceFactory implements IResourceFactory {
     }
 }
 
-class IncomingLink implements IIncomingLink {
+class IncomingLink {
     private _id;
     private _predicate;
 

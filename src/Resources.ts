@@ -81,7 +81,7 @@ export class HydraResource extends Resource implements IHydraResource {
     get operations() {
         var classOperations;
         if(_.isArray(this[JsonLd.Type])) {
-            classOperations = _.map(this[JsonLd.Type], type => this.apiDocumentation.getOperations(type));
+            classOperations = _.map(this[JsonLd.Type], (type:string) => this.apiDocumentation.getOperations(type));
         } else {
             classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
         }
@@ -89,7 +89,7 @@ export class HydraResource extends Resource implements IHydraResource {
         var propertyOperations = _.chain(this.getIncomingLinks())
             .map(link => _.map(link.subject.types, type => ({ type: type, predicate: link.predicate })))
             .flatten()
-            .map(link => this.apiDocumentation.getOperations(link.type, link.predicate))
+            .map((link: any) => this.apiDocumentation.getOperations(link.type, link.predicate))
             .union()
             .value();
 

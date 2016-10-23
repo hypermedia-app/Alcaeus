@@ -96,6 +96,8 @@ module.exports = function (config) {
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: process.env.TRAVIS ? true : false,
 
+        concurrency: 2,
+
         systemjs: {
             configFile: 'config.js',
             serveFiles: [

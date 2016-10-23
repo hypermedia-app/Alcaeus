@@ -8,4 +8,4 @@ install:
   - jspm install
   - typings install
 before_script:
-  - tsc
+  - tsc || true

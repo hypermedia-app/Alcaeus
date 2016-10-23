@@ -1,6 +1,7 @@
 language: node_js
 before_install:
-  - npm install -g jspm typescript
+  - npm install -g jspm typescript typings
 install:
   - npm install
   - jspm install
+  - typings install

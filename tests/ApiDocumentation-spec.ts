@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
-import 'core-js/es6/Weak-Map';
+import 'core-js/es6/weak-map';
 
 describe('ApiDocumentation', () => {
 

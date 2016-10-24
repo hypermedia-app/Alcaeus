@@ -13,7 +13,6 @@ You will need polyfills for older browsers:
 |                     | Chrome | Firefox | IExplore | Safari | Opera |
 | -------------       |--------|---------|----------|--------|-------|
 | [window.fetch][p1]  | <42    | <39     | :x:      | :x:    | <29   |
-| [WeakMap][p3]       | <36    | <6      | <11      | <7.1   | <23   |
 
 ## Installation
 

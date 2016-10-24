@@ -14,7 +14,6 @@ System.config({
 
   map: {
     "core-decorators": "npm:core-decorators@0.12.2",
-    "core-js": "npm:core-js@2.2.2",
     "jsonld": "npm:jsonld@0.4.11",
     "li": "npm:li@1.0.1",
     "lodash": "npm:lodash@4.9.0",
@@ -23,7 +22,6 @@ System.config({
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
-    "whatwg-fetch": "npm:whatwg-fetch@0.11.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },
@@ -161,12 +159,6 @@ System.config({
       "typedarray": "npm:typedarray@0.0.6"
     },
     "npm:constants-browserify@0.0.1": {
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
-    },
-    "npm:core-js@2.2.2": {
-      "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:core-util-is@1.0.2": {

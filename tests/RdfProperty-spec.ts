@@ -1,4 +1,3 @@
-import 'core-js/es6/weak-map';
 import {promises as jsonld} from 'jsonld';
 import {RdfProperty} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';

@@ -47,10 +47,8 @@
     },
     "devDependencies": {
       "core-decorators": "^0.12.2",
-      "core-js": "^2.2.2",
       "sinon": "^1.17.3",
-      "typescript": "^1.8.9",
-      "whatwg-fetch": "^1.0.0"
+      "typescript": "^1.8.9"
     },
     "buildConfig": {
       "transpileES6": true,

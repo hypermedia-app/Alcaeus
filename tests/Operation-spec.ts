@@ -1,4 +1,3 @@
-import 'core-js/es6/weak-map';
 import * as sinon from 'sinon';
 import {Operation} from "../src/Resources";
 import {ISupportedOperation, IHeracles, IHydraResource, IOperation, IClass} from "../src/interfaces";

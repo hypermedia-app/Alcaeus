@@ -1,4 +1,3 @@
-import 'core-js/es6/weak-map';
 import {Core} from '../src/Constants';
 import {DocumentedResource} from "../src/ApiDocumentation";
 import {promises as jsonld} from 'jsonld';

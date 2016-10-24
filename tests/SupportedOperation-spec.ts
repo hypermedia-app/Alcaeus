@@ -1,4 +1,3 @@
-import 'core-js/es6/weak-map';
 import {promises as jsonld} from 'jsonld';
 import * as sinon from 'sinon';
 import {SupportedOperation, ApiDocumentation} from '../src/ApiDocumentation';

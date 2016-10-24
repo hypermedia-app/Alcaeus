@@ -48,7 +48,8 @@
     "devDependencies": {
       "core-decorators": "^0.12.2",
       "sinon": "^1.17.3",
-      "typescript": "^1.8.9"
+      "typescript": "^1.8.9",
+      "whatwg-fetch": "^1.0.0"
     },
     "buildConfig": {
       "transpileES6": true,

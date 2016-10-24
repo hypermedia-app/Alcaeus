@@ -22,6 +22,7 @@ System.config({
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
+    "whatwg-fetch": "npm:whatwg-fetch@1.0.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },

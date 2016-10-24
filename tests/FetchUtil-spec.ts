@@ -6,6 +6,7 @@ import {Core} from '../src/Constants';
 import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
 import {rdf} from '../src/Vocabs';
+import 'whatwg-fetch';
 
 describe('FetchUtil', () => {
 

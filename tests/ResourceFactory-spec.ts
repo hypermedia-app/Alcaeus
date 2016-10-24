@@ -1,5 +1,6 @@
 'use strict';
 
+import 'core-js/es6/weak-map';
 import * as _ from 'lodash';
 import {rdf} from '../src/Vocabs';
 import {Core} from '../src/Constants';

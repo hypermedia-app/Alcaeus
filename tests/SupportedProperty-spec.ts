@@ -1,3 +1,4 @@
+import 'core-js/es6/weak-map';
 import {SupportedProperty} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';
 

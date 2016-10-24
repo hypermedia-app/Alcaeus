@@ -1,3 +1,4 @@
+import 'core-js/es6/weak-map';
 import {StatusCodeDescription} from "../src/ApiDocumentation";
 
 describe('StatusCodeDescription', () => {

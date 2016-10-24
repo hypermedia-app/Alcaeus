@@ -1,8 +1,8 @@
+import 'core-js/es6/weak-map';
 import * as sinon from 'sinon';
 import {HydraResource, Resource} from '../src/Resources';
 import {Bodies} from './test-objects';
 import {IApiDocumentation, IHeracles} from "../src/interfaces";
-import 'core-js/es6/weak-map';
 
 describe('Resource', () => {
 

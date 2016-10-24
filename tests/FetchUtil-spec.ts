@@ -1,5 +1,6 @@
 'use strict';
 
+import 'core-js/es6/weak-map';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Core} from '../src/Constants';

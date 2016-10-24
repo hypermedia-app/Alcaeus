@@ -8,7 +8,7 @@ import {FlattenOptions} from "jsonld";
 import * as $rdf from 'rdf-ext';
 import * as formats from 'rdf-formats-common';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
-import * as rdf from 'vocabs-rdf';
+import {rdf} from './Vocabs';
 
 formats($rdf);
 
@@ -23,7 +23,7 @@ export class FetchUtil {
         [Constants.Core.Vocab.operation, Constants.Core.Vocab.Operation],
         [Constants.Core.Vocab.supportedProperty, Constants.Core.Vocab.SupportedProperty],
         [Constants.Core.Vocab.statusCodes, Constants.Core.Vocab.StatusCodeDescription],
-        [Constants.Core.Vocab.property, rdf.ns + 'Property'],
+        [Constants.Core.Vocab.property, rdf.Property],
         [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
     ];
 

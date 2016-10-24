@@ -2,7 +2,7 @@ import {promises as jsonld} from 'jsonld';
 import * as sinon from 'sinon';
 import {SupportedOperation, ApiDocumentation} from '../src/ApiDocumentation';
 import {Core} from '../src/Constants';
-import * as owl from 'vocabs-owl';
+import {owl} from '../src/Vocabs';
 import {IHeracles} from "../src/interfaces";
 
 describe('SupportedOperation', () => {
@@ -13,7 +13,7 @@ describe('SupportedOperation', () => {
         '@context': Core.Context,
         'title': 'The operation',
         'description': 'The operation description',
-        'expects': 'http://www.w3.org/2002/07/owl#Nothing',
+        'expects': owl.Nothing,
         'returns': 'http://example.com/Something',
         'method': 'TRACE'
     });
@@ -31,7 +31,7 @@ describe('SupportedOperation', () => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
             var op = new SupportedOperation(compacted, <IHeracles>{});
 
-            expect(op.expects['@id']).toBe('http://www.w3.org/2002/07/owl#Nothing');
+            expect(op.expects['@id']).toBe(owl.Nothing);
             done();
         }).catch(done.fail);
     });
@@ -97,7 +97,7 @@ describe('SupportedOperation', () => {
 
             jsonld.compact(operation, {}).then(compacted => {
 
-                compacted[Core.Vocab.expects] = { id: owl.ns + 'Nothing' };
+                compacted[Core.Vocab.expects] = { id: owl.Nothing };
                 var op = new SupportedOperation(compacted, <IHeracles>{});
 
                 expect(op.requiresInput).toBe(true);

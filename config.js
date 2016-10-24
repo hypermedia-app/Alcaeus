@@ -23,11 +23,6 @@ System.config({
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
-    "vocabs": "npm:vocabs@0.11.1",
-    "vocabs-owl": "npm:vocabs-owl@0.11.1",
-    "vocabs-rdf": "npm:vocabs-rdf@0.11.1",
-    "vocabs-rdfs": "npm:vocabs-rdfs@0.11.1",
-    "vocabs-xsd": "npm:vocabs-xsd@0.11.1",
     "whatwg-fetch": "npm:whatwg-fetch@0.11.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -495,18 +490,6 @@ System.config({
     },
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
-    },
-    "npm:vocabs-owl@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-rdf@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-rdfs@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-xsd@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
     },
     "npm:xmldom@0.1.22": {
       "process": "github:jspm/nodelibs-process@0.1.2"

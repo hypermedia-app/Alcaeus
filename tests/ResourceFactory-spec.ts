@@ -1,7 +1,7 @@
 'use strict';
 
 import * as _ from 'lodash';
-import * as rdf from 'vocabs-rdf';
+import {rdf} from '../src/Vocabs';
 import {Core} from '../src/Constants';
 import {ResourceFactory} from '../src/ResourceFactory';
 import * as resources from '../src/Resources';
@@ -23,7 +23,7 @@ describe('ResourceFactory', () => {
         constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;
         constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.SupportedOperation;
         constructedTypes[Core.Vocab.StatusCodeDescription] = res => res instanceof documentationTypes.StatusCodeDescription;
-        constructedTypes[rdf.ns + 'Property'] = res => res instanceof documentationTypes.RdfProperty;
+        constructedTypes[rdf.Property] = res => res instanceof documentationTypes.RdfProperty;
 
         _.toPairs(constructedTypes).forEach(typePair => {
             (function (typeId, isOfCorrectType) {

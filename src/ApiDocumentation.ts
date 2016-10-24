@@ -1,9 +1,8 @@
 'use strict';
 
 import * as _ from 'lodash';
-import * as owl from 'vocabs-owl';
-import * as rdfs from 'vocabs-rdfs';
-import {Core, JsonLd, Schema} from './Constants';
+import {Core, JsonLd} from './Constants';
+import {Schema, rdfs, owl} from './Vocabs';
 import {Resource} from './Resources';
 import {default as nonenumerable} from "core-decorators/lib/nonenumerable";
 import {
@@ -80,13 +79,13 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
 
     get description():string {
         return this[Core.Vocab.description] ||
-            this[rdfs.ns + 'comment'] ||
+            this[rdfs.comment] ||
             this[Schema.description]
     }
 
     get title():string {
         return this[Core.Vocab.title] ||
-            this[rdfs.ns + 'label'] ||
+            this[rdfs.label] ||
             this[Schema.title];
     }
 }
@@ -114,7 +113,7 @@ export class SupportedOperation extends DocumentedResource implements ISupported
         const method = this.method || '';
         var methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE';
 
-        var operationExpectsBody = !!this.expects && this.expects.id !== owl.ns + 'Nothing';
+        var operationExpectsBody = !!this.expects && this.expects.id !== owl.Nothing;
 
         return methodExpectsBody || operationExpectsBody;
     }
@@ -203,11 +202,11 @@ export class StatusCodeDescription extends Resource implements IStatusCodeDescri
 
 export class RdfProperty extends DocumentedResource implements IRdfProperty {
     get range():IClass {
-        return this[rdfs.ns + 'range'];
+        return this[rdfs.range];
     }
 
     get domain():IClass {
-        return this[rdfs.ns + 'domain'];
+        return this[rdfs.domain];
     }
 
     get supportedOperations():Array<ISupportedOperation> {

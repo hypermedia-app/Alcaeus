@@ -2,7 +2,7 @@ import {promises as jsonld} from 'jsonld';
 import * as sinon from 'sinon';
 import {SupportedOperation, ApiDocumentation} from '../src/ApiDocumentation';
 import {Core} from '../src/Constants';
-import {owl} from 'linkeddata-vocabs';
+import * as owl from 'vocabs-owl';
 import {IHeracles} from "../src/interfaces";
 
 describe('SupportedOperation', () => {

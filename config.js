@@ -17,17 +17,17 @@ System.config({
     "core-js": "npm:core-js@2.2.2",
     "jsonld": "npm:jsonld@0.4.11",
     "li": "npm:li@1.0.1",
-    "linkeddata-vocabs": "npm:linkeddata-vocabs@1.0.0",
     "lodash": "npm:lodash@4.9.0",
     "rdf-ext": "npm:rdf-ext@0.3.0",
     "rdf-formats-common": "npm:rdf-formats-common@0.3.0",
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
     "sinon": "npm:sinon@1.17.3",
     "typescript": "npm:typescript@1.8.9",
+    "vocabs": "npm:vocabs@0.11.1",
     "vocabs-owl": "npm:vocabs-owl@0.11.1",
     "vocabs-rdf": "npm:vocabs-rdf@0.11.1",
     "vocabs-rdfs": "npm:vocabs-rdfs@0.11.1",
-    "vocabs-schema": "npm:vocabs-schema@0.11.1",
+    "vocabs-xsd": "npm:vocabs-xsd@0.11.1",
     "whatwg-fetch": "npm:whatwg-fetch@0.11.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -78,9 +78,6 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
-    },
-    "npm:activitystreams-context@1.0.0": {
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:asn1.js@4.6.0": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -263,17 +260,6 @@ System.config({
     "npm:jsonld@0.4.11": {
       "es6-promise": "npm:es6-promise@2.3.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:linkeddata-vocabs@1.0.0": {
-      "vocabs-as": "npm:vocabs-as@1.0.0",
-      "vocabs-asx": "npm:vocabs-asx@0.11.1",
-      "vocabs-interval": "npm:vocabs-interval@0.11.1",
-      "vocabs-owl": "npm:vocabs-owl@0.11.1",
-      "vocabs-rdf": "npm:vocabs-rdf@0.11.1",
-      "vocabs-rdfs": "npm:vocabs-rdfs@0.11.1",
-      "vocabs-schema": "npm:vocabs-schema@0.11.1",
-      "vocabs-social": "npm:vocabs-social@0.11.1",
-      "vocabs-xsd": "npm:vocabs-xsd@0.11.1"
     },
     "npm:lodash@4.9.0": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
@@ -510,16 +496,6 @@ System.config({
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
     },
-    "npm:vocabs-as@1.0.0": {
-      "activitystreams-context": "npm:activitystreams-context@1.0.0",
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-asx@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-interval@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
-    },
     "npm:vocabs-owl@0.11.1": {
       "vocabs": "npm:vocabs@0.11.1"
     },
@@ -527,13 +503,6 @@ System.config({
       "vocabs": "npm:vocabs@0.11.1"
     },
     "npm:vocabs-rdfs@0.11.1": {
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-schema@0.11.1": {
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "vocabs": "npm:vocabs@0.11.1"
-    },
-    "npm:vocabs-social@0.11.1": {
       "vocabs": "npm:vocabs@0.11.1"
     },
     "npm:vocabs-xsd@0.11.1": {

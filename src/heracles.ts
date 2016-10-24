@@ -5,7 +5,6 @@ import * as _ from 'lodash';
 import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
-import 'rxjs/add/operator/toPromise';
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {HydraResource as ResourceCtor} from "./Resources";
 import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';

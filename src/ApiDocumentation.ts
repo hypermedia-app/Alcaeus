@@ -2,9 +2,8 @@
 
 import * as _ from 'lodash';
 import * as owl from 'vocabs-owl';
-import * as schema from 'vocabs-schema';
 import * as rdfs from 'vocabs-rdfs';
-import {Core, JsonLd, MediaTypes} from './Constants';
+import {Core, JsonLd, Schema} from './Constants';
 import {Resource} from './Resources';
 import {default as nonenumerable} from "core-decorators/lib/nonenumerable";
 import {
@@ -82,13 +81,13 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
     get description():string {
         return this[Core.Vocab.description] ||
             this[rdfs.ns + 'comment'] ||
-            this[schema.description]
+            this[Schema.description]
     }
 
     get title():string {
         return this[Core.Vocab.title] ||
             this[rdfs.ns + 'label'] ||
-            this[schema.title];
+            this[Schema.title];
     }
 }
 

@@ -1,8 +1,9 @@
 import {promises as jsonld} from 'jsonld';
 import {RdfProperty} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';
-//noinspection TypeScriptCheckImport
-import {rdf, rdfs, xsd} from 'linkeddata-vocabs';
+import * as xsd from 'vocabs-xsd';
+import * as rdfs from 'vocabs-rdfs';
+import * as rdf from 'vocabs-rdf';
 
 describe('RdfProperty', () => {
 

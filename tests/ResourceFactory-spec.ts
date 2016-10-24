@@ -1,8 +1,7 @@
 'use strict';
 
 import * as _ from 'lodash';
-//noinspection TypeScriptCheckImport
-import {rdf} from 'linkeddata-vocabs';
+import * as rdf from 'vocabs-rdf';
 import {Core} from '../src/Constants';
 import {ResourceFactory} from '../src/ResourceFactory';
 import * as resources from '../src/Resources';

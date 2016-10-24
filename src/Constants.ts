@@ -103,3 +103,10 @@ export namespace Headers {
     export var Link = 'Link';
     export var ContentType = 'Content-Type';
 }
+
+const SchemaNs = 'http://schema.org/';
+
+export namespace Schema {
+    export var description = SchemaNs + 'description';
+    export var title = SchemaNs + 'title';
+}

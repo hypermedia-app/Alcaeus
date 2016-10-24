@@ -1,4 +1,5 @@
-import {rdf, xsd} from 'linkeddata-vocabs';
+import * as rdf from 'vocabs-rdf';
+import * as xsd from 'vocabs-xsd';
 import {Core} from '../src/Constants';
 import {promises as jsonld} from 'jsonld';
 import {JsonLd} from '../src/Constants';

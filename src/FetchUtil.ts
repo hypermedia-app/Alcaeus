@@ -23,7 +23,7 @@ export class FetchUtil {
         [Constants.Core.Vocab.operation, Constants.Core.Vocab.Operation],
         [Constants.Core.Vocab.supportedProperty, Constants.Core.Vocab.SupportedProperty],
         [Constants.Core.Vocab.statusCodes, Constants.Core.Vocab.StatusCodeDescription],
-        [Constants.Core.Vocab.property, ns + 'Property'],
+        [Constants.Core.Vocab.property, rdf.ns + 'Property'],
         [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
     ];
 
@@ -127,7 +127,7 @@ function runInference(graph) {
         _.forEach(matches.toArray(), triple => {
             graph.add(new $rdf.Triple(
                 triple.object,
-                new $rdf.NamedNode(type),
+                new $rdf.NamedNode(rdf.type),
                 new $rdf.NamedNode(mapping[1])
             ));
         });

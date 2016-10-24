@@ -1,6 +1,6 @@
 !function(e){function r(e,r,o){return 4===arguments.length?t.apply(this,arguments):void n(e,{declarative:!0,deps:r,declare:o})}function t(e,r,t,o){n(e,{declarative:!1,deps:r,executingRequire:t,execute:o})}function n(e,r){r.name=e,e in v||(v[e]=r),r.normalizedDeps=r.deps}function o(e,r){if(r[e.groupIndex]=r[e.groupIndex]||[],-1==g.call(r[e.groupIndex],e)){r[e.groupIndex].push(e);for(var t=0,n=e.normalizedDeps.length;n>t;t++){var a=e.normalizedDeps[t],u=v[a];if(u&&!u.evaluated){var d=e.groupIndex+(u.declarative!=e.declarative);if(void 0===u.groupIndex||u.groupIndex<d){if(void 0!==u.groupIndex&&(r[u.groupIndex].splice(g.call(r[u.groupIndex],u),1),0==r[u.groupIndex].length))throw new TypeError("Mixed dependency cycle detected");u.groupIndex=d}o(u,r)}}}}function a(e){var r=v[e];r.groupIndex=0;var t=[];o(r,t);for(var n=!!r.declarative==t.length%2,a=t.length-1;a>=0;a--){for(var u=t[a],i=0;i<u.length;i++){var s=u[i];n?d(s):l(s)}n=!n}}function u(e){return y[e]||(y[e]={name:e,dependencies:[],exports:{},importers:[]})}function d(r){if(!r.module){var t=r.module=u(r.name),n=r.module.exports,o=r.declare.call(e,function(e,r){if(t.locked=!0,"object"==typeof e)for(var o in e)n[o]=e[o];else n[e]=r;for(var a=0,u=t.importers.length;u>a;a++){var d=t.importers[a];if(!d.locked)for(var i=0;i<d.dependencies.length;++i)d.dependencies[i]===t&&d.setters[i](n)}return t.locked=!1,r},{id:r.name});t.setters=o.setters,t.execute=o.execute;for(var a=0,i=r.normalizedDeps.length;i>a;a++){var l,s=r.normalizedDeps[a],c=v[s],f=y[s];f?l=f.exports:c&&!c.declarative?l=c.esModule:c?(d(c),f=c.module,l=f.exports):l=p(s),f&&f.importers?(f.importers.push(t),t.dependencies.push(f)):t.dependencies.push(null),t.setters[a]&&t.setters[a](l)}}}function i(e){var r,t=v[e];if(t)t.declarative?f(e,[]):t.evaluated||l(t),r=t.module.exports;else if(r=p(e),!r)throw new Error("Unable to load dependency "+e+".");return(!t||t.declarative)&&r&&r.__useDefault?r["default"]:r}function l(r){if(!r.module){var t={},n=r.module={exports:t,id:r.name};if(!r.executingRequire)for(var o=0,a=r.normalizedDeps.length;a>o;o++){var u=r.normalizedDeps[o],d=v[u];d&&l(d)}r.evaluated=!0;var c=r.execute.call(e,function(e){for(var t=0,n=r.deps.length;n>t;t++)if(r.deps[t]==e)return i(r.normalizedDeps[t]);throw new TypeError("Module "+e+" not declared as a dependency.")},t,n);void 0!==typeof c&&(n.exports=c),t=n.exports,t&&t.__esModule?r.esModule=t:r.esModule=s(t)}}function s(r){var t={};if(("object"==typeof r||"function"==typeof r)&&r!==e)if(m)for(var n in r)"default"!==n&&c(t,r,n);else{var o=r&&r.hasOwnProperty;for(var n in r)"default"===n||o&&!r.hasOwnProperty(n)||(t[n]=r[n])}return t["default"]=r,x(t,"__useDefault",{value:!0}),t}function c(e,r,t){try{var n;(n=Object.getOwnPropertyDescriptor(r,t))&&x(e,t,n)}catch(o){return e[t]=r[t],!1}}function f(r,t){var n=v[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,a=n.normalizedDeps.length;a>o;o++){var u=n.normalizedDeps[o];-1==g.call(t,u)&&(v[u]?f(u,t):p(u))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function p(e){if(I[e])return I[e];if("@node/"==e.substr(0,6))return I[e]=s(D(e.substr(6)));var r=v[e];if(!r)throw"Module "+e+" not present.";return a(e),f(e,[]),v[e]=void 0,r.declarative&&x(r.module.exports,"__esModule",{value:!0}),I[e]=r.declarative?r.module.exports:r.esModule}var v={},g=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},m=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(h){m=!1}var x;!function(){try{Object.defineProperty({},"a",{})&&(x=Object.defineProperty)}catch(e){x=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var y={},D="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,I={"@empty":{}};return function(e,n,o,a){return function(u){u(function(u){for(var d={_nodeRequire:D,register:r,registerDynamic:t,get:p,set:function(e,r){I[e]=r},newModule:function(e){return e}},i=0;i<n.length;i++)(function(e,r){r&&r.__esModule?I[e]=r:I[e]=s(r)})(n[i],arguments[i]);a(d);var l=p(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)p(e[i]);return o?l["default"]:l})}}}("undefined"!=typeof self?self:global)
 
-(["1","2"], ["4","6","7","8","9","a","11"], true, function($__System) {
+(["1","2"], ["4","6","7","8","9","a"], true, function($__System) {
 var require = this.require, exports = this.exports, module = this.module;
 $__System.registerDynamic('3', ['4', '6', '7', '5', '8', '9', 'a', 'b'], true, function ($__require, exports, module) {
     'use strict';
@@ -171,26 +171,7 @@ $__System.registerDynamic("f", ["e"], true, function ($__require, exports, modul
   module.exports = $__require("e");
   return module.exports;
 });
-$__System.registerDynamic('10', ['d', '11'], true, function ($__require, exports, module) {
-  var define,
-      global = this || self,
-      GLOBAL = global;
-  /* */
-  (function (process) {
-    'use strict';
-
-    $__require('d')(exports, 'http://schema.org/', 's', ['APIReference', 'AboutPage', 'AcceptAction', 'AccountingService', 'AchieveAction', 'Action', 'ActionStatusType', 'ActivateAction', 'AddAction', 'AdministrativeArea', 'AdultEntertainment', 'AggregateOffer', 'AggregateRating', 'AgreeAction', 'Airline', 'Airport', 'AlignmentObject', 'AllocateAction', 'AmusementPark', 'AnatomicalStructure', 'AnatomicalSystem', 'AnimalShelter', 'Answer', 'ApartmentComplex', 'AppendAction', 'ApplyAction', 'ApprovedIndication', 'Aquarium', 'ArriveAction', 'ArtGallery', 'Artery', 'Article', 'AskAction', 'AssessAction', 'AssignAction', 'Attorney', 'Audience', 'AudioObject', 'AuthorizeAction', 'AutoBodyShop', 'AutoDealer', 'AutoPartsStore', 'AutoRental', 'AutoRepair', 'AutoWash', 'AutomatedTeller', 'AutomotiveBusiness', 'Bakery', 'BankOrCreditUnion', 'BarOrPub', 'Beach', 'BeautySalon', 'BedAndBreakfast', 'BefriendAction', 'BikeStore', 'Blog', 'BlogPosting', 'BloodTest', 'BodyOfWater', 'Bone', 'Book', 'BookFormatType', 'BookSeries', 'BookStore', 'BookmarkAction', 'Boolean', 'BorrowAction', 'BowlingAlley', 'BrainStructure', 'Brand', 'BreadcrumbList', 'Brewery', 'BroadcastEvent', 'BroadcastService', 'BuddhistTemple', 'BusReservation', 'BusStation', 'BusStop', 'BusTrip', 'BusinessAudience', 'BusinessEntityType', 'BusinessEvent', 'BusinessFunction', 'BuyAction', 'CafeOrCoffeeShop', 'Campground', 'Canal', 'CancelAction', 'Car', 'Casino', 'CatholicChurch', 'Cemetery', 'CheckAction', 'CheckInAction', 'CheckOutAction', 'CheckoutPage', 'ChildCare', 'ChildrensEvent', 'ChooseAction', 'Church', 'City', 'CityHall', 'CivicStructure', 'Class', 'Clip', 'ClothingStore', 'Code', 'CollectionPage', 'CollegeOrUniversity', 'ComedyClub', 'ComedyEvent', 'Comment', 'CommentAction', 'CommunicateAction', 'ComputerStore', 'ConfirmAction', 'ConsumeAction', 'ContactPage', 'ContactPoint', 'ContactPointOption', 'Continent', 'ControlAction', 'ConvenienceStore', 'CookAction', 'Corporation', 'Country', 'Courthouse', 'CreateAction', 'CreativeWork', 'CreditCard', 'Crematorium', 'DDxElement', 'DanceEvent', 'DanceGroup', 'DataCatalog', 'DataDownload', 'DataType', 'Dataset', 'Date', 'DateTime', 'DatedMoneySpecification', 'DayOfWeek', 'DaySpa', 'DeactivateAction', 'DefenceEstablishment', 'DeleteAction', 'DeliveryChargeSpecification', 'DeliveryEvent', 'DeliveryMethod', 'Demand', 'Dentist', 'DepartAction', 'DepartmentStore', 'DiagnosticLab', 'DiagnosticProcedure', 'Diet', 'DietarySupplement', 'DisagreeAction', 'DiscoverAction', 'DislikeAction', 'Distance', 'DonateAction', 'DoseSchedule', 'DownloadAction', 'DrawAction', 'DrinkAction', 'Drug', 'DrugClass', 'DrugCost', 'DrugCostCategory', 'DrugLegalStatus', 'DrugPregnancyCategory', 'DrugPrescriptionStatus', 'DrugStrength', 'DryCleaningOrLaundry', 'Duration', 'EatAction', 'EducationEvent', 'EducationalAudience', 'EducationalOrganization', 'Electrician', 'ElectronicsStore', 'ElementarySchool', 'EmailMessage', 'Embassy', 'EmergencyService', 'EmployeeRole', 'EmploymentAgency', 'EndorseAction', 'Energy', 'EntertainmentBusiness', 'EntryPoint', 'Enumeration', 'Episode', 'Event', 'EventReservation', 'EventStatusType', 'EventVenue', 'ExerciseAction', 'ExerciseGym', 'ExercisePlan', 'FastFoodRestaurant', 'Festival', 'FilmAction', 'FinancialService', 'FindAction', 'FireStation', 'Flight', 'FlightReservation', 'Float', 'Florist', 'FollowAction', 'FoodEstablishment', 'FoodEstablishmentReservation', 'FoodEvent', 'FurnitureStore', 'Game', 'GamePlayMode', 'GameServer', 'GameServerStatus', 'GardenStore', 'GasStation', 'GatedResidenceCommunity', 'GeneralContractor', 'GeoCoordinates', 'GeoShape', 'GiveAction', 'GolfCourse', 'GovernmentBuilding', 'GovernmentOffice', 'GovernmentOrganization', 'GovernmentPermit', 'GovernmentService', 'GroceryStore', 'HVACBusiness', 'HairSalon', 'HardwareStore', 'HealthAndBeautyBusiness', 'HealthClub', 'HighSchool', 'HinduTemple', 'HobbyShop', 'HomeAndConstructionBusiness', 'HomeGoodsStore', 'Hospital', 'Hostel', 'Hotel', 'HousePainter', 'IceCreamShop', 'IgnoreAction', 'ImageGallery', 'ImageObject', 'ImagingTest', 'IndividualProduct', 'InfectiousAgentClass', 'InfectiousDisease', 'InformAction', 'InsertAction', 'InstallAction', 'InsuranceAgency', 'Intangible', 'Integer', 'InteractAction', 'InternetCafe', 'InviteAction', 'Invoice', 'ItemAvailability', 'ItemList', 'ItemListOrderType', 'ItemPage', 'JewelryStore', 'JobPosting', 'JoinAction', 'Joint', 'LakeBodyOfWater', 'Landform', 'LandmarksOrHistoricalBuildings', 'Language', 'LeaveAction', 'LegislativeBuilding', 'LendAction', 'Library', 'LifestyleModification', 'Ligament', 'LikeAction', 'LiquorStore', 'ListItem', 'ListenAction', 'LiteraryEvent', 'LocalBusiness', 'LockerDelivery', 'Locksmith', 'LodgingBusiness', 'LodgingReservation', 'LoseAction', 'LymphaticVessel', 'Map', 'MapCategoryType', 'MarryAction', 'Mass', 'MaximumDoseSchedule', 'MediaObject', 'MedicalAudience', 'MedicalCause', 'MedicalClinic', 'MedicalCode', 'MedicalCondition', 'MedicalConditionStage', 'MedicalContraindication', 'MedicalDevice', 'MedicalDevicePurpose', 'MedicalEntity', 'MedicalEnumeration', 'MedicalEvidenceLevel', 'MedicalGuideline', 'MedicalGuidelineContraindication', 'MedicalGuidelineRecommendation', 'MedicalImagingTechnique', 'MedicalIndication', 'MedicalIntangible', 'MedicalObservationalStudy', 'MedicalObservationalStudyDesign', 'MedicalOrganization', 'MedicalProcedure', 'MedicalProcedureType', 'MedicalRiskCalculator', 'MedicalRiskEstimator', 'MedicalRiskFactor', 'MedicalRiskScore', 'MedicalScholarlyArticle', 'MedicalSign', 'MedicalSignOrSymptom', 'MedicalSpecialty', 'MedicalStudy', 'MedicalStudyStatus', 'MedicalSymptom', 'MedicalTest', 'MedicalTestPanel', 'MedicalTherapy', 'MedicalTrial', 'MedicalTrialDesign', 'MedicalWebPage', 'MedicineSystem', 'MensClothingStore', 'MiddleSchool', 'MobileApplication', 'MobilePhoneStore', 'Mosque', 'Motel', 'MotorcycleDealer', 'MotorcycleRepair', 'Mountain', 'MoveAction', 'Movie', 'MovieRentalStore', 'MovieSeries', 'MovieTheater', 'MovingCompany', 'Muscle', 'Museum', 'MusicAlbum', 'MusicAlbumProductionType', 'MusicAlbumReleaseType', 'MusicComposition', 'MusicEvent', 'MusicGroup', 'MusicPlaylist', 'MusicRecording', 'MusicRelease', 'MusicReleaseFormatType', 'MusicStore', 'MusicVenue', 'MusicVideoObject', 'NGO', 'NailSalon', 'Nerve', 'NewsArticle', 'NightClub', 'Notary', 'Number', 'NutritionInformation', 'OceanBodyOfWater', 'Offer', 'OfferItemCondition', 'OfficeEquipmentStore', 'OnDemandEvent', 'OpeningHoursSpecification', 'Optician', 'Order', 'OrderAction', 'OrderStatus', 'Organization', 'OrganizationRole', 'OrganizeAction', 'OutletStore', 'OwnershipInfo', 'PaintAction', 'Painting', 'PalliativeProcedure', 'ParcelDelivery', 'ParcelService', 'ParentAudience', 'Park', 'ParkingFacility', 'PathologyTest', 'PawnShop', 'PayAction', 'PaymentChargeSpecification', 'PaymentMethod', 'PeopleAudience', 'PerformAction', 'PerformanceRole', 'PerformingArtsTheater', 'PerformingGroup', 'Periodical', 'Permit', 'Person', 'PetStore', 'Pharmacy', 'Photograph', 'PhotographAction', 'PhysicalActivity', 'PhysicalActivityCategory', 'PhysicalExam', 'PhysicalTherapy', 'Physician', 'Place', 'PlaceOfWorship', 'PlanAction', 'PlayAction', 'Playground', 'Plumber', 'PoliceStation', 'Pond', 'PostOffice', 'PostalAddress', 'PrependAction', 'Preschool', 'PreventionIndication', 'PriceSpecification', 'Product', 'ProductModel', 'ProfessionalService', 'ProfilePage', 'ProgramMembership', 'Property', 'PropertyValueSpecification', 'PsychologicalTreatment', 'PublicSwimmingPool', 'PublicationEvent', 'PublicationIssue', 'PublicationVolume', 'QAPage', 'QualitativeValue', 'QuantitativeValue', 'Quantity', 'Question', 'QuoteAction', 'RVPark', 'RadiationTherapy', 'RadioClip', 'RadioEpisode', 'RadioSeason', 'RadioSeries', 'RadioStation', 'Rating', 'ReactAction', 'ReadAction', 'RealEstateAgent', 'ReceiveAction', 'Recipe', 'RecommendedDoseSchedule', 'RecyclingCenter', 'RegisterAction', 'RejectAction', 'RentAction', 'RentalCarReservation', 'ReplaceAction', 'ReplyAction', 'ReportedDoseSchedule', 'Reservation', 'ReservationPackage', 'ReservationStatusType', 'ReserveAction', 'Reservoir', 'Residence', 'Restaurant', 'ResumeAction', 'ReturnAction', 'Review', 'ReviewAction', 'RiverBodyOfWater', 'Role', 'RoofingContractor', 'RsvpAction', 'RsvpResponseType', 'SaleEvent', 'ScheduleAction', 'ScholarlyArticle', 'School', 'Sculpture', 'SeaBodyOfWater', 'SearchAction', 'SearchResultsPage', 'Season', 'Seat', 'SelfStorage', 'SellAction', 'SendAction', 'Series', 'Service', 'ServiceChannel', 'ShareAction', 'ShoeStore', 'ShoppingCenter', 'SingleFamilyResidence', 'SiteNavigationElement', 'SkiResort', 'SocialEvent', 'SoftwareApplication', 'SomeProducts', 'Specialty', 'SportingGoodsStore', 'SportsActivityLocation', 'SportsClub', 'SportsEvent', 'SportsOrganization', 'SportsTeam', 'StadiumOrArena', 'State', 'Store', 'StructuredValue', 'SubscribeAction', 'SubwayStation', 'SuperficialAnatomy', 'SuspendAction', 'Synagogue', 'TVClip', 'TVEpisode', 'TVSeason', 'TVSeries', 'Table', 'TakeAction', 'TattooParlor', 'Taxi', 'TaxiReservation', 'TaxiStand', 'TechArticle', 'TelevisionStation', 'TennisComplex', 'Text', 'TheaterEvent', 'TheaterGroup', 'TherapeuticProcedure', 'Thing', 'Ticket', 'TieAction', 'Time', 'TipAction', 'TireShop', 'TouristAttraction', 'TouristInformationCenter', 'ToyStore', 'TrackAction', 'TradeAction', 'TrainReservation', 'TrainStation', 'TrainTrip', 'TransferAction', 'TravelAction', 'TravelAgency', 'TreatmentIndication', 'TypeAndQuantityNode', 'URL', 'UnRegisterAction', 'UnitPriceSpecification', 'UpdateAction', 'UseAction', 'UserBlocks', 'UserCheckins', 'UserComments', 'UserDownloads', 'UserInteraction', 'UserLikes', 'UserPageVisits', 'UserPlays', 'UserPlusOnes', 'UserTweets', 'Vehicle', 'Vein', 'Vessel', 'VeterinaryCare', 'VideoGallery', 'VideoGame', 'VideoGameSeries', 'VideoObject', 'ViewAction', 'VisualArtsEvent', 'VisualArtwork', 'Volcano', 'VoteAction', 'WPAdBlock', 'WPFooter', 'WPHeader', 'WPSideBar', 'WantAction', 'WarrantyPromise', 'WarrantyScope', 'WatchAction', 'Waterfall', 'WearAction', 'WebApplication', 'WebPage', 'WebPageElement', 'WebSite', 'WholesaleStore', 'WinAction', 'Winery', 'WriteAction', 'Zoo', 'Abdomen', 'ActiveActionStatus', 'ActiveNotRecruiting', 'AerobicActivity', 'AlbumRelease', 'AnaerobicActivity', 'Anesthesia', 'Appearance', 'Ayurvedic', 'Bacteria', 'Balance', 'BroadcastRelease', 'CDFormat', 'CT', 'Cardiovascular', 'CardiovascularExam', 'CaseSeries', 'CassetteFormat', 'Chiropractic', 'Clinician', 'CoOp', 'CohortStudy', 'CommunityHealth', 'CompilationAlbum', 'Completed', 'CompletedActionStatus', 'CrossSectional', 'DJMixAlbum', 'DVDFormat', 'DamagedCondition', 'DemoAlbum', 'Dentistry', 'Dermatologic', 'Diagnostic', 'DietNutrition', 'DigitalAudioTapeFormat', 'DigitalFormat', 'Discontinued', 'DoubleBlindedTrial', 'EBook', 'EPRelease', 'Ear', 'Emergency', 'Endocrine', 'EnrollingByInvitation', 'EventCancelled', 'EventPostponed', 'EventRescheduled', 'EventScheduled', 'EvidenceLevelA', 'EvidenceLevelB', 'EvidenceLevelC', 'Eye', 'FDAcategoryA', 'FDAcategoryB', 'FDAcategoryC', 'FDAcategoryD', 'FDAcategoryX', 'FDAnotEvaluated', 'FailedActionStatus', 'False', 'Flexibility', 'Fungus', 'Gastroenterologic', 'Genetic', 'Genitourinary', 'Geriatric', 'Gynecologic', 'Hardcover', 'Head', 'HearingImpairedSupported', 'Hematologic', 'Homeopathic', 'InStock', 'InStoreOnly', 'Infectious', 'InternationalTrial', 'ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered', 'LaboratoryScience', 'LaserDiscFormat', 'LeisureTimeActivity', 'LimitedAvailability', 'LiveAlbum', 'Longitudinal', 'Lung', 'MRI', 'MedicalResearcher', 'Midwifery', 'MixtapeAlbum', 'MultiCenterTrial', 'MultiPlayer', 'MulticellularParasite', 'Musculoskeletal', 'MusculoskeletalExam', 'Neck', 'Neuro', 'Neurologic', 'NewCondition', 'NoninvasiveProcedure', 'Nose', 'NotYetRecruiting', 'Nursing', 'OTC', 'Observational', 'Obstetric', 'OccupationalActivity', 'OccupationalTherapy', 'OfflinePermanently', 'OfflineTemporarily', 'OnSitePickup', 'Oncologic', 'Online', 'OnlineFull', 'OnlineOnly', 'OpenTrial', 'Optometic', 'OrderCancelled', 'OrderDelivered', 'OrderInTransit', 'OrderPaymentDue', 'OrderPickupAvailable', 'OrderProblem', 'OrderProcessing', 'OrderReturned', 'Osteopathic', 'Otolaryngologic', 'OutOfStock', 'PET', 'Paperback', 'ParkingMap', 'Pathology', 'Patient', 'Pediatric', 'PercutaneousProcedure', 'PharmacySpecialty', 'Physiotherapy', 'PlaceboControlledTrial', 'PlasticSurgery', 'Podiatric', 'PotentialActionStatus', 'PreOrder', 'PrescriptionOnly', 'PrimaryCare', 'Prion', 'Protozoa', 'Psychiatric', 'PublicHealth', 'Pulmonary', 'Radiograpy', 'RandomizedTrial', 'Recruiting', 'RefurbishedCondition', 'Registry', 'ReimbursementCap', 'RemixAlbum', 'Renal', 'Researcher', 'ReservationCancelled', 'ReservationConfirmed', 'ReservationHold', 'ReservationPending', 'RespiratoryTherapy', 'ResultsAvailable', 'ResultsNotAvailable', 'Retail', 'Rheumatologic', 'RsvpResponseMaybe', 'RsvpResponseNo', 'RsvpResponseYes', 'SeatingMap', 'SingleBlindedTrial', 'SingleCenterTrial', 'SinglePlayer', 'SingleRelease', 'Skin', 'SoldOut', 'SoundtrackAlbum', 'SpeechPathology', 'SpokenWordAlbum', 'StrengthTraining', 'StudioAlbum', 'Surgical', 'SurgicalProcedure', 'Suspended', 'Terminated', 'Therapeutic', 'Throat', 'TollFree', 'Toxicologic', 'TraditionalChinese', 'TransitMap', 'TripleBlindedTrial', 'True', 'Ultrasound', 'Urologic', 'UsedCondition', 'VenueMap', 'VinylFormat', 'Virus', 'VitalSign', 'WesternConventional', 'Wholesale', 'Withdrawn', 'XRay', 'about', 'acceptedAnswer', 'acceptedOffer', 'acceptedPaymentMethod', 'acceptsReservations', 'accessCode', 'accessibilityAPI', 'accessibilityControl', 'accessibilityFeature', 'accessibilityHazard', 'accountId', 'accountablePerson', 'acquiredFrom', 'action', 'actionStatus', 'activeIngredient', 'activityDuration', 'activityFrequency', 'actors', 'addOn', 'additionalName', 'additionalNumberOfGuests', 'additionalType', 'additionalVariable', 'address', 'addressCountry', 'addressLocality', 'addressRegion', 'administrationRoute', 'advanceBookingRequirement', 'adverseOutcome', 'affectedBy', 'affiliation', 'agent', 'aggregateRating', 'aircraft', 'albumProductionType', 'albumReleaseType', 'albums', 'alcoholWarning', 'algorithm', 'alignmentType', 'alternateName', 'alternativeHeadline', 'amount', 'amountOfThisGood', 'answerCount', 'antagonist', 'applicableLocation', 'application', 'applicationCategory', 'applicationSubCategory', 'applicationSuite', 'appliesToDeliveryMethod', 'appliesToPaymentMethod', 'area', 'areaServed', 'arrivalAirport', 'arrivalBusStop', 'arrivalGate', 'arrivalPlatform', 'arrivalStation', 'arrivalTerminal', 'arrivalTime', 'artEdition', 'arterialBranch', 'artform', 'articleBody', 'articleSection', 'aspect', 'assembly', 'assemblyVersion', 'associatedAnatomy', 'associatedArticle', 'associatedMedia', 'associatedPathophysiology', 'athlete', 'attendees', 'audience', 'audienceType', 'audio', 'author', 'availability', 'availabilityEnds', 'availabilityStarts', 'availableAtOrFrom', 'availableChannel', 'availableDeliveryMethod', 'availableFrom', 'availableIn', 'availableLanguage', 'availableService', 'availableStrength', 'availableTest', 'availableThrough', 'awards', 'awayTeam', 'background', 'baseSalary', 'benefits', 'bestRating', 'billingAddress', 'billingIncrement', 'billingPeriod', 'biomechnicalClass', 'birthDate', 'birthPlace', 'bitrate', 'blogPosts', 'bloodSupply', 'boardingGroup', 'bodyLocation', 'bookEdition', 'bookFormat', 'bookingAgent', 'bookingTime', 'borrower', 'box', 'branch', 'branchOf', 'brand', 'breadcrumb', 'breastfeedingWarning', 'broadcaster', 'browserRequirements', 'busName', 'busNumber', 'businessFunction', 'buyer', 'byArtist', 'calories', 'candidate', 'caption', 'carbohydrateContent', 'carrier', 'carrierRequirements', 'catalog', 'catalogNumber', 'category', 'cause', 'causeOf', 'character', 'characterAttribute', 'characterName', 'cheatCode', 'checkinTime', 'checkoutTime', 'childMaxAge', 'childMinAge', 'children', 'cholesterolContent', 'circle', 'citation', 'clincalPharmacology', 'clinicalPharmacology', 'clipNumber', 'closes', 'coach', 'code', 'codeRepository', 'codeValue', 'codingSystem', 'colleagues', 'collection', 'color', 'comment', 'commentCount', 'commentText', 'commentTime', 'composer', 'comprisedOf', 'confirmationNumber', 'connectedTo', 'contactOption', 'contactPoints', 'contactType', 'containedIn', 'contentLocation', 'contentRating', 'contentSize', 'contentType', 'contentUrl', 'contraindication', 'contributor', 'cookTime', 'cookingMethod', 'copyrightHolder', 'copyrightYear', 'cost', 'costCategory', 'costCurrency', 'costOrigin', 'costPerUnit', 'countriesNotSupported', 'countriesSupported', 'course', 'creator', 'creditedTo', 'currenciesAccepted', 'currency', 'customer', 'dataset', 'dateCreated', 'dateIssued', 'dateModified', 'datePosted', 'datePublished', 'dateline', 'dayOfWeek', 'deathDate', 'deathPlace', 'defaultValue', 'deliveryAddress', 'deliveryLeadTime', 'deliveryMethod', 'deliveryStatus', 'department', 'departureAirport', 'departureBusStop', 'departureGate', 'departurePlatform', 'departureStation', 'departureTerminal', 'departureTime', 'dependencies', 'depth', 'description', 'device', 'diagnosis', 'diagram', 'diet', 'dietFeatures', 'differentialDiagnosis', 'directors', 'discount', 'discountCode', 'discountCurrency', 'discusses', 'discussionUrl', 'dissolutionDate', 'distance', 'distinguishingSign', 'distribution', 'domainIncludes', 'doorTime', 'dosageForm', 'doseSchedule', 'doseUnit', 'doseValue', 'downloadUrl', 'downvoteCount', 'drainsTo', 'dropoffLocation', 'dropoffTime', 'drug', 'drugClass', 'drugUnit', 'duns', 'duplicateTherapy', 'duration', 'durationOfWarranty', 'editor', 'educationRequirements', 'educationalAlignment', 'educationalFramework', 'educationalRole', 'educationalUse', 'elevation', 'eligibleCustomerType', 'eligibleDuration', 'eligibleQuantity', 'eligibleRegion', 'eligibleTransactionVolume', 'email', 'embedUrl', 'employees', 'employmentType', 'encodesCreativeWork', 'encodingFormat', 'encodingType', 'encodings', 'endDate', 'endTime', 'endorsee', 'endorsers', 'entertainmentBusiness', 'epidemiology', 'episodeNumber', 'episodes', 'equal', 'error', 'estimatedFlightDuration', 'estimatesRiskOf', 'eventStatus', 'events', 'evidenceLevel', 'evidenceOrigin', 'exercisePlan', 'exerciseType', 'exifData', 'expectedArrivalFrom', 'expectedArrivalUntil', 'expectedPrognosis', 'expectsAcceptanceOf', 'experienceRequirements', 'expertConsiderations', 'expires', 'familyName', 'fatContent', 'faxNumber', 'featureList', 'fiberContent', 'fileFormat', 'fileSize', 'firstPerformance', 'flightDistance', 'flightNumber', 'followee', 'follows', 'followup', 'foodEstablishment', 'foodEvent', 'foodWarning', 'founders', 'foundingDate', 'foundingLocation', 'free', 'frequency', 'fromLocation', 'function', 'functionalClass', 'gameItem', 'gameLocation', 'gamePlatform', 'gameTip', 'gender', 'genre', 'geo', 'geographicArea', 'givenName', 'globalLocationNumber', 'greater', 'greaterOrEqual', 'gtin13', 'gtin14', 'gtin8', 'guideline', 'guidelineDate', 'guidelineSubject', 'hasDeliveryMethod', 'hasPOS', 'headline', 'healthCondition', 'height', 'highPrice', 'hiringOrganization', 'homeLocation', 'homeTeam', 'honorificPrefix', 'honorificSuffix', 'hospitalAffiliation', 'hostingOrganization', 'hoursAvailable', 'howPerformed', 'httpMethod', 'iataCode', 'icaoCode', 'identifyingExam', 'identifyingTest', 'illustrator', 'imagingTechnique', 'inAlbum', 'inLanguage', 'inPlaylist', 'incentives', 'includedComposition', 'includedRiskFactor', 'includesObject', 'increasesRiskOf', 'indication', 'industry', 'ineligibleRegion', 'infectiousAgent', 'infectiousAgentClass', 'ingredients', 'insertion', 'installUrl', 'intensity', 'interactingDrug', 'interactionCount', 'interactivityType', 'inventoryLevel', 'inverseOf', 'isAccessoryOrSparePartFor', 'isAvailableGenerically', 'isBasedOnUrl', 'isConsumableFor', 'isFamilyFriendly', 'isGift', 'isProprietary', 'isRelatedTo', 'isSimilarTo', 'isVariantOf', 'isbn', 'isicV4', 'isrcCode', 'issn', 'issueNumber', 'issuedBy', 'issuedThrough', 'iswcCode', 'item', 'itemCondition', 'itemListElement', 'itemListOrder', 'itemOffered', 'itemReviewed', 'itemShipped', 'jobLocation', 'jobTitle', 'keywords', 'knows', 'labelDetails', 'landlord', 'language', 'lastReviewed', 'latitude', 'learningResourceType', 'legalName', 'legalStatus', 'lender', 'lesser', 'lesserOrEqual', 'license', 'line', 'lodgingUnitDescription', 'lodgingUnitType', 'logo', 'longitude', 'loser', 'lowPrice', 'lyricist', 'mainContentOfPage', 'makesOffer', 'manufacturer', 'map', 'mapType', 'maps', 'material', 'maxPrice', 'maxValue', 'maximumIntake', 'mealService', 'mechanismOfAction', 'medicalSpecialty', 'medicineSystem', 'members', 'membershipNumber', 'memoryRequirements', 'mentions', 'menu', 'merchant', 'minPrice', 'minValue', 'minimumPaymentDue', 'model', 'modifiedTime', 'mpn', 'multipleValues', 'musicArrangement', 'musicBy', 'musicCompositionForm', 'musicGroupMember', 'musicReleaseFormat', 'musicalKey', 'naics', 'name', 'namedPosition', 'nationality', 'naturalProgression', 'nerve', 'nerveMotor', 'netWorth', 'nextItem', 'nonEqual', 'nonProprietaryName', 'normalRange', 'numAdults', 'numChildren', 'numTracks', 'numberOfEmployees', 'numberOfEpisodes', 'numberOfItems', 'numberOfPages', 'numberOfPlayers', 'numberOfSeasons', 'numberedPosition', 'nutrition', 'occupationalCategory', 'offerCount', 'offers', 'openingHours', 'openingHoursSpecification', 'opens', 'operatingSystem', 'opponent', 'option', 'orderDate', 'orderNumber', 'orderStatus', 'orderedItem', 'organizer', 'origin', 'originAddress', 'originatesFrom', 'outcome', 'overdosage', 'overview', 'ownedFrom', 'ownedThrough', 'owns', 'pageEnd', 'pageStart', 'pagination', 'parentItem', 'parentService', 'parents', 'partOfEpisode', 'partOfInvoice', 'partOfOrder', 'partOfSeason', 'partOfSystem', 'partOfTVSeries', 'partySize', 'pathophysiology', 'paymentAccepted', 'paymentDue', 'paymentMethod', 'paymentMethodId', 'paymentStatus', 'paymentUrl', 'performerIn', 'performers', 'permissions', 'permitAudience', 'phase', 'photos', 'physiologicalBenefits', 'pickupLocation', 'pickupTime', 'playMode', 'playerType', 'playersOnline', 'polygon', 'population', 'possibleComplication', 'possibleTreatment', 'postOfficeBoxNumber', 'postOp', 'postalCode', 'potentialAction', 'preOp', 'predecessorOf', 'pregnancyCategory', 'pregnancyWarning', 'prepTime', 'preparation', 'prescribingInfo', 'prescriptionStatus', 'previousItem', 'previousStartDate', 'price', 'priceCurrency', 'priceRange', 'priceSpecification', 'priceType', 'priceValidUntil', 'primaryImageOfPage', 'primaryPrevention', 'printColumn', 'printEdition', 'printPage', 'printSection', 'procedure', 'procedureType', 'processingTime', 'processorRequirements', 'producer', 'produces', 'productID', 'productSupported', 'productionCompany', 'proficiencyLevel', 'programMembershipUsed', 'programName', 'programmingLanguage', 'programmingModel', 'proprietaryName', 'proteinContent', 'providesService', 'publication', 'publicationType', 'publishedOn', 'publisher', 'publishingPrinciples', 'purpose', 'qualifications', 'query', 'quest', 'question', 'rangeIncludes', 'ratingCount', 'ratingValue', 'readonlyValue', 'realEstateAgent', 'recipe', 'recipeCategory', 'recipeCuisine', 'recipeInstructions', 'recipeYield', 'recipient', 'recognizingAuthority', 'recommendationStrength', 'recommendedIntake', 'recordLabel', 'referencesOrder', 'regionDrained', 'regionsAllowed', 'relatedAnatomy', 'relatedCondition', 'relatedDrug', 'relatedLink', 'relatedStructure', 'relatedTherapy', 'relatedTo', 'releaseDate', 'releaseNotes', 'releasedEvent', 'relevantSpecialty', 'repetitions', 'replacee', 'replacer', 'replyToUrl', 'representativeOfPage', 'requiredGender', 'requiredMaxAge', 'requiredMinAge', 'requirements', 'requiresSubscription', 'reservationFor', 'reservationId', 'reservationStatus', 'reservedTicket', 'responsibilities', 'restPeriods', 'resultReview', 'reviewBody', 'reviewCount', 'reviewRating', 'reviewedBy', 'reviews', 'riskFactor', 'risks', 'rsvpResponse', 'runsTo', 'runtime', 'safetyConsideration', 'salaryCurrency', 'sameAs', 'sampleType', 'saturatedFatContent', 'scheduledPaymentDate', 'scheduledTime', 'screenshot', 'seasonNumber', 'seasons', 'seatNumber', 'seatRow', 'seatSection', 'seatingType', 'secondaryPrevention', 'seeks', 'sender', 'sensoryUnit', 'serialNumber', 'seriousAdverseOutcome', 'serverStatus', 'servesCuisine', 'serviceArea', 'serviceAudience', 'serviceLocation', 'serviceOperator', 'servicePhone', 'servicePostalAddress', 'serviceSmsNumber', 'serviceType', 'serviceUrl', 'servingSize', 'siblings', 'signDetected', 'signOrSymptom', 'significance', 'significantLinks', 'skills', 'sku', 'sodiumContent', 'softwareAddOn', 'softwareHelp', 'softwareVersion', 'source', 'sourceOrganization', 'sourcedFrom', 'spatial', 'specialCommitments', 'specialty', 'sponsor', 'sport', 'sportsActivityLocation', 'sportsEvent', 'sportsTeam', 'spouse', 'stage', 'stageAsNumber', 'startDate', 'startTime', 'status', 'stepValue', 'storageRequirements', 'streetAddress', 'strengthUnit', 'strengthValue', 'structuralClass', 'study', 'studyDesign', 'studyLocation', 'studySubject', 'subEvents', 'subOrganization', 'subReservation', 'subStageSuffix', 'subStructure', 'subTest', 'subtype', 'successorOf', 'sugarContent', 'suggestedGender', 'suggestedMaxAge', 'suggestedMinAge', 'superEvent', 'supersededBy', 'supplyTo', 'surface', 'target', 'targetDescription', 'targetName', 'targetPlatform', 'targetPopulation', 'targetProduct', 'targetUrl', 'taxID', 'telephone', 'temporal', 'text', 'thumbnail', 'thumbnailUrl', 'tickerSymbol', 'ticketNumber', 'ticketToken', 'ticketedSeat', 'timeRequired', 'tissueSample', 'title', 'toLocation', 'totalPaymentDue', 'totalPrice', 'totalTime', 'trackingNumber', 'trackingUrl', 'tracks', 'trailer', 'trainName', 'trainNumber', 'transFatContent', 'transcript', 'translator', 'transmissionMethod', 'trialDesign', 'tributary', 'typeOfGood', 'typicalAgeRange', 'typicalTest', 'underName', 'unitCode', 'unsaturatedFatContent', 'uploadDate', 'upvoteCount', 'url', 'urlTemplate', 'usedToDiagnose', 'usesDevice', 'validFor', 'validFrom', 'validIn', 'validThrough', 'validUntil', 'value', 'valueAddedTaxIncluded', 'valueMaxLength', 'valueMinLength', 'valueName', 'valuePattern', 'valueReference', 'valueRequired', 'vatID', 'vendor', 'version', 'video', 'videoFrameSize', 'videoQuality', 'volumeNumber', 'warning', 'warranty', 'warrantyPromise', 'warrantyScope', 'webCheckinTime', 'weight', 'width', 'winner', 'wordCount', 'workHours', 'workLocation', 'workPerformed', 'workload', 'worksFor', 'worstRating', 'yearlyRevenue', 'yearsInOperation', 'actor', 'album', 'albumRelease', 'alumni', 'alumniOf', 'attendee', 'award', 'blogPost', 'broker', 'colleague', 'contactPoint', 'director', 'employee', 'encoding', 'episode', 'event', 'exampleOfWork', 'founder', 'game', 'gameServer', 'memberOf', 'muscleAction', 'parent', 'partOfSeries', 'performer', 'photo', 'provider', 'recordedAs', 'recordedAt', 'recordedIn', 'recordingOf', 'releaseOf', 'result', 'review', 'roleName', 'season', 'sibling', 'significantLink', 'subEvent', 'suggestedAnswer', 'track', 'workExample', 'competitor', 'hasMap', 'image', 'seller', 'hasPart', 'member', 'position', 'instrument', 'isPartOf', 'object', 'location', 'participant']);
-  })($__require('11'));
-  return module.exports;
-});
-$__System.registerDynamic("12", ["10"], true, function ($__require, exports, module) {
-  var define,
-      global = this || self,
-      GLOBAL = global;
-  module.exports = $__require("10");
-  return module.exports;
-});
-$__System.registerDynamic('13', [], true, function ($__require, exports, module) {
+$__System.registerDynamic('10', [], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -208,18 +189,18 @@ $__System.registerDynamic('13', [], true, function ($__require, exports, module)
   module.exports = function (exports, ns, prefix, terms) {
     define(exports, 'ns', ns);
     define(exports, 'prefix', prefix);
-    for (let term of terms) define(exports, term, ns + term);
+    for (var term in terms) define(exports, term, ns + term);
   };
   return module.exports;
 });
-$__System.registerDynamic("d", ["13"], true, function ($__require, exports, module) {
+$__System.registerDynamic("d", ["10"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("13");
+  module.exports = $__require("10");
   return module.exports;
 });
-$__System.registerDynamic('14', ['d'], true, function ($__require, exports, module) {
+$__System.registerDynamic('11', ['d'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -229,14 +210,14 @@ $__System.registerDynamic('14', ['d'], true, function ($__require, exports, modu
   $__require('d')(exports, 'http://www.w3.org/2000/01/rdf-schema#', 'rdfs', ['subClassOf', 'subPropertyOf']);
   return module.exports;
 });
-$__System.registerDynamic("15", ["14"], true, function ($__require, exports, module) {
+$__System.registerDynamic("12", ["11"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("14");
+  module.exports = $__require("11");
   return module.exports;
 });
-$__System.registerDynamic("16", ["6", "f", "12", "15", "5", "17", "18"], true, function ($__require, exports, module) {
+$__System.registerDynamic("13", ["6", "f", "12", "5", "14", "15"], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -261,11 +242,10 @@ $__System.registerDynamic("16", ["6", "f", "12", "15", "5", "17", "18"], true, f
     };
     var _ = $__require("6");
     var owl = $__require("f");
-    var schema = $__require("12");
-    var rdfs = $__require("15");
+    var rdfs = $__require("12");
     var Constants_1 = $__require("5");
-    var Resources_1 = $__require("17");
-    var nonenumerable_1 = $__require("18");
+    var Resources_1 = $__require("14");
+    var nonenumerable_1 = $__require("15");
     var heraclesWeakMap = new WeakMap();
     var ApiDocumentation = function (_super) {
         __extends(ApiDocumentation, _super);
@@ -330,14 +310,14 @@ $__System.registerDynamic("16", ["6", "f", "12", "15", "5", "17", "18"], true, f
         }
         Object.defineProperty(DocumentedResource.prototype, "description", {
             get: function () {
-                return this[Constants_1.Core.Vocab.description] || this[rdfs.ns + 'comment'] || this[schema.description];
+                return this[Constants_1.Core.Vocab.description] || this[rdfs.ns + 'comment'] || this[Constants_1.Schema.description];
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(DocumentedResource.prototype, "title", {
             get: function () {
-                return this[Constants_1.Core.Vocab.title] || this[rdfs.ns + 'label'] || this[schema.title];
+                return this[Constants_1.Core.Vocab.title] || this[rdfs.ns + 'label'] || this[Constants_1.Schema.title];
             },
             enumerable: true,
             configurable: true
@@ -528,7 +508,7 @@ $__System.registerDynamic("16", ["6", "f", "12", "15", "5", "17", "18"], true, f
 
     return module.exports;
 });
-$__System.registerDynamic('19', [], true, function ($__require, exports, module) {
+$__System.registerDynamic('16', [], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -553,7 +533,7 @@ $__System.registerDynamic('19', [], true, function ($__require, exports, module)
 
     return module.exports;
 });
-$__System.registerDynamic('1a', ['6', 'b', '17', '16', '5', '19'], true, function ($__require, exports, module) {
+$__System.registerDynamic('17', ['6', 'b', '14', '13', '5', '16'], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -561,10 +541,10 @@ $__System.registerDynamic('1a', ['6', 'b', '17', '16', '5', '19'], true, functio
         GLOBAL = global;
     var _ = $__require('6');
     var rdf = $__require('b');
-    var Types = $__require('17');
-    var DocTypes = $__require('16');
+    var Types = $__require('14');
+    var DocTypes = $__require('13');
     var Constants_1 = $__require('5');
-    var JsonLdUtil_1 = $__require('19');
+    var JsonLdUtil_1 = $__require('16');
     var ResourceFactory = function () {
         function ResourceFactory() {
             this.factories = {};
@@ -658,7 +638,7 @@ $__System.registerDynamic('1a', ['6', 'b', '17', '16', '5', '19'], true, functio
 
     return module.exports;
 });
-$__System.registerDynamic('2', ['1b'], true, function ($__require, exports, module) {
+$__System.registerDynamic('2', ['18'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -667,7 +647,7 @@ $__System.registerDynamic('2', ['1b'], true, function ($__require, exports, modu
       GLOBAL = global;
   Object.defineProperty(exports, '__esModule', { value: true });
   exports['default'] = lazyInitialize;
-  var _privateUtils = $__require('1b');
+  var _privateUtils = $__require('18');
   function handleDescriptor(target, key, descriptor) {
     var configurable = descriptor.configurable;
     var enumerable = descriptor.enumerable;
@@ -701,7 +681,7 @@ $__System.registerDynamic('2', ['1b'], true, function ($__require, exports, modu
   module.exports = exports['default'];
   return module.exports;
 });
-$__System.registerDynamic('1b', ['2'], true, function ($__require, exports, module) {
+$__System.registerDynamic('18', ['2'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -862,7 +842,7 @@ $__System.registerDynamic('1b', ['2'], true, function ($__require, exports, modu
   }
   return module.exports;
 });
-$__System.registerDynamic('18', ['1b'], true, function ($__require, exports, module) {
+$__System.registerDynamic('15', ['18'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -871,7 +851,7 @@ $__System.registerDynamic('18', ['1b'], true, function ($__require, exports, mod
       GLOBAL = global;
   Object.defineProperty(exports, '__esModule', { value: true });
   exports['default'] = nonenumerable;
-  var _privateUtils = $__require('1b');
+  var _privateUtils = $__require('18');
   function handleDescriptor(target, key, descriptor) {
     descriptor.enumerable = false;
     return descriptor;
@@ -994,11 +974,17 @@ $__System.registerDynamic("5", [], true, function ($__require, exports, module) 
         Headers.Link = 'Link';
         Headers.ContentType = 'Content-Type';
     })(Headers = exports.Headers || (exports.Headers = {}));
+    var SchemaNs = 'http://schema.org/';
+    var Schema;
+    (function (Schema) {
+        Schema.description = SchemaNs + 'description';
+        Schema.title = SchemaNs + 'title';
+    })(Schema = exports.Schema || (exports.Schema = {}));
     
 
     return module.exports;
 });
-$__System.registerDynamic("17", ["6", "7", "18", "5"], true, function ($__require, exports, module) {
+$__System.registerDynamic("14", ["6", "7", "15", "5"], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -1023,7 +1009,7 @@ $__System.registerDynamic("17", ["6", "7", "18", "5"], true, function ($__requir
     };
     var _ = $__require("6");
     var jsonld_1 = $__require("7");
-    var nonenumerable = $__require("18");
+    var nonenumerable = $__require("15");
     var Constants_1 = $__require("5");
     var _isProcessed = new WeakMap();
     var _apiDocumentation = new WeakMap();
@@ -1275,7 +1261,7 @@ $__System.registerDynamic("17", ["6", "7", "18", "5"], true, function ($__requir
 
     return module.exports;
 });
-$__System.registerDynamic('1', ['6', '3', '5', '19', '1a', '17'], true, function ($__require, exports, module) {
+$__System.registerDynamic('1', ['6', '3', '5', '16', '17', '14'], true, function ($__require, exports, module) {
     /// <reference path="../typings/index.d.ts" />
     'use strict';
 
@@ -1285,9 +1271,9 @@ $__System.registerDynamic('1', ['6', '3', '5', '19', '1a', '17'], true, function
     var _ = $__require('6');
     var FetchUtil_1 = $__require('3');
     var Constants_1 = $__require('5');
-    var JsonLdUtil_1 = $__require('19');
-    var ResourceFactory_1 = $__require('1a');
-    var Resources_1 = $__require('17');
+    var JsonLdUtil_1 = $__require('16');
+    var ResourceFactory_1 = $__require('17');
+    var Resources_1 = $__require('14');
     var Heracles = function () {
         function Heracles() {
             this.resourceFactory = new ResourceFactory_1.ResourceFactory();
@@ -1379,5 +1365,5 @@ $__System.registerDynamic('1', ['6', '3', '5', '19', '1a', '17'], true, function
 });
 })
 (function(factory) {
-  module.exports = factory(require("li"), require("lodash"), require("jsonld"), require("rdf-ext"), require("rdf-formats-common"), require("rdf-serializer-jsonld"), require("github:jspm/nodelibs-process@0.1.2.js"));
+  module.exports = factory(require("li"), require("lodash"), require("jsonld"), require("rdf-ext"), require("rdf-formats-common"), require("rdf-serializer-jsonld"));
 });

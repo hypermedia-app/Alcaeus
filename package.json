@@ -56,9 +56,6 @@
       "minify": false
     }
   },
-  "peerDependencies": {
-    "core-js": "^2.4.1"
-  },
   "dependencies": {
     "core-decorators": "^0.13.0",
     "jsonld": "^0.4.6",

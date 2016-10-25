@@ -10,7 +10,7 @@
     "sinon": "registry:npm/sinon#1.16.0+20160723033700"
   },
   "dependencies": {
-    "jsonld": "registry:npm/jsonld#0.4.0+20161011204827",
+    "jsonld": "registry:npm/jsonld#0.4.0+20161023213320",
     "lodash": "registry:npm/lodash#4.0.0+20160305082308"
   }
 }

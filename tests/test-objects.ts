@@ -1,4 +1,4 @@
-import {rdf, xsd} from 'linkeddata-vocabs';
+import {rdf, xsd, owl} from '../src/Vocabs';
 import {Core} from '../src/Constants';
 import {promises as jsonld} from 'jsonld';
 import {JsonLd} from '../src/Constants';
@@ -203,14 +203,14 @@ export namespace Documentations {
                         'required': false,
                         'property': {
                             '@id': 'http://purl.org/dc/elements/1.1/partOf',
-                            '@type': rdf.ns + 'Property',
+                            '@type': rdf.Property,
                             'range': xsd.string,
                             'supportedOperation': [
                                 {
                                     'description': 'Update this property',
                                     'expects': xsd.string,
                                     'method': 'POST',
-                                    'returns': 'owl:Nothing'
+                                    'returns': owl.Nothing
                                 }
                             ]
                         }
@@ -223,7 +223,7 @@ export namespace Documentations {
                         'required': true,
                         'property': {
                             '@id': 'http://schema.org/name',
-                            '@type': rdf.ns + 'Property',
+                            '@type': rdf.Property,
                             'range': xsd.string
                         }
                     }

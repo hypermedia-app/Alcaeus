@@ -5,34 +5,46 @@ module.exports = function (config) {
     }
 
     var customLaunchers = {
-        sl_chrome: {
+        sl_chrome_42: {
             base: 'SauceLabs',
             browserName: 'chrome',
-            platform: 'Windows 7'
+            platform: 'Windows 7',
+            version: '42'
         },
-        sl_firefox: {
+        sl_firefox_39: {
             base: 'SauceLabs',
-            browserName: 'firefox'
+            browserName: 'firefox',
+            version: '39.0'
         },
-        sl_safari: {
+        sl_safari_9: {
             base: 'SauceLabs',
             browserName: 'safari',
-            platform: 'OS X 10.11'
+            platform: 'OS X 10.11',
+            version: '9.0'
         },
-        sl_iphone: {
+        sl_safari_8: {
             base: 'SauceLabs',
-            browserName: 'iphone',
-            platform: 'OS X 10.9'
+            browserName: 'safari',
+            platform: 'OS X 10.10',
+            version: '8.0'
         },
-        sl_ie: {
+        sl_ie_11: {
             base: 'SauceLabs',
             browserName: 'internet explorer',
-            platform: 'Windows 8.1'
+            platform: 'Windows 8.1',
+            version: '11'
         },
-        sl_edge: {
+        sl_edge_13: {
             base: 'SauceLabs',
             browserName: 'MicrosoftEdge',
-            platform: 'Windows 10'
+            platform: 'Windows 10',
+            version: '13.10586'
+        },
+        sl_edge_14: {
+            base: 'SauceLabs',
+            browserName: 'MicrosoftEdge',
+            platform: 'Windows 10',
+            version: '14.14393'
         }
     };
 
@@ -101,7 +113,7 @@ module.exports = function (config) {
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: process.env.TRAVIS ? true : false,
 
-        concurrency: 2,
+        concurrency: 3,
 
         systemjs: {
             configFile: 'config.js',

@@ -10,10 +10,10 @@ Heracles is a Promise-based library for consuming Hydra APIs
 
 You will need polyfills for older browsers:
 
-|                     | Chrome | Firefox | IExplore | Safari | Opera |
-| -------------       |--------|---------|----------|--------|-------|
-| [window.fetch][p1]  | <42    | <39     | :x:      | :x:    | <29   |
-| [WeakMap][p3]       | <36    | <6      | <11      | <7.1   | <23   |
+|                     | Chrome | Firefox | IExplore | Edge | Safari | Opera |
+| -------------       |--------|---------|----------|------|--------|-------|
+| [window.fetch][p1]  | <42    | <39     | <=11     | <14  | <=10   | <29   |
+| [WeakMap][p3]       | <36    | <6      | <11      |      | <7.1   | <23   |
 
 ## Installation
 

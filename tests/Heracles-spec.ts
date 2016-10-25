@@ -1,4 +1,5 @@
 'use strict';
+
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
@@ -9,6 +10,7 @@ import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations, Responses} from './test-objects';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {IPartialCollectionView} from "../src/interfaces";
+import * as Object from 'core-js/es6/object';
 
 describe('Hydra', () => {
 

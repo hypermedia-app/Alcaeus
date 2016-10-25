@@ -5,8 +5,8 @@ import * as sinon from 'sinon';
 import {Core} from '../src/Constants';
 import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
+import {rdf} from '../src/Vocabs';
 import 'whatwg-fetch';
-import * as rdf from 'vocabs-rdf';
 
 describe('FetchUtil', () => {
 
@@ -110,7 +110,7 @@ describe('FetchUtil', () => {
                 [Core.Vocab.operation, Core.Vocab.Operation],
                 [Core.Vocab.supportedProperty, Core.Vocab.SupportedProperty],
                 [Core.Vocab.statusCodes, Core.Vocab.StatusCodeDescription],
-                [Core.Vocab.property, rdf.ns + 'Property'],
+                [Core.Vocab.property, rdf.Property],
                 [Core.Vocab.mapping, Core.Vocab.IriTemplateMapping],
             ];
 

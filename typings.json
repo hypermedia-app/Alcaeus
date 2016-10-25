@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
+    "core-decorators": "github:retyped/core-decorators-tsd-ambient/core-decorators.d.ts",
     "core-js": "registry:dt/core-js#0.0.0+20160317120654",
     "es6-map-polyfill": "github:nozzlegear/es6-map-polyfill.d.ts",
     "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",

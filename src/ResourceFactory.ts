@@ -1,13 +1,12 @@
 'use strict';
 
 import * as _ from 'lodash';
-import * as rdf from 'vocabs-rdf';
+import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
-import {IIncomingLink} from "./internals";
 
 export class ResourceFactory implements IResourceFactory {
 
@@ -79,7 +78,7 @@ function setUpDefaultFactories() {
     this.factories[Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Core.Vocab.Operation] = createOperation;
     this.factories[Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
-    this.factories[rdf.ns + 'Property'] = createRdfProperty;
+    this.factories[rdf.Property] = createRdfProperty;
 }
 
 function createRdfProperty(heracles, obj) {

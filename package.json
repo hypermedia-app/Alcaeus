@@ -43,19 +43,18 @@
       "lodash": "^4.9.0",
       "rdf-ext": "^0.3.0",
       "rdf-formats-common": "^0.3.0",
-      "rdf-serializer-jsonld": "^0.3.0",
-      "vocabs-owl": "^0.11.1",
-      "vocabs-rdf": "^0.11.1",
-      "vocabs-rdfs": "^0.11.1",
-      "vocabs-schema": "^0.11.1"
+      "rdf-serializer-jsonld": "^0.3.0"
     },
     "devDependencies": {
       "core-decorators": "^0.12.2",
-      "core-js": "^2.2.2",
-      "linkeddata-vocabs": "^1.0.0",
+      "core-js": "^2.4.1",
       "sinon": "^1.17.3",
       "typescript": "^1.8.9",
-      "whatwg-fetch": "^0.11.0"
+      "whatwg-fetch": "^1.0.0"
+    },
+    "buildConfig": {
+      "transpileES6": true,
+      "minify": false
     }
   },
   "dependencies": {
@@ -64,11 +63,7 @@
     "lodash": "^4.9.0",
     "rdf-ext": "^0.3.0",
     "rdf-formats-common": "^0.3.0",
-    "rdf-serializer-jsonld": "^0.3.0",
-    "vocabs-owl": "^0.11.1",
-    "vocabs-rdf": "^0.11.1",
-    "vocabs-rdfs": "^0.11.1",
-    "vocabs-schema": "^0.11.1"
+    "rdf-serializer-jsonld": "^0.3.0"
   },
   "devDependencies": {
     "jasmine-core": "^2.4.1",
@@ -81,7 +76,8 @@
     "karma-systemjs": "^0.14.0",
     "sinon": "^1.17.3",
     "systemjs": "^0.19.31",
-    "typescript": "^1.6.2",
-    "whatwg-fetch": "^0.11.0"
+    "typings": "^1.4.0",
+    "typescript": "^1.8.9",
+    "whatwg-fetch": "^1.0.0"
   }
 }

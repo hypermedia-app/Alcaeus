@@ -1,8 +1,7 @@
 import {promises as jsonld} from 'jsonld';
 import {RdfProperty} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';
-//noinspection TypeScriptCheckImport
-import {rdf, rdfs, xsd} from 'linkeddata-vocabs';
+import {xsd, rdf, rdfs, owl} from '../src/Vocabs';
 
 describe('RdfProperty', () => {
 
@@ -14,7 +13,7 @@ describe('RdfProperty', () => {
             }
         ],
         '@id': 'http://purl.org/dc/elements/1.1/partOf',
-        '@type': rdf.ns + 'Property',
+        '@type': rdf.Property,
         'rdfs:range': xsd.string,
         'rdfs:domain': xsd.integer,
         'supportedOperation': [
@@ -22,7 +21,7 @@ describe('RdfProperty', () => {
                 'description': 'Update this property',
                 'expects': xsd.string,
                 'method': 'POST',
-                'returns': 'owl:Nothing'
+                'returns': owl.Nothing
             }
         ]
     };

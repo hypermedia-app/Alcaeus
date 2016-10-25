@@ -34,10 +34,8 @@ with other tools like Browserify, server-side NodeJS, etc.
 
 ## Usage
 
-Assuming JSPM installation
-
 ``` js
-import {Hydra} from 'wikibus/heracles';
+import {Hydra} from 'heracles';
 
 Hydra.loadResource('http://example.com/resource')
   .then(res => {

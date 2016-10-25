@@ -1,7 +1,8 @@
 /// <reference path="../typings/index.d.ts" />
 
 'use strict';
-import * as _ from 'lodash';
+
+import 'core-js/modules/core.object.is-object';
 import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
@@ -64,7 +65,7 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
 }
 
 function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
-    if (_.isObject(obj) === false) {
+    if (Object.isObject(obj) === false) {
         return obj;
     }
 

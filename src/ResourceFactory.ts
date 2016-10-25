@@ -1,6 +1,7 @@
 'use strict';
 
-import * as _ from 'lodash';
+import * as transform from 'lodash/transform';
+import * as forOwn from 'lodash/forOwn';
 import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
@@ -60,8 +61,8 @@ class IncomingLink {
 }
 
 function findIncomingLinks(object, resources) {
-    return _.transform(resources, (acc, res, key) => {
-        _.forOwn(res, (value, predicate) => {
+    return transform(resources, (acc, res, key) => {
+        forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
                 acc.push(new IncomingLink(
                     key, predicate, resources

@@ -47,6 +47,7 @@
     },
     "devDependencies": {
       "core-decorators": "^0.12.2",
+      "core-js": "^2.4.1",
       "sinon": "^1.17.3",
       "typescript": "^1.8.9",
       "whatwg-fetch": "^1.0.0"
@@ -57,10 +58,8 @@
     }
   },
   "dependencies": {
-    "core-decorators": "^0.13.0",
     "jsonld": "^0.4.6",
     "li": "^1.0.1",
-    "linkeddata-vocabs": "^1.0.0",
     "lodash": "^4.9.0",
     "rdf-ext": "^0.3.0",
     "rdf-formats-common": "^0.3.0",

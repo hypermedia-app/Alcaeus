@@ -83,9 +83,3 @@ export interface IStatusCodeDescription {
 }
 
 export default IHeracles;
-
-export * from './heracles';
-export * from './ApiDocumentation';
-export * from './Constants';
-export * from './FetchUtil';
-export * from './JsonLdUtil';

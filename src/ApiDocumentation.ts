@@ -168,7 +168,7 @@ export class Class extends DocumentedResource implements IClass {
         }
         
         if(Array.isArray(operations)) {
-            return this[Core.Vocab.supportedOperation];
+            return operations;
         }
 
         return [ operations ];

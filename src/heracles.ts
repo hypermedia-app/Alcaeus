@@ -9,6 +9,7 @@ import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {HydraResource as ResourceCtor} from "./Resources";
 import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
+import {forOwn} from "./LodashUtil";
 
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
@@ -46,19 +47,24 @@ function processFetchUtilResponse(uri) {
 
 function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = {}) {
     return apiDocumentation => {
-        var resourcified = _.keyBy(resources, res => JsonLdUtil.trimTrailingSlash(res[JsonLd.Id]));
+        var resourcified = {};
+        resources.forEach(res => {
+            resourcified[JsonLdUtil.trimTrailingSlash(res[JsonLd.Id])] = res;
+        });
+
         uri = JsonLdUtil.trimTrailingSlash(uri);
 
-        _.transform(resources, (acc, val) => {
+        resources.reduceRight((acc, val) => {
             var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
             acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
+            return acc;
         }, resourcified);
 
         if (!resourcified[uri]) {
             return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
         }
 
-        _.each(resourcified, g => resourcify(heracles, g, resourcified, apiDocumentation, typeOverrides));
+        forOwn(resourcified, resource => resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides));
 
         return resourcified[uri];
     };
@@ -91,9 +97,9 @@ function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
     }
 
     resource._processed = true;
-    _.forOwn(resource, (value, key) => {
-        if (_.isArray(value)) {
-            resource[key] = _.map(value, el => resourcify(heracles, el, resourcified, apiDoc, typeOverrides));
+    forOwn(resource, (value, key) => {
+        if (Array.isArray(value)) {
+            resource[key] = value.map(el => resourcify(heracles, el, resourcified, apiDoc, typeOverrides));
             return;
         }
 

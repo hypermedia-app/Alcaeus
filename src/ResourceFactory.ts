@@ -1,13 +1,13 @@
 'use strict';
 
-import * as transform from 'lodash/transform';
-import * as forOwn from 'lodash/forOwn';
+import * as transform from 'lodash.transform';
 import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
+import {forOwn} from "./LodashUtil";
 
 export class ResourceFactory implements IResourceFactory {
 
@@ -61,7 +61,7 @@ class IncomingLink {
 }
 
 function findIncomingLinks(object, resources) {
-    return transform(resources, (acc, res, key) => {
+    return transform((acc, res, key) => {
         forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
                 acc.push(new IncomingLink(

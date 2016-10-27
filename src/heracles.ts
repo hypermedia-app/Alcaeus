@@ -2,7 +2,6 @@
 
 'use strict';
 
-import 'core-js/modules/core.object.is-object';
 import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";

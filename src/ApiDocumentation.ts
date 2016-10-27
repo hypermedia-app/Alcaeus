@@ -1,6 +1,5 @@
 'use strict';
 
-import 'core-js/es6/array';
 import {Core, JsonLd} from './Constants';
 import {Schema, rdfs, owl} from './Vocabs';
 import {Resource} from './Resources';

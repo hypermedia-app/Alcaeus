@@ -1,7 +1,5 @@
 'use strict';
 
-import 'core-js/modules/es6.array.find';
-import 'core-js/modules/es6.object.assign';
 import {promises as jsonld} from 'jsonld';
 import * as nonenumerable from 'core-decorators/lib/nonenumerable';
 import {JsonLd, Core, MediaTypes} from './Constants';

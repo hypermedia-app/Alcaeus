@@ -3,7 +3,7 @@
 import * as Hydra from '../src/Resources';
 import {Core} from '../src/Constants';
 import {Bodies} from './test-objects';
-import * as Object from 'core-js/es6/object';
+import 'core-js/es6/object';
 
 describe('PartialCollectionView', () => {
 

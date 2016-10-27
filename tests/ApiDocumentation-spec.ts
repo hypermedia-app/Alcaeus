@@ -4,6 +4,7 @@ import {promises as jsonld} from 'jsonld';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
 import {fakeHeraclesResources} from "./test-utils";
+import 'core-js/es6/array';
 
 describe('ApiDocumentation', () => {
 

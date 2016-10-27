@@ -1,4 +1,4 @@
-# heracles [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
+# heracles [![Build Status](https://travis-ci.org/wikibus/heracles.svg?branch=master)](https://travis-ci.org/wikibus/heracles) [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 

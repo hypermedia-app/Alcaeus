@@ -70,7 +70,7 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
 }
 
 function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
-    if (Object.isObject(obj) === false) {
+    if ((typeof obj === 'object') === false) {
         return obj;
     }
 

@@ -61,7 +61,7 @@ class IncomingLink {
 }
 
 function findIncomingLinks(object, resources) {
-    return transform((acc, res, key) => {
+    return transform(resources, (acc, res, key) => {
         forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
                 acc.push(new IncomingLink(

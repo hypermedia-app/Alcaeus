@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {JsonLd, Core} from "../src/Constants";
 
 export function fakeHeraclesResources(obj: Object) {
-    if(!obj || !Object.isObject(obj)) {
+    if(!obj || typeof obj !== 'object') {
         return;
     }
 

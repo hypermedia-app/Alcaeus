@@ -6,7 +6,7 @@ import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
-import {forOwn} from "./LodashUtil";
+import {forOwn, values} from "./LodashUtil";
 
 export class ResourceFactory implements IResourceFactory {
 
@@ -60,7 +60,7 @@ class IncomingLink {
 }
 
 function findIncomingLinks(object, resources:Object) {
-    var instances = Object.values(resources);
+    var instances = values(resources);
 
     return instances.reduceRight((acc:Array<IncomingLink>, res, key) => {
         forOwn(res, (value, predicate) => {

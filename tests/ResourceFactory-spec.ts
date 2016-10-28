@@ -32,7 +32,7 @@ describe('ResourceFactory', () => {
                         '@type': typeId
                     };
 
-                    var resource = factory.createResource(null, jsonLd, apiDoc, []);
+                    var resource = factory.createResource(null, jsonLd, apiDoc, {});
 
                     expect(isOfCorrectType(resource)).toBe(true);
                 });
@@ -44,7 +44,7 @@ describe('ResourceFactory', () => {
                 '@type': [ Core.Vocab.SupportedProperty, Core.Vocab.Class ]
             };
 
-            var resource = factory.createResource(null, jsonLd, apiDoc, []);
+            var resource = factory.createResource(null, jsonLd, apiDoc, {});
 
             expect(resource instanceof documentationTypes.SupportedProperty).toBe(true);
         });

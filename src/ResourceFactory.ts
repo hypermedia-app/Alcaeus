@@ -1,6 +1,5 @@
 'use strict';
 
-import * as transform from 'lodash.transform';
 import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
@@ -17,7 +16,7 @@ export class ResourceFactory implements IResourceFactory {
         setUpDefaultFactories.call(this);
     }
 
-    public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
+    public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources:Object, typeOverride?:string):Types.Resource {
         var incomingLinks = findIncomingLinks(obj, resources);
 
         var factory = this.factories[typeOverride || obj[JsonLd.Type]];
@@ -60,8 +59,10 @@ class IncomingLink {
     }
 }
 
-function findIncomingLinks(object, resources) {
-    return transform(resources, (acc, res, key) => {
+function findIncomingLinks(object, resources:Object) {
+    var instances = Object.values(resources);
+
+    return instances.reduceRight((acc:Array<IncomingLink>, res, key) => {
         forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
                 acc.push(new IncomingLink(
@@ -69,6 +70,8 @@ function findIncomingLinks(object, resources) {
                 ));
             }
         });
+
+        return acc;
     }, []);
 }
 

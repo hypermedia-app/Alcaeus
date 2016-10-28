@@ -53,7 +53,7 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
 
         uri = JsonLdUtil.trimTrailingSlash(uri);
 
-        resources.reduceRight((acc, val) => {
+        resources.reduceRight((acc:Object, val) => {
             var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
             acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
             return acc;
@@ -69,7 +69,7 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
     };
 }
 
-function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
+function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDocumentation, typeOverrides) {
     if ((typeof obj === 'object') === false) {
         return obj;
     }

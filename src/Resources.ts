@@ -1,5 +1,5 @@
 'use strict';
-import * as _ from 'lodash';
+
 import {promises as jsonld} from 'jsonld';
 import * as nonenumerable from 'core-decorators/lib/nonenumerable';
 import {JsonLd, Core, MediaTypes} from './Constants';
@@ -19,7 +19,7 @@ var _resource = new WeakMap();
 export class Resource implements IResource {
 
     constructor(actualResource) {
-        _.extend(this, actualResource);
+        Object.assign(this, actualResource);
 
         _isProcessed.set(this, false);
     }
@@ -80,21 +80,19 @@ export class HydraResource extends Resource implements IHydraResource {
     @nonenumerable
     get operations() {
         var classOperations;
-        if(_.isArray(this[JsonLd.Type])) {
-            classOperations = _.map(this[JsonLd.Type], (type:string) => this.apiDocumentation.getOperations(type));
+        if(Array.isArray(this[JsonLd.Type])) {
+            classOperations = this[JsonLd.Type].map((type:string) => this.apiDocumentation.getOperations(type));
         } else {
             classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
         }
 
-        var propertyOperations = _.chain(this.getIncomingLinks())
-            .map(link => _.map(link.subject.types, type => ({ type: type, predicate: link.predicate })))
-            .flatten()
-            .map((link: any) => this.apiDocumentation.getOperations(link.type, link.predicate))
-            .union()
-            .value();
+        var mappedLinks = this.getIncomingLinks()
+            .map(link => link.subject.types.map(type => ({ type: type, predicate: link.predicate })));
+        var flattened = [].concat.apply([], mappedLinks);
+        var propertyOperations = flattened.map((link: any) => this.apiDocumentation.getOperations(link.type, link.predicate));
 
-        var operations = [...classOperations, ...propertyOperations];
-        return _.flatten(operations).map((supportedOperation:ISupportedOperation) => {
+        var operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
+        return operations.map((supportedOperation:ISupportedOperation) => {
             return new Operation(supportedOperation, this._heracles, this);
         });
     }
@@ -176,7 +174,7 @@ export class PartialCollectionView extends HydraResource implements IPartialColl
 
     @nonenumerable
     get collection():IHydraResource {
-        var collectionLink = _.find(this.getIncomingLinks(), (linkArray:IIncomingLink) => {
+        var collectionLink = this.getIncomingLinks().find((linkArray:IIncomingLink) => {
             return linkArray.predicate === Core.Vocab.view
         });
 

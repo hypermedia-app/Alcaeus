@@ -1,6 +1,5 @@
 'use strict';
 
-import * as _ from 'lodash';
 import {Core, JsonLd} from './Constants';
 import {Schema, rdfs, owl} from './Vocabs';
 import {Resource} from './Resources';
@@ -45,7 +44,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
             return clas.supportedOperations;
         }
 
-        var supportedProperty = _.find(clas.supportedProperties, (prop:ISupportedProperty) => {
+        var supportedProperty = clas.supportedProperties.find((prop:ISupportedProperty) => {
             return prop.property && prop.property.id === predicateUri;
         });
         if(!supportedProperty) {
@@ -64,7 +63,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     getClass(classId):IClass {
-        return _.find(this.classes, [JsonLd.Id, classId]) || null;
+        return this.classes.find(clas => clas[JsonLd.Id] === classId) || null;
     }
 
     getEntrypoint():Promise<IHydraResource> {
@@ -168,7 +167,7 @@ export class Class extends DocumentedResource implements IClass {
         }
         
         if(Array.isArray(operations)) {
-            return this[Core.Vocab.supportedOperation];
+            return operations;
         }
 
         return [ operations ];

@@ -1,12 +1,12 @@
 'use strict';
 
-import * as _ from 'lodash';
 import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from './JsonLdUtil';
 import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
+import {forOwn, values} from "./LodashUtil";
 
 export class ResourceFactory implements IResourceFactory {
 
@@ -16,7 +16,7 @@ export class ResourceFactory implements IResourceFactory {
         setUpDefaultFactories.call(this);
     }
 
-    public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):Types.Resource {
+    public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources:Object, typeOverride?:string):Types.Resource {
         var incomingLinks = findIncomingLinks(obj, resources);
 
         var factory = this.factories[typeOverride || obj[JsonLd.Type]];
@@ -59,15 +59,19 @@ class IncomingLink {
     }
 }
 
-function findIncomingLinks(object, resources) {
-    return _.transform(resources, (acc, res, key) => {
-        _.forOwn(res, (value, predicate) => {
+function findIncomingLinks(object, resources:Object) {
+    var instances = values(resources);
+
+    return instances.reduceRight((acc:Array<IncomingLink>, res, index) => {
+        forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
                 acc.push(new IncomingLink(
-                    key, predicate, resources
+                    instances[index][JsonLd.Id], predicate, resources
                 ));
             }
         });
+
+        return acc;
     }, []);
 }
 

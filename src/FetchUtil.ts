@@ -1,7 +1,6 @@
 'use strict';
 
 import * as li from 'li';
-import * as _ from 'lodash';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlattenOptions} from "jsonld";
@@ -122,9 +121,9 @@ function getFlattendGraph(res:Response):Promise<any> {
 }
 
 function runInference(graph) {
-    _.map(FetchUtil._propertyRangeMappings, mapping => {
+    FetchUtil._propertyRangeMappings.map(mapping => {
         var matches = graph.match(null, mapping[0], null, null);
-        _.forEach(matches.toArray(), triple => {
+        matches.toArray().forEach(triple => {
             graph.add(new $rdf.Triple(
                 triple.object,
                 new $rdf.NamedNode(rdf.type),

@@ -15,6 +15,14 @@ You will need polyfills for older browsers:
 | [window.fetch][p1]  | <42    | <39     | <=11     | <14  | <=10   | <29   |
 | [WeakMap][p3]       | <36    | <6      | <11      |      | <7.1   | <23   |
 
+Heracles also uses some ES6 functions from the `Object` and `Array` prototypes. You may have to load polyfills like those
+of the [core-js](https://github.com/zloirock/core-js) package:
+
+``` js
+import 'core-js/es6/object';
+import 'core-js/es6/array';
+```
+
 ## Installation
 
 Heracles uses JSPM for development and is probably best used with it:

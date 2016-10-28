@@ -18,7 +18,6 @@ System.config({
     "jsonld": "npm:jsonld@0.4.11",
     "li": "npm:li@1.0.1",
     "lodash": "npm:lodash@4.9.0",
-    "lodash.transform": "npm:lodash.transform@4.6.0",
     "rdf-ext": "npm:rdf-ext@0.3.0",
     "rdf-formats-common": "npm:rdf-formats-common@0.3.0",
     "rdf-serializer-jsonld": "npm:rdf-serializer-jsonld@0.3.0",
@@ -255,9 +254,6 @@ System.config({
     },
     "npm:jsonld@0.4.11": {
       "es6-promise": "npm:es6-promise@2.3.0",
-      "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:lodash.transform@4.6.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:lodash@4.9.0": {

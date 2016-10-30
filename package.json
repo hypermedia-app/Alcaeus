@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - rdf-ext - rdf-formats-common - rdf-serializer-jsonld dist/heracles.js --global-name heracles --format cjs --skip-source-maps"
+    "build": "jspm bundle-sfx src/heracles - jsonld - li - rdf-ext - rdf-parser-jsonld - rdf-serializer-jsonld dist/heracles.js --format cjs --skip-source-maps"
   },
   "repository": {
     "type": "git",
@@ -41,7 +41,7 @@
       "jsonld": "^0.4.6",
       "li": "^1.0.1",
       "rdf-ext": "^0.3.0",
-      "rdf-formats-common": "^0.3.0",
+      "rdf-parser-jsonld": "^0.3.0",
       "rdf-serializer-jsonld": "^0.3.0"
     },
     "devDependencies": {
@@ -61,7 +61,7 @@
     "jsonld": "^0.4.6",
     "li": "^1.0.1",
     "rdf-ext": "^0.3.0",
-    "rdf-formats-common": "^0.3.0",
+    "rdf-parser-jsonld": "^0.3.0",
     "rdf-serializer-jsonld": "^0.3.0"
   },
   "devDependencies": {

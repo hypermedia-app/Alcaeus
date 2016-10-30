@@ -5,11 +5,11 @@ import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlattenOptions} from "jsonld";
 import * as $rdf from 'rdf-ext';
-import * as formats from 'rdf-formats-common';
+import * as JsonLdParser from 'rdf-parser-jsonld';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
 import {rdf} from './Vocabs';
 
-formats($rdf);
+$rdf.parsers[Constants.MediaTypes.jsonLd] = JsonLdParser;
 
 export class FetchUtil {
     static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
@@ -114,10 +114,20 @@ function getFlattendGraph(res:Response):Promise<any> {
     }
 
     return res.text()
-        .then(jsonld => $rdf.parsers.parse(mediaType, jsonld, null, res.url))
+        .then(parseResourceRepresentation(mediaType, res))
         .then(runInference)
         .then(graph => JsonLdSerializer.serialize(graph))
         .then(flatten(res.url));
+}
+
+function parseResourceRepresentation(mediaType:string, res:Response) {
+    if($rdf.parsers.findParsers(mediaType) == null) {
+
+    }
+
+    return jsonld => {
+        return $rdf.parsers.parse(mediaType, jsonld, null, res.url);
+    };
 }
 
 function runInference(graph) {

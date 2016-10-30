@@ -2,11 +2,13 @@
 
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
-import {Core} from '../src/Constants';
+import {Core, MediaTypes} from '../src/Constants';
 import {FetchUtil} from '../src/FetchUtil';
 import {Responses, Bodies} from './test-objects';
 import {rdf} from '../src/Vocabs';
 import 'whatwg-fetch';
+import * as n3parser from 'rdf-parser-n3';
+import * as $rdf from 'rdf-ext';
 
 describe('FetchUtil', () => {
 
@@ -60,6 +62,8 @@ describe('FetchUtil', () => {
         });
 
         it('should parse non-json-ld response', (done:any) => {
+            $rdf.parsers[MediaTypes.ntriples] = n3parser;
+
             windowFetch.withArgs('http://example.com/resource')
                 .returns(Promise.resolve(Responses.ntriples(Bodies.ntriples, false)));
 

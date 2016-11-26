@@ -18,7 +18,7 @@ var _resource = new WeakMap<IOperation, IResource>();
 
 export class Resource implements IResource {
 
-    constructor(actualResource) {
+    constructor(actualResource:any) {
         Object.assign(this, actualResource);
 
         _isProcessed.set(this, false);
@@ -98,11 +98,9 @@ export class HydraResource extends Resource implements IHydraResource {
     }
 }
 
-export class Operation extends Resource implements IOperation {
+export class Operation implements IOperation {
 
     constructor(supportedOperation: ISupportedOperation, heracles: IHeracles, resource: IHydraResource) {
-        super(resource)
-
         if(!supportedOperation) {
             throw new Error('Missing supportedOperation parameter');
         }

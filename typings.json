@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "jsonld": "registry:npm/jsonld#0.4.0+20161023213320",
+    "li": "file:typings_local/li.d.ts",
     "lodash": "registry:npm/lodash#4.0.0+20160305082308"
   }
 }

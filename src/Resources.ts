@@ -10,15 +10,15 @@ import {
 import {IIncomingLink} from "./internals";
 
 var _isProcessed = new WeakMap<IResource, boolean>();
-var _apiDocumentation = new WeakMap();
-var _incomingLinks = new WeakMap();
-var _heracles = new WeakMap();
-var _supportedOperation = new WeakMap();
-var _resource = new WeakMap();
+var _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
+var _incomingLinks = new WeakMap<IResource, IIncomingLink[]>();
+var _heracles = new WeakMap<IResource, IHeracles>();
+var _supportedOperation = new WeakMap<IOperation, ISupportedOperation>();
+var _resource = new WeakMap<IOperation, IResource>();
 
 export class Resource implements IResource {
 
-    constructor(actualResource) {
+    constructor(actualResource:any) {
         Object.assign(this, actualResource);
 
         _isProcessed.set(this, false);

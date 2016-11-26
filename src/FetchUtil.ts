@@ -121,10 +121,6 @@ function getFlattendGraph(res:Response):Promise<any> {
 }
 
 function parseResourceRepresentation(mediaType:string, res:Response) {
-    if($rdf.parsers.findParsers(mediaType) == null) {
-
-    }
-
     return jsonld => {
         return $rdf.parsers.parse(mediaType, jsonld, null, res.url);
     };

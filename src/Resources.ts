@@ -10,11 +10,11 @@ import {
 import {IIncomingLink} from "./internals";
 
 var _isProcessed = new WeakMap<IResource, boolean>();
-var _apiDocumentation = new WeakMap();
-var _incomingLinks = new WeakMap();
-var _heracles = new WeakMap();
-var _supportedOperation = new WeakMap();
-var _resource = new WeakMap();
+var _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
+var _incomingLinks = new WeakMap<IResource, IIncomingLink[]>();
+var _heracles = new WeakMap<IResource, IHeracles>();
+var _supportedOperation = new WeakMap<IOperation, ISupportedOperation>();
+var _resource = new WeakMap<IOperation, IResource>();
 
 export class Resource implements IResource {
 
@@ -98,9 +98,11 @@ export class HydraResource extends Resource implements IHydraResource {
     }
 }
 
-export class Operation implements IOperation {
+export class Operation extends Resource implements IOperation {
 
     constructor(supportedOperation: ISupportedOperation, heracles: IHeracles, resource: IHydraResource) {
+        super(resource)
+
         if(!supportedOperation) {
             throw new Error('Missing supportedOperation parameter');
         }

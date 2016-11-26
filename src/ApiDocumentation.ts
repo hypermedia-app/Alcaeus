@@ -6,10 +6,10 @@ import {Resource} from './Resources';
 import {default as nonenumerable} from "core-decorators/lib/nonenumerable";
 import {
     IApiDocumentation, IHeracles, IClass, ISupportedOperation, ISupportedProperty, IHydraResource,
-    IDocumentedResource, IStatusCodeDescription, IRdfProperty
+    IDocumentedResource, IStatusCodeDescription, IRdfProperty, IResource
 } from './interfaces';
 
-var heraclesWeakMap = new WeakMap();
+var heraclesWeakMap = new WeakMap<IResource, IHeracles>();
 
 export class ApiDocumentation extends Resource implements IApiDocumentation {
 

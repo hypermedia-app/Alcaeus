@@ -5,6 +5,7 @@ import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
 import {fakeHeraclesResources} from "./test-utils";
 import 'core-js/es6/array';
+import {IApiDocumentation} from "../src/interfaces";
 
 describe('ApiDocumentation', () => {
 
@@ -90,7 +91,7 @@ describe('ApiDocumentation', () => {
 
         it('should return a value', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                var docs: IApiDocumentation = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
                 var ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
                 expect(ops).toBeDefined();

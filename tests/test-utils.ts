@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {JsonLd, Core} from "../src/Constants";
 
 export function fakeHeraclesResources(obj: Object) {
-    if(!obj || typeof obj !== 'object') {
+    if (!obj || typeof obj !== 'object') {
         return;
     }
 
@@ -19,12 +19,90 @@ export function fakeHeraclesResources(obj: Object) {
     return obj;
 }
 
-function addPredicateGetter(prop:string, pred:string, wrapArray:boolean = true) {
+export function responseBuilder() {
+    let isOk = true;
+    let statusCode = 200;
+    let responseBody = '';
+    let responseUri;
+    const headers = [];
+
+    return {
+
+        body: function (body: string) {
+            responseBody = body;
+            return this;
+        },
+
+        redirect: function (redirectUri: string) {
+            responseUri = redirectUri;
+            return this;
+        },
+
+        contentLocation: function (headerValue: string) {
+            headers['Content-Location'] = headerValue;
+            return this;
+        },
+
+        contentType: function (value: string) {
+            headers['Content-Type'] = value;
+            return this;
+        },
+
+        jsonLdPayload: function (jsonLd:Object) {
+            return this.body(JSON.stringify(jsonLd))
+                       .contentType('application/ld+json');
+        },
+
+        nTriplesPayload: function (triples: string) {
+            return this.body(triples)
+                       .contentType('application/n-triples');
+        },
+
+        statusCode: function (status: number) {
+            statusCode = status;
+            if (status >= 400) {
+                isOk = false;
+            }
+            return this;
+        },
+
+        notFound: function () {
+            return this.statusCode(404);
+        },
+
+        serverError: function () {
+            return this.statusCode(500);
+        },
+
+        apiDocumentation: function (docUri?: string) {
+            docUri = docUri || 'http://api.example.com/doc/';
+            headers['Link'] = `<${docUri}>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"`;
+            return this;
+        },
+
+        build: function (): Promise<Response> {
+            const response = new Response(responseBody, <any>{
+                headers: headers,
+                status: statusCode,
+                ok: isOk
+            });
+
+            if (responseUri) {
+                response.url = responseUri;
+            }
+
+            return Promise.resolve(response);
+        }
+
+    };
+}
+
+function addPredicateGetter(prop: string, pred: string, wrapArray: boolean = true) {
     Object.defineProperty(this, prop, {
         get: () => {
             var ret = this[pred];
-            if(Array.isArray(ret) === false && wrapArray) {
-                return [ ret ];
+            if (Array.isArray(ret) === false && wrapArray) {
+                return [ret];
             }
 
             return ret;

@@ -38,7 +38,7 @@ export class FetchUtil {
                     var apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location')));
                 },
                 () => null);
     }
@@ -57,7 +57,7 @@ export class FetchUtil {
                     var apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location')));
                 },
                 () => null);
     }
@@ -83,11 +83,13 @@ function getDocumentationUri(res:Response):string {
 }
 
 class ExpandedWithDocs {
-    constructor(resources:Object, apiDocumentationLink:string) {
+    constructor(resources:Object, apiDocumentationLink:string, resourceIdentifier:string) {
         this.resources = resources;
         this.apiDocumentationLink = apiDocumentationLink;
+        this.resourceIdentifier = resourceIdentifier;
     }
 
+    resourceIdentifier:string;
     resources:Object;
     apiDocumentationLink:string;
 }
@@ -110,7 +112,7 @@ function getFlattendGraph(res:Response):Promise<any> {
     var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
 
     if (res.ok === false) {
-        return Promise.reject(new FetchError(res))
+        return Promise.reject(new FetchError(res));
     }
 
     return res.text()

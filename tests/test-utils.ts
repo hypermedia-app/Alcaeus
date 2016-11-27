@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {JsonLd, Core} from "../src/Constants";
+import {JsonLd, Core, MediaTypes} from "../src/Constants";
 
 export function fakeHeraclesResources(obj: Object) {
     if (!obj || typeof obj !== 'object') {
@@ -22,9 +22,11 @@ export function fakeHeraclesResources(obj: Object) {
 export function responseBuilder() {
     let isOk = true;
     let statusCode = 200;
-    let responseBody = '';
+    let responseBody = '{}';
     let responseUri;
-    const headers = [];
+    const headers = {
+        'Content-Type': MediaTypes.jsonLd
+    };
 
     return {
 
@@ -48,14 +50,14 @@ export function responseBuilder() {
             return this;
         },
 
-        jsonLdPayload: function (jsonLd:Object) {
+        jsonLdPayload: function (jsonLd: Object) {
             return this.body(JSON.stringify(jsonLd))
-                       .contentType('application/ld+json');
+                .contentType(MediaTypes.jsonLd);
         },
 
         nTriplesPayload: function (triples: string) {
             return this.body(triples)
-                       .contentType('application/n-triples');
+                .contentType(MediaTypes.ntriples);
         },
 
         statusCode: function (status: number) {
@@ -81,14 +83,16 @@ export function responseBuilder() {
         },
 
         build: function (): Promise<Response> {
-            const response = new Response(responseBody, <any>{
-                headers: headers,
-                status: statusCode,
-                ok: isOk
-            });
+            let response;
 
             if (responseUri) {
-                response.url = responseUri;
+                response = Response.redirect(responseUri, 302);
+            }
+            else {
+                response = new Response(responseBody, {
+                    headers: headers,
+                    status: statusCode
+                });
             }
 
             return Promise.resolve(response);

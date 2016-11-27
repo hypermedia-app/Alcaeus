@@ -9,6 +9,7 @@ import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {HydraResource as ResourceCtor} from "./Resources";
 import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
 import {forOwn} from "./LodashUtil";
+import {ExpandedWithDocs} from "./internals";
 
 class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
@@ -39,9 +40,9 @@ export var Resource = ResourceCtor;
 export var Hydra = new Heracles();
 
 function processFetchUtilResponse(uri) {
-    return response =>
+    return (response:ExpandedWithDocs) =>
         this.loadDocumentation(response.apiDocumentationLink)
-            .then(getRequestedObject(this, uri, response.resources));
+            .then(getRequestedObject(this, response.resourceIdentifier || uri, response.resources));
 }
 
 function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = {}) {
@@ -59,11 +60,11 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
             return acc;
         }, resourcified);
 
+        forOwn(resourcified, resource => resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides));
+
         if (!resourcified[uri]) {
             return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
         }
-
-        forOwn(resourcified, resource => resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides));
 
         return resourcified[uri];
     };

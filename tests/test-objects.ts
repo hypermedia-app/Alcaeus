@@ -138,44 +138,6 @@ export namespace Bodies {
     };
 }
 
-export namespace Responses {
-    export var jsonLd = (jsonLd:Object, includeDocsLink = true) => createResponse(JSON.stringify(jsonLd), 'application/ld+json', includeDocsLink);
-
-    export var ntriples = (ntriples, includeDocsLink = true) => createResponse(ntriples, 'application/n-triples', includeDocsLink);
-
-    export var notFound = negativeResponse(404);
-
-    export var serverError = negativeResponse(500);
-
-    export function flattened(res) {
-        return jsonld.flatten(res, {})
-            .then(flat => flat[JsonLd.Graph]);
-    }
-
-    function negativeResponse(status) {
-        return () => new Response('', <any>{
-            status: status,
-            ok: false
-        });
-    }
-
-    function createResponse(body:string, contentType:string, includeDocsLink:boolean) {
-        var headers = new Headers({
-            'Content-Type': contentType
-        });
-
-        if(includeDocsLink){
-            headers.append('Link', '<http://api.example.com/doc/>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
-        }
-
-        return new Response(body, <any>{
-            status: 200,
-            ok: true,
-            headers: headers
-        });
-    }
-}
-
 export namespace Documentations {
     export var classWithOperation = {
         '@id': 'http://api.example.com/doc',

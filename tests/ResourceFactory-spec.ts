@@ -48,6 +48,8 @@ describe('ResourceFactory', () => {
 
             expect(resource instanceof documentationTypes.SupportedProperty).toBe(true);
         });
+
+        it('should create instance for')
         
     });
 

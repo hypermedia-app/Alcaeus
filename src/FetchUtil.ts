@@ -8,6 +8,7 @@ import * as $rdf from 'rdf-ext';
 import * as JsonLdParser from 'rdf-parser-jsonld';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
 import {rdf} from './Vocabs';
+import {ExpandedWithDocs} from "./internals";
 
 $rdf.parsers[Constants.MediaTypes.jsonLd] = JsonLdParser;
 
@@ -38,7 +39,7 @@ export class FetchUtil {
                     var apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location')));
                 },
                 () => null);
     }
@@ -57,7 +58,7 @@ export class FetchUtil {
                     var apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri));
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location')));
                 },
                 () => null);
     }
@@ -82,16 +83,6 @@ function getDocumentationUri(res:Response):string {
     return null;
 }
 
-class ExpandedWithDocs {
-    constructor(resources:Object, apiDocumentationLink:string) {
-        this.resources = resources;
-        this.apiDocumentationLink = apiDocumentationLink;
-    }
-
-    resources:Object;
-    apiDocumentationLink:string;
-}
-
 class FetchError extends Error {
     private _response;
 
@@ -110,7 +101,7 @@ function getFlattendGraph(res:Response):Promise<any> {
     var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
 
     if (res.ok === false) {
-        return Promise.reject(new FetchError(res))
+        return Promise.reject(new FetchError(res));
     }
 
     return res.text()

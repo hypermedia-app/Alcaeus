@@ -41,6 +41,19 @@ describe('Hydra', () => {
                 .catch(done.fail);
         });
 
+        it('should return object with matching redirected @id', (done:any) =>{
+            fetchResource.withArgs('http://example.com/not-in-response')
+                .returns(mockedResponse(Bodies.someJsonLd, true, 'http://example.com/linked'));
+
+            Hydra.loadResource('http://example.com/not-in-response')
+                .then(res => {
+                    expect(res['@id']).toBe('http://example.com/linked');
+                    expect(res instanceof HydraResource).toBe(true);
+                    done();
+                })
+                .catch(done.fail);
+        });
+
         it('should return object with matching @id, trailing slash ignored', (done:any) =>{
             fetchResource.withArgs('http://example.com/resource/')
                 .returns(mockedResponse(Bodies.someJsonLd));
@@ -282,10 +295,11 @@ describe('Hydra', () => {
     afterEach(() => createResource.restore());
 });
 
-function mockedResponse(resource, includeDocsLink = true) {
+function mockedResponse(resource, includeDocsLink = true, redirectUrl = null) {
     return jsonld.flatten(resource, {})
         .then(expanded => ({
             resources: expanded[JsonLd.Graph],
-            apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null
+            apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
+            resourceIdentifier: redirectUrl
         }));
 }

@@ -8,6 +8,7 @@ import * as $rdf from 'rdf-ext';
 import * as JsonLdParser from 'rdf-parser-jsonld';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
 import {rdf} from './Vocabs';
+import {ExpandedWithDocs} from "./internals";
 
 $rdf.parsers[Constants.MediaTypes.jsonLd] = JsonLdParser;
 
@@ -80,18 +81,6 @@ function getDocumentationUri(res:Response):string {
     }
 
     return null;
-}
-
-class ExpandedWithDocs {
-    constructor(resources:Object, apiDocumentationLink:string, resourceIdentifier:string) {
-        this.resources = resources;
-        this.apiDocumentationLink = apiDocumentationLink;
-        this.resourceIdentifier = resourceIdentifier;
-    }
-
-    resourceIdentifier:string;
-    resources:Object;
-    apiDocumentationLink:string;
 }
 
 class FetchError extends Error {

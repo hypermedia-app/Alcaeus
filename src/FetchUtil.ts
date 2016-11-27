@@ -39,7 +39,7 @@ export class FetchUtil {
                     var apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location')));
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
                 },
                 () => null);
     }
@@ -58,7 +58,7 @@ export class FetchUtil {
                     var apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location')));
+                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
                 },
                 () => null);
     }

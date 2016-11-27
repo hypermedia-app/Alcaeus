@@ -1,6 +1,6 @@
 {
   "name": "heracles",
-  "version": "0.1.2-pre03",
+  "version": "0.1.2-pre04",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/heracles.js",
   "directories": {

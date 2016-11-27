@@ -53,7 +53,7 @@ $__System.registerDynamic('4', ['5', '8', '6', '9', 'a', 'b', '7', '3'], true, f
             }).then(rejectNotFoundStatus).then(function (res) {
                 var apiDocsUri = getDocumentationUri(res);
                 return getFlattendGraph(res).then(function (obj) {
-                    return new internals_1.ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location'));
+                    return new internals_1.ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url);
                 });
             }, function () {
                 return null;
@@ -72,7 +72,7 @@ $__System.registerDynamic('4', ['5', '8', '6', '9', 'a', 'b', '7', '3'], true, f
             }).then(rejectNotFoundStatus).then(function (res) {
                 var apiDocsUri = getDocumentationUri(res);
                 return getFlattendGraph(res).then(function (obj) {
-                    return new internals_1.ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location'));
+                    return new internals_1.ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url);
                 });
             }, function () {
                 return null;

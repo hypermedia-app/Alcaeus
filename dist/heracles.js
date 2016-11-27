@@ -1,8 +1,27 @@
 !function(e){function r(e,r,o){return 4===arguments.length?t.apply(this,arguments):void n(e,{declarative:!0,deps:r,declare:o})}function t(e,r,t,o){n(e,{declarative:!1,deps:r,executingRequire:t,execute:o})}function n(e,r){r.name=e,e in v||(v[e]=r),r.normalizedDeps=r.deps}function o(e,r){if(r[e.groupIndex]=r[e.groupIndex]||[],-1==g.call(r[e.groupIndex],e)){r[e.groupIndex].push(e);for(var t=0,n=e.normalizedDeps.length;n>t;t++){var a=e.normalizedDeps[t],u=v[a];if(u&&!u.evaluated){var d=e.groupIndex+(u.declarative!=e.declarative);if(void 0===u.groupIndex||u.groupIndex<d){if(void 0!==u.groupIndex&&(r[u.groupIndex].splice(g.call(r[u.groupIndex],u),1),0==r[u.groupIndex].length))throw new TypeError("Mixed dependency cycle detected");u.groupIndex=d}o(u,r)}}}}function a(e){var r=v[e];r.groupIndex=0;var t=[];o(r,t);for(var n=!!r.declarative==t.length%2,a=t.length-1;a>=0;a--){for(var u=t[a],i=0;i<u.length;i++){var s=u[i];n?d(s):l(s)}n=!n}}function u(e){return y[e]||(y[e]={name:e,dependencies:[],exports:{},importers:[]})}function d(r){if(!r.module){var t=r.module=u(r.name),n=r.module.exports,o=r.declare.call(e,function(e,r){if(t.locked=!0,"object"==typeof e)for(var o in e)n[o]=e[o];else n[e]=r;for(var a=0,u=t.importers.length;u>a;a++){var d=t.importers[a];if(!d.locked)for(var i=0;i<d.dependencies.length;++i)d.dependencies[i]===t&&d.setters[i](n)}return t.locked=!1,r},{id:r.name});t.setters=o.setters,t.execute=o.execute;for(var a=0,i=r.normalizedDeps.length;i>a;a++){var l,s=r.normalizedDeps[a],c=v[s],f=y[s];f?l=f.exports:c&&!c.declarative?l=c.esModule:c?(d(c),f=c.module,l=f.exports):l=p(s),f&&f.importers?(f.importers.push(t),t.dependencies.push(f)):t.dependencies.push(null),t.setters[a]&&t.setters[a](l)}}}function i(e){var r,t=v[e];if(t)t.declarative?f(e,[]):t.evaluated||l(t),r=t.module.exports;else if(r=p(e),!r)throw new Error("Unable to load dependency "+e+".");return(!t||t.declarative)&&r&&r.__useDefault?r["default"]:r}function l(r){if(!r.module){var t={},n=r.module={exports:t,id:r.name};if(!r.executingRequire)for(var o=0,a=r.normalizedDeps.length;a>o;o++){var u=r.normalizedDeps[o],d=v[u];d&&l(d)}r.evaluated=!0;var c=r.execute.call(e,function(e){for(var t=0,n=r.deps.length;n>t;t++)if(r.deps[t]==e)return i(r.normalizedDeps[t]);throw new TypeError("Module "+e+" not declared as a dependency.")},t,n);void 0!==typeof c&&(n.exports=c),t=n.exports,t&&t.__esModule?r.esModule=t:r.esModule=s(t)}}function s(r){var t={};if(("object"==typeof r||"function"==typeof r)&&r!==e)if(m)for(var n in r)"default"!==n&&c(t,r,n);else{var o=r&&r.hasOwnProperty;for(var n in r)"default"===n||o&&!r.hasOwnProperty(n)||(t[n]=r[n])}return t["default"]=r,x(t,"__useDefault",{value:!0}),t}function c(e,r,t){try{var n;(n=Object.getOwnPropertyDescriptor(r,t))&&x(e,t,n)}catch(o){return e[t]=r[t],!1}}function f(r,t){var n=v[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,a=n.normalizedDeps.length;a>o;o++){var u=n.normalizedDeps[o];-1==g.call(t,u)&&(v[u]?f(u,t):p(u))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function p(e){if(I[e])return I[e];if("@node/"==e.substr(0,6))return I[e]=s(D(e.substr(6)));var r=v[e];if(!r)throw"Module "+e+" not present.";return a(e),f(e,[]),v[e]=void 0,r.declarative&&x(r.module.exports,"__esModule",{value:!0}),I[e]=r.declarative?r.module.exports:r.esModule}var v={},g=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},m=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(h){m=!1}var x;!function(){try{Object.defineProperty({},"a",{})&&(x=Object.defineProperty)}catch(e){x=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var y={},D="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,I={"@empty":{}};return function(e,n,o,a){return function(u){u(function(u){for(var d={_nodeRequire:D,register:r,registerDynamic:t,get:p,set:function(e,r){I[e]=r},newModule:function(e){return e}},i=0;i<n.length;i++)(function(e,r){r&&r.__esModule?I[e]=r:I[e]=s(r)})(n[i],arguments[i]);a(d);var l=p(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)p(e[i]);return o?l["default"]:l})}}}("undefined"!=typeof self?self:global)
 
-(["1","2"], ["4","7","8","9","a"], true, function($__System) {
+(["1","2"], ["5","8","9","a","b"], true, function($__System) {
 var require = this.require, exports = this.exports, module = this.module;
-$__System.registerDynamic('3', ['4', '7', '5', '8', '9', 'a', '6'], true, function ($__require, exports, module) {
+$__System.registerDynamic("3", [], true, function ($__require, exports, module) {
+    "use strict";
+
+    var define,
+        global = this || self,
+        GLOBAL = global;
+    var ExpandedWithDocs = function () {
+        function ExpandedWithDocs(resources, apiDocumentationLink, resourceIdentifier) {
+            this.resources = resources;
+            this.apiDocumentationLink = apiDocumentationLink;
+            this.resourceIdentifier = resourceIdentifier;
+        }
+        return ExpandedWithDocs;
+    }();
+    exports.ExpandedWithDocs = ExpandedWithDocs;
+    
+
+    return module.exports;
+});
+$__System.registerDynamic('4', ['5', '8', '6', '9', 'a', 'b', '7', '3'], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -15,13 +34,14 @@ $__System.registerDynamic('3', ['4', '7', '5', '8', '9', 'a', '6'], true, functi
         }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var li = $__require('4');
-    var jsonld_1 = $__require('7');
-    var Constants = $__require('5');
-    var $rdf = $__require('8');
-    var JsonLdParser = $__require('9');
-    var JsonLdSerializer = $__require('a');
-    var Vocabs_1 = $__require('6');
+    var li = $__require('5');
+    var jsonld_1 = $__require('8');
+    var Constants = $__require('6');
+    var $rdf = $__require('9');
+    var JsonLdParser = $__require('a');
+    var JsonLdSerializer = $__require('b');
+    var Vocabs_1 = $__require('7');
+    var internals_1 = $__require('3');
     $rdf.parsers[Constants.MediaTypes.jsonLd] = JsonLdParser;
     var FetchUtil = function () {
         function FetchUtil() {}
@@ -33,7 +53,7 @@ $__System.registerDynamic('3', ['4', '7', '5', '8', '9', 'a', '6'], true, functi
             }).then(rejectNotFoundStatus).then(function (res) {
                 var apiDocsUri = getDocumentationUri(res);
                 return getFlattendGraph(res).then(function (obj) {
-                    return new ExpandedWithDocs(obj, apiDocsUri);
+                    return new internals_1.ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location'));
                 });
             }, function () {
                 return null;
@@ -52,7 +72,7 @@ $__System.registerDynamic('3', ['4', '7', '5', '8', '9', 'a', '6'], true, functi
             }).then(rejectNotFoundStatus).then(function (res) {
                 var apiDocsUri = getDocumentationUri(res);
                 return getFlattendGraph(res).then(function (obj) {
-                    return new ExpandedWithDocs(obj, apiDocsUri);
+                    return new internals_1.ExpandedWithDocs(obj, apiDocsUri, res.url || res.headers.get('Content-Location'));
                 });
             }, function () {
                 return null;
@@ -77,13 +97,6 @@ $__System.registerDynamic('3', ['4', '7', '5', '8', '9', 'a', '6'], true, functi
         }
         return null;
     }
-    var ExpandedWithDocs = function () {
-        function ExpandedWithDocs(resources, apiDocumentationLink) {
-            this.resources = resources;
-            this.apiDocumentationLink = apiDocumentationLink;
-        }
-        return ExpandedWithDocs;
-    }();
     var FetchError = function (_super) {
         __extends(FetchError, _super);
         function FetchError(response) {
@@ -139,7 +152,7 @@ $__System.registerDynamic('3', ['4', '7', '5', '8', '9', 'a', '6'], true, functi
 
     return module.exports;
 });
-$__System.registerDynamic('6', [], true, function ($__require, exports, module) {
+$__System.registerDynamic('7', [], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -180,7 +193,7 @@ $__System.registerDynamic('6', [], true, function ($__require, exports, module) 
 
     return module.exports;
 });
-$__System.registerDynamic("b", ["5", "6", "c", "d"], true, function ($__require, exports, module) {
+$__System.registerDynamic("c", ["6", "7", "d", "e"], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -203,10 +216,10 @@ $__System.registerDynamic("b", ["5", "6", "c", "d"], true, function ($__require,
     var __metadata = this && this.__metadata || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var Constants_1 = $__require("5");
-    var Vocabs_1 = $__require("6");
-    var Resources_1 = $__require("c");
-    var nonenumerable_1 = $__require("d");
+    var Constants_1 = $__require("6");
+    var Vocabs_1 = $__require("7");
+    var Resources_1 = $__require("d");
+    var nonenumerable_1 = $__require("e");
     var heraclesWeakMap = new WeakMap();
     var ApiDocumentation = function (_super) {
         __extends(ApiDocumentation, _super);
@@ -471,7 +484,7 @@ $__System.registerDynamic("b", ["5", "6", "c", "d"], true, function ($__require,
 
     return module.exports;
 });
-$__System.registerDynamic('e', [], true, function ($__require, exports, module) {
+$__System.registerDynamic('f', [], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -496,18 +509,18 @@ $__System.registerDynamic('e', [], true, function ($__require, exports, module) 
 
     return module.exports;
 });
-$__System.registerDynamic('f', ['6', 'c', 'b', '5', 'e', '10'], true, function ($__require, exports, module) {
+$__System.registerDynamic('10', ['7', 'd', 'c', '6', 'f', '11'], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
         global = this || self,
         GLOBAL = global;
-    var Vocabs_1 = $__require('6');
-    var Types = $__require('c');
-    var DocTypes = $__require('b');
-    var Constants_1 = $__require('5');
-    var JsonLdUtil_1 = $__require('e');
-    var LodashUtil_1 = $__require('10');
+    var Vocabs_1 = $__require('7');
+    var Types = $__require('d');
+    var DocTypes = $__require('c');
+    var Constants_1 = $__require('6');
+    var JsonLdUtil_1 = $__require('f');
+    var LodashUtil_1 = $__require('11');
     var ResourceFactory = function () {
         function ResourceFactory() {
             this.factories = {};
@@ -603,7 +616,7 @@ $__System.registerDynamic('f', ['6', 'c', 'b', '5', 'e', '10'], true, function (
 
     return module.exports;
 });
-$__System.registerDynamic('2', ['11'], true, function ($__require, exports, module) {
+$__System.registerDynamic('2', ['12'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -612,7 +625,7 @@ $__System.registerDynamic('2', ['11'], true, function ($__require, exports, modu
       GLOBAL = global;
   Object.defineProperty(exports, '__esModule', { value: true });
   exports['default'] = lazyInitialize;
-  var _privateUtils = $__require('11');
+  var _privateUtils = $__require('12');
   function handleDescriptor(target, key, descriptor) {
     var configurable = descriptor.configurable;
     var enumerable = descriptor.enumerable;
@@ -646,7 +659,7 @@ $__System.registerDynamic('2', ['11'], true, function ($__require, exports, modu
   module.exports = exports['default'];
   return module.exports;
 });
-$__System.registerDynamic('11', ['2'], true, function ($__require, exports, module) {
+$__System.registerDynamic('12', ['2'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -807,7 +820,7 @@ $__System.registerDynamic('11', ['2'], true, function ($__require, exports, modu
   }
   return module.exports;
 });
-$__System.registerDynamic('d', ['11'], true, function ($__require, exports, module) {
+$__System.registerDynamic('e', ['12'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -816,7 +829,7 @@ $__System.registerDynamic('d', ['11'], true, function ($__require, exports, modu
       GLOBAL = global;
   Object.defineProperty(exports, '__esModule', { value: true });
   exports['default'] = nonenumerable;
-  var _privateUtils = $__require('11');
+  var _privateUtils = $__require('12');
   function handleDescriptor(target, key, descriptor) {
     descriptor.enumerable = false;
     return descriptor;
@@ -830,7 +843,7 @@ $__System.registerDynamic('d', ['11'], true, function ($__require, exports, modu
   module.exports = exports['default'];
   return module.exports;
 });
-$__System.registerDynamic("5", [], true, function ($__require, exports, module) {
+$__System.registerDynamic("6", [], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -943,7 +956,7 @@ $__System.registerDynamic("5", [], true, function ($__require, exports, module) 
 
     return module.exports;
 });
-$__System.registerDynamic("c", ["7", "d", "5"], true, function ($__require, exports, module) {
+$__System.registerDynamic("d", ["8", "e", "6"], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -966,9 +979,9 @@ $__System.registerDynamic("c", ["7", "d", "5"], true, function ($__require, expo
     var __metadata = this && this.__metadata || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var jsonld_1 = $__require("7");
-    var nonenumerable = $__require("d");
-    var Constants_1 = $__require("5");
+    var jsonld_1 = $__require("8");
+    var nonenumerable = $__require("e");
+    var Constants_1 = $__require("6");
     var _isProcessed = new WeakMap();
     var _apiDocumentation = new WeakMap();
     var _incomingLinks = new WeakMap();
@@ -1221,7 +1234,7 @@ $__System.registerDynamic("c", ["7", "d", "5"], true, function ($__require, expo
 
     return module.exports;
 });
-$__System.registerDynamic("10", [], true, function ($__require, exports, module) {
+$__System.registerDynamic("11", [], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -1246,19 +1259,19 @@ $__System.registerDynamic("10", [], true, function ($__require, exports, module)
 
     return module.exports;
 });
-$__System.registerDynamic('1', ['3', '5', 'e', 'f', 'c', '10'], true, function ($__require, exports, module) {
+$__System.registerDynamic('1', ['4', '6', 'f', '10', 'd', '11'], true, function ($__require, exports, module) {
     /// <reference path="../typings/index.d.ts" />
     'use strict';
 
     var define,
         global = this || self,
         GLOBAL = global;
-    var FetchUtil_1 = $__require('3');
-    var Constants_1 = $__require('5');
-    var JsonLdUtil_1 = $__require('e');
-    var ResourceFactory_1 = $__require('f');
-    var Resources_1 = $__require('c');
-    var LodashUtil_1 = $__require('10');
+    var FetchUtil_1 = $__require('4');
+    var Constants_1 = $__require('6');
+    var JsonLdUtil_1 = $__require('f');
+    var ResourceFactory_1 = $__require('10');
+    var Resources_1 = $__require('d');
+    var LodashUtil_1 = $__require('11');
     var Heracles = function () {
         function Heracles() {
             this.resourceFactory = new ResourceFactory_1.ResourceFactory();
@@ -1287,7 +1300,7 @@ $__System.registerDynamic('1', ['3', '5', 'e', 'f', 'c', '10'], true, function (
     function processFetchUtilResponse(uri) {
         var _this = this;
         return function (response) {
-            return _this.loadDocumentation(response.apiDocumentationLink).then(getRequestedObject(_this, uri, response.resources));
+            return _this.loadDocumentation(response.apiDocumentationLink).then(getRequestedObject(_this, response.resourceIdentifier || uri, response.resources));
         };
     }
     function getRequestedObject(heracles, uri, resources, typeOverrides) {
@@ -1305,12 +1318,12 @@ $__System.registerDynamic('1', ['3', '5', 'e', 'f', 'c', '10'], true, function (
                 acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
                 return acc;
             }, resourcified);
-            if (!resourcified[uri]) {
-                return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
-            }
             LodashUtil_1.forOwn(resourcified, function (resource) {
                 return resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides);
             });
+            if (!resourcified[uri]) {
+                return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
+            }
             return resourcified[uri];
         };
     }

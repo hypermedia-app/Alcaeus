@@ -22,7 +22,7 @@ class Heracles implements IHeracles {
     loadDocumentation(uri:string):Promise<IApiDocumentation> {
         return FetchUtil.fetchResource(uri)
             .then(response => {
-                var typeOverrides = {};
+                const typeOverrides = {};
                 typeOverrides[JsonLdUtil.trimTrailingSlash(uri)] = Core.Vocab.ApiDocumentation;
 
                 return getRequestedObject(this, uri, response.resources, typeOverrides)(null);
@@ -35,9 +35,9 @@ class Heracles implements IHeracles {
     }
 }
 
-export var ResourceFactory = ResourceFactoryCtor;
-export var Resource = ResourceCtor;
-export var Hydra = new Heracles();
+export let ResourceFactory = ResourceFactoryCtor;
+export let Resource = ResourceCtor;
+export let Hydra = new Heracles();
 
 function processFetchUtilResponse(uri) {
     return (response:ExpandedWithDocs) =>
@@ -47,7 +47,7 @@ function processFetchUtilResponse(uri) {
 
 function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = {}) {
     return apiDocumentation => {
-        var resourcified = {};
+        const resourcified = {};
         resources.forEach(res => {
             resourcified[JsonLdUtil.trimTrailingSlash(res[JsonLd.Id])] = res;
         });
@@ -55,7 +55,7 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
         uri = JsonLdUtil.trimTrailingSlash(uri);
 
         resources.reduceRight((acc:Object, val) => {
-            var id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
+            const id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
             acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
             return acc;
         }, resourcified);
@@ -79,15 +79,15 @@ function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDoc
         return obj[JsonLd.Value];
     }
 
-    var selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
+    let selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
 
     if (!selfId) {
         return obj;
     }
 
-    var resource = resourcified[selfId];
+    let resource = resourcified[selfId];
     if (!resource || typeof resource._processed === 'undefined') {
-        var id = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
+        const id = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
         resource = heracles.resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
         resourcified[selfId] = resource;
     }

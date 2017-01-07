@@ -4,7 +4,7 @@ import {Core} from '../src/Constants';
 
 describe('Class', () => {
 
-    var hydraClass = {
+    const hydraClass = {
         '@id': 'http://example.com/vocab#SomeClass',
         '@context': Core.Context,
         'supportedProperty': [{}],
@@ -15,14 +15,14 @@ describe('Class', () => {
 
         it('should return operations', (done:any) => {
             jsonld.compact(hydraClass, {}).then(compacted => {
-                var clas = new Class(compacted);
+                const clas = new Class(compacted);
                 expect(clas.supportedOperations.length).toBe(1);
                 done();
             }).catch(done.fail);
         });
 
         it('should return empty array if property is missing', () => {
-            var clas = new Class({
+            const clas = new Class({
                 '@id': 'http://example.com/vocab#SomeClass'
             });
 
@@ -30,7 +30,7 @@ describe('Class', () => {
         });
 
         it('should return empty array if property is null', () => {
-            var clas = new Class({
+            const clas = new Class({
                 '@id': 'http://example.com/vocab#SomeClass',
                 'http://www.w3.org/ns/hydra/core#supportedOperation': null
             });
@@ -44,14 +44,14 @@ describe('Class', () => {
 
         it('should return properties', (done:any) => {
             jsonld.compact(hydraClass, {}).then(compacted => {
-                var clas = new Class(compacted);
+                const clas = new Class(compacted);
                 expect(clas.supportedProperties.length).toBe(1);
                 done();
             }).catch(done.fail);
         });
 
         it('should return empty array if property is missing', () => {
-            var clas = new Class({
+            const clas = new Class({
                 '@id': 'http://example.com/vocab#SomeClass'
             });
 
@@ -59,7 +59,7 @@ describe('Class', () => {
         });
 
         it('should return empty array if property is null', () => {
-            var clas = new Class({
+            const clas = new Class({
                 '@id': 'http://example.com/vocab#SomeClass',
                 'http://www.w3.org/ns/hydra/core#supportedProperty': null
             });

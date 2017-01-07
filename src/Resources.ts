@@ -9,12 +9,12 @@ import {
 } from "./interfaces";
 import {IIncomingLink} from "./internals";
 
-var _isProcessed = new WeakMap<IResource, boolean>();
-var _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
-var _incomingLinks = new WeakMap<IResource, IIncomingLink[]>();
-var _heracles = new WeakMap<IResource, IHeracles>();
-var _supportedOperation = new WeakMap<IOperation, ISupportedOperation>();
-var _resource = new WeakMap<IOperation, IResource>();
+const _isProcessed = new WeakMap<IResource, boolean>();
+const _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
+const _incomingLinks = new WeakMap<IResource, IIncomingLink[]>();
+const _heracles = new WeakMap<IResource, IHeracles>();
+const _supportedOperation = new WeakMap<IOperation, ISupportedOperation>();
+const _resource = new WeakMap<IOperation, IResource>();
 
 export class Resource implements IResource {
 
@@ -31,7 +31,7 @@ export class Resource implements IResource {
 
     @nonenumerable
     get types() {
-        var types = this[JsonLd.Type];
+        let types = this[JsonLd.Type];
 
         if(typeof types === 'string'){
             return [ types ];
@@ -79,19 +79,19 @@ export class HydraResource extends Resource implements IHydraResource {
 
     @nonenumerable
     get operations() {
-        var classOperations;
+        let classOperations;
         if(Array.isArray(this[JsonLd.Type])) {
             classOperations = this[JsonLd.Type].map((type:string) => this.apiDocumentation.getOperations(type));
         } else {
             classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
         }
 
-        var mappedLinks = this.getIncomingLinks()
-            .map(link => link.subject.types.map(type => ({ type: type, predicate: link.predicate })));
-        var flattened = [].concat.apply([], mappedLinks);
-        var propertyOperations = flattened.map((link: any) => this.apiDocumentation.getOperations(link.type, link.predicate));
+        const mappedLinks = this.getIncomingLinks()
+            .map(link => link.subject.types.map(type => ({type: type, predicate: link.predicate})));
+        const flattened = [].concat.apply([], mappedLinks);
+        const propertyOperations = flattened.map((link: any) => this.apiDocumentation.getOperations(link.type, link.predicate));
 
-        var operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
+        const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
         return operations.map((supportedOperation:ISupportedOperation) => {
             return new Operation(supportedOperation, this._heracles, this);
         });
@@ -174,7 +174,7 @@ export class PartialCollectionView extends HydraResource implements IPartialColl
 
     @nonenumerable
     get collection():IHydraResource {
-        var collectionLink = this.getIncomingLinks().find((linkArray:IIncomingLink) => {
+        const collectionLink = this.getIncomingLinks().find((linkArray: IIncomingLink) => {
             return linkArray.predicate === Core.Vocab.view
         });
 

@@ -7,7 +7,7 @@ import {IHeracles} from "../src/interfaces";
 
 describe('SupportedOperation', () => {
 
-    var operationJsonLd;
+    let operationJsonLd;
 
     beforeEach(() => operationJsonLd = {
         '@context': Core.Context,
@@ -20,7 +20,7 @@ describe('SupportedOperation', () => {
 
     it('should expose operation method', (done:any) => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new SupportedOperation(compacted, <IHeracles>{});
+            const op = new SupportedOperation(compacted, <IHeracles>{});
 
             expect(op.method).toBe('TRACE');
             done();
@@ -29,7 +29,7 @@ describe('SupportedOperation', () => {
 
     it('should expose expected class id', (done:any) => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new SupportedOperation(compacted, <IHeracles>{});
+            const op = new SupportedOperation(compacted, <IHeracles>{});
 
             expect(op.expects['@id']).toBe(owl.Nothing);
             done();
@@ -38,7 +38,7 @@ describe('SupportedOperation', () => {
 
     it('should expose returned class id', (done:any) => {
         jsonld.compact(operationJsonLd, {}).then(compacted => {
-            var op = new SupportedOperation(compacted, <IHeracles>{});
+            const op = new SupportedOperation(compacted, <IHeracles>{});
 
             expect(op.returns['@id']).toBe('http://example.com/Something');
             done();
@@ -48,13 +48,13 @@ describe('SupportedOperation', () => {
     describe('requiresInput', () => {
 
         it('should return false for GET operation', done => {
-            var operation = {
+            const operation = {
                 '@context': Core.Context,
                 'method': 'GET'
             };
 
             jsonld.compact(operation, {}).then(compacted => {
-                var op = new SupportedOperation(compacted, <IHeracles>{});
+                const op = new SupportedOperation(compacted, <IHeracles>{});
 
                 expect(op.requiresInput).toBe(false);
                 done();
@@ -62,13 +62,13 @@ describe('SupportedOperation', () => {
         });
 
         it('should return false for DELETE operation', done => {
-            var operation = {
+            const operation = {
                 '@context': Core.Context,
                 'method': 'DELETE'
             };
 
             jsonld.compact(operation, {}).then(compacted => {
-                var op = new SupportedOperation(compacted, <IHeracles>{});
+                const op = new SupportedOperation(compacted, <IHeracles>{});
 
                 expect(op.requiresInput).toBe(false);
                 done();
@@ -76,13 +76,13 @@ describe('SupportedOperation', () => {
         });
 
         it('should return true if operation expects a body', done => {
-            var operation = {
+            const operation = {
                 '@context': Core.Context,
                 'method': 'POST'
             };
 
             jsonld.compact(operation, {}).then(compacted => {
-                var op = new SupportedOperation(compacted, <IHeracles>{});
+                const op = new SupportedOperation(compacted, <IHeracles>{});
 
                 expect(op.requiresInput).toBe(true);
                 done();
@@ -90,7 +90,7 @@ describe('SupportedOperation', () => {
         });
 
         it('should return true if operation expects nothing', done => {
-            var operation = {
+            const operation = {
                 '@context': Core.Context,
                 'method': 'POST'
             };
@@ -98,7 +98,7 @@ describe('SupportedOperation', () => {
             jsonld.compact(operation, {}).then(compacted => {
 
                 compacted[Core.Vocab.expects] = { id: owl.Nothing };
-                var op = new SupportedOperation(compacted, <IHeracles>{});
+                const op = new SupportedOperation(compacted, <IHeracles>{});
 
                 expect(op.requiresInput).toBe(true);
                 done();

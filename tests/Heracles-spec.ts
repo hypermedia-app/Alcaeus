@@ -15,7 +15,7 @@ import 'core-js/es6/array';
 
 describe('Hydra', () => {
 
-    var fetchResource, createResource:sinon.SinonSpy;
+    let fetchResource, createResource: sinon.SinonSpy;
     
     beforeEach(() => {
         createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
@@ -164,7 +164,7 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(res => {
-                    var incomingLinks = res['http://example.com/vocab#other'].getIncomingLinks();
+                    const incomingLinks = res['http://example.com/vocab#other'].getIncomingLinks();
 
                     expect(incomingLinks.length).toBe(2);
                     expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other' })).toBe(true);
@@ -182,7 +182,7 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/resource')
                 .then(() => {
-                    var ids = _.map(createResource.getCalls(), call => {
+                    const ids = _.map(createResource.getCalls(), call => {
                         return call.args[0]['@id'];
                     });
                     expect(createResource.callCount)
@@ -198,8 +198,8 @@ describe('Hydra', () => {
 
             Hydra.loadResource('http://example.com/root')
                 .then(res => {
-                    var p = 'http://example.com/prop';
-                    var t = 'http://example.com/text';
+                    const p = 'http://example.com/prop';
+                    const t = 'http://example.com/text';
 
                     expect(res[p][p][p][p][t]).toBe('I\'m nested way deep');
                     done();
@@ -233,7 +233,7 @@ describe('Hydra', () => {
                 .returns(mockedResponse(Bodies.cycledResource));
 
             Hydra.loadResource('http://example.com/resource').then(res => {
-                var objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top']);
+                const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top']);
                 expect(objectsAreSame).toBeTruthy();
                 done();
             }).catch(done.fail);

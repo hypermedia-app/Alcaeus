@@ -4,16 +4,16 @@ import {promises as jsonld} from 'jsonld';
 
 describe('DocumentedResource', () => {
 
-    var hydraDescriptionJsonLd = {
+    const hydraDescriptionJsonLd = {
         '@context': Core.Context,
         'title': 'The title',
         'description': 'The longer description',
         'http://some/custom/property': 'The value'
-    };    
+    };
     
     it('should use hydra:title for title property', (done:any) => {
         jsonld.compact(hydraDescriptionJsonLd, {}).then(compacted => {
-            var op = new DocumentedResource(compacted);
+            const op = new DocumentedResource(compacted);
 
             expect(op.title).toBe('The title');
             done();
@@ -22,7 +22,7 @@ describe('DocumentedResource', () => {
 
     it('should use hydra:description for title property', (done:any) => {
         jsonld.compact(hydraDescriptionJsonLd, {}).then(compacted => {
-            var op = new DocumentedResource(compacted);
+            const op = new DocumentedResource(compacted);
 
             expect(op.description).toBe('The longer description');
             done();
@@ -30,7 +30,7 @@ describe('DocumentedResource', () => {
     });
 
     it('should use rdfs:label for title property as fallback', () => {
-        var op = new DocumentedResource({
+        const op = new DocumentedResource({
             'http://www.w3.org/2000/01/rdf-schema#label': 'The title with rdfs'
         });
 
@@ -38,7 +38,7 @@ describe('DocumentedResource', () => {
     });
 
     it('should use schema:title for title property as fallback', () => {
-        var op = new DocumentedResource({
+        const op = new DocumentedResource({
             'http://schema.org/title': 'The title with schema'
         });
 
@@ -46,7 +46,7 @@ describe('DocumentedResource', () => {
     });
 
     it('should use rdfs:label for title property as fallback', () => {
-        var op = new DocumentedResource({
+        const op = new DocumentedResource({
             'http://www.w3.org/2000/01/rdf-schema#comment': 'The title descr with rdfs'
         });
 
@@ -54,7 +54,7 @@ describe('DocumentedResource', () => {
     });
 
     it('should use schema:label for title property as fallback', () => {
-        var op = new DocumentedResource({
+        const op = new DocumentedResource({
             'http://schema.org/description': 'The title descr with schema'
         });
 

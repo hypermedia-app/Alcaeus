@@ -5,7 +5,7 @@ import {xsd, rdf, rdfs, owl} from '../src/Vocabs';
 
 describe('RdfProperty', () => {
 
-    var testProperty = {
+    const testProperty = {
         '@context': [
             Core.Context,
             {
@@ -29,7 +29,7 @@ describe('RdfProperty', () => {
     it('should link to domain', (done:any) => {
 
         jsonld.compact(testProperty, {}).then(compacted => {
-            var property = new RdfProperty(compacted);
+            const property = new RdfProperty(compacted);
 
             expect(property.domain).toBe(xsd.integer);
             done();
@@ -39,7 +39,7 @@ describe('RdfProperty', () => {
     it('should link to range', (done:any) => {
 
         jsonld.compact(testProperty, {}).then(compacted => {
-            var property = new RdfProperty(compacted);
+            const property = new RdfProperty(compacted);
 
             expect(property.range).toBe(xsd.string);
             done();
@@ -51,7 +51,7 @@ describe('RdfProperty', () => {
         it('should return single operation as array', (done:any) => {
 
             jsonld.compact(testProperty, {}).then(compacted => {
-                var property = new RdfProperty(compacted);
+                const property = new RdfProperty(compacted);
 
                 expect(property.supportedOperations.length).toBe(1);
                 done();
@@ -60,7 +60,7 @@ describe('RdfProperty', () => {
 
         it('should return empty array when property is missing', () => {
 
-            var property = new RdfProperty({});
+            const property = new RdfProperty({});
 
             expect(Array.isArray(property.supportedOperations)).toBeTruthy();
             expect(property.supportedOperations.length).toBe(0);

@@ -13,7 +13,7 @@ import * as $rdf from 'rdf-ext';
 
 describe('FetchUtil', () => {
 
-    var windowFetch;
+    let windowFetch;
 
     beforeEach(() => {
         windowFetch = sinon.stub(window, 'fetch');
@@ -131,7 +131,7 @@ describe('FetchUtil', () => {
 
         describe('fetching api documentation', () => {
 
-            var inferredTypes = [
+            const inferredTypes = [
                 [Core.Vocab.supportedClass, Core.Vocab.Class],
                 [Core.Vocab.expects, Core.Vocab.Class],
                 [Core.Vocab.returns, Core.Vocab.Class],
@@ -146,14 +146,14 @@ describe('FetchUtil', () => {
             _.forEach(inferredTypes, typePair => {
                 (function(prop, type) {
                     it('should add inferences for property ' + prop, (done:any) => {
-                        var obj = { '@id': 'http://example.com/resource' };
+                        const obj = {'@id': 'http://example.com/resource'};
                         obj[prop] = { '@id': 'http://example.com/child' };
                         windowFetch.withArgs('http://example.com/resource')
                             .returns(responseBuilder().jsonLdPayload(obj).build());
 
                         FetchUtil.fetchResource('http://example.com/resource')
                             .then((res:any) => {
-                                var child = _.find(res.resources, [ '@id', 'http://example.com/child']);
+                                const child = _.find(res.resources, ['@id', 'http://example.com/child']);
 
                                 expect(child['@type']).toBeDefined();
                                 expect(child['@type']).toBe(type);

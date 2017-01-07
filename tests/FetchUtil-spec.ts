@@ -79,7 +79,7 @@ describe('FetchUtil', () => {
                 });
         });
 
-        fit('should fail when resource returns non-success status code', (done:any) => {
+        it('should fail when resource returns non-success status code', (done:any) => {
             windowFetch.withArgs('http://example.com/not/there')
                 .returns(responseBuilder().serverError().build());
 

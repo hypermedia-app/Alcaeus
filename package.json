@@ -1,6 +1,6 @@
 {
   "name": "heracles",
-  "version": "0.1.2-pre04",
+  "version": "0.1.2",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/heracles.js",
   "directories": {
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - li - rdf-ext - rdf-parser-jsonld - rdf-serializer-jsonld dist/heracles.js --format cjs --skip-source-maps"
+    "build": "jspm bundle-sfx src/heracles - jsonld - parse-link-header - rdf-ext - rdf-parser-jsonld - rdf-serializer-jsonld dist/heracles.js --format cjs"
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,7 @@
   "dependencies": {
     "jsonld": "^0.4.6",
     "li": "^1.0.1",
+    "parse-link-header": "^0.4.1",
     "rdf-ext": "^0.3.0",
     "rdf-parser-jsonld": "^0.3.0",
     "rdf-serializer-jsonld": "^0.3.0"

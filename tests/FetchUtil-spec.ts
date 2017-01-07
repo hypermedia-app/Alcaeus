@@ -84,12 +84,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().serverError().build());
 
             FetchUtil.fetchResource('http://example.com/not/there')
-                .then(done.fail, err => {
-                    // hm, why doesn't thins work?
-                    // expect(err.message).toBe('Request failed');
-                    expect(err.response).toBeDefined();
-                    done();
-                })
+                .then(done.fail, done)
                 .catch(done.fail);
         });
 

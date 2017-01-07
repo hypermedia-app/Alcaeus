@@ -16,8 +16,8 @@ System.config({
     "core-decorators": "npm:core-decorators@0.12.2",
     "core-js": "npm:core-js@2.4.1",
     "jsonld": "npm:jsonld@0.4.11",
-    "li": "npm:li@1.0.1",
     "lodash": "npm:lodash@4.9.0",
+    "parse-link-header": "npm:parse-link-header@0.4.1",
     "rdf-ext": "npm:rdf-ext@0.3.0",
     "rdf-parser-jsonld": "npm:rdf-parser-jsonld@0.3.0",
     "rdf-parser-n3": "npm:rdf-parser-n3@0.3.0",
@@ -310,6 +310,11 @@ System.config({
       "pbkdf2": "npm:pbkdf2@3.0.9",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
+    "npm:parse-link-header@0.4.1": {
+      "querystring": "github:jspm/nodelibs-querystring@0.1.0",
+      "url": "github:jspm/nodelibs-url@0.1.0",
+      "xtend": "npm:xtend@4.0.1"
+    },
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -489,6 +494,9 @@ System.config({
     },
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
+    },
+    "npm:xtend@4.0.1": {
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     }
   }
 });

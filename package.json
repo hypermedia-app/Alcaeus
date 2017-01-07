@@ -39,7 +39,7 @@
     },
     "dependencies": {
       "jsonld": "^0.4.6",
-      "li": "^1.0.1",
+      "parse-link-header": "^0.4.1",
       "rdf-ext": "^0.3.0",
       "rdf-parser-jsonld": "^0.3.0",
       "rdf-serializer-jsonld": "^0.3.0"

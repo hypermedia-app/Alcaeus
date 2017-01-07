@@ -11,6 +11,11 @@ module.exports = function (config) {
             platform: 'Windows 7',
             version: '42'
         },
+        sl_chrome_latest: {
+            base: 'SauceLabs',
+            browserName: 'chrome',
+            platform: 'Windows 7'
+        },
         sl_firefox_39: {
             base: 'SauceLabs',
             browserName: 'firefox',

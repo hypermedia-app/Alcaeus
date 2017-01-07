@@ -1,6 +1,6 @@
 'use strict';
 
-import * as li from 'li';
+import * as li from 'parse-link-header';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlattenOptions} from "jsonld";
@@ -75,9 +75,11 @@ function rejectNotFoundStatus(res:Response):Promise<any> {
 function getDocumentationUri(res:Response):string {
     if (res.headers.has(Constants.Headers.Link)) {
         var linkHeaders = res.headers.get(Constants.Headers.Link);
-        var links = li.parse(linkHeaders);
+        var links = li(linkHeaders);
 
-        return links[Constants.Core.Vocab.apiDocumentation];
+        if(links[Constants.Core.Vocab.apiDocumentation]){
+            return links[Constants.Core.Vocab.apiDocumentation].url;
+        }
     }
 
     return null;

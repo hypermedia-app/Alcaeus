@@ -9,14 +9,14 @@ import * as documentationTypes from '../src/ApiDocumentation';
 
 describe('ResourceFactory', () => {
 
-    var apiDoc;
-    var factory;
+    let apiDoc;
+    let factory;
 
     beforeEach(() => factory = new ResourceFactory());
 
     describe('createResource', () => {
 
-        var constructedTypes = {};
+        const constructedTypes = {};
         constructedTypes[Core.Vocab.PartialCollectionView] = res => res instanceof resources.PartialCollectionView;
         constructedTypes[Core.Vocab.ApiDocumentation] = res => res instanceof documentationTypes.ApiDocumentation;
         constructedTypes[Core.Vocab.Class] = res => res instanceof documentationTypes.Class;
@@ -28,11 +28,11 @@ describe('ResourceFactory', () => {
         _.toPairs(constructedTypes).forEach(typePair => {
             (function (typeId, isOfCorrectType) {
                 it('should create typed instance for ' + typeId, function () {
-                    var jsonLd = {
+                    const jsonLd = {
                         '@type': typeId
                     };
 
-                    var resource = factory.createResource(null, jsonLd, apiDoc, {});
+                    const resource = factory.createResource(null, jsonLd, apiDoc, {});
 
                     expect(isOfCorrectType(resource)).toBe(true);
                 });
@@ -40,11 +40,11 @@ describe('ResourceFactory', () => {
         });
 
         it('should create typed instance for type expressed as array', function () {
-            var jsonLd = {
-                '@type': [ Core.Vocab.SupportedProperty, Core.Vocab.Class ]
+            const jsonLd = {
+                '@type': [Core.Vocab.SupportedProperty, Core.Vocab.Class]
             };
 
-            var resource = factory.createResource(null, jsonLd, apiDoc, {});
+            const resource = factory.createResource(null, jsonLd, apiDoc, {});
 
             expect(resource instanceof documentationTypes.SupportedProperty).toBe(true);
         });

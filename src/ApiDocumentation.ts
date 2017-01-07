@@ -9,7 +9,7 @@ import {
     IDocumentedResource, IStatusCodeDescription, IRdfProperty, IResource
 } from './interfaces';
 
-var heraclesWeakMap = new WeakMap<IResource, IHeracles>();
+const heraclesWeakMap = new WeakMap<IResource, IHeracles>();
 
 export class ApiDocumentation extends Resource implements IApiDocumentation {
 
@@ -35,7 +35,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     getOperations(classUri:string):Array<ISupportedOperation>;
 
     getOperations(classUri:string, predicateUri?:string):Array<ISupportedOperation> {
-        var clas = this.getClass(classUri);
+        let clas = this.getClass(classUri);
         if (!clas) {
             return [];
         }
@@ -44,7 +44,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
             return clas.supportedOperations;
         }
 
-        var supportedProperty = clas.supportedProperties.find((prop:ISupportedProperty) => {
+        let supportedProperty = clas.supportedProperties.find((prop: ISupportedProperty) => {
             return prop.property && prop.property.id === predicateUri;
         });
         if(!supportedProperty) {
@@ -55,7 +55,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     getProperties(classUri:string):Array<ISupportedProperty> {
-        var clas = this.getClass(classUri);
+        let clas = this.getClass(classUri);
         if (!clas) {
             return [];
         }
@@ -110,9 +110,9 @@ export class SupportedOperation extends DocumentedResource implements ISupported
 
     get requiresInput():boolean {
         const method = this.method || '';
-        var methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE';
+        const methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE';
 
-        var operationExpectsBody = !!this.expects && this.expects.id !== owl.Nothing;
+        const operationExpectsBody = !!this.expects && this.expects.id !== owl.Nothing;
 
         return methodExpectsBody || operationExpectsBody;
     }
@@ -160,7 +160,7 @@ export class Class extends DocumentedResource implements IClass {
     }
 
     get supportedOperations():Array<ISupportedOperation> {
-        var operations = this[Core.Vocab.supportedOperation];
+        let operations = this[Core.Vocab.supportedOperation];
         
         if(typeof operations ==='undefined' || operations === null) {
             return [];
@@ -174,7 +174,7 @@ export class Class extends DocumentedResource implements IClass {
     }
 
     get supportedProperties():Array<ISupportedProperty> {
-        var properties = this[Core.Vocab.supportedProperty];
+        let properties = this[Core.Vocab.supportedProperty];
         
         if(typeof properties === 'undefined' || properties === null ) {
             return [];
@@ -209,7 +209,7 @@ export class RdfProperty extends DocumentedResource implements IRdfProperty {
     }
 
     get supportedOperations():Array<ISupportedOperation> {
-        var value = this[Core.Vocab.supportedOperation];
+        let value = this[Core.Vocab.supportedOperation];
 
         if(typeof value === 'undefined'){
             return [];

@@ -6,7 +6,7 @@ export function fakeHeraclesResources(obj: Object) {
         return;
     }
 
-    var addGetter = addPredicateGetter.bind(obj);
+    const addGetter = addPredicateGetter.bind(obj);
 
     addGetter('id', JsonLd.Id, false);
     addGetter('types', JsonLd.Type, false);
@@ -104,7 +104,7 @@ export function responseBuilder() {
 function addPredicateGetter(prop: string, pred: string, wrapArray: boolean = true) {
     Object.defineProperty(this, prop, {
         get: () => {
-            var ret = this[pred];
+            const ret = this[pred];
             if (Array.isArray(ret) === false && wrapArray) {
                 return [ret];
             }

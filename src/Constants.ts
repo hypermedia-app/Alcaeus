@@ -1,7 +1,7 @@
 'use strict';
 
 export namespace Core {
-    export var Context = {
+    export const Context = {
         "hydra": "http://www.w3.org/ns/hydra/core#",
         "apiDocumentation": "hydra:apiDocumentation",
         "ApiDocumentation": "hydra:ApiDocumentation",
@@ -50,7 +50,7 @@ export namespace Core {
         "variable": "hydra:variable"
     };
 
-    export var Vocab = {
+    export let Vocab = {
         apiDocumentation: Context['hydra'] + 'apiDocumentation',
         ApiDocumentation: Context['hydra'] + 'ApiDocumentation',
         title: Context['hydra'] + 'title',
@@ -86,20 +86,20 @@ export namespace Core {
 }
 
 export namespace JsonLd {
-    export var Graph = '@graph';
-    export var Context = '@context';
-    export var Id = '@id';
-    export var Value = '@value';
-    export var Type = '@type';
+    export let Graph = '@graph';
+    export const Context = '@context';
+    export let Id = '@id';
+    export let Value = '@value';
+    export let Type = '@type';
 }
 
 export namespace MediaTypes {
-    export var jsonLd = 'application/ld+json';
-    export var ntriples = 'application/n-triples';
-    export var nquads = 'application/n-quads';
+    export let jsonLd = 'application/ld+json';
+    export let ntriples = 'application/n-triples';
+    export let nquads = 'application/n-quads';
 }
 
 export namespace Headers {
-    export var Link = 'Link';
-    export var ContentType = 'Content-Type';
+    export let Link = 'Link';
+    export let ContentType = 'Content-Type';
 }

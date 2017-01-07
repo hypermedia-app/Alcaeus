@@ -4,7 +4,7 @@ import {ISupportedOperation, IHeracles, IHydraResource, IOperation, IClass} from
 
 describe('Operation', () => {
 
-    var supportedOperation:ISupportedOperation;
+    let supportedOperation: ISupportedOperation;
 
     describe('constructor', () => {
 
@@ -27,9 +27,9 @@ describe('Operation', () => {
 
     describe('property', () => {
 
-        var operation:IOperation;
-        var expects:IClass = <IClass>{};
-        var returns:IClass = <IClass>{};
+        let operation: IOperation;
+        const expects: IClass = <IClass>{};
+        const returns: IClass = <IClass>{};
 
         beforeEach(() => {
             operation = new Operation(<ISupportedOperation>{
@@ -61,10 +61,9 @@ describe('Operation', () => {
 
     describe('invoke', () => {
 
-        var heracles;
-        var supportedOperation = <ISupportedOperation>{
-        };
-        var resource = <IHydraResource>{
+        let heracles;
+        const supportedOperation = <ISupportedOperation>{};
+        const resource = <IHydraResource>{
             id: 'http://target/resource'
         };
 
@@ -74,8 +73,8 @@ describe('Operation', () => {
 
         it('should execute through heracles with JSON-LD media type', () => {
 
-            var op = new Operation(supportedOperation, heracles, resource);
-            var payload = {};
+            const op = new Operation(supportedOperation, heracles, resource);
+            const payload = {};
 
             op.invoke(payload);
 
@@ -85,8 +84,8 @@ describe('Operation', () => {
 
         it('should execute through heracles with changed media type', () => {
 
-                var op = new Operation(supportedOperation, heracles, resource);
-                var payload = {};
+                const op = new Operation(supportedOperation, heracles, resource);
+                const payload = {};
 
                 op.invoke(payload, 'text/turtle');
 

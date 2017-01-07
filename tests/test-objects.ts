@@ -4,7 +4,7 @@ import {promises as jsonld} from 'jsonld';
 import {JsonLd} from '../src/Constants';
 
 export namespace Bodies {
-    export var someJsonLd = {
+    export let someJsonLd = {
         '@context': {
             '@vocab': 'http://example.com/vocab#'
         },
@@ -21,7 +21,7 @@ export namespace Bodies {
         }
     };
 
-    export var idWithTrailingSlash = {
+    export let idWithTrailingSlash = {
         '@context': {
             '@vocab': 'http://example.com/vocab#'
         },
@@ -29,7 +29,7 @@ export namespace Bodies {
         '@type': 'Resource'
     };
 
-    export var someJsonLdExpanded = {
+    export let someJsonLdExpanded = {
         '@id': 'http://example.com/resource',
         '@type': 'http://example.com/vocab#Resource',
         'http://example.com/vocab#prop': {
@@ -43,7 +43,7 @@ export namespace Bodies {
         }
     };
 
-    export var cycledResource = {
+    export let cycledResource = {
         '@id': 'http://example.com/resource',
         'http://example.com/vocab#prop': {
             'http://example.com/vocab#top': {
@@ -52,7 +52,7 @@ export namespace Bodies {
         }
     };
 
-    export var typedLiteral = {
+    export let typedLiteral = {
         "@id": "http://example.com/resource",
         "http://schema.org/image": {
             "http://schema.org/contentUrl": {
@@ -62,7 +62,7 @@ export namespace Bodies {
         }
     };
 
-    export var typedNumericLiteral = {
+    export let typedNumericLiteral = {
         "@id": "http://example.com/resource",
         "http://schema.org/age": {
             "@type": xsd.integer,
@@ -70,7 +70,7 @@ export namespace Bodies {
         }
     };
 
-    export var multipleTypesExpanded = {
+    export let multipleTypesExpanded = {
         '@id': 'http://example.com/resource',
         '@type': [
             'http://example.com/vocab#Resource',
@@ -78,7 +78,7 @@ export namespace Bodies {
         ]
     };
 
-    export var deepBlankNodes = {
+    export let deepBlankNodes = {
         "@id": "http://example.com/root",
         "http://example.com/prop": {
             "http://example.com/prop": {
@@ -93,19 +93,19 @@ export namespace Bodies {
         }
     };
 
-    export var ntriples = `
+    export let ntriples = `
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .
 `;
 
-    export var hydraCollection = {
+    export let hydraCollection = {
         '@id': 'http://example.com/resource',
         '@context': Core.Context,
         'hydra:member': [
-            { '@id': 'http://example.com/element/1' },
-            { '@id': 'http://example.com/element/2' },
-            { '@id': 'http://example.com/element/3' },
-            { '@id': 'http://example.com/element/4' }
+            {'@id': 'http://example.com/element/1'},
+            {'@id': 'http://example.com/element/2'},
+            {'@id': 'http://example.com/element/3'},
+            {'@id': 'http://example.com/element/4'}
         ],
         'http://example.vocab/managedBy': {
             '@id': 'http://example.com/collection-curator',
@@ -113,14 +113,14 @@ export namespace Bodies {
         }
     };
 
-    export var hydraCollectionWithView = {
+    export let hydraCollectionWithView = {
         '@id': 'http://example.com/resource',
         '@context': Core.Context,
         'member': [
-            { '@id': 'http://example.com/element/1' },
-            { '@id': 'http://example.com/element/2' },
-            { '@id': 'http://example.com/element/3' },
-            { '@id': 'http://example.com/element/4' }
+            {'@id': 'http://example.com/element/1'},
+            {'@id': 'http://example.com/element/2'},
+            {'@id': 'http://example.com/element/3'},
+            {'@id': 'http://example.com/element/4'}
         ],
         'http://example.vocab/managedBy': {
             '@id': 'http://example.com/collection-curator',
@@ -139,7 +139,7 @@ export namespace Bodies {
 }
 
 export namespace Documentations {
-    export var classWithOperation = {
+    export let classWithOperation = {
         '@id': 'http://api.example.com/doc',
         '@type': Core.Vocab.ApiDocumentation,
         '@context': Core.Context,
@@ -194,9 +194,9 @@ export namespace Documentations {
         ]
     };
 
-    export var untyped = {
+    export let untyped = {
         '@context': Core.Context,
         '@id': 'http://api.example.com/doc',
         'entrypoint': 'http://example.com/home'
-    }
+    };
 }

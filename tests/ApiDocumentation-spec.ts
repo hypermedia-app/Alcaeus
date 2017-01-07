@@ -9,7 +9,7 @@ import {IApiDocumentation} from "../src/interfaces";
 
 describe('ApiDocumentation', () => {
 
-    var heracles;
+    let heracles;
 
     beforeEach(() => heracles = {});
 
@@ -18,7 +18,7 @@ describe('ApiDocumentation', () => {
         it('should return classes from documentation', (done) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
                 expect(docs.classes.length).toBe(1);
                 expect(docs.classes[0]['@id']).toBe('http://example.com/api#Class');
@@ -29,9 +29,9 @@ describe('ApiDocumentation', () => {
         it('should return selected class by @id', (done) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                var clas = docs.getClass('http://example.com/api#Class');
+                const clas = docs.getClass('http://example.com/api#Class');
                 expect(clas['@id']).toBe('http://example.com/api#Class');
                 done();
             }).catch(done.fail);
@@ -39,9 +39,9 @@ describe('ApiDocumentation', () => {
 
         it('should return null for missing supported class', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                var clas = docs.getClass('http://example.com/api#UndomcumentedClass');
+                const clas = docs.getClass('http://example.com/api#UndomcumentedClass');
                 expect(clas).toBe(null);
                 done()
             }).catch(done.fail);
@@ -51,7 +51,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting entrypoint', () => {
 
-        var heracles;
+        let heracles;
         beforeEach(() => {
             heracles = {
                 loadResource: sinon.stub()
@@ -60,7 +60,7 @@ describe('ApiDocumentation', () => {
 
         it('should invoke Resource.load', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
                 heracles.loadResource.returns(Promise.resolve(null));
 
                 docs.getEntrypoint()
@@ -77,9 +77,9 @@ describe('ApiDocumentation', () => {
 
         it('should return empty array for missing supported class', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                var ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
+                const ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
                 expect(_.isArray(ops)).toBe(true);
                 expect(ops.length).toBe(0);
                 done();
@@ -91,9 +91,9 @@ describe('ApiDocumentation', () => {
 
         it('should return a value', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs: IApiDocumentation = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs: IApiDocumentation = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                var ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
+                const ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
                 expect(ops).toBeDefined();
                 expect(ops).not.toBeNull();
                 expect(ops.length).toBe(1);
@@ -106,9 +106,9 @@ describe('ApiDocumentation', () => {
 
         it('should return empty array for missing supported class', (done:any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                var docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                var props = docs.getProperties('http://example.com/api#UndomcumentedClass');
+                const props = docs.getProperties('http://example.com/api#UndomcumentedClass');
                 expect(_.isArray(props)).toBe(true);
                 expect(props.length).toBe(0);
                 done();

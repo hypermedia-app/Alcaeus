@@ -36,7 +36,7 @@ export class FetchUtil {
             })
             .then(rejectNotFoundStatus)
             .then((res:Response) => {
-                    var apiDocsUri = getDocumentationUri(res);
+                    const apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
                         .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
@@ -55,7 +55,7 @@ export class FetchUtil {
             })
             .then(rejectNotFoundStatus)
             .then((res:Response) => {
-                    var apiDocsUri = getDocumentationUri(res);
+                    const apiDocsUri = getDocumentationUri(res);
 
                     return getFlattendGraph(res)
                         .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
@@ -74,8 +74,8 @@ function rejectNotFoundStatus(res:Response):Promise<any> {
 
 function getDocumentationUri(res:Response):string {
     if (res.headers.has(Constants.Headers.Link)) {
-        var linkHeaders = res.headers.get(Constants.Headers.Link);
-        var links = li(linkHeaders);
+        const linkHeaders = res.headers.get(Constants.Headers.Link);
+        const links = li(linkHeaders);
 
         if(links[Constants.Core.Vocab.apiDocumentation]){
             return links[Constants.Core.Vocab.apiDocumentation].url;
@@ -100,7 +100,7 @@ class FetchError extends Error {
 }
 
 function getFlattendGraph(res:Response):Promise<any> {
-    var mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
+    const mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
 
     if (res.ok === false) {
         return Promise.reject(new FetchError(res));
@@ -121,7 +121,7 @@ function parseResourceRepresentation(mediaType:string, res:Response) {
 
 function runInference(graph) {
     FetchUtil._propertyRangeMappings.map(mapping => {
-        var matches = graph.match(null, mapping[0], null, null);
+        const matches = graph.match(null, mapping[0], null, null);
         matches.toArray().forEach(triple => {
             graph.add(new $rdf.Triple(
                 triple.object,
@@ -136,7 +136,7 @@ function runInference(graph) {
 
 function flatten(url) {
     return json => {
-        var opts:FlattenOptions = {};
+        const opts: FlattenOptions = {};
         if (url) {
             opts.base = url;
         }

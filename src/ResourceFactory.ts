@@ -17,11 +17,11 @@ export class ResourceFactory implements IResourceFactory {
     }
 
     public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources:Object, typeOverride?:string):Types.Resource {
-        var incomingLinks = findIncomingLinks(obj, resources);
+        const incomingLinks = findIncomingLinks(obj, resources);
 
-        var factory = this.factories[typeOverride || obj[JsonLd.Type]];
+        let factory = this.factories[typeOverride || obj[JsonLd.Type]];
         if(!factory && Array.isArray(obj[JsonLd.Type])) {
-            for (var i=0; i<obj[JsonLd.Type].length; i++) {
+            for (let i=0; i<obj[JsonLd.Type].length; i++) {
                 factory = this.factories[obj[JsonLd.Type][i]];
                 if(factory) {
                     break;
@@ -60,7 +60,7 @@ class IncomingLink {
 }
 
 function findIncomingLinks(object, resources:Object) {
-    var instances = values(resources);
+    const instances = values(resources);
 
     return instances.reduceRight((acc:Array<IncomingLink>, res, index) => {
         forOwn(res, (value, predicate) => {

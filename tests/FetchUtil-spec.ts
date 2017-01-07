@@ -79,17 +79,12 @@ describe('FetchUtil', () => {
                 });
         });
 
-        it('should fail when resource returns non-success status code', (done:any) => {
+        fit('should fail when resource returns non-success status code', (done:any) => {
             windowFetch.withArgs('http://example.com/not/there')
                 .returns(responseBuilder().serverError().build());
 
             FetchUtil.fetchResource('http://example.com/not/there')
-                .then(done.fail, err => {
-                    // hm, why doesn't thins work?
-                    // expect(err.message).toBe('Request failed');
-                    expect(err.response).toBeDefined();
-                    done();
-                })
+                .then(done.fail, done)
                 .catch(done.fail);
         });
 

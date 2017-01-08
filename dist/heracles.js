@@ -154,6 +154,28 @@ $__System.registerDynamic('4', ['7', '8', '5', '9', 'a', 'b', '6', '3'], true, f
 
     return module.exports;
 });
+$__System.registerDynamic('c', [], true, function ($__require, exports, module) {
+    'use strict';
+
+    var define,
+        global = this || self,
+        GLOBAL = global;
+    var JsonLdUtil = function () {
+        function JsonLdUtil() {}
+        JsonLdUtil.trimTrailingSlash = function (uri) {
+            if (!uri || !uri.replace) {
+                return null;
+            }
+            // todo: is this really correct to ignore trailing slash?
+            return uri.replace(/\/$/, '');
+        };
+        return JsonLdUtil;
+    }();
+    exports.JsonLdUtil = JsonLdUtil;
+    
+
+    return module.exports;
+});
 $__System.registerDynamic('6', [], true, function ($__require, exports, module) {
     "use strict";
 
@@ -195,7 +217,7 @@ $__System.registerDynamic('6', [], true, function ($__require, exports, module) 
 
     return module.exports;
 });
-$__System.registerDynamic("c", ["5", "6", "d", "e"], true, function ($__require, exports, module) {
+$__System.registerDynamic("d", ["5", "6", "e", "f"], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -220,8 +242,8 @@ $__System.registerDynamic("c", ["5", "6", "d", "e"], true, function ($__require,
     };
     var Constants_1 = $__require("5");
     var Vocabs_1 = $__require("6");
-    var Resources_1 = $__require("d");
-    var nonenumerable_1 = $__require("e");
+    var Resources_1 = $__require("e");
+    var nonenumerable_1 = $__require("f");
     var heraclesWeakMap = new WeakMap();
     var ApiDocumentation = function (_super) {
         __extends(ApiDocumentation, _super);
@@ -486,42 +508,16 @@ $__System.registerDynamic("c", ["5", "6", "d", "e"], true, function ($__require,
 
     return module.exports;
 });
-$__System.registerDynamic('f', [], true, function ($__require, exports, module) {
-    'use strict';
-
-    var define,
-        global = this || self,
-        GLOBAL = global;
-    var JsonLdUtil = function () {
-        function JsonLdUtil() {}
-        JsonLdUtil.idsEqual = function (id1, id2) {
-            return JsonLdUtil.trimTrailingSlash(id1) === JsonLdUtil.trimTrailingSlash(id2);
-        };
-        JsonLdUtil.trimTrailingSlash = function (uri) {
-            if (!uri || !uri.replace) {
-                return null;
-            }
-            // todo: is this really correct to ignore trailing slash?
-            return uri.replace(/\/$/, '');
-        };
-        return JsonLdUtil;
-    }();
-    exports.JsonLdUtil = JsonLdUtil;
-    
-
-    return module.exports;
-});
-$__System.registerDynamic('10', ['6', 'd', 'c', '5', 'f', '11'], true, function ($__require, exports, module) {
+$__System.registerDynamic('10', ['6', 'e', 'd', '5', '11'], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
         global = this || self,
         GLOBAL = global;
     var Vocabs_1 = $__require('6');
-    var Types = $__require('d');
-    var DocTypes = $__require('c');
+    var Types = $__require('e');
+    var DocTypes = $__require('d');
     var Constants_1 = $__require('5');
-    var JsonLdUtil_1 = $__require('f');
     var LodashUtil_1 = $__require('11');
     var ResourceFactory = function () {
         function ResourceFactory() {
@@ -577,7 +573,7 @@ $__System.registerDynamic('10', ['6', 'd', 'c', '5', 'f', '11'], true, function 
         var instances = LodashUtil_1.values(resources);
         return instances.reduceRight(function (acc, res, index) {
             LodashUtil_1.forOwn(res, function (value, predicate) {
-                if (value && value[Constants_1.JsonLd.Id] && JsonLdUtil_1.JsonLdUtil.idsEqual(value[Constants_1.JsonLd.Id], object[Constants_1.JsonLd.Id])) {
+                if (value && value[Constants_1.JsonLd.Id] && value[Constants_1.JsonLd.Id] === object[Constants_1.JsonLd.Id]) {
                     acc.push(new IncomingLink(instances[index][Constants_1.JsonLd.Id], predicate, resources));
                 }
             });
@@ -822,7 +818,7 @@ $__System.registerDynamic('12', ['2'], true, function ($__require, exports, modu
   }
   return module.exports;
 });
-$__System.registerDynamic('e', ['12'], true, function ($__require, exports, module) {
+$__System.registerDynamic('f', ['12'], true, function ($__require, exports, module) {
   /* */
   'use strict';
 
@@ -958,7 +954,7 @@ $__System.registerDynamic("5", [], true, function ($__require, exports, module) 
 
     return module.exports;
 });
-$__System.registerDynamic("d", ["8", "e", "5"], true, function ($__require, exports, module) {
+$__System.registerDynamic("e", ["8", "f", "5"], true, function ($__require, exports, module) {
     'use strict';
 
     var define,
@@ -982,7 +978,7 @@ $__System.registerDynamic("d", ["8", "e", "5"], true, function ($__require, expo
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var jsonld_1 = $__require("8");
-    var nonenumerable = $__require("e");
+    var nonenumerable = $__require("f");
     var Constants_1 = $__require("5");
     var _isProcessed = new WeakMap();
     var _apiDocumentation = new WeakMap();
@@ -1261,7 +1257,7 @@ $__System.registerDynamic("11", [], true, function ($__require, exports, module)
 
     return module.exports;
 });
-$__System.registerDynamic('1', ['4', '5', 'f', '10', 'd', '11'], true, function ($__require, exports, module) {
+$__System.registerDynamic('1', ['4', '5', 'c', '10', 'e', '11'], true, function ($__require, exports, module) {
     /// <reference path="../typings/index.d.ts" />
     'use strict';
 
@@ -1270,9 +1266,9 @@ $__System.registerDynamic('1', ['4', '5', 'f', '10', 'd', '11'], true, function 
         GLOBAL = global;
     var FetchUtil_1 = $__require('4');
     var Constants_1 = $__require('5');
-    var JsonLdUtil_1 = $__require('f');
+    var JsonLdUtil_1 = $__require('c');
     var ResourceFactory_1 = $__require('10');
-    var Resources_1 = $__require('d');
+    var Resources_1 = $__require('e');
     var LodashUtil_1 = $__require('11');
     var Heracles = function () {
         function Heracles() {
@@ -1285,7 +1281,7 @@ $__System.registerDynamic('1', ['4', '5', 'f', '10', 'd', '11'], true, function 
             var _this = this;
             return FetchUtil_1.FetchUtil.fetchResource(uri).then(function (response) {
                 var typeOverrides = {};
-                typeOverrides[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)] = Constants_1.Core.Vocab.ApiDocumentation;
+                typeOverrides[uri] = Constants_1.Core.Vocab.ApiDocumentation;
                 return getRequestedObject(_this, uri, response.resources, typeOverrides)(null);
             }, function () {
                 return null;
@@ -1312,21 +1308,21 @@ $__System.registerDynamic('1', ['4', '5', 'f', '10', 'd', '11'], true, function 
         return function (apiDocumentation) {
             var resourcified = {};
             resources.forEach(function (res) {
-                resourcified[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(res[Constants_1.JsonLd.Id])] = res;
+                resourcified[res[Constants_1.JsonLd.Id]] = res;
             });
-            uri = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri);
             resources.reduceRight(function (acc, val) {
-                var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(val[Constants_1.JsonLd.Id]);
+                var id = val[Constants_1.JsonLd.Id];
                 acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
                 return acc;
             }, resourcified);
             LodashUtil_1.forOwn(resourcified, function (resource) {
                 return resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides);
             });
-            if (!resourcified[uri]) {
+            var rootResource = resourcified[uri] || resourcified[JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(uri)];
+            if (!rootResource) {
                 return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
             }
-            return resourcified[uri];
+            return rootResource;
         };
     }
     function resourcify(heracles, obj, resourcified, apiDoc, typeOverrides) {
@@ -1336,13 +1332,13 @@ $__System.registerDynamic('1', ['4', '5', 'f', '10', 'd', '11'], true, function 
         if (obj[Constants_1.JsonLd.Value]) {
             return obj[Constants_1.JsonLd.Value];
         }
-        var selfId = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
+        var selfId = obj[Constants_1.JsonLd.Id];
         if (!selfId) {
             return obj;
         }
         var resource = resourcified[selfId];
         if (!resource || typeof resource._processed === 'undefined') {
-            var id = JsonLdUtil_1.JsonLdUtil.trimTrailingSlash(obj[Constants_1.JsonLd.Id]);
+            var id = obj[Constants_1.JsonLd.Id];
             resource = heracles.resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
             resourcified[selfId] = resource;
         }

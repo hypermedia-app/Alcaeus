@@ -23,7 +23,7 @@ class Heracles implements IHeracles {
         return FetchUtil.fetchResource(uri)
             .then(response => {
                 const typeOverrides = {};
-                typeOverrides[JsonLdUtil.trimTrailingSlash(uri)] = Core.Vocab.ApiDocumentation;
+                typeOverrides[uri] = Core.Vocab.ApiDocumentation;
 
                 return getRequestedObject(this, uri, response.resources, typeOverrides)(null);
             }, () => null);
@@ -49,24 +49,24 @@ function getRequestedObject(heracles:IHeracles, uri, resources, typeOverrides = 
     return apiDocumentation => {
         const resourcified = {};
         resources.forEach(res => {
-            resourcified[JsonLdUtil.trimTrailingSlash(res[JsonLd.Id])] = res;
+            resourcified[res[JsonLd.Id]] = res;
         });
 
-        uri = JsonLdUtil.trimTrailingSlash(uri);
-
         resources.reduceRight((acc:Object, val) => {
-            const id = JsonLdUtil.trimTrailingSlash(val[JsonLd.Id]);
+            const id = val[JsonLd.Id];
             acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
             return acc;
         }, resourcified);
 
         forOwn(resourcified, resource => resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides));
 
-        if (!resourcified[uri]) {
+        const rootResource = resourcified[uri] || resourcified[JsonLdUtil.trimTrailingSlash(uri)];
+
+        if (!rootResource) {
             return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
         }
 
-        return resourcified[uri];
+        return rootResource;
     };
 }
 
@@ -79,7 +79,7 @@ function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDoc
         return obj[JsonLd.Value];
     }
 
-    let selfId = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
+    let selfId = obj[JsonLd.Id];
 
     if (!selfId) {
         return obj;
@@ -87,7 +87,7 @@ function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDoc
 
     let resource = resourcified[selfId];
     if (!resource || typeof resource._processed === 'undefined') {
-        const id = JsonLdUtil.trimTrailingSlash(obj[JsonLd.Id]);
+        const id = obj[JsonLd.Id];
         resource = heracles.resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
         resourcified[selfId] = resource;
     }

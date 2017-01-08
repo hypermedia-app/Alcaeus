@@ -140,7 +140,7 @@ export namespace Bodies {
 
 export namespace Documentations {
     export let classWithOperation = {
-        '@id': 'http://api.example.com/doc',
+        '@id': 'http://api.example.com/doc/',
         '@type': Core.Vocab.ApiDocumentation,
         '@context': Core.Context,
         'entrypoint': 'http://example.com/home',
@@ -196,7 +196,7 @@ export namespace Documentations {
 
     export let untyped = {
         '@context': Core.Context,
-        '@id': 'http://api.example.com/doc',
+        '@id': 'http://api.example.com/doc/',
         'entrypoint': 'http://example.com/home'
     };
 }

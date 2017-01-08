@@ -64,7 +64,7 @@ function findIncomingLinks(object, resources:Object) {
 
     return instances.reduceRight((acc:Array<IncomingLink>, res, index) => {
         forOwn(res, (value, predicate) => {
-            if (value && value[JsonLd.Id] && JsonLdUtil.idsEqual(value[JsonLd.Id], object[JsonLd.Id])) {
+            if (value && value[JsonLd.Id] && value[JsonLd.Id] === object[JsonLd.Id]) {
                 acc.push(new IncomingLink(
                     instances[index][JsonLd.Id], predicate, resources
                 ));

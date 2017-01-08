@@ -7,7 +7,7 @@ import {Hydra} from '../src/heracles';
 import {HydraResource} from '../src/Resources';
 import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
-import {Bodies, Documentations, Responses} from './test-objects';
+import {Bodies, Documentations } from './test-objects';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {IPartialCollectionView} from "../src/interfaces";
 import 'core-js/es6/object';
@@ -49,30 +49,6 @@ describe('Hydra', () => {
                 .then(res => {
                     expect(res['@id']).toBe('http://example.com/linked');
                     expect(res instanceof HydraResource).toBe(true);
-                    done();
-                })
-                .catch(done.fail);
-        });
-
-        it('should return object with matching @id, trailing slash ignored', (done:any) =>{
-            fetchResource.withArgs('http://example.com/resource/')
-                .returns(mockedResponse(Bodies.someJsonLd));
-
-            Hydra.loadResource('http://example.com/resource/')
-                .then(res => {
-                    expect(res['@id']).toBe('http://example.com/resource');
-                    done();
-                })
-                .catch(done.fail);
-        });
-
-        it('should return object with matching @id, trailing slash ignored', (done:any) =>{
-            fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.idWithTrailingSlash));
-
-            Hydra.loadResource('http://example.com/resource')
-                .then(res => {
-                    expect(res['@id']).toBe('http://example.com/resource/');
                     done();
                 })
                 .catch(done.fail);
@@ -245,9 +221,9 @@ describe('Hydra', () => {
     describe('loadDocumentation', () => {
 
         it('should return type ApiDocumentation', (done:any) => {
-            fetchResource.withArgs('http://api.example.com/doc').returns(mockedResponse(Documentations.classWithOperation, false));
+            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.classWithOperation, false));
 
-            Hydra.loadDocumentation('http://api.example.com/doc')
+            Hydra.loadDocumentation('http://api.example.com/doc/')
                 .then(doc => {
                     expect(doc instanceof ApiDocumentation).toBe(true);
                     done();

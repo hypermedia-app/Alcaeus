@@ -31,7 +31,7 @@ describe('RdfProperty', () => {
         jsonld.compact(testProperty, {}).then(compacted => {
             const property = new RdfProperty(compacted);
 
-            expect(property.domain).toBe(xsd.integer);
+            expect(property.domain.id).toBe(xsd.integer);
             done();
         }).catch(done.fail);
     });
@@ -41,7 +41,7 @@ describe('RdfProperty', () => {
         jsonld.compact(testProperty, {}).then(compacted => {
             const property = new RdfProperty(compacted);
 
-            expect(property.range).toBe(xsd.string);
+            expect(property.range.id).toBe(xsd.string);
             done();
         }).catch(done.fail);
     });

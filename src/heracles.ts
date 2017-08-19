@@ -1,20 +1,15 @@
-/// <reference path="../typings/index.d.ts" />
-
-'use strict';
-
 import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {HydraResource as ResourceCtor} from "./Resources";
 import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
 import {forOwn} from "./LodashUtil";
 import {ExpandedWithDocs} from "./internals";
 
-class Heracles implements IHeracles {
+export class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
 
-    loadResource(uri:string):Promise<IHydraResource> {
+    loadResource(uri:string):Promise<any> {
         return FetchUtil.fetchResource(uri)
             .then(processFetchUtilResponse.call(this, uri));
     }
@@ -29,15 +24,11 @@ class Heracles implements IHeracles {
             }, () => null);
     }
 
-    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource> {
+    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<any> {
         return FetchUtil.invokeOperation(operation.method, uri, body, mediaType)
             .then(processFetchUtilResponse.call(this, uri));
     }
 }
-
-export let ResourceFactory = ResourceFactoryCtor;
-export let Resource = ResourceCtor;
-export let Hydra = new Heracles();
 
 function processFetchUtilResponse(uri) {
     return (response:ExpandedWithDocs) =>

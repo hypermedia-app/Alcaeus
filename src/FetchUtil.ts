@@ -9,6 +9,7 @@ import * as JsonLdParser from 'rdf-parser-jsonld';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld'
 import {rdf} from './Vocabs';
 import {ExpandedWithDocs} from "./internals";
+import 'isomorphic-fetch';
 
 $rdf.parsers[Constants.MediaTypes.jsonLd] = JsonLdParser;
 
@@ -29,7 +30,7 @@ export class FetchUtil {
 
     static fetchResource(uri:string):Promise<ExpandedWithDocs> {
 
-        return window.fetch(uri, {
+        return fetch(uri, {
                 headers: {
                     accept: FetchUtil._requestAcceptHeaders
                 }
@@ -46,7 +47,7 @@ export class FetchUtil {
 
     static invokeOperation(method:string, uri:string, body?:any, mediaType = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
 
-        return window.fetch(uri, {
+        return fetch(uri, {
                 method: method,
                 headers: {
                     'Content-Type': mediaType,

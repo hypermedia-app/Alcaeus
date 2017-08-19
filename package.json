@@ -10,8 +10,8 @@
     "definition": "index.d.ts"
   },
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start --single-run",
-    "build": "jspm bundle-sfx src/heracles - jsonld - parse-link-header - rdf-ext - rdf-parser-jsonld - rdf-serializer-jsonld dist/heracles.js --format cjs"
+    "test": "karma start --single-run",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -56,10 +56,9 @@
     "karma-systemjs": "^0.14.0",
     "rdf-parser-n3": "^1.0.0",
     "sinon": "^1.17.3",
-    "systemjs": "^0.19.31",
     "ts-loader": "^2.3.3",
     "typescript": "^2.4.2",
-    "typings": "^1.4.0",
+    "webpack": "^3.5.5",
     "whatwg-fetch": "^1.0.0"
   }
 }

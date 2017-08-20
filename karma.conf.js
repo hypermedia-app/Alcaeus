@@ -1,3 +1,5 @@
+var webpackConfig = require("./webpack.config");
+
 module.exports = function (config) {
     if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
         console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
@@ -61,20 +63,18 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['systemjs', 'jasmine'],
+        frameworks: ['jasmine'],
 
         //plugins
         plugins: process.env.TRAVIS
-            ? ['karma-systemjs', 'karma-jasmine', 'karma-sauce-launcher']
-            : ['karma-systemjs', 'karma-jasmine', 'karma-chrome-launcher', 'karma-firefox-launcher', 'karma-ie-launcher'],
+            ? ['karma-webpack', 'karma-jasmine', 'karma-sauce-launcher']
+            : ['karma-webpack', 'karma-jasmine', 'karma-chrome-launcher', 'karma-firefox-launcher', 'karma-ie-launcher', 'karma-safari-launcher'],
 
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/*-spec.js',
-            'tests/*-specs.js'
+            'tests/*-specs?.ts'
         ],
-
 
         // list of files to exclude
         exclude: [],
@@ -82,7 +82,9 @@ module.exports = function (config) {
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {},
+        preprocessors: {
+            "tests/**/*.ts": ["webpack"]
+        },
 
 
         // test results reporter to use
@@ -112,23 +114,17 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome', 'IE', 'Firefox'],
+            : ['Chrome', 'Safari'],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: process.env.TRAVIS ? true : false,
+        singleRun: process.env.TRAVIS ? false : false,
 
         concurrency: 3,
 
-        systemjs: {
-            configFile: 'config.js',
-            serveFiles: [
-                'src/**/*',
-                'tests/**/*',
-                'jspm_packages/**/*',
-                'node_modules/**/*',
-                'build.js'
-            ]
+        webpack: {
+            module: webpackConfig.module,
+            resolve: webpackConfig.resolve
         }
     });
 };

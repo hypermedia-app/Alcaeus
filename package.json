@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "karma start --single-run",
+    "test-dev": "karma start",
     "build": "webpack"
   },
   "repository": {
@@ -34,7 +35,6 @@
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "jsonld": "^0.4.12",
-    "li": "^1.2.1",
     "parse-link-header": "^0.4.1",
     "rdf-ext": "^0.3.0",
     "rdf-parser-jsonld": "^0.3.3",
@@ -51,14 +51,14 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
-    "karma-jasmine": "^1.0.2",
+    "karma-jasmine": "^1.1.0",
     "karma-sauce-launcher": "^1.0.0",
-    "karma-systemjs": "^0.14.0",
     "rdf-parser-n3": "^1.0.0",
     "sinon": "^1.17.3",
     "ts-loader": "^2.3.3",
     "typescript": "^2.4.2",
     "webpack": "^3.5.5",
+    "webpack-karma-jasmine": "^1.0.4",
     "whatwg-fetch": "^1.0.0"
   }
 }

@@ -47,7 +47,7 @@ describe('SupportedOperation', () => {
     
     describe('requiresInput', () => {
 
-        it('should return false for GET operation', done => {
+        it('should return false for GET operation', (done:any) => {
             const operation = {
                 '@context': Core.Context,
                 'method': 'GET'
@@ -61,7 +61,7 @@ describe('SupportedOperation', () => {
             }).catch(done.fail);
         });
 
-        it('should return false for DELETE operation', done => {
+        it('should return false for DELETE operation', (done:any) => {
             const operation = {
                 '@context': Core.Context,
                 'method': 'DELETE'
@@ -75,7 +75,7 @@ describe('SupportedOperation', () => {
             }).catch(done.fail);
         });
 
-        it('should return true if operation expects a body', done => {
+        it('should return true if operation expects a body', (done:any) => {
             const operation = {
                 '@context': Core.Context,
                 'method': 'POST'
@@ -89,7 +89,7 @@ describe('SupportedOperation', () => {
             }).catch(done.fail);
         });
 
-        it('should return true if operation expects nothing', done => {
+        it('should return true if operation expects nothing', (done:any) => {
             const operation = {
                 '@context': Core.Context,
                 'method': 'POST'

@@ -15,7 +15,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting classes', () => {
 
-        it('should return classes from documentation', (done) => {
+        it('should return classes from documentation', (done:any) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
                 const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
@@ -26,7 +26,7 @@ describe('ApiDocumentation', () => {
             }).catch(done.fail);
         });
 
-        it('should return selected class by @id', (done) => {
+        it('should return selected class by @id', (done:any) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
                 const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));

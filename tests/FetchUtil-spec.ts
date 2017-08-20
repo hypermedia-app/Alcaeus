@@ -100,7 +100,7 @@ describe('FetchUtil', () => {
                 .catch(done.fail);
         });
 
-        xit('should handle redirects', (done) => {
+        xit('should handle redirects', (done:any) => {
             windowFetch.withArgs('http://example.com/something/requested')
                 .returns(responseBuilder().redirect('http://example.com/redirected/to').build());
 
@@ -112,7 +112,7 @@ describe('FetchUtil', () => {
                 .catch(done.fail);
         });
 
-        it('should handle Content-Location', (done) => {
+        it('should handle Content-Location', (done:any) => {
             windowFetch.withArgs('http://example.com/something/requested')
                 .returns(responseBuilder().contentLocation('http://example.com/redirected/to').build());
 

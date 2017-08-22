@@ -1,5 +1,3 @@
-'use strict';
-
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Core, MediaTypes} from '../src/Constants';

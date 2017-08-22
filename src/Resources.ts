@@ -1,7 +1,5 @@
-'use strict';
-
 import {promises as jsonld} from 'jsonld';
-import * as nonenumerable from 'core-decorators/lib/nonenumerable';
+import {nonenumerable} from 'core-decorators';
 import {JsonLd, Core, MediaTypes} from './Constants';
 import {
     IOperation, ISupportedOperation, IHeracles, IHydraResource, IClass, IResource,

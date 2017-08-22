@@ -1,5 +1,3 @@
-'use strict';
-
 export class JsonLdUtil{
     static trimTrailingSlash(uri:string):string {
         if(!uri || !uri.replace) {

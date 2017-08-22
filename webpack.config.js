@@ -12,7 +12,8 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"]
+    extensions: [".tsx", ".ts", ".js"],
+    mainFields: ['jsnext:main', 'browser', 'main']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -51,6 +52,6 @@ module.exports = {
       'amd': 'isomporphic-fetch',
       'root': 'fetch'
     }
-  }
-  //devtool: 'inline-source-map'
+  },
+  devtool: 'source-map'
 };

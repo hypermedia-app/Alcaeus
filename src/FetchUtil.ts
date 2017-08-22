@@ -1,5 +1,3 @@
-'use strict';
-
 import * as li from 'parse-link-header';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";

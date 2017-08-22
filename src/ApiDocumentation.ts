@@ -1,9 +1,7 @@
-'use strict';
-
 import {Core, JsonLd} from './Constants';
 import {Schema, rdfs, owl} from './Vocabs';
 import {Resource} from './Resources';
-import {default as nonenumerable} from "core-decorators/lib/nonenumerable";
+import {nonenumerable} from "core-decorators";
 import {
     IApiDocumentation, IHeracles, IClass, ISupportedOperation, ISupportedProperty, IHydraResource,
     IDocumentedResource, IStatusCodeDescription, IRdfProperty, IResource

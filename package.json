@@ -10,8 +10,7 @@
     "definition": "index.d.ts"
   },
   "scripts": {
-    "test": "karma start --single-run",
-    "test-dev": "karma start",
+    "test": "karma start",
     "build": "webpack"
   },
   "repository": {
@@ -54,11 +53,10 @@
     "karma-jasmine": "^1.1.0",
     "karma-sauce-launcher": "^1.0.0",
     "rdf-parser-n3": "^1.0.0",
-    "sinon": "^1.17.3",
+    "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
     "typescript": "^2.4.2",
     "webpack": "^3.5.5",
-    "webpack-karma-jasmine": "^1.0.4",
-    "whatwg-fetch": "^1.0.0"
+    "webpack-karma-jasmine": "^1.0.4"
   }
 }

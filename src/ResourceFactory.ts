@@ -1,10 +1,7 @@
-'use strict';
-
 import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
-import {JsonLdUtil} from './JsonLdUtil';
 import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
 import {forOwn, values} from "./LodashUtil";
 

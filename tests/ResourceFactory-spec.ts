@@ -1,5 +1,3 @@
-'use strict';
-
 import * as _ from 'lodash';
 import {rdf} from '../src/Vocabs';
 import {Core} from '../src/Constants';

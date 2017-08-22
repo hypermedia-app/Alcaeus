@@ -65,15 +65,10 @@ module.exports = function (config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['jasmine'],
 
-        //plugins
-        plugins: process.env.TRAVIS
-            ? ['karma-webpack', 'karma-jasmine', 'karma-sauce-launcher']
-            : ['karma-webpack', 'karma-jasmine', 'karma-chrome-launcher', 'karma-firefox-launcher', 'karma-ie-launcher', 'karma-safari-launcher'],
-
-
         // list of files / patterns to load in the browser
         files: [
-            'tests/*-specs?.ts'
+            'tests/*-spec.ts',
+            'tests/*-specs.ts'
         ],
 
         // list of files to exclude
@@ -85,6 +80,8 @@ module.exports = function (config) {
         preprocessors: {
             "tests/**/*.ts": ["webpack"]
         },
+
+        mime: { 'text/x-typescript': ['ts','tsx'] },
 
 
         // test results reporter to use
@@ -114,11 +111,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome', 'Safari'],
-
-        // Continuous Integration mode
-        // if true, Karma captures browsers, runs the tests and exits
-        singleRun: process.env.TRAVIS ? false : false,
+            : ['Chrome'],
 
         concurrency: 3,
 

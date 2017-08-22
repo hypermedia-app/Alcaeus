@@ -1,12 +1,3 @@
 language: node_js
 node_js:
   - 5.5
-before_install:
-  - npm install -g jspm typescript typings
-install:
-  - npm install
-  - jspm install
-  - typings install
-before_script:
-  - tsc || true
-  - jspm bundle src/heracles --inject

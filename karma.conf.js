@@ -113,6 +113,8 @@ module.exports = function (config) {
             ? Object.keys(customLaunchers)
             : ['Chrome'],
 
+        singleRun: !!process.env.TRAVIS,
+
         concurrency: 3,
 
         webpack: {

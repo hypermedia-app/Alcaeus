@@ -1,4 +1,24 @@
-var webpackConfig = require("./webpack.config");
+const webpackConfig = require("./webpack.config");
+const webpack = require('webpack');
+
+delete webpackConfig.entry;
+webpackConfig.bail = false;
+webpackConfig.stats = 'errors-only';
+webpackConfig.plugins = [];
+webpackConfig.plugins.push(new webpack.SourceMapDevToolPlugin({
+  filename: null,
+  test: /\.(ts|js)($|\?)/i
+}));
+/*webpackConfig.module.rules.push({
+  enforce: 'post',
+  test: /\.ts$/,
+  include: path.resolve(__dirname, 'src'),
+  exclude: path.resolve(__dirname, 'src/test'),
+  loader: 'istanbul-instrumenter-loader',
+  options: {
+    esModules: true
+  }
+});*/
 
 module.exports = function (config) {
     if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
@@ -78,8 +98,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            "tests/**/*.ts": ["webpack", "sourcemap"],
-            "src/**/*.ts": ["webpack", "sourcemap"]
+            "tests/**/*.ts": ["webpack"],
+            "src/**/*.ts": ["webpack"]
         },
 
         mime: { 'text/x-typescript': ['ts','tsx'] },
@@ -112,15 +132,12 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Firefox'],
+            : ['Chrome'],
 
         singleRun: !!process.env.TRAVIS,
 
         concurrency: 3,
 
-        webpack: {
-            module: webpackConfig.module,
-            resolve: webpackConfig.resolve
-        }
+        webpack: webpackConfig
     });
 };

@@ -78,7 +78,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            "tests/**/*.ts": ["webpack"]
+            "tests/**/*.ts": ["webpack", "sourcemap"],
+            "src/**/*.ts": ["webpack", "sourcemap"]
         },
 
         mime: { 'text/x-typescript': ['ts','tsx'] },
@@ -111,7 +112,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome'],
+            : ['Firefox'],
 
         singleRun: !!process.env.TRAVIS,
 

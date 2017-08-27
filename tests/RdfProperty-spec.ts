@@ -14,8 +14,8 @@ describe('RdfProperty', () => {
         ],
         '@id': 'http://purl.org/dc/elements/1.1/partOf',
         '@type': rdf.Property,
-        'rdfs:range': xsd.string,
-        'rdfs:domain': xsd.integer,
+        'rdfs:range': { '@id': xsd.string },
+        'rdfs:domain': { '@id': xsd.integer },
         'supportedOperation': [
             {
                 'description': 'Update this property',
@@ -31,7 +31,7 @@ describe('RdfProperty', () => {
         jsonld.compact(testProperty, {}).then(compacted => {
             const property = new RdfProperty(compacted);
 
-            expect(property.domain.id).toBe(xsd.integer);
+            expect(property.domain['@id']).toBe(xsd.integer);
             done();
         }).catch(done.fail);
     });
@@ -41,7 +41,7 @@ describe('RdfProperty', () => {
         jsonld.compact(testProperty, {}).then(compacted => {
             const property = new RdfProperty(compacted);
 
-            expect(property.range.id).toBe(xsd.string);
+            expect(property.range['@id']).toBe(xsd.string);
             done();
         }).catch(done.fail);
     });

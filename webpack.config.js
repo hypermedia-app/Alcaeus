@@ -34,7 +34,7 @@ module.exports = {
       'amd': 'rdf-ext',
       'root': 'rdf'
     },
-    'rdf-serializer-jsonld': {
+    'rdf-serializer-jsonld-ext': {
       'commonjs2': 'rdf-ext',
       'commonjs': 'rdf-ext',
       'amd': 'rdf-ext',

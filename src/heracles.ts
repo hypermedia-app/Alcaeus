@@ -8,14 +8,15 @@ import {ExpandedWithDocs} from "./internals";
 
 export class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
+    public fetchUtil = new FetchUtil();
 
     loadResource(uri:string):Promise<any> {
-        return FetchUtil.fetchResource(uri)
+        return this.fetchUtil.fetchResource(uri)
             .then(processFetchUtilResponse.call(this, uri));
     }
 
     loadDocumentation(uri:string):Promise<IApiDocumentation> {
-        return FetchUtil.fetchResource(uri)
+        return this.fetchUtil.fetchResource(uri)
             .then(response => {
                 const typeOverrides = {};
                 typeOverrides[uri] = Core.Vocab.ApiDocumentation;
@@ -25,7 +26,7 @@ export class Heracles implements IHeracles {
     }
 
     invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<any> {
-        return FetchUtil.invokeOperation(operation.method, uri, body, mediaType)
+        return this.fetchUtil.invokeOperation(operation.method, uri, body, mediaType)
             .then(processFetchUtilResponse.call(this, uri));
     }
 }

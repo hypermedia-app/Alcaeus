@@ -1,6 +1,7 @@
 const webpackConfig = require("./webpack.config");
 const webpack = require('webpack');
 
+delete webpackConfig.externals;
 delete webpackConfig.entry;
 webpackConfig.bail = false;
 webpackConfig.stats = 'errors-only';
@@ -98,11 +99,11 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            "tests/**/*.ts": ["webpack"],
-            "src/**/*.ts": ["webpack"]
+            "tests/**/*.ts": ["webpack", "sourcemap"],
+            "src/**/*.ts": ["webpack", "sourcemap" ]
         },
 
-        mime: { 'text/x-typescript': ['ts','tsx'] },
+        mime: { 'text/x-typescript': ['ts'] },
 
 
         // test results reporter to use

@@ -37,9 +37,7 @@
     "parse-link-header": "^1.0.1",
     "rdf-ext": "^1.0.0",
     "rdf-parser-jsonld": "^1.1.0",
-    "rdf-serializer-jsonld-ext": "^1.2.0",
-    "string-to-stream": "^1.1.0",
-    "typescript": "^2.4.2"
+    "string-to-stream": "^1.1.0"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.34",
@@ -51,10 +49,12 @@
     "karma-sauce-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "rdf-parser-n3": "^1.0.0",
+    "rdf-serializer-jsonld-ext": "^1.2.0",
     "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
     "typescript": "^2.4.2",
     "webpack": "^3.5.5",
-    "webpack-karma-jasmine": "^1.0.4"
+    "webpack-karma-jasmine": "^1.0.4",
+    "whatwg-fetch": "^2.0.3"
   }
 }

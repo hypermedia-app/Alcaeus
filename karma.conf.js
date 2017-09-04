@@ -10,16 +10,6 @@ webpackConfig.plugins.push(new webpack.SourceMapDevToolPlugin({
   filename: null,
   test: /\.(ts|js)($|\?)/i
 }));
-/*webpackConfig.module.rules.push({
-  enforce: 'post',
-  test: /\.ts$/,
-  include: path.resolve(__dirname, 'src'),
-  exclude: path.resolve(__dirname, 'src/test'),
-  loader: 'istanbul-instrumenter-loader',
-  options: {
-    esModules: true
-  }
-});*/
 
 module.exports = function (config) {
     if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
@@ -99,8 +89,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            "tests/**/*.ts": ["webpack", "sourcemap"],
-            "src/**/*.ts": ["webpack", "sourcemap" ]
+            "tests/**/*.ts": ["webpack", "babel", "sourcemap"],
+            "src/**/*.ts": ["webpack", "babel", "sourcemap" ]
         },
 
         mime: { 'text/x-typescript': ['ts'] },
@@ -133,7 +123,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome'],
+            : ['Chrome', 'Safari', 'Firefox'],
 
         singleRun: !!process.env.TRAVIS,
 

@@ -148,9 +148,7 @@ describe('FetchUtil', () => {
 
                         fetchUtil.fetchResource('http://example.com/resource')
                             .then((res:any) => {
-                                console.debug(res.resources);
-
-                                const child = _.find(res.resources, ['@id', 'http://example.com/child']);
+                                const child = res.resources.find(r => r['@id'] === 'http://example.com/child');
 
                                 expect(child['@type']).toBeDefined();
                                 expect(child['@type']).toBe(type);

@@ -153,12 +153,13 @@ function serializeDataset(dataset) {
 
 function runInference(dataset) {
     FetchUtil._propertyRangeMappings.map(mapping => {
-        const matches = dataset.match(null, mapping[0], null, null);
+        const matches = dataset.match(null, $rdf.namedNode(mapping[0]), null, null);
+
         matches.forEach(triple => {
-            dataset.add(new $rdf.Triple(
+            dataset.add($rdf.triple(
                 triple.object,
-                new $rdf.NamedNode(rdf.type),
-                new $rdf.NamedNode(mapping[1])
+                $rdf.namedNode(rdf.type),
+                $rdf.namedNode(mapping[1])
             ));
         });
     });

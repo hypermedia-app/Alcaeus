@@ -17,24 +17,28 @@ module.exports = function (config) {
         process.exit(1);
     }
 
-    var customLaunchers = {
-        sl_chrome_42: {
+    const customLaunchers = {
+        /*sl_chrome_42: {
             base: 'SauceLabs',
             browserName: 'chrome',
             platform: 'Windows 7',
             version: '42'
-        },
+        },*/
         sl_chrome_latest: {
             base: 'SauceLabs',
             browserName: 'chrome',
             platform: 'Windows 7'
         },
-        sl_firefox_39: {
+        /*sl_firefox_39: {
             base: 'SauceLabs',
             browserName: 'firefox',
             version: '39.0'
+        },*/
+        sl_firefox_latest: {
+            base: 'SauceLabs',
+            browserName: 'firefox'
         },
-        sl_safari_9: {
+        /*sl_safari_9: {
             base: 'SauceLabs',
             browserName: 'safari',
             platform: 'OS X 10.11',
@@ -45,7 +49,11 @@ module.exports = function (config) {
             browserName: 'safari',
             platform: 'OS X 10.10',
             version: '8.0'
-        },
+        },*/
+        sl_safari_latest: {
+            base: 'SauceLabs',
+            browserName: 'safari'
+        },/*
         sl_ie_11: {
             base: 'SauceLabs',
             browserName: 'internet explorer',
@@ -63,6 +71,10 @@ module.exports = function (config) {
             browserName: 'MicrosoftEdge',
             platform: 'Windows 10',
             version: '14.14393'
+        },*/
+        sl_edge_latest: {
+            base: 'SauceLabs',
+            browserName: 'MicrosoftEdge'
         }
     };
 
@@ -89,8 +101,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            "tests/**/*.ts": ["webpack", "babel", "sourcemap"],
-            "src/**/*.ts": ["webpack", "babel", "sourcemap" ]
+            "tests/**/*.ts": ["webpack", "sourcemap"],
+            "src/**/*.ts": ["webpack", "sourcemap" ]
         },
 
         mime: { 'text/x-typescript': ['ts'] },

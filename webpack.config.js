@@ -29,16 +29,16 @@ module.exports = {
       'root': 'rdf'
     },
     'rdf-parser-jsonld': {
-      'commonjs2': 'rdf-ext',
-      'commonjs': 'rdf-ext',
-      'amd': 'rdf-ext',
-      'root': 'rdf'
+      'commonjs2': 'rdf-parser-jsonld',
+      'commonjs': 'rdf-parser-jsonld',
+      'amd': 'rdf-parser-jsonld',
+      'root': 'rdf-parser-jsonld'
     },
     'rdf-serializer-jsonld-ext': {
-      'commonjs2': 'rdf-ext',
-      'commonjs': 'rdf-ext',
-      'amd': 'rdf-ext',
-      'root': 'rdf'
+      'commonjs2': 'rdf-serializer-jsonld-ext',
+      'commonjs': 'rdf-serializer-jsonld-ext',
+      'amd': 'rdf-serializer-jsonld-ext',
+      'root': 'rdf-serializer-jsonld-ext'
     },
     'jsonld': {
       'commonjs2': 'jsonld',

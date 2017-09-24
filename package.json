@@ -37,6 +37,7 @@
     "parse-link-header": "^1.0.1",
     "rdf-ext": "^1.0.0",
     "rdf-parser-jsonld": "^1.1.0",
+    "rdf-serializer-jsonld-ext": "^1.2.0",
     "string-to-stream": "^1.1.0"
   },
   "devDependencies": {

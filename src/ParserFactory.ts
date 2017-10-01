@@ -2,8 +2,12 @@ import * as JsonLdParser from 'rdf-parser-jsonld';
 import * as $rdf from 'rdf-ext';
 import {MediaTypes} from './Constants';
 
+interface ParserFactoryMethod {
+    (baseIRI: string): any;
+}
+
 export class ParserFactory {
-    private parsers = {};
+    private parsers: { [index: string] : ParserFactoryMethod } = {};
 
     constructor() {
         this.addParser(MediaTypes.jsonLd, JsonLdParser);

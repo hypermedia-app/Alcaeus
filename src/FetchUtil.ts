@@ -3,22 +3,20 @@ import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlattenOptions} from "jsonld";
 import * as $rdf from 'rdf-ext';
-import * as JsonLdParser from 'rdf-parser-jsonld';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext'
 import {rdf} from './Vocabs';
 import {ExpandedWithDocs} from "./internals";
 import 'isomorphic-fetch';
 import * as stringToStream from 'string-to-stream';
+import {ParserFactory} from "./ParserFactory";
 
 const jsonldSerializer = new JsonLdSerializer();
 
 export class FetchUtil {
-    parsers: any;
+    parserFactory: ParserFactory;
 
     constructor() {
-        this.parsers = new $rdf.Parsers({
-            [Constants.MediaTypes.jsonLd]: new JsonLdParser({ factory: $rdf })
-        });
+        this.parserFactory = new ParserFactory();
     }
 
     static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
@@ -46,7 +44,7 @@ export class FetchUtil {
             .then((res:Response) => {
                     const apiDocsUri = getDocumentationUri(res);
 
-                    return this._getFlattendGraph(res)
+                    return this._getFlattendGraph(res, uri)
                         .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
                 },
                 () => null);
@@ -65,19 +63,21 @@ export class FetchUtil {
             .then((res:Response) => {
                     const apiDocsUri = getDocumentationUri(res);
 
-                    return this._getFlattendGraph(res)
+                    return this._getFlattendGraph(res, uri)
                         .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
                 },
                 () => null);
     }
 
     addParsers(newParsers) {
-        this.parsers = new $rdf.Parsers(
-            {...this.parsers.list(), ...newParsers}
-        );
+        Object.entries(newParsers)
+            .forEach(pair => this.parserFactory.addParser.apply(this.parserFactory, pair));
     }
 
-    private _getFlattendGraph(res:Response):Promise<any> {
+
+    private _getFlattendGraph(res:Response, uri: string):Promise<any> {
+        const parsers = this.parserFactory.create(uri);
+
         const mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
 
         if (res.ok === false) {
@@ -85,15 +85,15 @@ export class FetchUtil {
         }
 
         return res.text()
-            .then(this._parseResourceRepresentation(mediaType, res))
+            .then(this._parseResourceRepresentation(mediaType, res, parsers))
             .then(runInference)
             .then(serializeDataset)
             .then(flatten(res.url));
     }
 
-    private _parseResourceRepresentation(mediaType:string, res:Response) {
+    private _parseResourceRepresentation(mediaType:string, res:Response, parsers: any) {
         return jsonld => {
-            let quadStream = this.parsers.import(mediaType, stringToStream(jsonld));
+            let quadStream = parsers.import(mediaType, stringToStream(jsonld));
             if(quadStream == null){
                 throw Error(`Parser not found for media type ${mediaType}`);
             }

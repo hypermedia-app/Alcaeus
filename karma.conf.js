@@ -1,27 +1,44 @@
+const webpackConfig = require("./webpack.config");
+const webpack = require('webpack');
+
+delete webpackConfig.externals;
+delete webpackConfig.entry;
+webpackConfig.bail = false;
+webpackConfig.stats = 'errors-only';
+webpackConfig.plugins = [];
+webpackConfig.plugins.push(new webpack.SourceMapDevToolPlugin({
+  filename: null,
+  test: /\.(ts|js)($|\?)/i
+}));
+
 module.exports = function (config) {
     if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
         console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
         process.exit(1);
     }
 
-    var customLaunchers = {
-        sl_chrome_42: {
+    const customLaunchers = {
+        /*sl_chrome_42: {
             base: 'SauceLabs',
             browserName: 'chrome',
             platform: 'Windows 7',
             version: '42'
-        },
+        },*/
         sl_chrome_latest: {
             base: 'SauceLabs',
             browserName: 'chrome',
             platform: 'Windows 7'
         },
-        sl_firefox_39: {
+        /*sl_firefox_39: {
             base: 'SauceLabs',
             browserName: 'firefox',
             version: '39.0'
+        },*/
+        sl_firefox_latest: {
+            base: 'SauceLabs',
+            browserName: 'firefox'
         },
-        sl_safari_9: {
+        /*sl_safari_9: {
             base: 'SauceLabs',
             browserName: 'safari',
             platform: 'OS X 10.11',
@@ -32,7 +49,11 @@ module.exports = function (config) {
             browserName: 'safari',
             platform: 'OS X 10.10',
             version: '8.0'
-        },
+        },*/
+        sl_safari_latest: {
+            base: 'SauceLabs',
+            browserName: 'safari'
+        },/*
         sl_ie_11: {
             base: 'SauceLabs',
             browserName: 'internet explorer',
@@ -50,6 +71,10 @@ module.exports = function (config) {
             browserName: 'MicrosoftEdge',
             platform: 'Windows 10',
             version: '14.14393'
+        },*/
+        sl_edge_latest: {
+            base: 'SauceLabs',
+            browserName: 'MicrosoftEdge'
         }
     };
 
@@ -61,20 +86,13 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['systemjs', 'jasmine'],
-
-        //plugins
-        plugins: process.env.TRAVIS
-            ? ['karma-systemjs', 'karma-jasmine', 'karma-sauce-launcher']
-            : ['karma-systemjs', 'karma-jasmine', 'karma-chrome-launcher', 'karma-firefox-launcher', 'karma-ie-launcher'],
-
+        frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/*-spec.js',
-            'tests/*-specs.js'
+            'tests/*-spec.ts',
+            'tests/*-specs.ts'
         ],
-
 
         // list of files to exclude
         exclude: [],
@@ -82,7 +100,12 @@ module.exports = function (config) {
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {},
+        preprocessors: {
+            "tests/**/*.ts": ["webpack", "sourcemap"],
+            "src/**/*.ts": ["webpack", "sourcemap" ]
+        },
+
+        mime: { 'text/x-typescript': ['ts'] },
 
 
         // test results reporter to use
@@ -112,23 +135,12 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome', 'IE', 'Firefox'],
+            : ['Chrome', 'Safari', 'Firefox'],
 
-        // Continuous Integration mode
-        // if true, Karma captures browsers, runs the tests and exits
-        singleRun: process.env.TRAVIS ? true : false,
+        singleRun: !!process.env.TRAVIS,
 
-        concurrency: 3,
+        concurrency: process.env.TRAVIS ? 1: Number.MAX_SAFE_INTEGER,
 
-        systemjs: {
-            configFile: 'config.js',
-            serveFiles: [
-                'src/**/*',
-                'tests/**/*',
-                'jspm_packages/**/*',
-                'node_modules/**/*',
-                'build.js'
-            ]
-        }
+        webpack: webpackConfig
     });
 };

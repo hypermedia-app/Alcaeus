@@ -1,18 +1,24 @@
-'use strict';
-
 import * as li from 'parse-link-header';
 import {promises as jsonld} from 'jsonld';
 import * as Constants from "./Constants";
 import {FlattenOptions} from "jsonld";
 import * as $rdf from 'rdf-ext';
-import * as JsonLdParser from 'rdf-parser-jsonld';
-import * as JsonLdSerializer from 'rdf-serializer-jsonld'
+import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext'
 import {rdf} from './Vocabs';
 import {ExpandedWithDocs} from "./internals";
+import 'isomorphic-fetch';
+import * as stringToStream from 'string-to-stream';
+import {ParserFactory} from "./ParserFactory";
 
-$rdf.parsers[Constants.MediaTypes.jsonLd] = JsonLdParser;
+const jsonldSerializer = new JsonLdSerializer();
 
 export class FetchUtil {
+    parserFactory: ParserFactory;
+
+    constructor() {
+        this.parserFactory = new ParserFactory();
+    }
+
     static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
 
     static _propertyRangeMappings = [
@@ -27,9 +33,9 @@ export class FetchUtil {
         [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
     ];
 
-    static fetchResource(uri:string):Promise<ExpandedWithDocs> {
+    fetchResource(uri:string):Promise<ExpandedWithDocs> {
 
-        return window.fetch(uri, {
+        return fetch(uri, {
                 headers: {
                     accept: FetchUtil._requestAcceptHeaders
                 }
@@ -38,15 +44,15 @@ export class FetchUtil {
             .then((res:Response) => {
                     const apiDocsUri = getDocumentationUri(res);
 
-                    return getFlattendGraph(res)
+                    return this._getFlattendGraph(res, uri)
                         .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
                 },
                 () => null);
     }
 
-    static invokeOperation(method:string, uri:string, body?:any, mediaType = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
+    invokeOperation(method:string, uri:string, body?:any, mediaType = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
 
-        return window.fetch(uri, {
+        return fetch(uri, {
                 method: method,
                 headers: {
                     'Content-Type': mediaType,
@@ -57,10 +63,43 @@ export class FetchUtil {
             .then((res:Response) => {
                     const apiDocsUri = getDocumentationUri(res);
 
-                    return getFlattendGraph(res)
+                    return this._getFlattendGraph(res, uri)
                         .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
                 },
                 () => null);
+    }
+
+    addParsers(newParsers) {
+        Object.entries(newParsers)
+            .forEach(pair => this.parserFactory.addParser.apply(this.parserFactory, pair));
+    }
+
+
+    private _getFlattendGraph(res:Response, uri: string):Promise<any> {
+        const parsers = this.parserFactory.create(uri);
+
+        const mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
+
+        if (res.ok === false) {
+            return Promise.reject(new FetchError(res));
+        }
+
+        return res.text()
+            .then(this._parseResourceRepresentation(mediaType, res, parsers))
+            .then(runInference)
+            .then(serializeDataset)
+            .then(flatten(res.url));
+    }
+
+    private _parseResourceRepresentation(mediaType:string, res:Response, parsers: any) {
+        return jsonld => {
+            let quadStream = parsers.import(mediaType, stringToStream(jsonld));
+            if(quadStream == null){
+                throw Error(`Parser not found for media type ${mediaType}`);
+            }
+
+            return $rdf.dataset().import(quadStream);
+        };
     }
 }
 
@@ -99,39 +138,33 @@ class FetchError extends Error {
     }
 }
 
-function getFlattendGraph(res:Response):Promise<any> {
-    const mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
+function serializeDataset(dataset) {
+    const stream = jsonldSerializer.import(dataset.toStream());
 
-    if (res.ok === false) {
-        return Promise.reject(new FetchError(res));
-    }
+    let result;
+    stream.on('data', (data) => {
+        result = data
+    });
 
-    return res.text()
-        .then(parseResourceRepresentation(mediaType, res))
-        .then(runInference)
-        .then(graph => JsonLdSerializer.serialize(graph))
-        .then(flatten(res.url));
+    return $rdf.waitFor(stream).then(() => {
+        return result;
+    });
 }
 
-function parseResourceRepresentation(mediaType:string, res:Response) {
-    return jsonld => {
-        return $rdf.parsers.parse(mediaType, jsonld, null, res.url);
-    };
-}
-
-function runInference(graph) {
+function runInference(dataset) {
     FetchUtil._propertyRangeMappings.map(mapping => {
-        const matches = graph.match(null, mapping[0], null, null);
-        matches.toArray().forEach(triple => {
-            graph.add(new $rdf.Triple(
+        const matches = dataset.match(null, $rdf.namedNode(mapping[0]), null, null);
+
+        matches.forEach(triple => {
+            dataset.add($rdf.triple(
                 triple.object,
-                new $rdf.NamedNode(rdf.type),
-                new $rdf.NamedNode(mapping[1])
+                $rdf.namedNode(rdf.type),
+                $rdf.namedNode(mapping[1])
             ));
         });
     });
 
-    return graph;
+    return dataset;
 }
 
 function flatten(url) {

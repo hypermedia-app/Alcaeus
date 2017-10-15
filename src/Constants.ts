@@ -1,5 +1,3 @@
-'use strict';
-
 export namespace Core {
     export const Context = {
         "hydra": "http://www.w3.org/ns/hydra/core#",

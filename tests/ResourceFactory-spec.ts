@@ -1,6 +1,4 @@
-'use strict';
-
-import * as _ from 'lodash';
+import { entries } from 'core-js/es7/object';
 import {rdf} from '../src/Vocabs';
 import {Core} from '../src/Constants';
 import {ResourceFactory} from '../src/ResourceFactory';
@@ -25,7 +23,7 @@ describe('ResourceFactory', () => {
         constructedTypes[Core.Vocab.StatusCodeDescription] = res => res instanceof documentationTypes.StatusCodeDescription;
         constructedTypes[rdf.Property] = res => res instanceof documentationTypes.RdfProperty;
 
-        _.toPairs(constructedTypes).forEach(typePair => {
+        entries(constructedTypes).forEach(typePair => {
             (function (typeId, isOfCorrectType) {
                 it('should create typed instance for ' + typeId, function () {
                     const jsonLd = {

@@ -1,11 +1,8 @@
-'use strict';
-
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
-import {Hydra} from '../src/heracles';
+import {Hydra} from '../src';
 import {HydraResource} from '../src/Resources';
-import {FetchUtil} from '../src/FetchUtil';
 import {JsonLd, Core} from '../src/Constants';
 import {Bodies, Documentations } from './test-objects';
 import {ApiDocumentation} from "../src/ApiDocumentation";
@@ -19,7 +16,7 @@ describe('Hydra', () => {
     
     beforeEach(() => {
         createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
-        fetchResource = sinon.stub(FetchUtil, 'fetchResource');
+        fetchResource = sinon.stub(Hydra.fetchUtil, 'fetchResource');
     });
 
     describe('loadResource', () => {

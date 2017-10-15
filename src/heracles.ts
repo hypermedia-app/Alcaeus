@@ -1,26 +1,22 @@
-/// <reference path="../typings/index.d.ts" />
-
-'use strict';
-
 import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {HydraResource as ResourceCtor} from "./Resources";
 import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
 import {forOwn} from "./LodashUtil";
 import {ExpandedWithDocs} from "./internals";
 
-class Heracles implements IHeracles {
+export class Heracles implements IHeracles {
     public resourceFactory = new ResourceFactoryCtor();
+    public fetchUtil = new FetchUtil();
 
-    loadResource(uri:string):Promise<IHydraResource> {
-        return FetchUtil.fetchResource(uri)
+    loadResource(uri:string):Promise<any> {
+        return this.fetchUtil.fetchResource(uri)
             .then(processFetchUtilResponse.call(this, uri));
     }
 
     loadDocumentation(uri:string):Promise<IApiDocumentation> {
-        return FetchUtil.fetchResource(uri)
+        return this.fetchUtil.fetchResource(uri)
             .then(response => {
                 const typeOverrides = {};
                 typeOverrides[uri] = Core.Vocab.ApiDocumentation;
@@ -29,15 +25,11 @@ class Heracles implements IHeracles {
             }, () => null);
     }
 
-    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource> {
-        return FetchUtil.invokeOperation(operation.method, uri, body, mediaType)
+    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<any> {
+        return this.fetchUtil.invokeOperation(operation.method, uri, body, mediaType)
             .then(processFetchUtilResponse.call(this, uri));
     }
 }
-
-export let ResourceFactory = ResourceFactoryCtor;
-export let Resource = ResourceCtor;
-export let Hydra = new Heracles();
 
 function processFetchUtilResponse(uri) {
     return (response:ExpandedWithDocs) =>

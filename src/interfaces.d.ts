@@ -48,7 +48,7 @@ export interface IRdfProperty extends IDocumentedResource {
     supportedOperations:Array<ISupportedOperation>;
 }
 
-export interface IOperation {
+export interface IOperation extends IResource{
     title:string;
     description:string;
     method:string;

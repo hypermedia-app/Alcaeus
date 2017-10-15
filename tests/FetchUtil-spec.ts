@@ -1,5 +1,3 @@
-'use strict';
-
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Core, MediaTypes} from '../src/Constants';
@@ -9,14 +7,14 @@ import {responseBuilder} from './test-utils';
 import {rdf} from '../src/Vocabs';
 import 'whatwg-fetch';
 import * as n3parser from 'rdf-parser-n3';
-import * as $rdf from 'rdf-ext';
 
 describe('FetchUtil', () => {
 
-    let windowFetch;
+    let windowFetch, fetchUtil;
 
     beforeEach(() => {
         windowFetch = sinon.stub(window, 'fetch');
+        fetchUtil = new FetchUtil();
     });
 
     describe('fetchResource', () => {
@@ -25,7 +23,7 @@ describe('FetchUtil', () => {
             windowFetch.withArgs('http://example.com/resource')
                 .returns(responseBuilder().jsonLdPayload(Bodies.someJsonLd).build());
 
-            FetchUtil.fetchResource('http://example.com/resource')
+            fetchUtil.fetchResource('http://example.com/resource')
                 .then(() => {
                     expect(windowFetch.calledWithMatch('http://example.com/resource', {
                         headers: {
@@ -42,7 +40,7 @@ describe('FetchUtil', () => {
             windowFetch.withArgs('http://example.com/resource')
                 .returns(responseBuilder().jsonLdPayload(Bodies.someJsonLd).build());
 
-            FetchUtil.fetchResource('http://example.com/resource')
+            fetchUtil.fetchResource('http://example.com/resource')
                 .then(res => {
                     expect(res.resources[0]['http://example.com/vocab#prop']).toBe('some textual value');
                     done();
@@ -54,7 +52,7 @@ describe('FetchUtil', () => {
             windowFetch.withArgs('http://example.com/resource')
                 .returns(responseBuilder().jsonLdPayload(Bodies.someJsonLd).apiDocumentation().build());
 
-            FetchUtil.fetchResource('http://example.com/resource')
+            fetchUtil.fetchResource('http://example.com/resource')
                 .then(res => {
                     expect(res.apiDocumentationLink).toBe('http://api.example.com/doc/');
                     done();
@@ -63,12 +61,14 @@ describe('FetchUtil', () => {
         });
 
         it('should parse non-json-ld response', (done:any) => {
-            $rdf.parsers[MediaTypes.ntriples] = n3parser;
+            fetchUtil.addParsers({
+                [MediaTypes.ntriples]: n3parser
+            });
 
             windowFetch.withArgs('http://example.com/resource')
                 .returns(responseBuilder().nTriplesPayload(Bodies.ntriples).build());
 
-            FetchUtil.fetchResource('http://example.com/resource')
+            fetchUtil.fetchResource('http://example.com/resource')
                 .then(res => {
                     expect(res.resources[0]['http://example.com/vocab#prop']).toBe('some textual value');
                     done();
@@ -83,7 +83,7 @@ describe('FetchUtil', () => {
             windowFetch.withArgs('http://example.com/not/there')
                 .returns(responseBuilder().serverError().build());
 
-            FetchUtil.fetchResource('http://example.com/not/there')
+            fetchUtil.fetchResource('http://example.com/not/there')
                 .then(done.fail, done)
                 .catch(done.fail);
         });
@@ -92,7 +92,7 @@ describe('FetchUtil', () => {
             windowFetch.withArgs('http://example.com/not/there')
                 .returns(responseBuilder().notFound().build());
 
-            FetchUtil.fetchResource('http://example.com/not/there')
+            fetchUtil.fetchResource('http://example.com/not/there')
                 .then(res => {
                     expect(res).toBe(null);
                     done();
@@ -100,11 +100,11 @@ describe('FetchUtil', () => {
                 .catch(done.fail);
         });
 
-        xit('should handle redirects', (done) => {
+        xit('should handle redirects', (done:any) => {
             windowFetch.withArgs('http://example.com/something/requested')
                 .returns(responseBuilder().redirect('http://example.com/redirected/to').build());
 
-            FetchUtil.fetchResource('http://example.com/something/requested')
+            fetchUtil.fetchResource('http://example.com/something/requested')
                 .then(res => {
                     expect(res.resourceIdentifier).toBe('http://example.com/redirected/to');
                     done();
@@ -112,11 +112,11 @@ describe('FetchUtil', () => {
                 .catch(done.fail);
         });
 
-        it('should handle Content-Location', (done) => {
+        it('should handle Content-Location', (done:any) => {
             windowFetch.withArgs('http://example.com/something/requested')
                 .returns(responseBuilder().contentLocation('http://example.com/redirected/to').build());
 
-            FetchUtil.fetchResource('http://example.com/something/requested')
+            fetchUtil.fetchResource('http://example.com/something/requested')
                 .then(res => {
                     expect(res.resourceIdentifier).toBe('http://example.com/redirected/to');
                     done();
@@ -146,9 +146,9 @@ describe('FetchUtil', () => {
                         windowFetch.withArgs('http://example.com/resource')
                             .returns(responseBuilder().jsonLdPayload(obj).build());
 
-                        FetchUtil.fetchResource('http://example.com/resource')
+                        fetchUtil.fetchResource('http://example.com/resource')
                             .then((res:any) => {
-                                const child = _.find(res.resources, ['@id', 'http://example.com/child']);
+                                const child = res.resources.find(r => r['@id'] === 'http://example.com/child');
 
                                 expect(child['@type']).toBeDefined();
                                 expect(child['@type']).toBe(type);

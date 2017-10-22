@@ -72,6 +72,6 @@ describe('Collection', () => {
 
         // then
         expect(Array.isArray(collection.members)).toBe(true);
-        expect(collection.members[0].text).toBe('hello');
+        expect(collection.members[0]['text']).toBe('hello');
     });
 });

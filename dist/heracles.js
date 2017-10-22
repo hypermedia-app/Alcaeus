@@ -346,6 +346,7 @@ var Core;
         Class: Core.Context['hydra'] + 'Class',
         member: Core.Context['hydra'] + 'member',
         PartialCollectionView: Core.Context['hydra'] + 'PartialCollectionView',
+        Collection: Core.Context['hydra'] + 'Collection',
         view: Core.Context['hydra'] + 'view',
         first: Core.Context['hydra'] + 'first',
         next: Core.Context['hydra'] + 'next',
@@ -3049,6 +3050,46 @@ var PartialCollectionView = (function (_super) {
     return PartialCollectionView;
 }(HydraResource));
 exports.PartialCollectionView = PartialCollectionView;
+var Collection = (function (_super) {
+    __extends(Collection, _super);
+    function Collection() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Object.defineProperty(Collection.prototype, "members", {
+        get: function () {
+            var members = this[Constants_1.Core.Vocab.member];
+            if (Array.isArray(members) === false) {
+                return [members];
+            }
+            return members;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Collection.prototype, "views", {
+        get: function () {
+            var views = this[Constants_1.Core.Vocab.view];
+            if (Array.isArray(views) === false) {
+                return [views];
+            }
+            return views;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    __decorate([
+        core_decorators_1.nonenumerable,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], Collection.prototype, "members", null);
+    __decorate([
+        core_decorators_1.nonenumerable,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], Collection.prototype, "views", null);
+    return Collection;
+}(HydraResource));
+exports.Collection = Collection;
 
 
 /***/ }),
@@ -3364,6 +3405,7 @@ function findIncomingLinks(object, resources) {
 function setUpDefaultFactories() {
     this.factories[Constants_1.Core.Vocab.ApiDocumentation] = createApiDocumentation;
     this.factories[Constants_1.Core.Vocab.PartialCollectionView] = createPartialCollectionView;
+    this.factories[Constants_1.Core.Vocab.Collection] = createCollection;
     this.factories[Constants_1.Core.Vocab.Class] = createClass;
     this.factories[Constants_1.Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Constants_1.Core.Vocab.Operation] = createOperation;
@@ -3390,6 +3432,9 @@ function createOperation(heracles, obj) {
 }
 function createStatusCodeDescription(heracles, obj) {
     return new DocTypes.StatusCodeDescription(obj);
+}
+function createCollection(heracles, obj, apiDocumentation, incomingLinks) {
+    return new Types.Collection(heracles, obj, apiDocumentation, incomingLinks);
 }
 
 

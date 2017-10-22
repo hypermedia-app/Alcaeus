@@ -71,6 +71,11 @@ export interface IPartialCollectionView extends IHydraResource {
     collection:IHydraResource;
 }
 
+export interface ICollection extends IHydraResource {
+    members:Array<IHydraResource>;
+    views:Array<IPartialCollectionView>;
+}
+
 export interface IResourceFactory {
     createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):IResource
 }

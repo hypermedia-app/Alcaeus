@@ -16,6 +16,7 @@ describe('ResourceFactory', () => {
 
         const constructedTypes = {};
         constructedTypes[Core.Vocab.PartialCollectionView] = res => res instanceof resources.PartialCollectionView;
+        constructedTypes[Core.Vocab.Collection] = res => res instanceof resources.Collection;
         constructedTypes[Core.Vocab.ApiDocumentation] = res => res instanceof documentationTypes.ApiDocumentation;
         constructedTypes[Core.Vocab.Class] = res => res instanceof documentationTypes.Class;
         constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;

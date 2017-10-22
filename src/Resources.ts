@@ -3,7 +3,7 @@ import {nonenumerable} from 'core-decorators';
 import {JsonLd, Core, MediaTypes} from './Constants';
 import {
     IOperation, ISupportedOperation, IHeracles, IHydraResource, IClass, IResource,
-    IPartialCollectionView, IApiDocumentation
+    IPartialCollectionView, IApiDocumentation, ICollection
 } from "./interfaces";
 import {IIncomingLink} from "./internals";
 
@@ -179,5 +179,29 @@ export class PartialCollectionView extends HydraResource implements IPartialColl
         });
 
         return collectionLink ? collectionLink.subject : null
+    }
+}
+
+export class Collection extends HydraResource implements ICollection {
+    @nonenumerable
+    get members(): IHydraResource[] {
+        const members = this[Core.Vocab.member];
+
+        if(Array.isArray(members) === false) {
+            return [ members ];
+        }
+
+        return members;
+    }
+
+    @nonenumerable
+    get views(): IPartialCollectionView[] {
+        const views = this[Core.Vocab.view];
+
+        if(Array.isArray(views) === false) {
+            return [ views ];
+        }
+
+        return views;
     }
 }

@@ -57,6 +57,7 @@ export namespace Core {
         Class: Context['hydra'] + 'Class',
         member: Context['hydra'] + 'member',
         PartialCollectionView: Context['hydra'] + 'PartialCollectionView',
+        Collection: Context['hydra'] + 'Collection',
         view: Context['hydra'] + 'view',
         first: Context['hydra'] + 'first',
         next: Context['hydra'] + 'next',

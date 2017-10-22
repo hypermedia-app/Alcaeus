@@ -75,6 +75,7 @@ function findIncomingLinks(object, resources:Object) {
 function setUpDefaultFactories() {
     this.factories[Core.Vocab.ApiDocumentation] = createApiDocumentation;
     this.factories[Core.Vocab.PartialCollectionView] = createPartialCollectionView;
+    this.factories[Core.Vocab.Collection] = createCollection;
     this.factories[Core.Vocab.Class] = createClass;
     this.factories[Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Core.Vocab.Operation] = createOperation;
@@ -104,4 +105,8 @@ function createOperation(heracles, obj) {
 }
 function createStatusCodeDescription(heracles, obj) {
     return new DocTypes.StatusCodeDescription(obj);
+}
+
+function createCollection(heracles, obj, apiDocumentation, incomingLinks) {
+    return new Types.Collection(heracles, obj, apiDocumentation, incomingLinks);
 }

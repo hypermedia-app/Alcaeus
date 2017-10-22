@@ -62,3 +62,16 @@ describe('PartialCollectionView', () => {
             .toBe(false);
     });
 });
+
+describe('Collection', () => {
+    it('should return array even for one member', () => {
+        // given
+        const collectionBody = {};
+        collectionBody[Core.Vocab.member] = { text: 'hello' };
+        const collection = new Hydra.Collection(null, collectionBody, null, []);
+
+        // then
+        expect(Array.isArray(collection.members)).toBe(true);
+        expect(collection.members[0].text).toBe('hello');
+    });
+});

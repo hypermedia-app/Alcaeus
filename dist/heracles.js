@@ -2784,6 +2784,9 @@ var Resource = (function () {
             if (typeof types === 'string') {
                 return [types];
             }
+            if (typeof types === 'undefined') {
+                return [];
+            }
             return types;
         },
         enumerable: true,

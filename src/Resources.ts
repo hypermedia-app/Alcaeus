@@ -35,6 +35,10 @@ export class Resource implements IResource {
             return [ types ];
         }
 
+        if(typeof types === 'undefined') {
+            return [];
+        }
+
         return types;
     }
 

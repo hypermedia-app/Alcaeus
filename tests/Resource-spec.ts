@@ -35,6 +35,12 @@ describe('Resource', () => {
             expect(resource.types.length).toBe(2);
         });
 
+        it('should return empty array when undefined', () => {
+            const resource = new HydraResource(null, {}, <IApiDocumentation>{}, []);
+
+            expect(Array.isArray(resource.types)).toBe(true);
+            expect(resource.types.length).toBe(0);
+        });
     });
 
     describe('apiDocumentation', () => {
@@ -45,7 +51,7 @@ describe('Resource', () => {
         });
 
     });
-    
+
     describe('get operations', () => {
 
         it('should combine operations from class and property', () => {

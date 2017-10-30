@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
-import {fakeHeraclesResources} from "./test-utils";
+import {fakeHeraclesResources, itAsync} from "./test-utils";
 import 'core-js/es6/array';
 import {IApiDocumentation} from "../src/interfaces";
 
@@ -58,18 +58,37 @@ describe('ApiDocumentation', () => {
             }
         });
 
-        it('should invoke Resource.load', (done:any) => {
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
-                heracles.loadResource.returns(Promise.resolve(null));
+        itAsync('should invoke Resource.load', async () => {
+            // given
+            const expanded = await jsonld.compact(Documentations.classWithOperation, {});
+            const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+            heracles.loadResource.returns(Promise.resolve(null));
 
+            // when
+            await docs.getEntrypoint();
+
+            // then
+            expect(heracles.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
+        });
+
+        itAsync('should reject if entrypoint missing', async () => {
+            // given
+            const apiDoc = Object.assign({}, Documentations.classWithOperation);
+            delete apiDoc.entrypoint;
+            const expanded = await jsonld.compact(apiDoc, {});
+            const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+            heracles.loadResource.returns(Promise.resolve(null));
+
+            // when
+            try {
                 docs.getEntrypoint()
                     .then(() => {
-                        expect(heracles.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
-                        done();
-                    })
-                    .catch(done.fail);
-            });
+                        throw new Error('Operation should not succeed');
+                    });
+            }
+            catch(e) {
+                throw new Error('Should not throw unhandled exception');
+            }
         });
     });
 

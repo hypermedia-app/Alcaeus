@@ -101,6 +101,12 @@ export function responseBuilder() {
     };
 }
 
+export function itAsync(expectation, test) {
+    it(expectation, done => {
+        test.call(this).then(done).catch(done.fail);
+    });
+}
+
 function addPredicateGetter(prop: string, pred: string, wrapArray: boolean = true) {
     Object.defineProperty(this, prop, {
         get: () => {

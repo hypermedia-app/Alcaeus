@@ -37,7 +37,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
         if (!clas) {
             return [];
         }
-        
+
         if(!predicateUri) {
             return clas.supportedOperations;
         }
@@ -65,6 +65,10 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     getEntrypoint():Promise<IHydraResource> {
+        if(!this[Core.Vocab.entrypoint]) {
+            return Promise.reject('The ApiDocumentation doesn\'t have and entrypoint.');
+        }
+
         return this._heracles.loadResource(this[Core.Vocab.entrypoint][JsonLd.Id]);
     }
 }
@@ -159,11 +163,11 @@ export class Class extends DocumentedResource implements IClass {
 
     get supportedOperations():Array<ISupportedOperation> {
         let operations = this[Core.Vocab.supportedOperation];
-        
+
         if(typeof operations ==='undefined' || operations === null) {
             return [];
         }
-        
+
         if(Array.isArray(operations)) {
             return operations;
         }
@@ -173,11 +177,11 @@ export class Class extends DocumentedResource implements IClass {
 
     get supportedProperties():Array<ISupportedProperty> {
         let properties = this[Core.Vocab.supportedProperty];
-        
+
         if(typeof properties === 'undefined' || properties === null ) {
             return [];
         }
-        
+
         if(Array.isArray(properties)) {
             return properties;
         }
@@ -187,11 +191,11 @@ export class Class extends DocumentedResource implements IClass {
 }
 
 export class StatusCodeDescription extends Resource implements IStatusCodeDescription {
-    
+
     get code():number {
         return this[Core.Vocab.code];
     }
-    
+
     get description():string {
         return this[Core.Vocab.description] || '';
     }

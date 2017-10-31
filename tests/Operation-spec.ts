@@ -4,8 +4,6 @@ import {ISupportedOperation, IHeracles, IHydraResource, IOperation, IClass} from
 
 describe('Operation', () => {
 
-    let supportedOperation: ISupportedOperation;
-
     describe('constructor', () => {
 
         it('should require supported operation', () => {
@@ -84,13 +82,13 @@ describe('Operation', () => {
 
         it('should execute through heracles with changed media type', () => {
 
-                const op = new Operation(supportedOperation, heracles, resource);
-                const payload = {};
+            const op = new Operation(supportedOperation, heracles, resource);
+            const payload = {};
 
-                op.invoke(payload, 'text/turtle');
+            op.invoke(payload, 'text/turtle');
 
-                expect(heracles.invokeOperation.firstCall.args[3])
-                    .toBeTruthy('text/turtle');
+            expect(heracles.invokeOperation.firstCall.args[3])
+                .toBeTruthy('text/turtle');
         });
     });
 });

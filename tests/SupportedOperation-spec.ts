@@ -1,9 +1,9 @@
 import {promises as jsonld} from 'jsonld';
-import * as sinon from 'sinon';
-import {SupportedOperation, ApiDocumentation} from '../src/ApiDocumentation';
+import {SupportedOperation} from '../src/ApiDocumentation';
 import {Core} from '../src/Constants';
 import {owl} from '../src/Vocabs';
 import {IHeracles} from "../src/interfaces";
+import {async} from "./test-utils";
 
 describe('SupportedOperation', () => {
 
@@ -18,92 +18,104 @@ describe('SupportedOperation', () => {
         'method': 'TRACE'
     });
 
-    it('should expose operation method', (done:any) => {
-        jsonld.compact(operationJsonLd, {}).then(compacted => {
-            const op = new SupportedOperation(compacted, <IHeracles>{});
+    async(it, 'should expose operation method', async () => {
+        // given
+        const compacted = await jsonld.compact(operationJsonLd, {});
 
-            expect(op.method).toBe('TRACE');
-            done();
-        }).catch(done.fail);
+        // wehen
+        const op = new SupportedOperation(compacted, <IHeracles>{});
+
+        // then
+        expect(op.method).toBe('TRACE');
     });
 
-    it('should expose expected class id', (done:any) => {
-        jsonld.compact(operationJsonLd, {}).then(compacted => {
+    async(it, 'should expose expected class id', async () => {
+        // given
+        const compacted = await jsonld.compact(operationJsonLd, {});
+
+        // when
             const op = new SupportedOperation(compacted, <IHeracles>{});
 
-            expect(op.expects['@id']).toBe(owl.Nothing);
-            done();
-        }).catch(done.fail);
+        // then
+        expect(op.expects['@id']).toBe(owl.Nothing);
     });
 
-    it('should expose returned class id', (done:any) => {
-        jsonld.compact(operationJsonLd, {}).then(compacted => {
-            const op = new SupportedOperation(compacted, <IHeracles>{});
+    async(it, 'should expose returned class id', async () => {
+        // given
+        const compacted = await jsonld.compact(operationJsonLd, {});
 
-            expect(op.returns['@id']).toBe('http://example.com/Something');
-            done();
-        }).catch(done.fail);
+        // when
+        const op = new SupportedOperation(compacted, <IHeracles>{});
+
+        // then
+        expect(op.returns['@id']).toBe('http://example.com/Something');
     });
-    
+
     describe('requiresInput', () => {
 
-        it('should return false for GET operation', (done:any) => {
+        async(it, 'should return false for GET operation', async () => {
+            // given
             const operation = {
                 '@context': Core.Context,
                 'method': 'GET'
             };
 
-            jsonld.compact(operation, {}).then(compacted => {
-                const op = new SupportedOperation(compacted, <IHeracles>{});
+            const compacted = await jsonld.compact(operation, {});
 
-                expect(op.requiresInput).toBe(false);
-                done();
-            }).catch(done.fail);
+            // when
+            const op = new SupportedOperation(compacted, <IHeracles>{});
+
+            // then
+            expect(op.requiresInput).toBe(false);
         });
 
-        it('should return false for DELETE operation', (done:any) => {
+        async(it, 'should return false for DELETE operation', async () => {
+            // given
             const operation = {
                 '@context': Core.Context,
                 'method': 'DELETE'
             };
 
-            jsonld.compact(operation, {}).then(compacted => {
-                const op = new SupportedOperation(compacted, <IHeracles>{});
+            const compacted = await jsonld.compact(operation, {});
 
-                expect(op.requiresInput).toBe(false);
-                done();
-            }).catch(done.fail);
+            // when
+            const op = new SupportedOperation(compacted, <IHeracles>{});
+
+            // then
+            expect(op.requiresInput).toBe(false);
         });
 
-        it('should return true if operation expects a body', (done:any) => {
+        async(it, 'should return true if operation expects a body', async () => {
+            // given
             const operation = {
                 '@context': Core.Context,
                 'method': 'POST'
             };
 
-            jsonld.compact(operation, {}).then(compacted => {
-                const op = new SupportedOperation(compacted, <IHeracles>{});
+            const compacted = await jsonld.compact(operation, {});
 
-                expect(op.requiresInput).toBe(true);
-                done();
-            }).catch(done.fail);
+            // when
+            const op = new SupportedOperation(compacted, <IHeracles>{});
+
+            // then
+            expect(op.requiresInput).toBe(true);
         });
 
-        it('should return true if operation expects nothing', (done:any) => {
+        async(it, 'should return true if operation expects nothing', async () => {
+            // given
             const operation = {
                 '@context': Core.Context,
                 'method': 'POST'
             };
 
-            jsonld.compact(operation, {}).then(compacted => {
+            const compacted = await jsonld.compact(operation, {});
+            compacted[Core.Vocab.expects] = { id: owl.Nothing };
 
-                compacted[Core.Vocab.expects] = { id: owl.Nothing };
-                const op = new SupportedOperation(compacted, <IHeracles>{});
+            // when
+            const op = new SupportedOperation(compacted, <IHeracles>{});
 
-                expect(op.requiresInput).toBe(true);
-                done();
-            }).catch(done.fail);
+            // then
+            expect(op.requiresInput).toBe(true);
         });
-        
     });
 });

@@ -2,6 +2,7 @@ import {promises as jsonld} from 'jsonld';
 import {RdfProperty} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';
 import {xsd, rdf, rdfs, owl} from '../src/Vocabs';
+import {async} from "./test-utils";
 
 describe('RdfProperty', () => {
 
@@ -26,36 +27,39 @@ describe('RdfProperty', () => {
         ]
     };
 
-    it('should link to domain', (done:any) => {
+    async(it, 'should link to domain', async () => {
+        // given
+        const compacted = await jsonld.compact(testProperty, {});
 
-        jsonld.compact(testProperty, {}).then(compacted => {
-            const property = new RdfProperty(compacted);
+        // when
+        const property = new RdfProperty(compacted);
 
-            expect(property.domain['@id']).toBe(xsd.integer);
-            done();
-        }).catch(done.fail);
+        // then
+        expect(property.domain['@id']).toBe(xsd.integer);
     });
 
-    it('should link to range', (done:any) => {
+    async(it, 'should link to range', async () => {
+        // given
+        const compacted = await jsonld.compact(testProperty, {});
 
-        jsonld.compact(testProperty, {}).then(compacted => {
-            const property = new RdfProperty(compacted);
+        // when
+        const property = new RdfProperty(compacted);
 
-            expect(property.range['@id']).toBe(xsd.string);
-            done();
-        }).catch(done.fail);
+        // them
+        expect(property.range['@id']).toBe(xsd.string);
     });
 
     describe('supportedOperations', () => {
 
-        it('should return single operation as array', (done:any) => {
+        async(it, 'should return single operation as array', async () => {
+            // given
+            const compacted = await jsonld.compact(testProperty, {});
 
-            jsonld.compact(testProperty, {}).then(compacted => {
-                const property = new RdfProperty(compacted);
+            // when
+            const property = new RdfProperty(compacted);
 
-                expect(property.supportedOperations.length).toBe(1);
-                done();
-            }).catch(done.fail);
+            // then
+            expect(property.supportedOperations.length).toBe(1);
         });
 
         it('should return empty array when property is missing', () => {

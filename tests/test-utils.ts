@@ -101,7 +101,7 @@ export function responseBuilder() {
     };
 }
 
-export function itAsync(expectation, test) {
+export function async(it, expectation, test) {
     it(expectation, done => {
         test.call(this).then(done).catch(done.fail);
     });

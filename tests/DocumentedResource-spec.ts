@@ -1,6 +1,7 @@
 import {Core} from '../src/Constants';
 import {DocumentedResource} from "../src/ApiDocumentation";
 import {promises as jsonld} from 'jsonld';
+import {async} from "./test-utils";
 
 describe('DocumentedResource', () => {
 
@@ -10,23 +11,27 @@ describe('DocumentedResource', () => {
         'description': 'The longer description',
         'http://some/custom/property': 'The value'
     };
-    
-    it('should use hydra:title for title property', (done:any) => {
-        jsonld.compact(hydraDescriptionJsonLd, {}).then(compacted => {
-            const op = new DocumentedResource(compacted);
 
-            expect(op.title).toBe('The title');
-            done();
-        }).catch(done.fail);
+    async(it, 'should use hydra:title for title property', async () => {
+        // given
+        const compacted = await jsonld.compact(hydraDescriptionJsonLd, {});
+
+        // when
+        const op = new DocumentedResource(compacted);
+
+        // then
+        expect(op.title).toBe('The title');
     });
 
-    it('should use hydra:description for title property', (done:any) => {
-        jsonld.compact(hydraDescriptionJsonLd, {}).then(compacted => {
-            const op = new DocumentedResource(compacted);
+    async(it, 'should use hydra:description for title property', async() => {
+        // given
+        const compacted = await jsonld.compact(hydraDescriptionJsonLd, {});
 
-            expect(op.description).toBe('The longer description');
-            done();
-        }).catch(done.fail);
+        // when
+        const op = new DocumentedResource(compacted);
+
+        // then
+        expect(op.description).toBe('The longer description');
     });
 
     it('should use rdfs:label for title property as fallback', () => {
@@ -60,5 +65,4 @@ describe('DocumentedResource', () => {
 
         expect(op.description).toBe('The title descr with schema');
     });
-
 });

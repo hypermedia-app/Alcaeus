@@ -1,6 +1,7 @@
 import {promises as jsonld} from 'jsonld';
 import {Class} from "../src/ApiDocumentation";
 import {Core} from '../src/Constants';
+import {async} from "./test-utils";
 
 describe('Class', () => {
 
@@ -13,12 +14,15 @@ describe('Class', () => {
 
     describe('getting operations', () => {
 
-        it('should return operations', (done:any) => {
-            jsonld.compact(hydraClass, {}).then(compacted => {
-                const clas = new Class(compacted);
-                expect(clas.supportedOperations.length).toBe(1);
-                done();
-            }).catch(done.fail);
+        async(it, 'should return operations', async () => {
+            // then
+            const compacted = await jsonld.compact(hydraClass, {});
+
+            // when
+            const clas = new Class(compacted);
+
+            // then
+            expect(clas.supportedOperations.length).toBe(1);
         });
 
         it('should return empty array if property is missing', () => {
@@ -42,12 +46,15 @@ describe('Class', () => {
 
     describe('getting properties', () => {
 
-        it('should return properties', (done:any) => {
-            jsonld.compact(hydraClass, {}).then(compacted => {
-                const clas = new Class(compacted);
-                expect(clas.supportedProperties.length).toBe(1);
-                done();
-            }).catch(done.fail);
+        async(it, 'should return properties', async () => {
+            // given
+            const compacted = await jsonld.compact(hydraClass, {});
+
+            // when
+            const clas = new Class(compacted);
+
+            // then
+            expect(clas.supportedProperties.length).toBe(1);
         });
 
         it('should return empty array if property is missing', () => {

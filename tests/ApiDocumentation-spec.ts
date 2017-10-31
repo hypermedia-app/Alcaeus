@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
 import {ApiDocumentation} from "../src/ApiDocumentation";
 import {Documentations} from './test-objects';
-import {fakeHeraclesResources, itAsync} from "./test-utils";
+import {async, fakeHeraclesResources} from "./test-utils";
 import 'core-js/es6/array';
 import {IApiDocumentation} from "../src/interfaces";
 
@@ -58,7 +58,7 @@ describe('ApiDocumentation', () => {
             }
         });
 
-        itAsync('should invoke Resource.load', async () => {
+        async(it, 'should invoke Resource.load', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
             const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
@@ -71,7 +71,7 @@ describe('ApiDocumentation', () => {
             expect(heracles.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
         });
 
-        itAsync('should reject if entrypoint missing', async () => {
+        async(it, 'should reject if entrypoint missing', async () => {
             // given
             const apiDoc = Object.assign({}, Documentations.classWithOperation);
             delete apiDoc.entrypoint;
@@ -94,44 +94,50 @@ describe('ApiDocumentation', () => {
 
     describe('getting class operations', () => {
 
-        it('should return empty array for missing supported class', (done:any) => {
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+        async(it, 'should return empty array for missing supported class', async () => {
+            // given
+            const expanded = await jsonld.compact(Documentations.classWithOperation, {});
+            const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                const ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
-                expect(_.isArray(ops)).toBe(true);
-                expect(ops.length).toBe(0);
-                done();
-            }).catch(done.fail);
+            // when
+            const ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
+
+            // then
+            expect(_.isArray(ops)).toBe(true);
+            expect(ops.length).toBe(0);
         });
     });
 
     describe('getting property operations', () => {
 
-        it('should return a value', (done:any) => {
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                const docs: IApiDocumentation = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+        async(it, 'should return a value', async () => {
+            // given
+            const expanded = await jsonld.compact(Documentations.classWithOperation, {});
+            const docs: IApiDocumentation = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                const ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
-                expect(ops).toBeDefined();
-                expect(ops).not.toBeNull();
-                expect(ops.length).toBe(1);
-                done();
-            }).catch(done.fail);
+            // when
+            const ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
+
+            // then
+            expect(ops).toBeDefined();
+            expect(ops).not.toBeNull();
+            expect(ops.length).toBe(1);
         });
     });
 
     describe('getting properties', () => {
 
-        it('should return empty array for missing supported class', (done:any) => {
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
-                const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
+        async(it, 'should return empty array for missing supported class', async () => {
+            // gicven
+            const expanded = await jsonld.compact(Documentations.classWithOperation, {});
+            const docs = new ApiDocumentation(heracles, fakeHeraclesResources(expanded));
 
-                const props = docs.getProperties('http://example.com/api#UndomcumentedClass');
-                expect(_.isArray(props)).toBe(true);
-                expect(props.length).toBe(0);
-                done();
-            }).catch(done.fail);
+            // when
+            const props = docs.getProperties('http://example.com/api#UndomcumentedClass');
+
+            // then
+            expect(_.isArray(props)).toBe(true);
+            expect(props.length).toBe(0);
         });
     });
 });

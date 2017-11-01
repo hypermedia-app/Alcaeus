@@ -33,40 +33,41 @@ export class FetchUtil {
         [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
     ];
 
-    fetchResource(uri:string):Promise<ExpandedWithDocs> {
-
-        return fetch(uri, {
+    async fetchResource(uri:string):Promise<ExpandedWithDocs> {
+        const res = await fetch(uri, {
                 headers: {
                     accept: FetchUtil._requestAcceptHeaders
                 }
-            })
-            .then(rejectNotFoundStatus)
-            .then((res:Response) => {
-                    const apiDocsUri = getDocumentationUri(res);
+            });
 
-                    return this._getFlattendGraph(res, uri)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
-                },
-                () => null);
+        if(res.status == 404) {
+            return null;
+        }
+
+        const apiDocsUri = getDocumentationUri(res);
+        const obj = await this._getFlattendGraph(res, uri);
+
+        return new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url);
     }
 
-    invokeOperation(method:string, uri:string, body?:any, mediaType = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
+    async invokeOperation(method:string, uri:string, body?:any, mediaType = Constants.MediaTypes.jsonLd):Promise<ExpandedWithDocs> {
 
-        return fetch(uri, {
+        const res = await fetch(uri, {
                 method: method,
                 headers: {
                     'Content-Type': mediaType,
                     Accept: FetchUtil._requestAcceptHeaders
                 }
-            })
-            .then(rejectNotFoundStatus)
-            .then((res:Response) => {
-                    const apiDocsUri = getDocumentationUri(res);
+            });
 
-                    return this._getFlattendGraph(res, uri)
-                        .then(obj => new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url));
-                },
-                () => null);
+        if(res.status == 404) {
+            return null;
+        }
+
+        const apiDocsUri = getDocumentationUri(res);
+
+        const obj = await this._getFlattendGraph(res, uri);
+        return new ExpandedWithDocs(obj, apiDocsUri, res.headers.get('Content-Location') || res.url);
     }
 
     addParsers(newParsers) {
@@ -75,7 +76,7 @@ export class FetchUtil {
     }
 
 
-    private _getFlattendGraph(res:Response, uri: string):Promise<any> {
+    private async _getFlattendGraph(res:Response, uri: string):Promise<any> {
         const parsers = this.parserFactory.create(uri);
 
         const mediaType = res.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
@@ -84,31 +85,22 @@ export class FetchUtil {
             return Promise.reject(new FetchError(res));
         }
 
-        return res.text()
-            .then(this._parseResourceRepresentation(mediaType, res, parsers))
-            .then(runInference)
-            .then(serializeDataset)
-            .then(flatten(res.url));
-    }
+        const responseText = await res.text();
+        const dataset = await parseResourceRepresentation(responseText, mediaType, parsers);
+        runInference(dataset);
+        const json = await serializeDataset(dataset);
 
-    private _parseResourceRepresentation(mediaType:string, res:Response, parsers: any) {
-        return jsonld => {
-            let quadStream = parsers.import(mediaType, stringToStream(jsonld));
-            if(quadStream == null){
-                throw Error(`Parser not found for media type ${mediaType}`);
-            }
-
-            return $rdf.dataset().import(quadStream);
-        };
+         return await flatten(json, res.url);
     }
 }
 
-function rejectNotFoundStatus(res:Response):Promise<any> {
-    if (res.status === 404) {
-        return Promise.reject(null);
+function parseResourceRepresentation(data: string, mediaType:string, parsers: any) {
+    let quadStream = parsers.import(mediaType, stringToStream(data));
+    if (quadStream == null) {
+        throw Error(`Parser not found for media type ${mediaType}`);
     }
 
-    return Promise.resolve(res);
+    return $rdf.dataset().import(quadStream);
 }
 
 function getDocumentationUri(res:Response):string {
@@ -163,19 +155,16 @@ function runInference(dataset) {
             ));
         });
     });
-
-    return dataset;
 }
 
-function flatten(url) {
-    return json => {
-        const opts: FlattenOptions = {};
-        if (url) {
-            opts.base = url;
-        }
-
-        return jsonld.expand(json, opts)
-            .then(expanded => jsonld.flatten(expanded, {}))
-            .then(flattened => flattened[Constants.JsonLd.Graph]);
+async function flatten(json, url):Promise<any> {
+    const opts: FlattenOptions = {};
+    if (url) {
+        opts.base = url;
     }
+
+    const expanded = await jsonld.expand(json, opts);
+    const flattened = await jsonld.flatten(expanded, {});
+
+    return flattened[Constants.JsonLd.Graph];
 }

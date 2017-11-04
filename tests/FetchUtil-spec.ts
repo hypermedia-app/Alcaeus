@@ -28,11 +28,8 @@ describe('FetchUtil', () => {
             await fetchUtil.fetchResource('http://example.com/resource');
 
             // then
-            expect(windowFetch.calledWithMatch('http://example.com/resource', {
-                headers: {
-                    accept: 'application/ld+json, application/n-triples, application/n-quads'
-                }
-            })).toBe(true);
+            const requestHeaders = windowFetch.firstCall.args[1].headers;
+            expect(requestHeaders.get('accept')).toBe('application/ld+json, application/n-triples, application/n-quads');
         });
 
         async(it, 'should expand json-ld', async () => {

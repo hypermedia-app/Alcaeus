@@ -1,49 +1,27 @@
-# heracles [![Build Status](https://travis-ci.org/wikibus/heracles.svg?branch=master)](https://travis-ci.org/wikibus/heracles) [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
+# Alcaeus [![Build Status](https://travis-ci.org/wikibus/alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/alcaeus) [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 
-Heracles is a Promise-based library for consuming Hydra APIs
+Alcaeus is a Promise-based library for consuming Hydra APIs.
+
+Alcaeus is the birth name of Heracles. The demigod who defeated Hydra.
 
 ## Browser support
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://saucelabs.com/u/heracles-tcode)
 
-You will need polyfills for older browsers:
-
-|                     | Chrome | Firefox | IExplore | Edge | Safari | Opera |
-| -------------       |--------|---------|----------|------|--------|-------|
-| [window.fetch][p1]  | <42    | <39     | <=11     | <14  | <=10   | <29   |
-| [WeakMap][p3]       | <36    | <6      | <11      |      | <7.1   | <23   |
-
-Heracles also uses some ES6 functions from the `Object` and `Array` prototypes. You may have to load polyfills like those
-of the [core-js](https://github.com/zloirock/core-js) package:
-
-``` js
-import 'core-js/es6/object';
-import 'core-js/es6/array';
-```
-
 ## Installation
 
-Heracles uses JSPM for development and is probably best used with it:
+Use npm or yarn:
 
 ``` bash
-jspm install npm:heracles
+yarn add alcaeus
 ```
-
-However, it is also possible to install from NPM directly. 
-
-``` bash
-npm install heracles
-```
-
-Heracles is bundled as a CommonJS module and has been verified to work fine with Webpack. Please let me know if you have any issues 
-with other tools like Browserify, server-side NodeJS, etc.
 
 ## Usage
 
 ``` js
-import {Hydra} from 'heracles';
+import {Hydra} from 'alcaeus';
 
 Hydra.loadResource('http://example.com/resource')
   .then(res => {

@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
 import {Operation} from "../src/Resources";
-import {ISupportedOperation, IHeracles, IHydraResource, IOperation, IClass} from "../src/interfaces";
+import {ISupportedOperation, IHydraClient, IHydraResource, IOperation, IClass} from "../src/interfaces";
 
 describe('Operation', () => {
 
@@ -8,17 +8,17 @@ describe('Operation', () => {
 
         it('should require supported operation', () => {
 
-            expect(() => new Operation(null, <IHeracles>{}, <IHydraResource>{}))
+            expect(() => new Operation(null, <IHydraClient>{}, <IHydraResource>{}))
                 .toThrowError('Missing supportedOperation parameter');
-            expect(() => new Operation(undefined, <IHeracles>{}, <IHydraResource>{}))
+            expect(() => new Operation(undefined, <IHydraClient>{}, <IHydraResource>{}))
                 .toThrowError('Missing supportedOperation parameter');
         });
 
-        it('should require heracles', () => {
+        it('should require alcaeus', () => {
             expect(() => new Operation(<ISupportedOperation>{}, null, <IHydraResource>{}))
-                .toThrowError('Missing heracles parameter');
+                .toThrowError('Missing alcaeus parameter');
             expect(() => new Operation(<ISupportedOperation>{}, undefined, <IHydraResource>{}))
-                .toThrowError('Missing heracles parameter');
+                .toThrowError('Missing alcaeus parameter');
         });
 
     });
@@ -36,7 +36,7 @@ describe('Operation', () => {
                 returns: returns,
                 title: 'the title',
                 description: 'the description'
-            }, <IHeracles>{}, <IHydraResource>{});
+            }, <IHydraClient>{}, <IHydraResource>{});
         });
 
         it('method should delegate to operation', () => {
@@ -59,35 +59,35 @@ describe('Operation', () => {
 
     describe('invoke', () => {
 
-        let heracles;
+        let alcaeus;
         const supportedOperation = <ISupportedOperation>{};
         const resource = <IHydraResource>{
             id: 'http://target/resource'
         };
 
-        beforeEach(() => heracles = {
+        beforeEach(() => alcaeus = {
             invokeOperation: sinon.stub()
         });
 
-        it('should execute through heracles with JSON-LD media type', () => {
+        it('should execute through alcaeus with JSON-LD media type', () => {
 
-            const op = new Operation(supportedOperation, heracles, resource);
+            const op = new Operation(supportedOperation, alcaeus, resource);
             const payload = {};
 
             op.invoke(payload);
 
-            expect(heracles.invokeOperation.calledWithExactly(op, 'http://target/resource', payload, 'application/ld+json'))
+            expect(alcaeus.invokeOperation.calledWithExactly(op, 'http://target/resource', payload, 'application/ld+json'))
                 .toBeTruthy();
         });
 
-        it('should execute through heracles with changed media type', () => {
+        it('should execute through alcaeus with changed media type', () => {
 
-            const op = new Operation(supportedOperation, heracles, resource);
+            const op = new Operation(supportedOperation, alcaeus, resource);
             const payload = {};
 
             op.invoke(payload, 'text/turtle');
 
-            expect(heracles.invokeOperation.firstCall.args[3])
+            expect(alcaeus.invokeOperation.firstCall.args[3])
                 .toBeTruthy('text/turtle');
         });
     });

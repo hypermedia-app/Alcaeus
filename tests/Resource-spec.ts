@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import {HydraResource, Resource} from '../src/Resources';
 import {Bodies} from './test-objects';
-import {IApiDocumentation, IHeracles} from "../src/interfaces";
+import {IApiDocumentation, IHydraClient} from "../src/interfaces";
 
 describe('Resource', () => {
 
@@ -79,7 +79,7 @@ describe('Resource', () => {
                 getOperations: getOperations
             };
             getOperations.returns(Promise.resolve([]));
-            const resource = new HydraResource(<IHeracles>{}, Bodies.multipleTypesExpanded, apiDoc, []);
+            const resource = new HydraResource(<IHydraClient>{}, Bodies.multipleTypesExpanded, apiDoc, []);
 
             let ops = resource.operations;
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);

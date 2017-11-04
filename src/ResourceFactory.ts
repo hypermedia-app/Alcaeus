@@ -2,7 +2,7 @@ import {rdf} from './Vocabs';
 import * as Types from './Resources';
 import * as DocTypes from './ApiDocumentation';
 import {JsonLd, Core} from './Constants';
-import {IResourceFactory, IHeracles, IApiDocumentation} from "./interfaces";
+import {IResourceFactory, IHydraClient, IApiDocumentation} from "./interfaces";
 import {forOwn, values} from "./LodashUtil";
 
 export class ResourceFactory implements IResourceFactory {
@@ -13,7 +13,7 @@ export class ResourceFactory implements IResourceFactory {
         setUpDefaultFactories.call(this);
     }
 
-    public createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources:Object, typeOverride?:string):Types.Resource {
+    public createResource(alcaeus:IHydraClient, obj:Object, apiDocumentation:IApiDocumentation, resources:Object, typeOverride?:string):Types.Resource {
         const incomingLinks = findIncomingLinks(obj, resources);
 
         let factory = this.factories[typeOverride || obj[JsonLd.Type]];
@@ -27,10 +27,10 @@ export class ResourceFactory implements IResourceFactory {
         }
 
         if (factory) {
-            return factory.call(this, heracles, obj, apiDocumentation, incomingLinks);
+            return factory.call(this, alcaeus, obj, apiDocumentation, incomingLinks);
         }
 
-        return new Types.HydraResource(heracles, obj, apiDocumentation, incomingLinks);
+        return new Types.HydraResource(alcaeus, obj, apiDocumentation, incomingLinks);
     }
 }
 
@@ -83,30 +83,30 @@ function setUpDefaultFactories() {
     this.factories[rdf.Property] = createRdfProperty;
 }
 
-function createRdfProperty(heracles, obj) {
+function createRdfProperty(alcaeus, obj) {
     return new DocTypes.RdfProperty(obj);
 }
 
-function createApiDocumentation(heracles, obj) {
-    return new DocTypes.ApiDocumentation(heracles, obj);
+function createApiDocumentation(alcaeus, obj) {
+    return new DocTypes.ApiDocumentation(alcaeus, obj);
 }
 
-function createPartialCollectionView(heracles, obj, apiDocumentation, incomingLinks) {
-    return new Types.PartialCollectionView(heracles, obj, apiDocumentation, incomingLinks);
+function createPartialCollectionView(alcaeus, obj, apiDocumentation, incomingLinks) {
+    return new Types.PartialCollectionView(alcaeus, obj, apiDocumentation, incomingLinks);
 }
-function createClass(heracles, obj) {
+function createClass(alcaeus, obj) {
     return new DocTypes.Class(obj);
 }
-function createSupportedProperty(heracles, obj) {
+function createSupportedProperty(alcaeus, obj) {
     return new DocTypes.SupportedProperty(obj);
 }
-function createOperation(heracles, obj) {
-    return new DocTypes.SupportedOperation(obj, heracles);
+function createOperation(alcaeus, obj) {
+    return new DocTypes.SupportedOperation(obj, alcaeus);
 }
-function createStatusCodeDescription(heracles, obj) {
+function createStatusCodeDescription(alcaeus, obj) {
     return new DocTypes.StatusCodeDescription(obj);
 }
 
-function createCollection(heracles, obj, apiDocumentation, incomingLinks) {
-    return new Types.Collection(heracles, obj, apiDocumentation, incomingLinks);
+function createCollection(alcaeus, obj, apiDocumentation, incomingLinks) {
+    return new Types.Collection(alcaeus, obj, apiDocumentation, incomingLinks);
 }

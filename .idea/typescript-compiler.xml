@@ -3,6 +3,5 @@
   <component name="TypeScriptCompiler">
     <option name="isCompilerEnabled" value="true" />
     <option name="useConfig" value="true" />
-    <option name="versionType" value="EMBEDDED" />
   </component>
 </project>

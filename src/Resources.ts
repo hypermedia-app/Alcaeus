@@ -2,7 +2,7 @@ import {promises as jsonld} from 'jsonld';
 import {nonenumerable} from 'core-decorators';
 import {JsonLd, Core, MediaTypes} from './Constants';
 import {
-    IOperation, ISupportedOperation, IHeracles, IHydraResource, IClass, IResource,
+    IOperation, ISupportedOperation, IHydraClient, IHydraResource, IClass, IResource,
     IPartialCollectionView, IApiDocumentation, ICollection
 } from "./interfaces";
 import {IIncomingLink} from "./internals";
@@ -10,7 +10,7 @@ import {IIncomingLink} from "./internals";
 const _isProcessed = new WeakMap<IResource, boolean>();
 const _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
 const _incomingLinks = new WeakMap<IResource, IIncomingLink[]>();
-const _heracles = new WeakMap<IResource, IHeracles>();
+const _alcaeus = new WeakMap<IResource, IHydraClient>();
 const _supportedOperation = new WeakMap<IOperation, ISupportedOperation>();
 const _resource = new WeakMap<IOperation, IResource>();
 
@@ -57,12 +57,12 @@ export class Resource implements IResource {
 }
 
 export class HydraResource extends Resource implements IHydraResource {
-    constructor(heracles:IHeracles, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
+    constructor(alcaeus:IHydraClient, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
         super(actualResource);
 
         _apiDocumentation.set(this, apiDoc);
         _incomingLinks.set(this, incomingLinks);
-        _heracles.set(this, heracles);
+        _alcaeus.set(this, alcaeus);
     }
 
     @nonenumerable
@@ -71,8 +71,8 @@ export class HydraResource extends Resource implements IHydraResource {
     }
 
     @nonenumerable
-    get _heracles() {
-        return _heracles.get(this);
+    get _alcaeus() {
+        return _alcaeus.get(this);
     }
 
     getIncomingLinks():Array<IIncomingLink> {
@@ -95,27 +95,27 @@ export class HydraResource extends Resource implements IHydraResource {
 
         const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
         return operations.map((supportedOperation:ISupportedOperation) => {
-            return new Operation(supportedOperation, this._heracles, this);
+            return new Operation(supportedOperation, this._alcaeus, this);
         });
     }
 }
 
 export class Operation extends Resource implements IOperation {
 
-    constructor(supportedOperation: ISupportedOperation, heracles: IHeracles, resource: IHydraResource) {
+    constructor(supportedOperation: ISupportedOperation, alcaeus: IHydraClient, resource: IHydraResource) {
         super(resource);
 
         if(!supportedOperation) {
             throw new Error('Missing supportedOperation parameter');
         }
 
-        if(!heracles) {
-            throw new Error('Missing heracles parameter');
+        if(!alcaeus) {
+            throw new Error('Missing alcaeus parameter');
         }
 
         _supportedOperation.set(this, supportedOperation);
         _resource.set(this, resource);
-        _heracles.set(this, heracles);
+        _alcaeus.set(this, alcaeus);
     }
 
     get method():string {
@@ -153,12 +153,12 @@ export class Operation extends Resource implements IOperation {
     }
 
     @nonenumerable
-    get _heracles():IHeracles {
-        return _heracles.get(this);
+    get _alcaeus():IHydraClient {
+        return _alcaeus.get(this);
     }
 
     invoke(body:any, mediaType = MediaTypes.jsonLd) {
-        return this._heracles.invokeOperation(this, this._resource.id, body, mediaType);
+        return this._alcaeus.invokeOperation(this, this._resource.id, body, mediaType);
     }
 }
 

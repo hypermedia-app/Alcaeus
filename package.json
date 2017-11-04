@@ -1,21 +1,25 @@
 {
-  "name": "heracles",
-  "version": "0.1.3-a2",
+  "name": "alcaeus",
+  "version": "0.2.0",
   "description": "Hydra Core hypermedia-aware client library",
-  "main": "dist/heracles.js",
+  "main": "dist/alcaeus.js",
   "directories": {
     "test": "tests"
   },
+  "files": [
+    "dist"
+  ],
   "typescript": {
     "definition": "index.d.ts"
   },
   "scripts": {
     "test": "karma start --single-run",
-    "build": "webpack"
+    "build": "webpack",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/wikibus/heracles"
+    "url": "git://github.com/wikibus/alcaeus"
   },
   "keywords": [
     "ajax",
@@ -28,9 +32,9 @@
   "author": "Tomasz Pluskiewicz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wikibus/heracles/issues"
+    "url": "https://github.com/wikibus/alcaeus/issues"
   },
-  "homepage": "https://github.com/wikibus/heracles#readme",
+  "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "jsonld": "^0.4.12",
@@ -50,6 +54,7 @@
     "karma": "^1.3.0",
     "karma-sauce-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.5",
     "rdf-parser-n3": "^1.0.0",
     "rdf-serializer-jsonld-ext": "^1.2.0",
     "sinon": "^3.2.1",

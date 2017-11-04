@@ -3,18 +3,18 @@ import {Schema, rdfs, owl} from './Vocabs';
 import {Resource} from './Resources';
 import {nonenumerable} from "core-decorators";
 import {
-    IApiDocumentation, IHeracles, IClass, ISupportedOperation, ISupportedProperty, IHydraResource,
+    IApiDocumentation, IHydraClient, IClass, ISupportedOperation, ISupportedProperty, IHydraResource,
     IDocumentedResource, IStatusCodeDescription, IRdfProperty, IResource
 } from './interfaces';
 
-const heraclesWeakMap = new WeakMap<IResource, IHeracles>();
+const alcaeusWeakMap = new WeakMap<IResource, IHydraClient>();
 
 export class ApiDocumentation extends Resource implements IApiDocumentation {
 
-    constructor(heracles:IHeracles, apiDoc:any) {
+    constructor(alcaeus:IHydraClient, apiDoc:any) {
         super(apiDoc);
 
-        heraclesWeakMap.set(this, heracles);
+        alcaeusWeakMap.set(this, alcaeus);
     }
 
     get classes():Array<IClass> {
@@ -26,8 +26,8 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
     }
 
     @nonenumerable
-    get _heracles():IHeracles {
-        return heraclesWeakMap.get(this);
+    get _alcaeus():IHydraClient {
+        return alcaeusWeakMap.get(this);
     }
 
     getOperations(classUri:string):Array<ISupportedOperation>;
@@ -69,7 +69,7 @@ export class ApiDocumentation extends Resource implements IApiDocumentation {
             return Promise.reject('The ApiDocumentation doesn\'t have and entrypoint.');
         }
 
-        return this._heracles.loadResource(this[Core.Vocab.entrypoint][JsonLd.Id]);
+        return this._alcaeus.loadResource(this[Core.Vocab.entrypoint][JsonLd.Id]);
     }
 }
 
@@ -93,9 +93,9 @@ export class DocumentedResource extends Resource implements IDocumentedResource 
 
 export class SupportedOperation extends DocumentedResource implements ISupportedOperation {
 
-    constructor(hydraOperation:any, heracles:IHeracles) {
+    constructor(hydraOperation:any, alcaeus:IHydraClient) {
         super(hydraOperation);
-        heraclesWeakMap.set(this, heracles);
+        alcaeusWeakMap.set(this, alcaeus);
     }
 
     get method():string {

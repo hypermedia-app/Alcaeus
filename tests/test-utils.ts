@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {JsonLd, Core, MediaTypes} from "../src/Constants";
 
-export function fakeHeraclesResources(obj: Object) {
+export function fakeAlcaeusResources(obj: Object) {
     if (!obj || typeof obj !== 'object') {
         return;
     }
@@ -14,7 +14,7 @@ export function fakeHeraclesResources(obj: Object) {
     addGetter('supportedOperations', Core.Vocab.supportedOperation);
     addGetter('property', Core.Vocab.property, false);
 
-    _.forOwn(obj, fakeHeraclesResources);
+    _.forOwn(obj, fakeAlcaeusResources);
 
     return obj;
 }
@@ -90,7 +90,7 @@ export function responseBuilder() {
             }
             else {
                 response = new Response(responseBody, {
-                    headers: headers,
+                    headers: new Headers(headers),
                     status: statusCode
                 });
             }

@@ -111,5 +111,4 @@ Session.vim
 # auto-generated tag files
 tags
 
-dist/src/
-dist/tests/
+dist/

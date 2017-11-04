@@ -2,11 +2,11 @@ import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {IHeracles, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
+import {IHydraClient, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
 import {forOwn} from "./LodashUtil";
 import {ExpandedWithDocs} from "./internals";
 
-export class Heracles implements IHeracles {
+export class Alcaeus implements IHydraClient {
     public resourceFactory = new ResourceFactoryCtor();
     public fetchUtil = new FetchUtil();
 
@@ -37,7 +37,7 @@ export class Heracles implements IHeracles {
     }
 }
 
-function getRequestedObject(heracles:IHeracles, uri, resources, apiDocumentation, typeOverrides = {}) {
+function getRequestedObject(alcaeus:IHydraClient, uri, resources, apiDocumentation, typeOverrides = {}) {
     const resourcified = {};
     resources.forEach(res => {
         resourcified[res[JsonLd.Id]] = res;
@@ -45,11 +45,11 @@ function getRequestedObject(heracles:IHeracles, uri, resources, apiDocumentation
 
     resources.reduceRight((acc:Object, val) => {
         const id = val[JsonLd.Id];
-        acc[id] = heracles.resourceFactory.createResource(heracles, val, apiDocumentation, acc, typeOverrides[id]);
+        acc[id] = alcaeus.resourceFactory.createResource(alcaeus, val, apiDocumentation, acc, typeOverrides[id]);
         return acc;
     }, resourcified);
 
-    forOwn(resourcified, resource => resourcify(heracles, resource, resourcified, apiDocumentation, typeOverrides));
+    forOwn(resourcified, resource => resourcify(alcaeus, resource, resourcified, apiDocumentation, typeOverrides));
 
     const rootResource = resourcified[uri] || resourcified[JsonLdUtil.trimTrailingSlash(uri)];
 
@@ -60,7 +60,7 @@ function getRequestedObject(heracles:IHeracles, uri, resources, apiDocumentation
     return rootResource;
 }
 
-function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDocumentation, typeOverrides) {
+function resourcify(alcaeus:IHydraClient, obj, resourcified:Object, apiDoc:IApiDocumentation, typeOverrides) {
     if ((typeof obj === 'object') === false) {
         return obj;
     }
@@ -78,7 +78,7 @@ function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDoc
     let resource = resourcified[selfId];
     if (!resource || typeof resource._processed === 'undefined') {
         const id = obj[JsonLd.Id];
-        resource = heracles.resourceFactory.createResource(heracles, obj, apiDoc, resourcified, id);
+        resource = alcaeus.resourceFactory.createResource(alcaeus, obj, apiDoc, resourcified, id);
         resourcified[selfId] = resource;
     }
 
@@ -89,11 +89,11 @@ function resourcify(heracles:IHeracles, obj, resourcified:Object, apiDoc:IApiDoc
     resource._processed = true;
     forOwn(resource, (value, key) => {
         if (Array.isArray(value)) {
-            resource[key] = value.map(el => resourcify(heracles, el, resourcified, apiDoc, typeOverrides));
+            resource[key] = value.map(el => resourcify(alcaeus, el, resourcified, apiDoc, typeOverrides));
             return;
         }
 
-        resource[key] = resourcify(heracles, value, resourcified, apiDoc, typeOverrides);
+        resource[key] = resourcify(alcaeus, value, resourcified, apiDoc, typeOverrides);
     });
 
     return resource;

@@ -1,4 +1,4 @@
-export declare interface IHeracles {
+export declare interface IHydraClient {
     resourceFactory:IResourceFactory;
     loadResource(uri:string):Promise<IHydraResource>;
     invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource>;
@@ -77,7 +77,7 @@ export interface ICollection extends IHydraResource {
 }
 
 export interface IResourceFactory {
-    createResource(heracles:IHeracles, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):IResource
+    createResource(alcaeus:IHydraClient, obj:Object, apiDocumentation:IApiDocumentation, resources, typeOverride?:string):IResource
 }
 
 export interface IStatusCodeDescription {
@@ -85,4 +85,4 @@ export interface IStatusCodeDescription {
     description:string;
 }
 
-export default IHeracles;
+export default IHydraClient;

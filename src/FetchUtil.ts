@@ -35,9 +35,9 @@ export class FetchUtil {
 
     async fetchResource(uri:string):Promise<ExpandedWithDocs> {
         const res = await fetch(uri, {
-                headers: {
+                headers: new Headers({
                     accept: FetchUtil._requestAcceptHeaders
-                }
+                })
             });
 
         if(res.status == 404) {
@@ -54,10 +54,10 @@ export class FetchUtil {
 
         const res = await fetch(uri, {
                 method: method,
-                headers: {
+                headers: new Headers({
                     'Content-Type': mediaType,
                     Accept: FetchUtil._requestAcceptHeaders
-                }
+                })
             });
 
         if(res.status == 404) {

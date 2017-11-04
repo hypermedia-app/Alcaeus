@@ -17,7 +17,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'heracles.js',
+    filename: 'alcaeus.js',
     library: 'Hydra',
     libraryTarget: 'umd'
   },

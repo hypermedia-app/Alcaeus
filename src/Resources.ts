@@ -202,6 +202,10 @@ export class Collection extends HydraResource implements ICollection {
     get views(): IPartialCollectionView[] {
         const views = this[Core.Vocab.view];
 
+        if (!views) {
+            return [];
+        }
+
         if(Array.isArray(views) === false) {
             return [ views ];
         }

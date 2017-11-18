@@ -74,4 +74,25 @@ describe('Collection', () => {
         expect(Array.isArray(collection.members)).toBe(true);
         expect(collection.members[0]['text']).toBe('hello');
     });
+
+    it('should return empty array when views are missing', () => {
+        // given
+        const collectionBody = {};
+        const collection = new Hydra.Collection(null, collectionBody, null, []);
+
+        // then
+        expect(Array.isArray(collection.views)).toBe(true);
+        expect(collection.views.length).toBe(0);
+    });
+
+    it('should return empty array when views is null', () => {
+        // given
+        const collectionBody = {};
+        collectionBody[Core.Vocab.view] = null;
+        const collection = new Hydra.Collection(null, collectionBody, null, []);
+
+        // then
+        expect(Array.isArray(collection.views)).toBe(true);
+        expect(collection.views.length).toBe(0);
+    });
 });

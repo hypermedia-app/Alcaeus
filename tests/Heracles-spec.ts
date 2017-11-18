@@ -39,6 +39,19 @@ describe('Hydra', () => {
             expect(res instanceof HydraResource).toBe(true);
         });
 
+        async(it, 'should return object with matching @id when it is unescaped in response', async () => {
+            // given
+            fetchResource.withArgs('http://example.com/bia%C5%82a%20g%C4%99%C5%9B')
+                .returns(mockedResponse(Bodies.unescapedDiacritics));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/bia%C5%82a%20g%C4%99%C5%9B'); // http://example.com/biała gęś
+
+            // then
+            expect(res['@id']).toBe('http://example.com/bia%C5%82a%20g%C4%99%C5%9B');
+            expect(res instanceof HydraResource).toBe(true);
+        });
+
         async(it, 'should return object with matching redirected @id', async () =>{
             // given
             fetchResource.withArgs('http://example.com/not-in-response')

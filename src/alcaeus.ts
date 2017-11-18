@@ -39,7 +39,12 @@ export class Alcaeus implements IHydraClient {
 
 function getRequestedObject(alcaeus:IHydraClient, uri, resources, apiDocumentation, typeOverrides = {}) {
     const resourcified = {};
+    debugger;
     resources.forEach(res => {
+        try {
+            res[JsonLd.Id] = new URL(res[JsonLd.Id]).href;
+        } catch(e) {}
+
         resourcified[res[JsonLd.Id]] = res;
     });
 

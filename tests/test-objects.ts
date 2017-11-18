@@ -21,6 +21,14 @@ export namespace Bodies {
         }
     };
 
+    export let unescapedDiacritics = {
+        '@context': {
+            '@vocab': 'http://example.com/vocab#'
+        },
+        '@id': 'http://example.com/biała gęś',
+        '@type': 'Resource'
+    };
+
     export let idWithTrailingSlash = {
         '@context': {
             '@vocab': 'http://example.com/vocab#'

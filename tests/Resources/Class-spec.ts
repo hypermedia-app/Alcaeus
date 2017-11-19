@@ -1,7 +1,9 @@
 import {promises as jsonld} from 'jsonld';
-import {Class} from "../src/ApiDocumentation";
-import {Core} from '../src/Constants';
-import {async} from "./test-utils";
+import ClassMixin from "../../src/Resources/Class";
+import {Core} from '../../src/Constants';
+import {async} from "../test-utils";
+
+class Class extends ClassMixin(Object) {}
 
 describe('Class', () => {
 

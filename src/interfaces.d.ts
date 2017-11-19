@@ -1,5 +1,3 @@
-import {RdfProperty} from "./ApiDocumentation";
-
 export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
 
 export declare interface IHydraClient {
@@ -97,7 +95,7 @@ export interface IIriTemplate {
 }
 
 export interface IIriTemplateMapping {
-    property:RdfProperty;
+    property:IRdfProperty;
     variable:string;
     required:boolean;
 }

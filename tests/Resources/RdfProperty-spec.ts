@@ -1,8 +1,10 @@
 import {promises as jsonld} from 'jsonld';
-import {RdfProperty} from "../src/ApiDocumentation";
-import {Core} from '../src/Constants';
-import {xsd, rdf, rdfs, owl} from '../src/Vocabs';
-import {async} from "./test-utils";
+import RdfPropertyMixin from "../../src/Resources/RdfProperty";
+import {Core} from '../../src/Constants';
+import {xsd, rdf, rdfs, owl} from '../../src/Vocabs';
+import {async} from "../test-utils";
+
+class RdfProperty extends RdfPropertyMixin(Object) {}
 
 describe('RdfProperty', () => {
 

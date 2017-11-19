@@ -83,6 +83,7 @@ export namespace Core {
         IriTemplateMapping: Context['hydra'] + 'IriTemplateMapping',
         code: Context['hydra'] + 'code',
         variable: Context['hydra'] + 'variable',
+        variableRepresentation: Context['hydra'] + 'variableRepresentation',
     };
 }
 

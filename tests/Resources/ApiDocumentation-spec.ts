@@ -1,14 +1,16 @@
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
-import {ApiDocumentation} from "../src/ApiDocumentation";
-import {Documentations} from './test-objects';
-import {async, fakeAlcaeusResources} from "./test-utils";
+import ApiDocumentationMixin from "../../src/Resources/ApiDocumentation";
+import {Documentations} from '../test-objects';
+import {async, fakeAlcaeusResources} from "../test-utils";
 import 'core-js/es6/array';
-import {IApiDocumentation} from "../src/interfaces";
+import Resource from "../../src/Resources/Resource";
 
-describe('ApiDocumentation', () => {
+class ApiDocumentation extends ApiDocumentationMixin(Resource) {
+}
 
+fdescribe('ApiDocumentation', () => {
     let alcaeus;
 
     beforeEach(() => alcaeus = {});
@@ -126,7 +128,7 @@ describe('ApiDocumentation', () => {
         async(it, 'should return a value', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
-            const docs: IApiDocumentation = new ApiDocumentation(alcaeus, fakeAlcaeusResources(expanded));
+            const docs = new ApiDocumentation(alcaeus, fakeAlcaeusResources(expanded));
 
             // when
             const ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');

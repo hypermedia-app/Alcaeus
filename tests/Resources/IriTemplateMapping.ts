@@ -1,6 +1,7 @@
 import IriTemplateMappingMixin from '../../src/Resources/IriTemplateMapping';
+import Resource from "../../src/Resources/Resource";
 
-class IriTemplateMapping extends IriTemplateMappingMixin(Object) {}
+class IriTemplateMapping extends IriTemplateMappingMixin(Resource) {}
 
 describe('IriTemplateMapping', () => {
 
@@ -15,7 +16,7 @@ describe('IriTemplateMapping', () => {
         });
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(IriTemplateMappingMixin.prototype, 'required').enumerable)
+            expect(IriTemplateMapping.prototype.propertyIsEnumerable('required'))
                 .toBe(false);
         });
     });

@@ -9,7 +9,7 @@ const _resource = new WeakMap<IOperation, IResource>();
 export class Operation extends Resource implements IOperation {
 
     constructor(supportedOperation: ISupportedOperation, alcaeus: IHydraClient, resource: IHydraResource) {
-        super(alcaeus, resource);
+        super(resource, alcaeus);
 
         if(!supportedOperation) {
             throw new Error('Missing supportedOperation parameter');

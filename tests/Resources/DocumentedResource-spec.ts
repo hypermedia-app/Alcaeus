@@ -2,8 +2,9 @@ import {Core} from '../../src/Constants';
 import DocumentedResourceMixin from "../../src/Resources/DocumentedResource";
 import {promises as jsonld} from 'jsonld';
 import {async} from "../test-utils";
+import Resource from "../../src/Resources/Resource";
 
-class DocumentedResource extends DocumentedResourceMixin(Object) {}
+class DocumentedResource extends DocumentedResourceMixin(Resource) {}
 
 describe('DocumentedResource', () => {
 

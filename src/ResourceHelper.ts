@@ -1,5 +1,5 @@
 export default function ensureArray(obj: object, property: string) {
-    const values = this[property];
+    const values = obj[property];
 
     if (!values) {
         return [];

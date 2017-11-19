@@ -7,11 +7,10 @@ import HydraResource from "../../src/Resources/HydraResource";
 class PartialCollectionView extends PartialCollectionViewMixin(HydraResource) {}
 
 describe('PartialCollectionView', () => {
-
     it('should link to the collection', () => {
         const collection = {};
 
-        const pcv = new PartialCollectionView(null, Bodies.hydraCollectionWithView['hydra:view'], null, [
+        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, null, [
             {
                 subjectId: 'http://some.id',
                 predicate: Core.Vocab.view,
@@ -23,7 +22,7 @@ describe('PartialCollectionView', () => {
     });
 
     it('should contain null links to other pages if missing', () => {
-        const pcv = new PartialCollectionView(null, {}, null, []);
+        const pcv = new PartialCollectionView({}, null, null, []);
 
         expect(pcv.next).toBe(null);
         expect(pcv.previous).toBe(null);
@@ -31,8 +30,8 @@ describe('PartialCollectionView', () => {
         expect(pcv.last).toBe(null);
     });
 
-    it('should contain null links to other pages if missing', () => {
-        const pcv = new PartialCollectionView(null, Bodies.hydraCollectionWithView['hydra:view'], null, []);
+    it('should contain links to other pages', () => {
+        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, null, []);
 
         expect(pcv.next).toBe('http://example.com/resource?page=4');
         expect(pcv.previous).toBe('http://example.com/resource?page=2');
@@ -41,27 +40,27 @@ describe('PartialCollectionView', () => {
     });
 
     it('first should be nonenumerable', () => {
-        expect(Object.getOwnPropertyDescriptor(PartialCollectionViewMixin, 'first').enumerable)
+        expect(PartialCollectionView.prototype.propertyIsEnumerable('first'))
             .toBe(false);
     });
 
     it('last should be nonenumerable', () => {
-        expect(Object.getOwnPropertyDescriptor(PartialCollectionViewMixin, 'last').enumerable)
+        expect(PartialCollectionView.prototype.propertyIsEnumerable('last'))
             .toBe(false);
     });
 
     it('next should be nonenumerable', () => {
-        expect(Object.getOwnPropertyDescriptor(PartialCollectionViewMixin, 'next').enumerable)
+        expect(PartialCollectionView.prototype.propertyIsEnumerable('next'))
             .toBe(false);
     });
 
     it('previous should be nonenumerable', () => {
-        expect(Object.getOwnPropertyDescriptor(PartialCollectionViewMixin, 'previous').enumerable)
+        expect(PartialCollectionView.prototype.propertyIsEnumerable('previous'))
             .toBe(false);
     });
 
     it('collection should be nonenumerable', () => {
-        expect(Object.getOwnPropertyDescriptor(PartialCollectionViewMixin, 'collection').enumerable)
+        expect(PartialCollectionView.prototype.propertyIsEnumerable('collection'))
             .toBe(false);
     });
 });

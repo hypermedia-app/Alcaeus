@@ -2,9 +2,8 @@ import {FetchUtil} from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {IHydraClient, IHydraResource, IApiDocumentation, IOperation} from './interfaces';
+import {IHydraClient, IApiDocumentation, IOperation} from './interfaces';
 import {forOwn} from "./LodashUtil";
-import {ExpandedWithDocs} from "./internals";
 
 export class Alcaeus implements IHydraClient {
     public resourceFactory = new ResourceFactoryCtor();
@@ -39,7 +38,6 @@ export class Alcaeus implements IHydraClient {
 
 function getRequestedObject(alcaeus:IHydraClient, uri, resources, apiDocumentation, typeOverrides = {}) {
     const resourcified = {};
-    debugger;
     resources.forEach(res => {
         try {
             res[JsonLd.Id] = new URL(res[JsonLd.Id]).href;

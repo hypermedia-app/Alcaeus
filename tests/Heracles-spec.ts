@@ -8,6 +8,7 @@ import {Bodies, Documentations} from './test-objects';
 import 'core-js/es6/object';
 import 'core-js/es6/array';
 import {async} from "./test-utils";
+import {ReverseLinks} from "../src/Resources/Maps";
 
 describe('Hydra', () => {
 
@@ -127,8 +128,6 @@ describe('Hydra', () => {
             // then
             expect(res.collection).toBeDefined();
             expect(res.collection).not.toBeNull();
-            expect(res.collection instanceof HydraResource)
-                .toBe(true, 'Actual type is: ' + res.collection.constructor.name);
         });
 
         async(it, 'should fail when resource with given @id doesn\'t exist in the representation', async () => {
@@ -154,7 +153,7 @@ describe('Hydra', () => {
 
             // when
             const res = await Hydra.loadResource('http://example.com/resource');
-            const incomingLinks = res['http://example.com/vocab#other'].getIncomingLinks();
+            const incomingLinks = ReverseLinks.get(res['http://example.com/vocab#other']);
 
             // then
             expect(incomingLinks.length).toBe(2);
@@ -245,7 +244,7 @@ describe('Hydra', () => {
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
 
             // then
-            expect(false).toBe(true);
+            expect(doc.id).toBe('http://api.example.com/doc/');
         });
 
         async(it, 'should return type ApiDocumentation when @type is not defined', async () => {
@@ -256,7 +255,7 @@ describe('Hydra', () => {
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
 
             // then
-            expect(false).toBe(true);
+            expect(doc.id).toBe('http://api.example.com/doc/');
         });
 
         afterEach(() => fetchResource.restore());

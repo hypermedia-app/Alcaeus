@@ -26,7 +26,7 @@ describe('SupportedOperation', () => {
         const compacted = await jsonld.compact(operationJsonLd, {});
 
         // wehen
-        const op = new SupportedOperation(compacted, <IHydraClient>{});
+        const op = new SupportedOperation(compacted);
 
         // then
         expect(op.method).toBe('TRACE');
@@ -37,7 +37,7 @@ describe('SupportedOperation', () => {
         const compacted = await jsonld.compact(operationJsonLd, {});
 
         // when
-            const op = new SupportedOperation(compacted, <IHydraClient>{});
+        const op = new SupportedOperation(compacted);
 
         // then
         expect(op.expects['@id']).toBe(owl.Nothing);
@@ -48,7 +48,7 @@ describe('SupportedOperation', () => {
         const compacted = await jsonld.compact(operationJsonLd, {});
 
         // when
-        const op = new SupportedOperation(compacted, <IHydraClient>{});
+        const op = new SupportedOperation(compacted);
 
         // then
         expect(op.returns['@id']).toBe('http://example.com/Something');
@@ -66,7 +66,7 @@ describe('SupportedOperation', () => {
             const compacted = await jsonld.compact(operation, {});
 
             // when
-            const op = new SupportedOperation(compacted, <IHydraClient>{});
+            const op = new SupportedOperation(compacted);
 
             // then
             expect(op.requiresInput).toBe(false);
@@ -82,7 +82,7 @@ describe('SupportedOperation', () => {
             const compacted = await jsonld.compact(operation, {});
 
             // when
-            const op = new SupportedOperation(compacted, <IHydraClient>{});
+            const op = new SupportedOperation(compacted);
 
             // then
             expect(op.requiresInput).toBe(false);
@@ -98,7 +98,7 @@ describe('SupportedOperation', () => {
             const compacted = await jsonld.compact(operation, {});
 
             // when
-            const op = new SupportedOperation(compacted, <IHydraClient>{});
+            const op = new SupportedOperation(compacted);
 
             // then
             expect(op.requiresInput).toBe(true);
@@ -115,7 +115,7 @@ describe('SupportedOperation', () => {
             compacted[Core.Vocab.expects] = { id: owl.Nothing };
 
             // when
-            const op = new SupportedOperation(compacted, <IHydraClient>{});
+            const op = new SupportedOperation(compacted);
 
             // then
             expect(op.requiresInput).toBe(true);

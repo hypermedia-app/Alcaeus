@@ -90,8 +90,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/*-spec.ts',
-            'tests/*-specs.ts'
+            'tests/**/*-spec.ts'
         ],
 
         // list of files to exclude
@@ -137,7 +136,7 @@ module.exports = function (config) {
             ? Object.keys(customLaunchers)
             : ['Chrome', 'Safari', 'Firefox'],
 
-        singleRun: !!process.env.TRAVIS,
+        singleRun: true,
 
         concurrency: process.env.TRAVIS ? 1: Number.MAX_SAFE_INTEGER,
 

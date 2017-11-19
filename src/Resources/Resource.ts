@@ -8,8 +8,7 @@ const _isProcessed = new WeakMap<IResource, boolean>();
 const _alcaeus = new WeakMap<IResource, IHydraClient>();
 
 export default class implements IResource {
-
-    constructor(alcaeus:IHydraClient, actualResource:any) {
+    constructor(actualResource:object, alcaeus:IHydraClient = null) {
         Object.assign(this, actualResource);
 
         _isProcessed.set(this, false);

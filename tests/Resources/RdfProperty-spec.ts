@@ -3,8 +3,9 @@ import RdfPropertyMixin from "../../src/Resources/RdfProperty";
 import {Core} from '../../src/Constants';
 import {xsd, rdf, rdfs, owl} from '../../src/Vocabs';
 import {async} from "../test-utils";
+import Resource from "../../src/Resources/Resource";
 
-class RdfProperty extends RdfPropertyMixin(Object) {}
+class RdfProperty extends RdfPropertyMixin(Resource) {}
 
 describe('RdfProperty', () => {
 

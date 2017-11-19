@@ -4,25 +4,6 @@ import {ISupportedOperation, IHydraClient, IHydraResource, IOperation, IClass} f
 
 describe('Operation', () => {
 
-    describe('constructor', () => {
-
-        it('should require supported operation', () => {
-
-            expect(() => new Operation(null, <IHydraClient>{}, <IHydraResource>{}))
-                .toThrowError('Missing supportedOperation parameter');
-            expect(() => new Operation(undefined, <IHydraClient>{}, <IHydraResource>{}))
-                .toThrowError('Missing supportedOperation parameter');
-        });
-
-        it('should require alcaeus', () => {
-            expect(() => new Operation(<ISupportedOperation>{}, null, <IHydraResource>{}))
-                .toThrowError('Missing alcaeus parameter');
-            expect(() => new Operation(<ISupportedOperation>{}, undefined, <IHydraResource>{}))
-                .toThrowError('Missing alcaeus parameter');
-        });
-
-    });
-
     describe('property', () => {
 
         let operation: IOperation;

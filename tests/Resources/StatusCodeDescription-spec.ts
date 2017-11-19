@@ -1,6 +1,7 @@
 import StatusCodeDescriptionMixin from "../../src/Resources/StatusCodeDescription";
+import Resource from "../../src/Resources/Resource";
 
-class StatusCodeDescription extends StatusCodeDescriptionMixin(Object) {}
+class StatusCodeDescription extends StatusCodeDescriptionMixin(Resource) {}
 
 describe('StatusCodeDescription', () => {
     it('should have code', () => {

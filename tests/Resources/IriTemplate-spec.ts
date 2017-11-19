@@ -1,7 +1,8 @@
 import IriTemplateMixin from '../../src/Resources/IriTemplate';
 import {Core} from "../../src/Constants";
+import Resource from "../../src/Resources/Resource";
 
-class IriTemplate extends IriTemplateMixin(Object) {}
+class IriTemplate extends IriTemplateMixin(Resource) {}
 
 describe('IriTemplate', () => {
     describe('mappings', () => {
@@ -13,11 +14,11 @@ describe('IriTemplate', () => {
 
             // then
             expect(Array.isArray(iriTemplate.mappings)).toBe(true);
-            expect(iriTemplate.mappings.length).toBe(0);
+            expect(iriTemplate.mappings.length).toBe(1);
         });
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(IriTemplateMixin.prototype, 'mappings').enumerable)
+            expect(IriTemplate.prototype.propertyIsEnumerable('mappings'))
                 .toBe(false);
         });
     });
@@ -33,7 +34,7 @@ describe('IriTemplate', () => {
         });
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(IriTemplateMixin.prototype, 'variableRepresentation').enumerable)
+            expect(IriTemplate.prototype.propertyIsEnumerable('variableRepresentation'))
                 .toBe(false);
         });
     });

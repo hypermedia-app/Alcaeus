@@ -8,8 +8,8 @@ import {ReverseLinks} from "./Maps";
 const _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
 
 export default class extends Resource implements IHydraResource {
-    constructor(alcaeus:IHydraClient, actualResource, apiDoc:IApiDocumentation, incomingLinks) {
-        super(alcaeus, actualResource);
+    constructor(actualResource, alcaeus:IHydraClient, apiDoc:IApiDocumentation, incomingLinks) {
+        super(actualResource, alcaeus);
 
         _apiDocumentation.set(this, apiDoc);
         ReverseLinks.set(this, incomingLinks);

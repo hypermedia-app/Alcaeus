@@ -10,7 +10,7 @@ describe('Collection', () => {
             // given
             const collectionBody = {};
             collectionBody[Core.Vocab.member] = { text: 'hello' };
-            const collection = new Collection(null, collectionBody);
+            const collection = new Collection(collectionBody);
 
             // then
             expect(Array.isArray(collection.members)).toBe(true);
@@ -18,7 +18,7 @@ describe('Collection', () => {
         });
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(CollectionMixin.prototype, 'members').enumerable)
+            expect(Collection.prototype.propertyIsEnumerable('members'))
                 .toBe(false);
         });
     });
@@ -27,7 +27,7 @@ describe('Collection', () => {
         it('should return empty array when views are missing', () => {
             // given
             const collectionBody = {};
-            const collection = new Collection(null, collectionBody);
+            const collection = new Collection(collectionBody);
 
             // then
             expect(Array.isArray(collection.views)).toBe(true);
@@ -38,7 +38,7 @@ describe('Collection', () => {
             // given
             const collectionBody = {};
             collectionBody[Core.Vocab.view] = null;
-            const collection = new Collection(null, collectionBody);
+            const collection = new Collection(collectionBody);
 
             // then
             expect(Array.isArray(collection.views)).toBe(true);
@@ -46,7 +46,7 @@ describe('Collection', () => {
         });
 
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(CollectionMixin.prototype, 'views').enumerable)
+            expect(Collection.prototype.propertyIsEnumerable('views'))
                 .toBe(false);
         });
     });

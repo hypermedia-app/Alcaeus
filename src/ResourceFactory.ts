@@ -5,26 +5,18 @@ import HydraResource from "./Resources/HydraResource";
 
 export class ResourceFactory implements IResourceFactory {
 
-    factories = {};
+    mixins = [];
 
-    public createResource(alcaeus:IHydraClient, obj:Object, apiDocumentation:IApiDocumentation, resources:Object, typeOverride?:string):IResource {
+    public createResource(alcaeus:IHydraClient, obj:Object, apiDocumentation:IApiDocumentation, resources:Object):IResource {
         const incomingLinks = findIncomingLinks(obj, resources);
 
-        let factory = this.factories[typeOverride || obj[JsonLd.Type]];
-        if(!factory && Array.isArray(obj[JsonLd.Type])) {
-            for (let i=0; i<obj[JsonLd.Type].length; i++) {
-                factory = this.factories[obj[JsonLd.Type][i]];
-                if(factory) {
-                    break;
-                }
-            }
-        }
+        const mixins = this.mixins
+            .filter(mc => mc.shouldApplyMixin(obj))
+            .map(mc => mc.mixinFunction);
 
-        if (factory) {
-            return factory.call(this, alcaeus, obj, apiDocumentation, incomingLinks);
-        }
+        const AlcaeusGenerated = mixins.reduce((c, mixin) => mixin(c), HydraResource);
 
-        return new HydraResource(alcaeus, obj, apiDocumentation, incomingLinks);
+        return new AlcaeusGenerated(obj, alcaeus, apiDocumentation, incomingLinks);
     }
 }
 

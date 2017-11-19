@@ -77,6 +77,8 @@ function setUpDefaultFactories() {
     this.factories[Core.Vocab.PartialCollectionView] = createPartialCollectionView;
     this.factories[Core.Vocab.Collection] = createCollection;
     this.factories[Core.Vocab.Class] = createClass;
+    this.factories[Core.Vocab.IriTemplate] = createIriTemplate;
+    this.factories[Core.Vocab.IriTemplateMapping] = createIriTemplateMapping;
     this.factories[Core.Vocab.SupportedProperty] = createSupportedProperty;
     this.factories[Core.Vocab.Operation] = createOperation;
     this.factories[Core.Vocab.StatusCodeDescription] = createStatusCodeDescription;
@@ -96,6 +98,12 @@ function createPartialCollectionView(alcaeus, obj, apiDocumentation, incomingLin
 }
 function createClass(alcaeus, obj) {
     return new DocTypes.Class(obj);
+}
+function createIriTemplate(_, obj) {
+    return new Types.IriTemplate(obj);
+}
+function createIriTemplateMapping(_, obj) {
+    return new Types.IriTemplateMapping(obj);
 }
 function createSupportedProperty(alcaeus, obj) {
     return new DocTypes.SupportedProperty(obj);

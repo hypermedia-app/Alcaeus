@@ -22,6 +22,8 @@ describe('ResourceFactory', () => {
         constructedTypes[Core.Vocab.SupportedProperty] = res => res instanceof documentationTypes.SupportedProperty;
         constructedTypes[Core.Vocab.Operation] = res => res instanceof documentationTypes.SupportedOperation;
         constructedTypes[Core.Vocab.StatusCodeDescription] = res => res instanceof documentationTypes.StatusCodeDescription;
+        constructedTypes[Core.Vocab.IriTemplate] = res => res instanceof resources.IriTemplate;
+        constructedTypes[Core.Vocab.IriTemplateMapping] = res => res instanceof resources.IriTemplateMapping;
         constructedTypes[rdf.Property] = res => res instanceof documentationTypes.RdfProperty;
 
         entries(constructedTypes).forEach(typePair => {

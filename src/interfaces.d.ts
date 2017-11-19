@@ -1,3 +1,7 @@
+import {RdfProperty} from "./ApiDocumentation";
+
+export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
+
 export declare interface IHydraClient {
     resourceFactory:IResourceFactory;
     loadResource(uri:string):Promise<IHydraResource>;
@@ -83,6 +87,19 @@ export interface IResourceFactory {
 export interface IStatusCodeDescription {
     code:number,
     description:string;
+}
+
+export interface IIriTemplate {
+    template:string;
+    mappings:IIriTemplateMapping[];
+    variableRepresentation: VariableRepresentation;
+    expand():string;
+}
+
+export interface IIriTemplateMapping {
+    property:RdfProperty;
+    variable:string;
+    required:boolean;
 }
 
 export default IHydraClient;

@@ -64,7 +64,8 @@ describe('PartialCollectionView', () => {
 });
 
 describe('Collection', () => {
-    it('should return array even for one member', () => {
+    describe('members', () => {
+        it('should return array even for one member', () => {
         // given
         const collectionBody = {};
         collectionBody[Core.Vocab.member] = { text: 'hello' };
@@ -75,24 +76,92 @@ describe('Collection', () => {
         expect(collection.members[0]['text']).toBe('hello');
     });
 
-    it('should return empty array when views are missing', () => {
-        // given
-        const collectionBody = {};
-        const collection = new Hydra.Collection(null, collectionBody, null, []);
-
-        // then
-        expect(Array.isArray(collection.views)).toBe(true);
-        expect(collection.views.length).toBe(0);
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Hydra.Collection.prototype, 'members').enumerable)
+                .toBe(false);
+        });
     });
 
-    it('should return empty array when views is null', () => {
-        // given
-        const collectionBody = {};
-        collectionBody[Core.Vocab.view] = null;
-        const collection = new Hydra.Collection(null, collectionBody, null, []);
+    describe('views', () => {
+        it('should return empty array when views are missing', () => {
+            // given
+            const collectionBody = {};
+            const collection = new Hydra.Collection(null, collectionBody, null, []);
 
-        // then
-        expect(Array.isArray(collection.views)).toBe(true);
-        expect(collection.views.length).toBe(0);
+            // then
+            expect(Array.isArray(collection.views)).toBe(true);
+            expect(collection.views.length).toBe(0);
+        });
+
+        it('should return empty array when views is null', () => {
+            // given
+            const collectionBody = {};
+            collectionBody[Core.Vocab.view] = null;
+            const collection = new Hydra.Collection(null, collectionBody, null, []);
+
+            // then
+            expect(Array.isArray(collection.views)).toBe(true);
+            expect(collection.views.length).toBe(0);
+        });
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Hydra.Collection.prototype, 'views').enumerable)
+                .toBe(false);
+        });
+    });
+});
+
+describe('IriTemplate', () => {
+    describe('mappings', () => {
+        it('should return empty array even for one mapping', () => {
+            // given
+            const body = {};
+            body[Core.Vocab.mapping] = {};
+            const iriTemplate = new Hydra.IriTemplate(body);
+
+            // then
+            expect(Array.isArray(iriTemplate.mappings)).toBe(true);
+            expect(iriTemplate.mappings.length).toBe(0);
+        });
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Hydra.IriTemplate.prototype, 'mappings').enumerable)
+                .toBe(false);
+        });
+    });
+
+    describe('variableRepresentation', () => {
+        it('should return BasicRepresentation if missing', () => {
+            // given
+            const body = {};
+            const iriTemplate = new Hydra.IriTemplate(body);
+
+            // then
+            expect(iriTemplate.variableRepresentation).toBe('BasicRepresentation');
+        });
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Hydra.IriTemplate.prototype, 'variableRepresentation').enumerable)
+                .toBe(false);
+        });
+    });
+});
+
+describe('IriTemplateMapping', () => {
+
+    describe('required', () => {
+        it('should return true if missing', () => {
+            // given
+            const body = {};
+            const iriTemplate = new Hydra.IriTemplateMapping(body);
+
+            // then
+            expect(iriTemplate.required).toBe(false);
+        });
+
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Hydra.IriTemplateMapping.prototype, 'required').enumerable)
+                .toBe(false);
+        });
     });
 });

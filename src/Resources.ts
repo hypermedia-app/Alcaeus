@@ -3,9 +3,10 @@ import {nonenumerable} from 'core-decorators';
 import {JsonLd, Core, MediaTypes} from './Constants';
 import {
     IOperation, ISupportedOperation, IHydraClient, IHydraResource, IClass, IResource,
-    IPartialCollectionView, IApiDocumentation, ICollection
+    IPartialCollectionView, IApiDocumentation, ICollection, IIriTemplate, IIriTemplateMapping, VariableRepresentation
 } from "./interfaces";
 import {IIncomingLink} from "./internals";
+import ensureArray from "./ResourceHelper";
 
 const _isProcessed = new WeakMap<IResource, boolean>();
 const _apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
@@ -97,6 +98,35 @@ export class HydraResource extends Resource implements IHydraResource {
         return operations.map((supportedOperation:ISupportedOperation) => {
             return new Operation(supportedOperation, this._alcaeus, this);
         });
+    }
+}
+
+export class IriTemplate extends Resource implements IIriTemplate {
+    @nonenumerable
+    get mappings() {
+        return ensureArray(this, Core.Vocab.mapping);
+    }
+
+    @nonenumerable
+    get variableRepresentation(): VariableRepresentation {
+        return this[Core.Vocab.variableRepresentation] || 'BasicRepresentation';
+    }
+}
+
+export class IriTemplateMapping extends Resource implements IIriTemplateMapping {
+    @nonenumerable
+    get variable() {
+        return this[Core.Vocab.variable];
+    }
+
+    @nonenumerable
+    get property() {
+        return this[Core.Vocab.property];
+    }
+
+    @nonenumerable
+    get required() {
+        return this[Core.Vocab.required] || false;
     }
 }
 
@@ -200,16 +230,6 @@ export class Collection extends HydraResource implements ICollection {
 
     @nonenumerable
     get views(): IPartialCollectionView[] {
-        const views = this[Core.Vocab.view];
-
-        if (!views) {
-            return [];
-        }
-
-        if(Array.isArray(views) === false) {
-            return [ views ];
-        }
-
-        return views;
+        return ensureArray(this, Core.Vocab.view);
     }
 }

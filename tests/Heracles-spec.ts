@@ -2,11 +2,9 @@ import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
 import {Hydra} from '../src';
-import {HydraResource} from '../src/Resources';
+import HydraResource from "../src/Resources/HydraResource";
 import {JsonLd, Core} from '../src/Constants';
-import {Bodies, Documentations } from './test-objects';
-import {ApiDocumentation} from "../src/ApiDocumentation";
-import {IPartialCollectionView} from "../src/interfaces";
+import {Bodies, Documentations} from './test-objects';
 import 'core-js/es6/object';
 import 'core-js/es6/array';
 import {async} from "./test-utils";
@@ -247,7 +245,7 @@ describe('Hydra', () => {
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
 
             // then
-            expect(doc instanceof ApiDocumentation).toBe(true);
+            expect(false).toBe(true);
         });
 
         async(it, 'should return type ApiDocumentation when @type is not defined', async () => {
@@ -258,7 +256,7 @@ describe('Hydra', () => {
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
 
             // then
-            expect(doc instanceof ApiDocumentation).toBe(true);
+            expect(false).toBe(true);
         });
 
         afterEach(() => fetchResource.restore());

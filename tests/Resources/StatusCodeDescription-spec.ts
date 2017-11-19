@@ -1,7 +1,8 @@
-import {StatusCodeDescription} from "../src/ApiDocumentation";
+import StatusCodeDescriptionMixin from "../../src/Resources/StatusCodeDescription";
+
+class StatusCodeDescription extends StatusCodeDescriptionMixin(Object) {}
 
 describe('StatusCodeDescription', () => {
-
     it('should have code', () => {
         const prop = new StatusCodeDescription({'http://www.w3.org/ns/hydra/core#code': 200});
 
@@ -19,5 +20,4 @@ describe('StatusCodeDescription', () => {
 
         expect(prop.description).toBe('');
     });
-
 });

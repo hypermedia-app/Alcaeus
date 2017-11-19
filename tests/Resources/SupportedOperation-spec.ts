@@ -1,9 +1,12 @@
 import {promises as jsonld} from 'jsonld';
-import {SupportedOperation} from '../src/ApiDocumentation';
-import {Core} from '../src/Constants';
-import {owl} from '../src/Vocabs';
-import {IHydraClient} from "../src/interfaces";
-import {async} from "./test-utils";
+import SupportedOperationMixin from '../../src/Resources/SupportedOperation';
+import {Core} from '../../src/Constants';
+import {owl} from '../../src/Vocabs';
+import {IHydraClient} from "../../src/interfaces";
+import {async} from "../test-utils";
+import Resource from "../../src/Resources/Resource";
+
+class SupportedOperation extends SupportedOperationMixin(Resource) {}
 
 describe('SupportedOperation', () => {
 

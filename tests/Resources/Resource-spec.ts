@@ -1,7 +1,8 @@
 import * as sinon from 'sinon';
-import {HydraResource, Resource} from '../src/Resources';
-import {Bodies} from './test-objects';
-import {IApiDocumentation, IHydraClient} from "../src/interfaces";
+import HydraResource from "../../src/Resources/HydraResource";
+import Resource from '../../src/Resources/Resource';
+import {Bodies} from '../test-objects';
+import {IApiDocumentation, IHydraClient} from "../../src/interfaces";
 
 describe('Resource', () => {
 

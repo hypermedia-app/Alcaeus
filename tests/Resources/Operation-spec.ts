@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
-import {Operation} from "../src/Resources";
-import {ISupportedOperation, IHydraClient, IHydraResource, IOperation, IClass} from "../src/interfaces";
+import {Operation} from "../../src/Resources/Operation";
+import {ISupportedOperation, IHydraClient, IHydraResource, IOperation, IClass} from "../../src/interfaces";
 
 describe('Operation', () => {
 

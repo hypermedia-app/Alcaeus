@@ -1,3 +1,5 @@
+import {JsonLd} from "./Constants";
+
 export default function ensureArray(obj: object, property: string) {
     const values = obj[property];
 
@@ -10,4 +12,12 @@ export default function ensureArray(obj: object, property: string) {
     }
 
     return values;
+}
+
+export function isA(typeId) {
+    return obj => {
+        const types = obj[JsonLd.Type];
+
+        return types === typeId || (Array.isArray(types) && types.findIndex(typeId) !== -1);
+    };
 }

@@ -1,10 +1,10 @@
 import {nonenumerable} from "core-decorators";
 import {Core} from "../Constants";
-import ensureArray from "../ResourceHelper";
+import ensureArray, {isA} from "../ResourceHelper";
 import {IHydraResource, IPartialCollectionView} from "../interfaces";
 import {Constructor} from "./Mixin";
 
-export default <TBase extends Constructor>(Base: TBase) => {
+const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class Collection extends Base {
         @nonenumerable
         get members(): IHydraResource[] {
@@ -19,3 +19,7 @@ export default <TBase extends Constructor>(Base: TBase) => {
 
     return Collection;
 };
+
+Mixin['shouldApply'] = isA(Core.Vocab.Collection);
+
+export default Mixin;

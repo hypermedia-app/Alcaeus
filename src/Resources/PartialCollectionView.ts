@@ -4,8 +4,9 @@ import {IHydraResource} from "../interfaces";
 import {IIncomingLink} from "../internals";
 import {Constructor} from "./Mixin";
 import {ReverseLinks} from "./Maps";
+import {isA} from "../ResourceHelper";
 
-export default <TBase extends Constructor>(Base: TBase) => {
+const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class PartialCollectionView extends Base {
         @nonenumerable
         get first() {
@@ -39,3 +40,8 @@ export default <TBase extends Constructor>(Base: TBase) => {
 
     return PartialCollectionView;
 };
+
+
+Mixin['shouldApply'] = isA(Core.Vocab.PartialCollectionView);
+
+export default Mixin;

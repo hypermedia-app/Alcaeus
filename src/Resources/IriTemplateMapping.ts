@@ -2,8 +2,9 @@ import {nonenumerable} from "core-decorators";
 import {Core} from "../Constants";
 import {IIriTemplateMapping} from "../interfaces";
 import {Constructor} from "./Mixin";
+import {isA} from "../ResourceHelper";
 
-export default <TBase extends Constructor>(Base: TBase) => {
+const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class IriTemplateMapping extends Base implements IIriTemplateMapping {
         @nonenumerable
         get variable() {
@@ -23,3 +24,7 @@ export default <TBase extends Constructor>(Base: TBase) => {
 
     return IriTemplateMapping;
 };
+
+Mixin.shouldApply = isA(Core.Vocab.IriTemplateMapping);
+
+export default Mixin;

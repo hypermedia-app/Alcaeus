@@ -2,17 +2,24 @@ import {JsonLd} from './Constants';
 import {IResourceFactory, IHydraClient, IApiDocumentation, IResource} from "./interfaces";
 import {forOwn, values} from "./LodashUtil";
 import HydraResource from "./Resources/HydraResource";
+import DefaultMixins from './ResourceFactoryDefaults';
 
 export class ResourceFactory implements IResourceFactory {
 
-    mixins = [];
+    mixins = DefaultMixins;
 
     public createResource(alcaeus:IHydraClient, obj:Object, apiDocumentation:IApiDocumentation, resources:Object):IResource {
         const incomingLinks = findIncomingLinks(obj, resources);
 
         const mixins = this.mixins
-            .filter(mc => mc.shouldApplyMixin(obj))
-            .map(mc => mc.mixinFunction);
+            .filter((mc:any) => {
+                debugger;
+                if (!mc.shouldApply) {
+                    return false;
+                }
+
+                return mc.shouldApply(obj);
+            });
 
         const AlcaeusGenerated = mixins.reduce((c, mixin) => mixin(c), HydraResource);
 

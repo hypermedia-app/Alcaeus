@@ -1,10 +1,10 @@
 import {IClass, ISupportedOperation} from "../interfaces";
-import {rdfs} from "../Vocabs";
+import {rdf, rdfs} from "../Vocabs";
 import {Core} from "../Constants";
-import ensureArray from "../ResourceHelper";
+import ensureArray, {isA} from "../ResourceHelper";
 import {Constructor} from "./Mixin";
 
-export default <TBase extends Constructor>(Base: TBase) => {
+const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class RdfProperty extends Base {
         get range(): IClass {
             return this[rdfs.range];
@@ -21,3 +21,7 @@ export default <TBase extends Constructor>(Base: TBase) => {
 
     return RdfProperty;
 };
+
+Mixin['shouldApply'] = isA(rdf.Property);
+
+export default Mixin;

@@ -30,12 +30,24 @@ describe('IriTemplate', () => {
             const iriTemplate = new IriTemplate(body);
 
             // then
-            expect(iriTemplate.variableRepresentation).toBe('BasicRepresentation');
+            expect(iriTemplate.variableRepresentation).toBe(Core.Vocab.BasicRepresentation);
         });
 
         it('should be non-enumerable', () => {
             expect(IriTemplate.prototype.propertyIsEnumerable('variableRepresentation'))
                 .toBe(false);
         });
+    });
+
+    describe('template', () => {
+        it('should return underlying value', () => {
+            // given
+            const body = {};
+            body[Core.Vocab.template] = 'http://example.com/{name}/friends{?friendName}';
+            const iriTemplate = new IriTemplate(body);
+
+            // then
+            expect(iriTemplate.template).toBe('http://example.com/{name}/friends{?friendName}');
+        }) ;
     });
 });

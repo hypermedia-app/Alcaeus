@@ -84,6 +84,9 @@ export namespace Core {
         code: Context['hydra'] + 'code',
         variable: Context['hydra'] + 'variable',
         variableRepresentation: Context['hydra'] + 'variableRepresentation',
+        template: Context['hydra'] + 'template',
+        BasicRepresentation: Context['hydra'] + 'BasicRepresentation',
+        ExplicitRepresentation: Context['hydra'] + 'ExplicitRepresentation',
     };
 }
 

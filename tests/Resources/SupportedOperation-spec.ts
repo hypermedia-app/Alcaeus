@@ -2,7 +2,6 @@ import {promises as jsonld} from 'jsonld';
 import SupportedOperationMixin from '../../src/Resources/SupportedOperation';
 import {Core} from '../../src/Constants';
 import {owl} from '../../src/Vocabs';
-import {IHydraClient} from "../../src/interfaces";
 import {async} from "../test-utils";
 import Resource from "../../src/Resources/Resource";
 

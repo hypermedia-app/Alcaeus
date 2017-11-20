@@ -5,7 +5,7 @@ import {Constructor} from "./Mixin";
 import DocumentedResource from "./DocumentedResource";
 
 export default <TBase extends Constructor>(Base: TBase) => {
-    return class extends DocumentedResource(Base) {
+    class SupportedOperation extends Base {
 
         get method(): string {
             return this[Core.Vocab.method];
@@ -27,5 +27,7 @@ export default <TBase extends Constructor>(Base: TBase) => {
 
             return methodExpectsBody || operationExpectsBody;
         }
-    };
+    }
+
+    return DocumentedResource(SupportedOperation);
 };

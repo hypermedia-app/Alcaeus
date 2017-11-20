@@ -19,6 +19,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     return IriTemplate;
 };
 
-Mixin.shouldApply = isA(Core.Vocab.IriTemplate);
+Mixin['shouldApply'] = isA(Core.Vocab.IriTemplate);
 
 export default Mixin;

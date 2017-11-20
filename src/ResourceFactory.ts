@@ -13,7 +13,6 @@ export class ResourceFactory implements IResourceFactory {
 
         const mixins = this.mixins
             .filter((mc:any) => {
-                debugger;
                 if (!mc.shouldApply) {
                     return false;
                 }
@@ -21,7 +20,7 @@ export class ResourceFactory implements IResourceFactory {
                 return mc.shouldApply(obj);
             });
 
-        const AlcaeusGenerated = mixins.reduce((c, mixin) => mixin(c), HydraResource);
+        const AlcaeusGenerated = mixins.reduce((c, mixin:any) => mixin(c), HydraResource);
 
         return new AlcaeusGenerated(obj, alcaeus, apiDocumentation, incomingLinks);
     }

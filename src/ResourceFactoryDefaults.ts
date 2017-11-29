@@ -6,6 +6,8 @@ import SupportedProperty from "./Resources/SupportedProperty";
 import StatusCodeDescription from "./Resources/StatusCodeDescription";
 import RdfProperty from "./Resources/RdfProperty";
 import SupportedOperation from "./Resources/SupportedOperation";
+import BasicRepresentationExpansion from './Resources/Mixins/BasicRepresentationExpansion';
+import ExplicitRepresentationExpansion from './Resources/Mixins/ExplicitRepresentationExpansion';
 
 export default [
     ApiDocumentation,
@@ -15,5 +17,7 @@ export default [
     SupportedOperation,
     StatusCodeDescription,
     RdfProperty,
-    Class
+    Class,
+    BasicRepresentationExpansion,
+    ExplicitRepresentationExpansion,
 ];

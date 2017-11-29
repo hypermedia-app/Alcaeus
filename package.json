@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
+    "es6-url-template": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonld": "^0.4.12",
     "parse-link-header": "^1.0.1",

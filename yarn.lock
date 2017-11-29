@@ -1010,6 +1010,10 @@ es6-symbol@3.1.1, es6-symbol@^3.1.1, es6-symbol@~3.1.1:
     d "1"
     es5-ext "~0.10.14"
 
+es6-url-template@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-1.0.0.tgz#8987412d1b95e90b529804709a5186cc3f26d456"
+
 es6-weak-map@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/es6-weak-map/-/es6-weak-map-2.0.2.tgz#5e3ab32251ffd1538a1f8e5ffa1357772f92d96f"

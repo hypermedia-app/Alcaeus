@@ -1,8 +1,9 @@
 import Resource from "../../../src/Resources/Resource";
 import BasicRepresentationExpansionMixin from "../../../src/Resources/Mixins/BasicRepresentationExpansion";
+import IriTemplate from "../../../src/Resources/IriTemplate";
 import {Core, JsonLd} from "../../../src/Constants";
 
-class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(Resource) {}
+class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(IriTemplate(Resource)) {}
 
 describe('BasicRepresentationExpansion', () => {
     describe('shouldApply', () => {
@@ -48,16 +49,28 @@ describe('BasicRepresentationExpansion', () => {
         let iriTemplate;
 
         describe('uses BasicRepresentation rules when', () => {
+            const valueProperty = 'http://example.com/someProp';
+
             beforeEach(() => {
-                const body = {};
-                body[Core.Vocab.template] = 'http://example.com/find/{value}';
+                const body = {
+                    [Core.Vocab.mapping]: [
+                        {
+                            variable: 'value',
+                            property: {
+                                id: 'http://example.com/someProp'
+                            }
+                        },
+                    ],
+                    [Core.Vocab.template]: 'http://example.com/find/{value}'
+                };
+
                 iriTemplate = new BasicRepresentationExpansion(body);
             });
 
             it('expands IRI', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: 'http://www.hydra-cg.com/',
+                    [valueProperty]: 'http://www.hydra-cg.com/',
                 });
 
                 // then
@@ -67,7 +80,7 @@ describe('BasicRepresentationExpansion', () => {
             it('expands string', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: 'A simple string',
+                    [valueProperty]: 'A simple string',
                 });
 
                 // then
@@ -77,7 +90,7 @@ describe('BasicRepresentationExpansion', () => {
             it('expands string with quote', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: 'A string " with a quote',
+                    [valueProperty]: 'A string " with a quote',
                 });
 
                 // then
@@ -87,7 +100,7 @@ describe('BasicRepresentationExpansion', () => {
             it('expands decimal value', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: { '@value': `5.5`, '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
+                    [valueProperty]: { '@value': `5.5`, '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
                 });
 
                 // then
@@ -97,7 +110,7 @@ describe('BasicRepresentationExpansion', () => {
             it('expands language tagged string', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: { '@value': `A simple string`, '@language': 'en' },
+                    [valueProperty]: { '@value': `A simple string`, '@language': 'en' },
                 });
 
                 // then

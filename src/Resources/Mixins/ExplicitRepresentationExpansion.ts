@@ -1,15 +1,32 @@
 import {Core} from "../../Constants";
 import {isA} from "../../ResourceHelper";
 import {Constructor} from "../Mixin";
+import ExpansionModelBuilder, {ExpandedValue} from "./ExpansionModelBuilder";
 
 const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class ExplicitRepresentationExpansion extends Base {
-        expand(): string {
-            throw new Error("Method not implemented.");
+        mapShorthandValue(value: string) {
+            return `"${value}"`;
+        }
+
+        mapExpandedValue(value: ExpandedValue) {
+            if (value["@id"]) {
+                return value["@id"];
+            }
+
+            if (value["@language"]) {
+               return `"${value["@value"]}"@${value["@language"]}`;
+            }
+
+            if (value["@type"]) {
+                return `"${value["@value"]}"^^${value["@type"]}`;
+            }
+
+            return `"${value["@value"]}"`;
         }
     }
 
-    return ExplicitRepresentationExpansion;
+    return ExpansionModelBuilder(ExplicitRepresentationExpansion);
 };
 
 Mixin['shouldApply'] = resource => {

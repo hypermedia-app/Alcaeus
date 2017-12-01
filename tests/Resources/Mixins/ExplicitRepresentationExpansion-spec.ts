@@ -1,8 +1,9 @@
 import Resource from "../../../src/Resources/Resource";
 import ExplicitRepresentationExpansionMixin from "../../../src/Resources/Mixins/ExplicitRepresentationExpansion";
+import IriTemplate from "../../../src/Resources/IriTemplate";
 import {Core, JsonLd} from "../../../src/Constants";
 
-class ExplicitRepresentationExpansion extends ExplicitRepresentationExpansionMixin(Resource) {}
+class ExplicitRepresentationExpansion extends ExplicitRepresentationExpansionMixin(IriTemplate(Resource)) {}
 
 describe('ExplicitRepresentationExpansion', () => {
     describe('shouldApply', () => {
@@ -44,30 +45,56 @@ describe('ExplicitRepresentationExpansion', () => {
         });
     });
 
-    xdescribe('expand', () => {
+    describe('expand', () => {
         let iriTemplate;
 
         describe('uses ExplicitRepresentation rules when', () => {
+            const valueProperty = 'http://example.com/someProp';
+
             beforeEach(() => {
-                const body = {};
-                body[Core.Vocab.template] = 'http://example.com/find/{value}';
+                const body = {
+                    [Core.Vocab.mapping]: [
+                        {
+                            variable: 'value',
+                            property: {
+                                id: valueProperty
+                            }
+                        },
+                    ],
+                    [Core.Vocab.template]: 'http://example.com/find/{value}'
+                };
+
                 iriTemplate = new ExplicitRepresentationExpansion(body);
             });
 
             it('expands IRI', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: 'http://www.hydra-cg.com/',
+                    [valueProperty]: {
+                        [JsonLd.Id]: 'http://www.hydra-cg.com/'
+                    },
                 });
 
                 // then
                 expect(expanded).toBe('http://example.com/find/http%3A%2F%2Fwww.hydra-cg.com%2F');
             });
 
+            it('expands shorthand string', () => {
+                // when
+                const expanded = iriTemplate.expand({
+                    [valueProperty]: 'A simple string',
+                });
+
+                // then
+                expect(expanded).toBe('http://example.com/find/%22A%20simple%20string%22');
+            });
+
             it('expands string', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: 'A simple string',
+                    [valueProperty]: {
+                        [JsonLd.Value]: 'A simple string'
+                    },
                 });
 
                 // then
@@ -77,7 +104,7 @@ describe('ExplicitRepresentationExpansion', () => {
             it('expands string with quote', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: 'A string " with a quote',
+                    [valueProperty]: 'A string " with a quote',
                 });
 
                 // then
@@ -87,7 +114,7 @@ describe('ExplicitRepresentationExpansion', () => {
             it('expands decimal value', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: { '@value': `5.5`, '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
+                    [valueProperty]: { '@value': `5.5`, '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
                 });
 
                 // then
@@ -97,7 +124,7 @@ describe('ExplicitRepresentationExpansion', () => {
             it('expands language tagged string', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    value: { '@value': `A simple string`, '@language': 'en' },
+                    [valueProperty]: { '@value': `A simple string`, '@language': 'en' },
                 });
 
                 // then

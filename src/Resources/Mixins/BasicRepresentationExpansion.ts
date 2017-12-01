@@ -1,34 +1,20 @@
 import {Core} from "../../Constants";
 import {isA} from "../../ResourceHelper";
 import {Constructor} from "../Mixin";
-import URITemplate from 'es6-url-template';
-import {IIriTemplate, IIriTemplateMapping} from "../../interfaces";
+import ExpansionModelBuilder, {ExpandedValue} from './ExpansionModelBuilder';
 
 const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class BasicRepresentationExpansion extends Base {
-        expand(model): string {
-            const thisTemplate = <IIriTemplate><any>this;
-            const uriTemplate = new URITemplate(thisTemplate.template);
-
-            const variables = this.buildExpansionModel(thisTemplate.mappings, model);
-
-            return uriTemplate.expand(variables);
+        mapShorthandValue(value: any) {
+            return value;
         }
 
-        buildExpansionModel(mappings: IIriTemplateMapping[], model: Object) {
-            return mappings.map((mapping:IIriTemplateMapping) => {
-              return {
-                  variable: mapping.variable,
-                  value: model[mapping.property.id]
-              }
-            }).reduce((result, mapping) => {
-                result[mapping.variable] = mapping.value['@value'] || mapping.value;
-                return result;
-            }, {});
+        mapExpandedValue(value: ExpandedValue) {
+            return value["@value"] || value["@id"];
         }
     }
 
-    return BasicRepresentationExpansion;
+    return ExpansionModelBuilder(BasicRepresentationExpansion);
 };
 
 Mixin['shouldApply'] = resource => {

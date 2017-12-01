@@ -96,6 +96,7 @@ export namespace JsonLd {
     export let Id = '@id';
     export let Value = '@value';
     export let Type = '@type';
+    export let Language = '@language';
 }
 
 export namespace MediaTypes {

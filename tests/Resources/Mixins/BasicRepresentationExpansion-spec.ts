@@ -57,7 +57,7 @@ describe('BasicRepresentationExpansion', () => {
                         {
                             variable: 'value',
                             property: {
-                                id: 'http://example.com/someProp'
+                                id: valueProperty
                             }
                         },
                     ],
@@ -70,7 +70,9 @@ describe('BasicRepresentationExpansion', () => {
             it('expands IRI', () => {
                 // when
                 const expanded = iriTemplate.expand({
-                    [valueProperty]: 'http://www.hydra-cg.com/',
+                    [valueProperty]: {
+                        [JsonLd.Id]: 'http://www.hydra-cg.com/',
+                    },
                 });
 
                 // then

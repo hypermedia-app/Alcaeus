@@ -1,4 +1,4 @@
-# Alcaeus [![Build Status](https://travis-ci.org/wikibus/alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/alcaeus) [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
+# Alcaeus [![Build Status](https://travis-ci.org/wikibus/Alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/Alcaeus) [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 

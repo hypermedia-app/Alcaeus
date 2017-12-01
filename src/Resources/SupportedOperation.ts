@@ -8,15 +8,15 @@ export default <TBase extends Constructor>(Base: TBase) => {
     class SupportedOperation extends Base {
 
         get method(): string {
-            return this[Core.Vocab.method];
+            return this[Core.Vocab('method')];
         }
 
         get expects(): IClass {
-            return this[Core.Vocab.expects];
+            return this[Core.Vocab('expects')];
         }
 
         get returns(): IClass {
-            return this[Core.Vocab.returns];
+            return this[Core.Vocab('returns')];
         }
 
         get requiresInput(): boolean {

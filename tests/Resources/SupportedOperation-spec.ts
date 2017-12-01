@@ -111,7 +111,7 @@ describe('SupportedOperation', () => {
             };
 
             const compacted = await jsonld.compact(operation, {});
-            compacted[Core.Vocab.expects] = { id: owl.Nothing };
+            compacted[Core.Vocab('expects')] = { id: owl.Nothing };
 
             // when
             const op = new SupportedOperation(compacted);

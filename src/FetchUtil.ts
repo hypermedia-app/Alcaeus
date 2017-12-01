@@ -22,15 +22,15 @@ export class FetchUtil {
     static _requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads;
 
     static _propertyRangeMappings = [
-        [Constants.Core.Vocab.supportedClass, Constants.Core.Vocab.Class],
-        [Constants.Core.Vocab.expects, Constants.Core.Vocab.Class],
-        [Constants.Core.Vocab.returns, Constants.Core.Vocab.Class],
-        [Constants.Core.Vocab.supportedOperation, Constants.Core.Vocab.Operation],
-        [Constants.Core.Vocab.operation, Constants.Core.Vocab.Operation],
-        [Constants.Core.Vocab.supportedProperty, Constants.Core.Vocab.SupportedProperty],
-        [Constants.Core.Vocab.statusCodes, Constants.Core.Vocab.StatusCodeDescription],
-        [Constants.Core.Vocab.property, rdf.Property],
-        [Constants.Core.Vocab.mapping, Constants.Core.Vocab.IriTemplateMapping],
+        [Constants.Core.Vocab('supportedClass'), Constants.Core.Vocab('Class')],
+        [Constants.Core.Vocab('expects'), Constants.Core.Vocab('Class')],
+        [Constants.Core.Vocab('returns'), Constants.Core.Vocab('Class')],
+        [Constants.Core.Vocab('supportedOperation'), Constants.Core.Vocab('Operation')],
+        [Constants.Core.Vocab('operation'), Constants.Core.Vocab('Operation')],
+        [Constants.Core.Vocab('supportedProperty'), Constants.Core.Vocab('SupportedProperty')],
+        [Constants.Core.Vocab('statusCodes'), Constants.Core.Vocab('StatusCodeDescription')],
+        [Constants.Core.Vocab('property'), rdf.Property],
+        [Constants.Core.Vocab('mapping'), Constants.Core.Vocab('IriTemplateMapping')],
     ];
 
     async fetchResource(uri:string):Promise<ExpandedWithDocs> {
@@ -108,8 +108,8 @@ function getDocumentationUri(res:Response):string {
         const linkHeaders = res.headers.get(Constants.Headers.Link);
         const links = li(linkHeaders);
 
-        if(links[Constants.Core.Vocab.apiDocumentation]){
-            return links[Constants.Core.Vocab.apiDocumentation].url;
+        if(links[Constants.Core.Vocab('apiDocumentation')]){
+            return links[Constants.Core.Vocab('apiDocumentation')].url;
         }
     }
 

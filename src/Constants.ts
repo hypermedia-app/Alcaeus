@@ -1,3 +1,43 @@
+type HydraTerm = 'apiDocumentation' |
+    'ApiDocumentation' |
+    'title' |
+    'description' |
+    'method' |
+    'Class' |
+    'member' |
+    'PartialCollectionView' |
+    'Collection' |
+    'view' |
+    'first' |
+    'next' |
+    'last' |
+    'previous' |
+    'entrypoint' |
+    'SupportedProperty' |
+    'supportedProperty' |
+    'SupportedOperation' |
+    'supportedClass' |
+    'supportedOperation' |
+    'expects' |
+    'returns' |
+    'readable' |
+    'writable' |
+    'required' |
+    'property' |
+    'statusCodes' |
+    'operation' |
+    'Operation' |
+    'mapping' |
+    'StatusCodeDescription' |
+    'IriTemplate' |
+    'IriTemplateMapping' |
+    'code' |
+    'variable' |
+    'variableRepresentation' |
+    'template' |
+    'BasicRepresentation' |
+    'ExplicitRepresentation';
+
 export namespace Core {
     export const Context = {
         "hydra": "http://www.w3.org/ns/hydra/core#",
@@ -48,46 +88,9 @@ export namespace Core {
         "variable": "hydra:variable"
     };
 
-    export let Vocab = {
-        apiDocumentation: Context['hydra'] + 'apiDocumentation',
-        ApiDocumentation: Context['hydra'] + 'ApiDocumentation',
-        title: Context['hydra'] + 'title',
-        description: Context['hydra'] + 'description',
-        method: Context['hydra'] + 'method',
-        Class: Context['hydra'] + 'Class',
-        member: Context['hydra'] + 'member',
-        PartialCollectionView: Context['hydra'] + 'PartialCollectionView',
-        Collection: Context['hydra'] + 'Collection',
-        view: Context['hydra'] + 'view',
-        first: Context['hydra'] + 'first',
-        next: Context['hydra'] + 'next',
-        last: Context['hydra'] + 'last',
-        previous: Context['hydra'] + 'previous',
-        entrypoint: Context['hydra'] + 'entrypoint',
-        SupportedProperty: Context['hydra'] + 'SupportedProperty',
-        supportedProperty: Context['hydra'] + 'supportedProperty',
-        Operation: Context['hydra'] + 'SupportedOperation',
-        supportedClass: Context['hydra'] + 'supportedClass',
-        supportedOperation: Context['hydra'] + 'supportedOperation',
-        expects: Context['hydra'] + 'expects',
-        returns: Context['hydra'] + 'returns',
-        readable: Context['hydra'] + 'readable',
-        writable: Context['hydra'] + 'writable',
-        required: Context['hydra'] + 'required',
-        property: Context['hydra'] + 'property',
-        statusCodes: Context['hydra'] + 'statusCodes',
-        operation: Context['hydra'] + 'operation',
-        mapping: Context['hydra'] + 'mapping',
-        StatusCodeDescription: Context['hydra'] + 'StatusCodeDescription',
-        IriTemplate: Context['hydra'] + 'IriTemplate',
-        IriTemplateMapping: Context['hydra'] + 'IriTemplateMapping',
-        code: Context['hydra'] + 'code',
-        variable: Context['hydra'] + 'variable',
-        variableRepresentation: Context['hydra'] + 'variableRepresentation',
-        template: Context['hydra'] + 'template',
-        BasicRepresentation: Context['hydra'] + 'BasicRepresentation',
-        ExplicitRepresentation: Context['hydra'] + 'ExplicitRepresentation',
-    };
+    export function Vocab(term: HydraTerm) {
+        return Core.Context['hydra'] + term;
+    }
 }
 
 export namespace JsonLd {

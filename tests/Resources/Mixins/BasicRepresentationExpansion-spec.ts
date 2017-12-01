@@ -11,7 +11,7 @@ describe('BasicRepresentationExpansion', () => {
 
         beforeEach(() => {
             body = {};
-            body[JsonLd.Type] = Core.Vocab.IriTemplate;
+            body[JsonLd.Type] = Core.Vocab('IriTemplate');
         });
 
         it('is true when variableRepresentation is not defined', () => {
@@ -24,7 +24,7 @@ describe('BasicRepresentationExpansion', () => {
 
         it('is true when variableRepresentation is null', () => {
             // given
-            body[Core.Vocab.variableRepresentation] = null;
+            body[Core.Vocab('variableRepresentation')] = null;
 
             // when
             const shouldApply = BasicRepresentationExpansionMixin['shouldApply'](body);
@@ -35,7 +35,7 @@ describe('BasicRepresentationExpansion', () => {
 
         it('is true when variableRepresentation is BasicRepresentation', () => {
             // given
-            body[Core.Vocab.variableRepresentation] = Core.Vocab.BasicRepresentation;
+            body[Core.Vocab('variableRepresentation')] = Core.Vocab('BasicRepresentation');
 
             // when
             const shouldApply = BasicRepresentationExpansionMixin['shouldApply'](body);
@@ -53,7 +53,7 @@ describe('BasicRepresentationExpansion', () => {
 
             beforeEach(() => {
                 const body = {
-                    [Core.Vocab.mapping]: [
+                    [Core.Vocab('mapping')]: [
                         {
                             variable: 'value',
                             property: {
@@ -61,7 +61,7 @@ describe('BasicRepresentationExpansion', () => {
                             }
                         },
                     ],
-                    [Core.Vocab.template]: 'http://example.com/find/{value}'
+                    [Core.Vocab('template')]: 'http://example.com/find/{value}'
                 };
 
                 iriTemplate = new BasicRepresentationExpansion(body);

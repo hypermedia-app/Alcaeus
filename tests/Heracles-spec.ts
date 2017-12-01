@@ -98,8 +98,8 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/resource');
 
             // then
-            expect(res[Core.Vocab.member].length).toBe(4);
-            _.each(res[Core.Vocab.member], member => {
+            expect(res[Core.Vocab('member')].length).toBe(4);
+            _.each(res[Core.Vocab('member')], member => {
                 expect(member instanceof HydraResource).toBe(true);
             });
         });

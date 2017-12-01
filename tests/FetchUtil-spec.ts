@@ -125,15 +125,15 @@ describe('FetchUtil', () => {
         describe('fetching api documentation', () => {
 
             const inferredTypes = [
-                [Core.Vocab.supportedClass, Core.Vocab.Class],
-                [Core.Vocab.expects, Core.Vocab.Class],
-                [Core.Vocab.returns, Core.Vocab.Class],
-                [Core.Vocab.supportedOperation, Core.Vocab.Operation],
-                [Core.Vocab.operation, Core.Vocab.Operation],
-                [Core.Vocab.supportedProperty, Core.Vocab.SupportedProperty],
-                [Core.Vocab.statusCodes, Core.Vocab.StatusCodeDescription],
-                [Core.Vocab.property, rdf.Property],
-                [Core.Vocab.mapping, Core.Vocab.IriTemplateMapping],
+                [Core.Vocab('supportedClass'), Core.Vocab('Class')],
+                [Core.Vocab('expects'), Core.Vocab('Class')],
+                [Core.Vocab('returns'), Core.Vocab('Class')],
+                [Core.Vocab('supportedOperation'), Core.Vocab('Operation')],
+                [Core.Vocab('operation'), Core.Vocab('Operation')],
+                [Core.Vocab('supportedProperty'), Core.Vocab('SupportedProperty')],
+                [Core.Vocab('statusCodes'), Core.Vocab('StatusCodeDescription')],
+                [Core.Vocab('property'), rdf.Property],
+                [Core.Vocab('mapping'), Core.Vocab('IriTemplateMapping')],
             ];
 
             _.forEach(inferredTypes, typePair => {

@@ -13,7 +13,7 @@ describe('RdfProperty', () => {
         '@context': [
             Core.Context,
             {
-                rdfs: rdfs.ns
+                rdfs: rdfs()
             }
         ],
         '@id': 'http://purl.org/dc/elements/1.1/partOf',
@@ -30,7 +30,7 @@ describe('RdfProperty', () => {
         ]
     };
 
-    async(it, 'should link to domain', async () => {
+    async(fit, 'should link to domain', async () => {
         // given
         const compacted = await jsonld.compact(testProperty, {});
 

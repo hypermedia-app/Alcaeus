@@ -10,9 +10,9 @@ export function fakeAlcaeusResources(obj: Object) {
 
     addGetter('id', JsonLd.Id, false);
     addGetter('types', JsonLd.Type, false);
-    addGetter('supportedProperties', Core.Vocab.supportedProperty);
-    addGetter('supportedOperations', Core.Vocab.supportedOperation);
-    addGetter('property', Core.Vocab.property, false);
+    addGetter('supportedProperties', Core.Vocab('supportedProperty'));
+    addGetter('supportedOperations', Core.Vocab('supportedOperation'));
+    addGetter('property', Core.Vocab('property'), false);
 
     _.forOwn(obj, fakeAlcaeusResources);
 

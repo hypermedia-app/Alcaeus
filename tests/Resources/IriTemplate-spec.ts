@@ -9,7 +9,7 @@ describe('IriTemplate', () => {
         it('should return empty array even for one mapping', () => {
             // given
             const body = {};
-            body[Core.Vocab.mapping] = {};
+            body[Core.Vocab('mapping')] = {};
             const iriTemplate = new IriTemplate(body);
 
             // then
@@ -30,7 +30,7 @@ describe('IriTemplate', () => {
             const iriTemplate = new IriTemplate(body);
 
             // then
-            expect(iriTemplate.variableRepresentation).toBe(Core.Vocab.BasicRepresentation);
+            expect(iriTemplate.variableRepresentation).toBe(Core.Vocab('BasicRepresentation'));
         });
 
         it('should be non-enumerable', () => {
@@ -43,7 +43,7 @@ describe('IriTemplate', () => {
         it('should return underlying value', () => {
             // given
             const body = {};
-            body[Core.Vocab.template] = 'http://example.com/{name}/friends{?friendName}';
+            body[Core.Vocab('template')] = 'http://example.com/{name}/friends{?friendName}';
             const iriTemplate = new IriTemplate(body);
 
             // then

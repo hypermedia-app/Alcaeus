@@ -30,9 +30,9 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
 };
 
 Mixin['shouldApply'] = resource => {
-    const isTemplate = isA(Core.Vocab.IriTemplate)(resource);
+    const isTemplate = isA(Core.Vocab('IriTemplate'))(resource);
 
-    const isExactMatch = resource[Core.Vocab.variableRepresentation] === Core.Vocab.ExplicitRepresentation;
+    const isExactMatch = resource[Core.Vocab('variableRepresentation')] === Core.Vocab('ExplicitRepresentation');
 
     return isTemplate && isExactMatch;
 };

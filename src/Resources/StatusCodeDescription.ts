@@ -7,17 +7,17 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     const StatusCodeDescription = class extends Base implements IStatusCodeDescription {
 
         get code(): number {
-            return this[Core.Vocab.code];
+            return this[Core.Vocab('code')];
         }
 
         get description(): string {
-            return this[Core.Vocab.description] || '';
+            return this[Core.Vocab('description')] || '';
         }
     };
 
     return StatusCodeDescription;
 };
 
-Mixin['shouldApply'] = isA(Core.Vocab.StatusCodeDescription);
+Mixin['shouldApply'] = isA(Core.Vocab('StatusCodeDescription'));
 
 export default Mixin;

@@ -8,17 +8,17 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     class IriTemplate extends Base implements IIriTemplate {
         @nonenumerable
         get template(): string {
-            return this[Core.Vocab.template];
+            return this[Core.Vocab('template')];
         }
 
         @nonenumerable
         get mappings() {
-            return ensureArray(this, Core.Vocab.mapping);
+            return ensureArray(this, Core.Vocab('mapping'));
         }
 
         @nonenumerable
         get variableRepresentation() {
-            return this[Core.Vocab.variableRepresentation] || Core.Vocab.BasicRepresentation;
+            return this[Core.Vocab('variableRepresentation')] || Core.Vocab('BasicRepresentation');
         }
 
         expand(): string {
@@ -29,6 +29,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     return IriTemplate;
 };
 
-Mixin['shouldApply'] = isA(Core.Vocab.IriTemplate);
+Mixin['shouldApply'] = isA(Core.Vocab('IriTemplate'));
 
 export default Mixin;

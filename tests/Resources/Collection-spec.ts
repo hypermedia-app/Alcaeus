@@ -9,7 +9,7 @@ describe('Collection', () => {
         it('should return array even for one member', () => {
             // given
             const collectionBody = {};
-            collectionBody[Core.Vocab.member] = { text: 'hello' };
+            collectionBody[Core.Vocab('member')] = { text: 'hello' };
             const collection = new Collection(collectionBody);
 
             // then
@@ -37,7 +37,7 @@ describe('Collection', () => {
         it('should return empty array when views is null', () => {
             // given
             const collectionBody = {};
-            collectionBody[Core.Vocab.view] = null;
+            collectionBody[Core.Vocab('view')] = null;
             const collection = new Collection(collectionBody);
 
             // then

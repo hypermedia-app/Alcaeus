@@ -18,12 +18,12 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
 };
 
 Mixin['shouldApply'] = resource => {
-    const isTemplate = isA(Core.Vocab.IriTemplate)(resource);
+    const isTemplate = isA(Core.Vocab('IriTemplate'))(resource);
 
-    const isUndefined = typeof resource[Core.Vocab.variableRepresentation] === 'undefined'
-        || resource[Core.Vocab.variableRepresentation] === null;
+    const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined'
+        || resource[Core.Vocab('variableRepresentation')] === null;
 
-    const isExactMatch = resource[Core.Vocab.variableRepresentation] === Core.Vocab.BasicRepresentation;
+    const isExactMatch = resource[Core.Vocab('variableRepresentation')] === Core.Vocab('BasicRepresentation');
 
     return isTemplate && (isUndefined || isExactMatch);
 };

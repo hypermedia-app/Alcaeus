@@ -13,7 +13,7 @@ describe('PartialCollectionView', () => {
         const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, null, [
             {
                 subjectId: 'http://some.id',
-                predicate: Core.Vocab.view,
+                predicate: Core.Vocab('view'),
                 subject: collection
             }
         ]);

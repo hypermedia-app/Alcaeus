@@ -149,7 +149,7 @@ export namespace Bodies {
 export namespace Documentations {
     export let classWithOperation = {
         '@id': 'http://api.example.com/doc/',
-        '@type': Core.Vocab.ApiDocumentation,
+        '@type': Core.Vocab('ApiDocumentation'),
         '@context': Core.Context,
         'entrypoint': 'http://example.com/home',
         'supportedClass': [

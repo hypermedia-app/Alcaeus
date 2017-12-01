@@ -8,11 +8,11 @@ import {isA} from "../ResourceHelper";
 const ApiDocumentationMixin = <TBase extends Constructor>(Base: TBase) => {
     class ApiDocumentation extends Base {
         get classes(): Array<IClass> {
-            if (Array.isArray(this[Core.Vocab.supportedClass])) {
-                return this[Core.Vocab.supportedClass];
+            if (Array.isArray(this[Core.Vocab('supportedClass')])) {
+                return this[Core.Vocab('supportedClass')];
             }
 
-            return [this[Core.Vocab.supportedClass]];
+            return [this[Core.Vocab('supportedClass')]];
         }
 
         getOperations(classUri: string, predicateUri?: string): Array<ISupportedOperation> {
@@ -48,17 +48,17 @@ const ApiDocumentationMixin = <TBase extends Constructor>(Base: TBase) => {
         }
 
         getEntrypoint(): Promise<IHydraResource> {
-            if (!this[Core.Vocab.entrypoint]) {
+            if (!this[Core.Vocab('entrypoint')]) {
                 return Promise.reject('The ApiDocumentation doesn\'t have an entrypoint.');
             }
 
-            return this['_alcaeus'].loadResource(this[Core.Vocab.entrypoint][JsonLd.Id]);
+            return this['_alcaeus'].loadResource(this[Core.Vocab('entrypoint')][JsonLd.Id]);
         }
     }
 
     return ApiDocumentation;
 };
 
-ApiDocumentationMixin['shouldApply'] = isA(Core.Vocab.ApiDocumentation);
+ApiDocumentationMixin['shouldApply'] = isA(Core.Vocab('ApiDocumentation'));
 
 export default ApiDocumentationMixin;

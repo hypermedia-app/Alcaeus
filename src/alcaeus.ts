@@ -20,7 +20,7 @@ export class Alcaeus implements IHydraClient {
         try {
             const response = await this.fetchUtil.fetchResource(uri);
             const typeOverrides = {};
-            typeOverrides[uri] = Core.Vocab.ApiDocumentation;
+            typeOverrides[uri] = Core.Vocab('ApiDocumentation');
 
             return getRequestedObject(this, uri, response.resources, null, typeOverrides);
         } catch (e) {

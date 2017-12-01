@@ -1,23 +1,19 @@
-export namespace Schema {
-    export const ns = 'http://schema.org/';
+type SchemaTerm = 'description' | 'title';
 
-    export const description = ns + 'description';
-    export const title = ns + 'title';
+type RdfsTerm = 'comment' | 'label' | 'range' | 'domain';
+
+export function Schema(term?: SchemaTerm) {
+    return 'http://schema.org/' + (term || '');
 }
 
-export namespace rdfs {
-    export const ns = 'http://www.w3.org/2000/01/rdf-schema#';
-
-    export const comment = ns + 'comment';
-    export const label = ns + 'label';
-    export const range = ns + 'range';
-    export const domain = ns + 'domain';
+export function rdfs(term?: RdfsTerm) {
+    return 'http://www.w3.org/2000/01/rdf-schema#' + (term || '');
 }
 
 export namespace owl {
     export const ns = 'http://www.w3.org/2002/07/owl#';
 
-    export const Nothing = 'http://www.w3.org/2002/07/owl#';
+    export const Nothing = ns + 'Nothing';
 }
 
 export namespace rdf {

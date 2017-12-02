@@ -5,7 +5,7 @@ import {Constructor} from "./Mixin";
 import {IIriTemplate} from "../interfaces";
 
 const Mixin = <TBase extends Constructor>(Base: TBase) => {
-    class IriTemplate extends Base implements IIriTemplate {
+    abstract class IriTemplate extends Base implements IIriTemplate {
         @nonenumerable
         get template(): string {
             return this[Core.Vocab('template')];
@@ -21,9 +21,7 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
             return this[Core.Vocab('variableRepresentation')] || Core.Vocab('BasicRepresentation');
         }
 
-        expand(): string {
-            throw new Error("Method not implemented.");
-        }
+        abstract expand(): string;
     }
 
     return IriTemplate;

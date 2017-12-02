@@ -2,7 +2,11 @@ import IriTemplateMixin from '../../src/Resources/IriTemplate';
 import {Core} from "../../src/Constants";
 import Resource from "../../src/Resources/Resource";
 
-class IriTemplate extends IriTemplateMixin(Resource) {}
+class IriTemplate extends IriTemplateMixin(Resource) {
+    expand(): string {
+        return undefined;
+    }
+}
 
 describe('IriTemplate', () => {
     describe('mappings', () => {

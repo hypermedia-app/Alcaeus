@@ -8,6 +8,8 @@ import RdfProperty from "./Resources/RdfProperty";
 import SupportedOperation from "./Resources/SupportedOperation";
 import BasicRepresentationExpansion from './Resources/Mixins/BasicRepresentationExpansion';
 import ExplicitRepresentationExpansion from './Resources/Mixins/ExplicitRepresentationExpansion';
+import IriTemplate from './Resources/IriTemplate';
+import IriTemplateMapping from './Resources/IriTemplateMapping';
 
 export default [
     ApiDocumentation,
@@ -20,4 +22,6 @@ export default [
     Class,
     BasicRepresentationExpansion,
     ExplicitRepresentationExpansion,
+    IriTemplate,
+    IriTemplateMapping,
 ];

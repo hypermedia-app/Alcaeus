@@ -18,6 +18,6 @@ export function isA(typeId) {
     return obj => {
         const types = obj[JsonLd.Type];
 
-        return types === typeId || (Array.isArray(types) && types.findIndex(typeId) !== -1);
+        return types === typeId || (Array.isArray(types) && types.indexOf(typeId) !== -1);
     };
 }

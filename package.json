@@ -1,6 +1,6 @@
 {
   "name": "alcaeus",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/alcaeus.js",
   "directories": {

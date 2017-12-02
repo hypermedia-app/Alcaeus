@@ -30,7 +30,7 @@ describe('RdfProperty', () => {
         ]
     };
 
-    async(fit, 'should link to domain', async () => {
+    async(it, 'should link to domain', async () => {
         // given
         const compacted = await jsonld.compact(testProperty, {});
 

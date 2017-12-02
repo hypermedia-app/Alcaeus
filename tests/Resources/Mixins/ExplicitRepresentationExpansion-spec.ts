@@ -35,7 +35,9 @@ describe('ExplicitRepresentationExpansion', () => {
 
         it('is true when variableRepresentation is ExplicitRepresentation', () => {
             // given
-            body[Core.Vocab('variableRepresentation')] = Core.Vocab('ExplicitRepresentation');
+            body[Core.Vocab('variableRepresentation')] = {
+                '@id': Core.Vocab('ExplicitRepresentation')
+            };
 
             // when
             const shouldApply = ExplicitRepresentationExpansionMixin['shouldApply'](body);

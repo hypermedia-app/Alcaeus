@@ -1,4 +1,4 @@
-import {Core} from "../../Constants";
+import {Core, JsonLd} from "../../Constants";
 import {isA} from "../../ResourceHelper";
 import {Constructor} from "../Mixin";
 import ExpansionModelBuilder, {ExpandedValue} from './ExpansionModelBuilder';
@@ -23,7 +23,8 @@ Mixin['shouldApply'] = resource => {
     const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined'
         || resource[Core.Vocab('variableRepresentation')] === null;
 
-    const isExactMatch = resource[Core.Vocab('variableRepresentation')] === Core.Vocab('BasicRepresentation');
+    const isExactMatch = resource[Core.Vocab('variableRepresentation')]
+        && resource[Core.Vocab('variableRepresentation')][JsonLd.Id] === Core.Vocab('BasicRepresentation');
 
     return isTemplate && (isUndefined || isExactMatch);
 };

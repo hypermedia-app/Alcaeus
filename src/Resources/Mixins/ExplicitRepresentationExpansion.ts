@@ -1,4 +1,4 @@
-import {Core} from "../../Constants";
+import {Core, JsonLd} from "../../Constants";
 import {isA} from "../../ResourceHelper";
 import {Constructor} from "../Mixin";
 import ExpansionModelBuilder, {ExpandedValue} from "./ExpansionModelBuilder";
@@ -32,9 +32,13 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
 Mixin['shouldApply'] = resource => {
     const isTemplate = isA(Core.Vocab('IriTemplate'))(resource);
 
-    const isExactMatch = resource[Core.Vocab('variableRepresentation')] === Core.Vocab('ExplicitRepresentation');
+    const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined'
+        || resource[Core.Vocab('variableRepresentation')] === null;
 
-    return isTemplate && isExactMatch;
+    const isExactMatch = resource[Core.Vocab('variableRepresentation')]
+        && resource[Core.Vocab('variableRepresentation')][JsonLd.Id] === Core.Vocab('ExplicitRepresentation');
+
+    return isTemplate && (!isUndefined && isExactMatch);
 };
 
 export default Mixin;

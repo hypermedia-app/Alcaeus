@@ -35,7 +35,9 @@ describe('BasicRepresentationExpansion', () => {
 
         it('is true when variableRepresentation is BasicRepresentation', () => {
             // given
-            body[Core.Vocab('variableRepresentation')] = Core.Vocab('BasicRepresentation');
+            body[Core.Vocab('variableRepresentation')]= {
+                '@id': Core.Vocab('BasicRepresentation'),
+            };
 
             // when
             const shouldApply = BasicRepresentationExpansionMixin['shouldApply'](body);

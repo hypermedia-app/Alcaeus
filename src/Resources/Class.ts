@@ -2,6 +2,7 @@ import {ISupportedOperation, ISupportedProperty} from "../interfaces";
 import {Core} from "../Constants";
 import ensureArray, {isA} from "../ResourceHelper";
 import {Constructor} from "./Mixin";
+import DocumentedResource from './DocumentedResource';
 
 const ClassMixin = <TBase extends Constructor>(Base: TBase) => {
     class Class extends Base {
@@ -15,7 +16,7 @@ const ClassMixin = <TBase extends Constructor>(Base: TBase) => {
         }
     }
 
-    return Class;
+    return DocumentedResource(Class);
 };
 
 ClassMixin['shouldApply'] = isA(Core.Vocab('Class'));

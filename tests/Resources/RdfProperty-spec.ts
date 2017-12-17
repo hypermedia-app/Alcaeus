@@ -1,11 +1,11 @@
 import {promises as jsonld} from 'jsonld';
-import RdfPropertyMixin from "../../src/Resources/RdfProperty";
+import {Mixin} from "../../src/Resources/RdfProperty";
 import {Core} from '../../src/Constants';
 import {xsd, rdf, rdfs, owl} from '../../src/Vocabs';
 import {async} from "../test-utils";
 import Resource from "../../src/Resources/Resource";
 
-class RdfProperty extends RdfPropertyMixin(Resource) {}
+class RdfProperty extends Mixin(Resource) {}
 
 describe('RdfProperty', () => {
 

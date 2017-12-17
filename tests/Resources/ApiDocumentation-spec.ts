@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {promises as jsonld} from 'jsonld';
-import ApiDocumentationMixin from "../../src/Resources/ApiDocumentation";
+import {Mixin} from "../../src/Resources/ApiDocumentation";
 import {Documentations} from '../test-objects';
 import {async, fakeAlcaeusResources} from "../test-utils";
 import 'core-js/es6/array';
 import Resource from "../../src/Resources/Resource";
 
-class ApiDocumentation extends ApiDocumentationMixin(Resource) {
+class ApiDocumentation extends Mixin(Resource) {
 }
 
 describe('ApiDocumentation', () => {

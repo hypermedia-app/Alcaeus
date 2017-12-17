@@ -1,8 +1,8 @@
-import IriTemplateMixin from '../../src/Resources/IriTemplate';
+import {Mixin} from '../../src/Resources/IriTemplate';
 import {Core} from "../../src/Constants";
 import Resource from "../../src/Resources/Resource";
 
-class IriTemplate extends IriTemplateMixin(Resource) {
+class IriTemplate extends Mixin(Resource) {
     expand(): string {
         return undefined;
     }

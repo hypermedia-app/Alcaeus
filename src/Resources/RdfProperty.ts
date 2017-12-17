@@ -3,9 +3,8 @@ import {rdf, rdfs} from "../Vocabs";
 import {Core} from "../Constants";
 import ensureArray, {isA} from "../ResourceHelper";
 import {Constructor} from "./Mixin";
-import DocumentedResource from './DocumentedResource';
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class RdfProperty extends Base {
         get range(): IClass {
             return this[rdfs('range')];
@@ -20,9 +19,7 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
         }
     }
 
-    return DocumentedResource(RdfProperty);
-};
+    return RdfProperty;
+}
 
-Mixin['shouldApply'] = isA(rdf.Property);
-
-export default Mixin;
+export const shouldApply = isA(rdf.Property);

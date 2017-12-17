@@ -4,7 +4,7 @@ import {IIriTemplateMapping} from "../interfaces";
 import {Constructor} from "./Mixin";
 import {isA} from "../ResourceHelper";
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class IriTemplateMapping extends Base implements IIriTemplateMapping {
         @nonenumerable
         get variable() {
@@ -23,8 +23,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     }
 
     return IriTemplateMapping;
-};
+}
 
-Mixin['shouldApply'] = isA(Core.Vocab('IriTemplateMapping'));
-
-export default Mixin;
+export const shouldApply = isA(Core.Vocab('IriTemplateMapping'));

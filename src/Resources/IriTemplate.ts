@@ -4,7 +4,7 @@ import ensureArray, {isA} from "../ResourceHelper";
 import {Constructor} from "./Mixin";
 import {IIriTemplate} from "../interfaces";
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     abstract class IriTemplate extends Base implements IIriTemplate {
         @nonenumerable
         get template(): string {
@@ -25,8 +25,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     }
 
     return IriTemplate;
-};
+}
 
-Mixin['shouldApply'] = isA(Core.Vocab('IriTemplate'));
-
-export default Mixin;
+export const shouldApply = isA(Core.Vocab('IriTemplate'));

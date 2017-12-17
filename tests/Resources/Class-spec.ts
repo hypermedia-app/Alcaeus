@@ -1,10 +1,10 @@
 import {promises as jsonld} from 'jsonld';
-import ClassMixin from "../../src/Resources/Class";
+import {Mixin} from "../../src/Resources/Class";
 import {Core} from '../../src/Constants';
 import {async} from "../test-utils";
 import Resource from "../../src/Resources/Resource";
 
-class Class extends ClassMixin(Resource) {}
+class Class extends Mixin(Resource) {}
 
 describe('Class', () => {
 

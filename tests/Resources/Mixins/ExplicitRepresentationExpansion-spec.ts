@@ -1,9 +1,9 @@
 import Resource from "../../../src/Resources/Resource";
-import ExplicitRepresentationExpansionMixin from "../../../src/Resources/Mixins/ExplicitRepresentationExpansion";
-import IriTemplate from "../../../src/Resources/IriTemplate";
+import {Mixin, shouldApply} from "../../../src/Resources/Mixins/ExplicitRepresentationExpansion";
+import {Mixin as IriTemplate} from "../../../src/Resources/IriTemplate";
 import {Core, JsonLd} from "../../../src/Constants";
 
-class ExplicitRepresentationExpansion extends ExplicitRepresentationExpansionMixin(IriTemplate(Resource)) {}
+class ExplicitRepresentationExpansion extends Mixin(IriTemplate(Resource)) {}
 
 describe('ExplicitRepresentationExpansion', () => {
     describe('shouldApply', () => {
@@ -16,10 +16,10 @@ describe('ExplicitRepresentationExpansion', () => {
 
         it('is false when variableRepresentation is not defined', () => {
             // when
-            const shouldApply = ExplicitRepresentationExpansionMixin['shouldApply'](body);
+            const result = shouldApply(body);
 
             // then
-            expect(shouldApply).toBe(false);
+            expect(result).toBe(false);
         });
 
         it('is false when variableRepresentation is null', () => {
@@ -27,10 +27,10 @@ describe('ExplicitRepresentationExpansion', () => {
             body[Core.Vocab('variableRepresentation')] = null;
 
             // when
-            const shouldApply = ExplicitRepresentationExpansionMixin['shouldApply'](body);
+            const result = shouldApply(body);
 
             // then
-            expect(shouldApply).toBe(false);
+            expect(result).toBe(false);
         });
 
         it('is true when variableRepresentation is ExplicitRepresentation', () => {
@@ -40,10 +40,10 @@ describe('ExplicitRepresentationExpansion', () => {
             };
 
             // when
-            const shouldApply = ExplicitRepresentationExpansionMixin['shouldApply'](body);
+            const result = shouldApply(body);
 
             // then
-            expect(shouldApply).toBe(true);
+            expect(result).toBe(true);
         });
     });
 

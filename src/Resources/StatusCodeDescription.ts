@@ -3,7 +3,7 @@ import {IStatusCodeDescription} from "../interfaces";
 import {Constructor} from "./Mixin";
 import {isA} from "../ResourceHelper";
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin <TBase extends Constructor>(Base: TBase) {
     const StatusCodeDescription = class extends Base implements IStatusCodeDescription {
 
         get code(): number {
@@ -16,8 +16,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     };
 
     return StatusCodeDescription;
-};
+}
 
-Mixin['shouldApply'] = isA(Core.Vocab('StatusCodeDescription'));
-
-export default Mixin;
+export const shouldApply = isA(Core.Vocab('StatusCodeDescription'));

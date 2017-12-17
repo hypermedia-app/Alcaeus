@@ -2,9 +2,8 @@ import {ISupportedOperation, ISupportedProperty} from "../interfaces";
 import {Core} from "../Constants";
 import ensureArray, {isA} from "../ResourceHelper";
 import {Constructor} from "./Mixin";
-import DocumentedResource from './DocumentedResource';
 
-const ClassMixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class Class extends Base {
 
         get supportedOperations(): Array<ISupportedOperation> {
@@ -16,9 +15,7 @@ const ClassMixin = <TBase extends Constructor>(Base: TBase) => {
         }
     }
 
-    return DocumentedResource(Class);
-};
+    return Class;
+}
 
-ClassMixin['shouldApply'] = isA(Core.Vocab('Class'));
-
-export default ClassMixin;
+export const shouldApply = isA(Core.Vocab('Class'));

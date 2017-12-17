@@ -1,11 +1,11 @@
 import {promises as jsonld} from 'jsonld';
-import SupportedOperationMixin from '../../src/Resources/SupportedOperation';
+import {Mixin} from '../../src/Resources/SupportedOperation';
 import {Core} from '../../src/Constants';
 import {owl} from '../../src/Vocabs';
 import {async} from "../test-utils";
 import Resource from "../../src/Resources/Resource";
 
-class SupportedOperation extends SupportedOperationMixin(Resource) {}
+class SupportedOperation extends Mixin(Resource) {}
 
 describe('SupportedOperation', () => {
 

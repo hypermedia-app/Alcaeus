@@ -3,7 +3,7 @@ import {isA} from "../../ResourceHelper";
 import {Constructor} from "../Mixin";
 import ExpansionModelBuilder, {ExpandedValue} from './ExpansionModelBuilder';
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class BasicRepresentationExpansion extends Base {
         mapShorthandValue(value: any) {
             return value;
@@ -15,9 +15,9 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     }
 
     return ExpansionModelBuilder(BasicRepresentationExpansion);
-};
+}
 
-Mixin['shouldApply'] = resource => {
+export function shouldApply(resource) {
     const isTemplate = isA(Core.Vocab('IriTemplate'))(resource);
 
     const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined'
@@ -27,6 +27,4 @@ Mixin['shouldApply'] = resource => {
         && resource[Core.Vocab('variableRepresentation')][JsonLd.Id] === Core.Vocab('BasicRepresentation');
 
     return isTemplate && (isUndefined || isExactMatch);
-};
-
-export default Mixin;
+}

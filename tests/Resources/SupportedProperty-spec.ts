@@ -1,7 +1,7 @@
-import SupportedPropertyMixin from "../../src/Resources/SupportedProperty";
+import {Mixin} from "../../src/Resources/SupportedProperty";
 import Resource from "../../src/Resources/Resource";
 
-class SupportedProperty extends SupportedPropertyMixin(Resource) {
+class SupportedProperty extends Mixin(Resource) {
 }
 
 describe('SupportedProperty', () => {

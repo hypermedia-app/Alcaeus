@@ -20,7 +20,7 @@ export class ResourceFactory implements IResourceFactory {
                 return mc.shouldApply(obj);
             });
 
-        const AlcaeusGenerated = mixins.reduce((c, mixin:any) => mixin(c), HydraResource);
+        const AlcaeusGenerated = mixins.reduce((c, mixin:any) => mixin.Mixin(c), HydraResource);
 
         return new AlcaeusGenerated(obj, alcaeus, apiDocumentation, incomingLinks);
     }

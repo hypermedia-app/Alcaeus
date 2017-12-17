@@ -1,7 +1,7 @@
-import IriTemplateMappingMixin from '../../src/Resources/IriTemplateMapping';
+import {Mixin} from '../../src/Resources/IriTemplateMapping';
 import Resource from "../../src/Resources/Resource";
 
-class IriTemplateMapping extends IriTemplateMappingMixin(Resource) {}
+class IriTemplateMapping extends Mixin(Resource) {}
 
 describe('IriTemplateMapping', () => {
 

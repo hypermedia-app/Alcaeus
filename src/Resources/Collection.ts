@@ -4,7 +4,7 @@ import ensureArray, {isA} from "../ResourceHelper";
 import {IHydraResource, IPartialCollectionView} from "../interfaces";
 import {Constructor} from "./Mixin";
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin <TBase extends Constructor>(Base: TBase) {
     class Collection extends Base {
         @nonenumerable
         get members(): IHydraResource[] {
@@ -18,8 +18,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     }
 
     return Collection;
-};
+}
 
-Mixin['shouldApply'] = isA(Core.Vocab('Collection'));
-
-export default Mixin;
+export const shouldApply = isA(Core.Vocab('Collection'));

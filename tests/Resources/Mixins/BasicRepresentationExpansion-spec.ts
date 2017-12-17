@@ -1,9 +1,9 @@
 import Resource from "../../../src/Resources/Resource";
-import BasicRepresentationExpansionMixin from "../../../src/Resources/Mixins/BasicRepresentationExpansion";
-import IriTemplate from "../../../src/Resources/IriTemplate";
+import {Mixin, shouldApply} from "../../../src/Resources/Mixins/BasicRepresentationExpansion";
+import {Mixin as IriTemplate} from "../../../src/Resources/IriTemplate";
 import {Core, JsonLd} from "../../../src/Constants";
 
-class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(IriTemplate(Resource)) {}
+class BasicRepresentationExpansion extends Mixin(IriTemplate(Resource)) {}
 
 describe('BasicRepresentationExpansion', () => {
     describe('shouldApply', () => {
@@ -16,10 +16,10 @@ describe('BasicRepresentationExpansion', () => {
 
         it('is true when variableRepresentation is not defined', () => {
             // when
-            const shouldApply = BasicRepresentationExpansionMixin['shouldApply'](body);
+            const result = shouldApply(body);
 
             // then
-            expect(shouldApply).toBe(true);
+            expect(result).toBe(true);
         });
 
         it('is true when variableRepresentation is null', () => {
@@ -27,23 +27,23 @@ describe('BasicRepresentationExpansion', () => {
             body[Core.Vocab('variableRepresentation')] = null;
 
             // when
-            const shouldApply = BasicRepresentationExpansionMixin['shouldApply'](body);
+            const result = shouldApply(body);
 
             // then
-            expect(shouldApply).toBe(true);
+            expect(result).toBe(true);
         });
 
         it('is true when variableRepresentation is BasicRepresentation', () => {
             // given
-            body[Core.Vocab('variableRepresentation')]= {
+            body[Core.Vocab('variableRepresentation')] = {
                 '@id': Core.Vocab('BasicRepresentation'),
             };
 
             // when
-            const shouldApply = BasicRepresentationExpansionMixin['shouldApply'](body);
+            const result = shouldApply(body);
 
             // then
-            expect(shouldApply).toBe(true);
+            expect(result).toBe(true);
         });
     });
 

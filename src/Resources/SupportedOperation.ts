@@ -2,9 +2,8 @@ import {IClass} from "../interfaces";
 import {Core} from "../Constants";
 import {owl} from "../Vocabs";
 import {Constructor} from "./Mixin";
-import DocumentedResource from "./DocumentedResource";
 
-export default <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class SupportedOperation extends Base {
 
         get method(): string {
@@ -29,5 +28,5 @@ export default <TBase extends Constructor>(Base: TBase) => {
         }
     }
 
-    return DocumentedResource(SupportedOperation);
-};
+    return SupportedOperation;
+}

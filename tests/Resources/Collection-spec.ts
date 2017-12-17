@@ -1,8 +1,8 @@
-import CollectionMixin from '../../src/Resources/Collection';
+import {Mixin} from '../../src/Resources/Collection';
 import {Core} from "../../src/Constants";
 import Resource from "../../src/Resources/Resource";
 
-class Collection extends CollectionMixin(Resource) {}
+class Collection extends Mixin(Resource) {}
 
 describe('Collection', () => {
     describe('members', () => {

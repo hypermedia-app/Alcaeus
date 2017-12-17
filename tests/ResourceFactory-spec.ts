@@ -11,12 +11,12 @@ describe('ResourceFactory', () => {
     describe('createResource', () => {
         it('should apply selected mixins', () => {
             // given
-            const mixin = (Base) => class extends Base {
+            const Mixin = (Base) => class extends Base {
                 get mixed() { return true; }
             };
-            mixin['shouldApply'] = () => true;
+            const shouldApply = () => true;
 
-            factory.mixins.push(mixin);
+            factory.mixins.push({ Mixin, shouldApply });
 
             // when
             const resource = factory.createResource(null, {}, apiDoc, {});
@@ -27,12 +27,12 @@ describe('ResourceFactory', () => {
 
         it('should not apply unselected mixins', () => {
             // given
-            const mixin = (Base) => class extends Base {
+            const Mixin = (Base) => class extends Base {
                 get unmixed() { return true; }
             };
-            mixin['shouldApply'] = () => false;
+            const shouldApply = () => false;
 
-            factory.mixins.push(mixin);
+            factory.mixins.push({ Mixin, shouldApply });
 
             // when
             const resource = factory.createResource(null, {}, apiDoc, {});
@@ -43,11 +43,11 @@ describe('ResourceFactory', () => {
 
         it('should not apply selected mixin without shouldApply', () => {
             // given
-            const mixin = (Base) => class extends Base {
+            const Mixin = (Base) => class extends Base {
                 get unmixed() { return true; }
             };
 
-            factory.mixins.push(mixin);
+            factory.mixins.push({ Mixin });
 
             // when
             const resource = factory.createResource(null, {}, apiDoc, {});

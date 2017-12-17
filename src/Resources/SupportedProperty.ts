@@ -1,9 +1,8 @@
 import {Core} from "../Constants";
 import {Constructor} from "./Mixin";
 import {isA} from "../ResourceHelper";
-import DocumentedResource from './DocumentedResource';
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     const SupportedProperty = class extends Base {
 
         get readable() {
@@ -35,9 +34,7 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
         }
     };
 
-    return DocumentedResource(SupportedProperty);
-};
+    return SupportedProperty;
+}
 
-Mixin['shouldApply'] = isA(Core.Vocab('SupportedProperty'));
-
-export default Mixin;
+export const shouldApply = isA(Core.Vocab('SupportedProperty'));

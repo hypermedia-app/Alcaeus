@@ -1,10 +1,10 @@
 import {Core} from '../../src/Constants';
 import {Bodies} from '../test-objects';
 import 'core-js/es6/object';
-import PartialCollectionViewMixin from '../../src/Resources/PartialCollectionView';
+import {Mixin} from '../../src/Resources/PartialCollectionView';
 import HydraResource from "../../src/Resources/HydraResource";
 
-class PartialCollectionView extends PartialCollectionViewMixin(HydraResource) {}
+class PartialCollectionView extends Mixin(HydraResource) {}
 
 describe('PartialCollectionView', () => {
     it('should link to the collection', () => {

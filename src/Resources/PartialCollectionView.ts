@@ -6,7 +6,7 @@ import {Constructor} from "./Mixin";
 import {ReverseLinks} from "./Maps";
 import {isA} from "../ResourceHelper";
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class PartialCollectionView extends Base {
         @nonenumerable
         get first() {
@@ -39,9 +39,6 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
     }
 
     return PartialCollectionView;
-};
+}
 
-
-Mixin['shouldApply'] = isA(Core.Vocab('PartialCollectionView'));
-
-export default Mixin;
+export const shouldApply = isA(Core.Vocab('PartialCollectionView'));

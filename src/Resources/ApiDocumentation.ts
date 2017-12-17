@@ -5,7 +5,7 @@ import {Core, JsonLd} from "../Constants";
 import {Constructor} from "./Mixin";
 import {isA} from "../ResourceHelper";
 
-const ApiDocumentationMixin = <TBase extends Constructor>(Base: TBase) => {
+export function Mixin<TBase extends Constructor>(Base: TBase) {
     class ApiDocumentation extends Base {
         get classes(): Array<IClass> {
             if (Array.isArray(this[Core.Vocab('supportedClass')])) {
@@ -59,6 +59,4 @@ const ApiDocumentationMixin = <TBase extends Constructor>(Base: TBase) => {
     return ApiDocumentation;
 };
 
-ApiDocumentationMixin['shouldApply'] = isA(Core.Vocab('ApiDocumentation'));
-
-export default ApiDocumentationMixin;
+export const shouldApply = isA(Core.Vocab('ApiDocumentation'));

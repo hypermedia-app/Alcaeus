@@ -72,6 +72,21 @@ describe('FetchUtil', () => {
             expect(res.resources[0]['http://example.com/vocab#prop']).toBe('some textual value');
         });
 
+        async(it, 'should parse json-ld response when media type has additional parameters', async () => {
+            // given
+            const response = responseBuilder()
+                .body(JSON.stringify(Bodies.someJsonLd))
+                .contentType('application/ld+json; charset=utf-8')
+                .build();
+            windowFetch.withArgs('http://example.com/resource').returns(response);
+
+            // when
+            const res = await fetchUtil.fetchResource('http://example.com/resource');
+
+            // then
+            expect(res.resources[0]['http://example.com/vocab#prop']).toBe('some textual value');
+        });
+
         async(it, 'should fail when resource returns non-success status code', async () => {
             // given
             windowFetch.withArgs('http://example.com/not/there')

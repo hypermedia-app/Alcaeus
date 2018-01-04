@@ -95,12 +95,16 @@ export class FetchUtil {
 }
 
 function parseResourceRepresentation(data: string, mediaType:string, parsers: any) {
-    let quadStream = parsers.import(mediaType, stringToStream(data));
+    let quadStream = parsers.import(stripContentTypeParameters(mediaType), stringToStream(data));
     if (quadStream == null) {
         throw Error(`Parser not found for media type ${mediaType}`);
     }
 
     return $rdf.dataset().import(quadStream);
+}
+
+function stripContentTypeParameters(mediaType: string) {
+    return mediaType.split(';').shift();
 }
 
 function getDocumentationUri(res:Response):string {

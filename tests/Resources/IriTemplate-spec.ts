@@ -1,4 +1,4 @@
-import {Mixin} from '../../src/Resources/IriTemplate';
+import {Mixin} from '../../src/Resources/Mixins/IriTemplate';
 import {Core} from "../../src/Constants";
 import Resource from "../../src/Resources/Resource";
 

@@ -1,4 +1,4 @@
-import {Mixin} from "../../src/Resources/SupportedProperty";
+import {Mixin} from "../../src/Resources/Mixins/SupportedProperty";
 import Resource from "../../src/Resources/Resource";
 
 class SupportedProperty extends Mixin(Resource) {

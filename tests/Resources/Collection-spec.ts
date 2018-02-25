@@ -1,4 +1,4 @@
-import {Mixin} from '../../src/Resources/Collection';
+import {Mixin} from '../../src/Resources/Mixins/Collection';
 import {Core} from "../../src/Constants";
 import Resource from "../../src/Resources/Resource";
 

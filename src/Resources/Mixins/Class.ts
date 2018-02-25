@@ -1,7 +1,7 @@
-import {ISupportedOperation, ISupportedProperty} from "../interfaces";
-import {Core} from "../Constants";
-import ensureArray, {isA} from "../ResourceHelper";
-import {Constructor} from "./Mixin";
+import {ISupportedOperation, ISupportedProperty} from "../../interfaces";
+import {Core} from "../../Constants";
+import ensureArray, {isA} from "../../ResourceHelper";
+import {Constructor} from "../Mixin";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class Class extends Base {

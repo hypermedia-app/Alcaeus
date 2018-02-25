@@ -1,8 +1,8 @@
 import {nonenumerable} from "core-decorators";
-import {Core} from "../Constants";
-import ensureArray, {isA} from "../ResourceHelper";
-import {Constructor} from "./Mixin";
-import {IIriTemplate} from "../interfaces";
+import {Core} from "../../Constants";
+import ensureArray, {isA} from "../../ResourceHelper";
+import {Constructor} from "../Mixin";
+import {IIriTemplate} from "../../interfaces";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     abstract class IriTemplate extends Base implements IIriTemplate {

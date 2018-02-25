@@ -1,8 +1,8 @@
-import {IClass, ISupportedOperation} from "../interfaces";
-import {rdf, rdfs} from "../Vocabs";
-import {Core} from "../Constants";
-import ensureArray, {isA} from "../ResourceHelper";
-import {Constructor} from "./Mixin";
+import {IClass, ISupportedOperation} from "../../interfaces";
+import {rdf, rdfs} from "../../Vocabs";
+import {Core} from "../../Constants";
+import ensureArray, {isA} from "../../ResourceHelper";
+import {Constructor} from "../Mixin";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class RdfProperty extends Base {

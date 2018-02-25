@@ -1,7 +1,7 @@
 import {Core} from '../../src/Constants';
 import {Bodies} from '../test-objects';
 import 'core-js/es6/object';
-import {Mixin} from '../../src/Resources/PartialCollectionView';
+import {Mixin} from '../../src/Resources/Mixins/PartialCollectionView';
 import HydraResource from "../../src/Resources/HydraResource";
 
 class PartialCollectionView extends Mixin(HydraResource) {}

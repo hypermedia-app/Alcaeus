@@ -1,5 +1,5 @@
 import {promises as jsonld} from 'jsonld';
-import {Mixin} from "../../src/Resources/Class";
+import {Mixin} from "../../src/Resources/Mixins/Class";
 import {Core} from '../../src/Constants';
 import {async} from "../test-utils";
 import Resource from "../../src/Resources/Resource";

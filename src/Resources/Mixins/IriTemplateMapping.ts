@@ -1,8 +1,8 @@
 import {nonenumerable} from "core-decorators";
-import {Core} from "../Constants";
-import {IIriTemplateMapping} from "../interfaces";
-import {Constructor} from "./Mixin";
-import {isA} from "../ResourceHelper";
+import {Core} from "../../Constants";
+import {IIriTemplateMapping} from "../../interfaces";
+import {Constructor} from "../Mixin";
+import {isA} from "../../ResourceHelper";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class IriTemplateMapping extends Base implements IIriTemplateMapping {

@@ -1,6 +1,6 @@
 import Resource from "../../../src/Resources/Resource";
 import {Mixin, shouldApply} from "../../../src/Resources/Mixins/BasicRepresentationExpansion";
-import {Mixin as IriTemplate} from "../../../src/Resources/IriTemplate";
+import {Mixin as IriTemplate} from "../../../src/Resources/Mixins/IriTemplate";
 import {Core, JsonLd} from "../../../src/Constants";
 
 class BasicRepresentationExpansion extends Mixin(IriTemplate(Resource)) {}

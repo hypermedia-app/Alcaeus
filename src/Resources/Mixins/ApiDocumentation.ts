@@ -1,9 +1,9 @@
 import {
     IClass, IHydraResource, ISupportedOperation, ISupportedProperty
-} from "../interfaces";
-import {Core, JsonLd} from "../Constants";
-import {Constructor} from "./Mixin";
-import {isA} from "../ResourceHelper";
+} from "../../interfaces";
+import {Core, JsonLd} from "../../Constants";
+import {Constructor} from "../Mixin";
+import {isA} from "../../ResourceHelper";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class ApiDocumentation extends Base {

@@ -1,6 +1,6 @@
-import {Core} from "../Constants";
-import {rdfs, Schema} from "../Vocabs";
-import {Constructor} from "./Mixin";
+import {Core} from "../../Constants";
+import {rdfs, Schema} from "../../Vocabs";
+import {Constructor} from "../Mixin";
 
 function getTitle(res) {
     return res[Core.Vocab('title')] || res[rdfs('label')] || res[Schema('title')]

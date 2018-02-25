@@ -1,6 +1,6 @@
-import {Core} from "../Constants";
-import {Constructor} from "./Mixin";
-import {isA} from "../ResourceHelper";
+import {Core} from "../../Constants";
+import {Constructor} from "../Mixin";
+import {isA} from "../../ResourceHelper";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     const SupportedProperty = class extends Base {

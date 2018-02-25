@@ -1,4 +1,3 @@
-import {JsonLd} from "../../Constants";
 import {Constructor} from "../Mixin";
 import URITemplate from 'es6-url-template';
 import {IIriTemplate, IIriTemplateMapping} from "../../interfaces";

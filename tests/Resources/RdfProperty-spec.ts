@@ -1,5 +1,5 @@
 import {promises as jsonld} from 'jsonld';
-import {Mixin} from "../../src/Resources/RdfProperty";
+import {Mixin} from "../../src/Resources/Mixins/RdfProperty";
 import {Core} from '../../src/Constants';
 import {xsd, rdf, rdfs, owl} from '../../src/Vocabs';
 import {async} from "../test-utils";

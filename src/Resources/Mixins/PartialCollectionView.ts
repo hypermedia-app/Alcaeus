@@ -1,10 +1,10 @@
 import {nonenumerable} from "core-decorators";
-import {Core} from "../Constants";
-import {IHydraResource} from "../interfaces";
-import {IIncomingLink} from "../internals";
-import {Constructor} from "./Mixin";
-import {ReverseLinks} from "./Maps";
-import {isA} from "../ResourceHelper";
+import {Core} from "../../Constants";
+import {IHydraResource} from "../../interfaces";
+import {IIncomingLink} from "../../internals";
+import {Constructor} from "../Mixin";
+import {ReverseLinks} from "../Maps";
+import {isA} from "../../ResourceHelper";
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class PartialCollectionView extends Base {

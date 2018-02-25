@@ -1,7 +1,7 @@
-import {Core} from "../Constants";
-import {IStatusCodeDescription} from "../interfaces";
-import {Constructor} from "./Mixin";
-import {isA} from "../ResourceHelper";
+import {Core} from "../../Constants";
+import {IStatusCodeDescription} from "../../interfaces";
+import {Constructor} from "../Mixin";
+import {isA} from "../../ResourceHelper";
 
 export function Mixin <TBase extends Constructor>(Base: TBase) {
     const StatusCodeDescription = class extends Base implements IStatusCodeDescription {

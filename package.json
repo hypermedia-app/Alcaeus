@@ -13,9 +13,10 @@
     "definition": "index.d.ts"
   },
   "scripts": {
-    "test": "karma start --single-run",
+    "test": "karma start --single-run && npm run ts-coverage-remap",
     "build": "webpack",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "ts-coverage-remap": "remap-istanbul -i coverage/json/coverage-final.json -o coverage/coverage.json -t json"
   },
   "repository": {
     "type": "git",
@@ -52,12 +53,15 @@
     "@types/sinon": "^2.3.3",
     "core-decorators": "^0.19.0",
     "core-js": "^2.5.0",
+    "istanbul-instrumenter-loader": "^3.0.0",
     "karma": "^1.3.0",
+    "karma-coverage": "^1.1.1",
     "karma-sauce-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.5",
     "rdf-parser-n3": "^1.0.0",
     "rdf-serializer-jsonld-ext": "^1.2.0",
+    "remap-istanbul": "^0.11.0",
     "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
     "tslint": "^5.9.1",

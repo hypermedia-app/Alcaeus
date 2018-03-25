@@ -1,4 +1,4 @@
-const webpackConfig = require("./webpack.config");
+const webpackConfig = require("./webpack.config.karma");
 const webpack = require('webpack');
 
 delete webpackConfig.externals;
@@ -104,13 +104,24 @@ module.exports = function (config) {
             "src/**/*.ts": ["webpack", "sourcemap" ]
         },
 
+        // optionally, configure the reporter
+        coverageReporter: {
+            reporters: [
+                {
+                  type: 'json',
+                  dir: 'coverage/json',
+                  subdir: '.'
+                }
+            ]
+        },
+
         mime: { 'text/x-typescript': ['ts'] },
 
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'saucelabs'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'saucelabs', 'coverage'] : ['progress', 'coverage'],
 
 
         // web server port
@@ -133,8 +144,8 @@ module.exports = function (config) {
         customLaunchers: customLaunchers,
 
         browsers: process.env.TRAVIS
-            ? Object.keys(customLaunchers)
-            : ['Chrome', 'Safari', 'Firefox'],
+            ? [ 'Chrome', ...Object.keys(customLaunchers) ]
+            : ['Chrome'],
 
         singleRun: true,
 

@@ -3,4 +3,7 @@ node_js:
   - "node"
 install:
   - npm i -g yarn
+  - npm install codecov -g
   - yarn install
+after_success:
+  - codecov

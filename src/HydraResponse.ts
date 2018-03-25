@@ -30,7 +30,11 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
                 return resource;
             }, <IHydraResource>null);
 
-            return selectedRoot || resources[this.requestedUri] || resources[this.redirectUrl];
+            if(this.xhr.redirected) {
+                return selectedRoot || resources[this.xhr.url];
+            }
+
+            return selectedRoot || resources[this.requestedUri];
         }
 
         ofType(classId: string): Array<IHydraResource> {

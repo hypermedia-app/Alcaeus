@@ -22,6 +22,9 @@ describe('HydraResponse', () => {
     describe('root', () => {
         it('should use root selection strategy to select the root resource', () => {
             // given
+            const xhr = <IResponseWrapper>{
+                xhr: <Response>{},
+            };
             const resources = {};
             const selector = {
                 selectRoot: sinon.stub(),
@@ -31,7 +34,7 @@ describe('HydraResponse', () => {
             });
 
             // when
-            const response = HydraResponse('urn:some:resource', <IResponseWrapper>{}, resources, [ <IRootSelector>selector ] );
+            const response = HydraResponse('urn:some:resource', xhr, resources, [ <IRootSelector>selector ] );
             const root = response.root;
 
             // then
@@ -42,10 +45,7 @@ describe('HydraResponse', () => {
         it('should fall back to resource with requested id', async () => {
             // given
             const xhr = <IResponseWrapper>{
-                xhr: <Response>{
-                    url: 'http://example.com/redirected/to',
-                    redirected: true,
-                },
+                xhr: <Response>{ },
             };
             const resources = {
                 'urn:some:resource': {

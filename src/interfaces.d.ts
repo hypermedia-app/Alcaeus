@@ -2,8 +2,32 @@ export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresenta
 
 export declare interface IHydraClient {
     resourceFactory:IResourceFactory;
-    loadResource(uri:string):Promise<IHydraResource>;
-    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource>;
+    loadResource(uri:string):Promise<IHydraResponse>;
+    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResponse>;
+}
+
+export declare interface IHydraResponse {
+    /**
+     * Gets the URI used to perform the request
+     */
+    readonly requestedUri: string;
+
+    /**
+     * Indexer to look up any arbitrary resource by its id within the representation
+     */
+    [uri: string]: IHydraResource | any;
+
+    /**
+     * Gets all resources of given RDF type from the representation
+     * @param {string} classId RDF class identifier
+     * @returns {Array<IHydraResource>}
+     */
+    ofType(classId: string): Array<IHydraResource>;
+
+    /**
+     * Gets the root of the representation or undefined if it cannot be determined
+     */
+    root: IHydraResource;
 }
 
 export declare interface IResource {

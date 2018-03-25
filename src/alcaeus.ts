@@ -1,42 +1,70 @@
-import {FetchUtil} from './FetchUtil';
+import * as FetchUtil from './FetchUtil';
 import {JsonLd, Core} from './Constants';
-import {JsonLdUtil} from "./JsonLdUtil";
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {IHydraClient, IApiDocumentation, IOperation} from './interfaces';
+import {IHydraClient, IApiDocumentation, IOperation, IHydraResponse} from './interfaces';
 import {forOwn} from "./LodashUtil";
+import * as HydraResponse from './HydraResponse';
+import {IResponseWrapper} from './ResponseWrapper';
+import * as GraphProcessor from './GraphProcessor';
+
+interface ResponseWrapperPattern {
+    KnownRdfSerialization: (alcaeus: IHydraClient, response: IResponseWrapper, uri: string, apiDocumentation: IApiDocumentation, typeOverrides?) => Promise<IHydraResponse>,
+}
+
+function matchResponse<T>(p: ResponseWrapperPattern): (alcaeus: IHydraClient, res: IResponseWrapper, uri: string, apiDocumentation: IApiDocumentation, typeOverrides?) => Promise<IHydraResponse> {
+    return (alcaeus: IHydraClient, res: IResponseWrapper, uri: string, apiDocumentation?: IApiDocumentation, typeOverrides = {}) => {
+        if(isRdfFormatWeCanHandle(res.mediaType)) {
+            return p.KnownRdfSerialization(alcaeus, res, uri, apiDocumentation, typeOverrides);
+        }
+
+        return Promise.resolve(HydraResponse.create(uri, res, null, null));
+    };
+}
+
+function isRdfFormatWeCanHandle(mediaType: string): boolean {
+    return !!GraphProcessor.parserFactory.create(null).find(mediaType);
+}
+
+const getHydraResponse = matchResponse({
+    KnownRdfSerialization: async (alcaeus: IHydraClient, response: IResponseWrapper, uri: string, apiDocumentation?: IApiDocumentation, typeOverrides = {}) => {
+        const processedGraph = await GraphProcessor.parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType);
+
+        return processResources(alcaeus, uri, response, processedGraph, apiDocumentation, typeOverrides);
+    },
+});
 
 export class Alcaeus implements IHydraClient {
     public resourceFactory = new ResourceFactoryCtor();
-    public fetchUtil = new FetchUtil();
 
-    async loadResource(uri:string):Promise<any> {
-        const expandedWithDocs = await this.fetchUtil.fetchResource(uri);
-        const apiDocumentation = await this.loadDocumentation(expandedWithDocs.apiDocumentationLink);
+    async loadResource(uri:string):Promise<IHydraResponse> {
+        const response = await FetchUtil.fetchResource(uri);
+        const apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
 
-        return getRequestedObject(this, expandedWithDocs.resourceIdentifier || uri, expandedWithDocs.resources, apiDocumentation);
+        return getHydraResponse(this, response, uri, apiDocumentation);
     }
 
     async loadDocumentation(uri:string):Promise<IApiDocumentation> {
         try {
-            const response = await this.fetchUtil.fetchResource(uri);
+            const response = await FetchUtil.fetchResource(uri);
             const typeOverrides = {};
             typeOverrides[uri] = Core.Vocab('ApiDocumentation');
 
-            return getRequestedObject(this, uri, response.resources, null, typeOverrides);
+            const representation = await getHydraResponse(this, response, uri, null, typeOverrides);
+            return <IApiDocumentation><any>representation.root;
         } catch (e) {
             return null;
         }
     }
 
     async invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<any> {
-        const expandedWithDocs = await this.fetchUtil.invokeOperation(operation.method, uri, body, mediaType);
-        const apiDocumentation = await this.loadDocumentation(expandedWithDocs.apiDocumentationLink);
+        const response = await FetchUtil.invokeOperation(operation.method, uri, body, mediaType);
+        const apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
 
-        return getRequestedObject(this, expandedWithDocs.resourceIdentifier, expandedWithDocs.resources, apiDocumentation);
+        return await getHydraResponse(this, response, uri, apiDocumentation);
     }
 }
 
-function getRequestedObject(alcaeus:IHydraClient, uri, resources, apiDocumentation, typeOverrides = {}) {
+function processResources(alcaeus:IHydraClient, uri, response, resources, apiDocumentation, typeOverrides = {}): IHydraResponse {
     const resourcified = {};
     resources.forEach(res => {
         try {
@@ -54,13 +82,7 @@ function getRequestedObject(alcaeus:IHydraClient, uri, resources, apiDocumentati
 
     forOwn(resourcified, resource => resourcify(alcaeus, resource, resourcified, apiDocumentation, typeOverrides));
 
-    const rootResource = resourcified[uri] || resourcified[JsonLdUtil.trimTrailingSlash(uri)];
-
-    if (!rootResource) {
-        return Promise.reject(new Error('Resource ' + uri + ' was not found in the response'));
-    }
-
-    return rootResource;
+    return HydraResponse.create(uri, response, resourcified, []);
 }
 
 function resourcify(alcaeus:IHydraClient, obj, resourcified:Object, apiDoc:IApiDocumentation, typeOverrides) {

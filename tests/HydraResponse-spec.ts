@@ -42,7 +42,7 @@ describe('HydraResponse', () => {
             expect(selector.selectRoot.calledWith(resources)).toBeTruthy();
         });
 
-        it('should fall back to resource with requested id', async () => {
+        it('should fall back to resource with requested id', () => {
             // given
             const xhr = <IResponseWrapper>{
                 xhr: <Response>{ },
@@ -64,29 +64,53 @@ describe('HydraResponse', () => {
             expect(root.id).toEqual('urn:some:resource');
         });
 
-        it('should return redirect target when redirected', () => {
-            // given
-            const xhr = <IResponseWrapper>{
-                xhr: <Response>{
-                    url: 'http://example.com/redirected/to',
-                    redirected: true,
-                },
-            };
-            const resources = {
-                'urn:some:resource': <IHydraResource>{
-                    id: 'urn:some:resource',
-                },
-                'http://example.com/redirected/to': <IHydraResource>{
-                    id: 'http://example.com/redirected/to',
-                },
-            };
+        describe('when redirected', () => {
+            it('should fall back to resource with requested id when the redirect id is not found', () => {
+                // given
+                const xhr = <IResponseWrapper>{
+                    xhr: <Response>{
+                        url: 'http://example.com/redirected/to',
+                        redirected: true,
+                    },
+                };
+                const resources = {
+                    'urn:some:resource': <IHydraResource>{
+                        id: 'urn:some:resource',
+                    }
+                };
 
-            // when
-            const response = HydraResponse('urn:some:resource', xhr, resources, [ ] );
-            const root = response.root;
+                // when
+                const response = HydraResponse('urn:some:resource', xhr, resources, [ ] );
+                const root = response.root;
 
-            // then
-            expect(root.id).toEqual('http://example.com/redirected/to');
+                // then
+                expect(root.id).toEqual('urn:some:resource');
+            });
+
+            it('should return resource identified by redirect target', () => {
+                // given
+                const xhr = <IResponseWrapper>{
+                    xhr: <Response>{
+                        url: 'http://example.com/redirected/to',
+                        redirected: true,
+                    },
+                };
+                const resources = {
+                    'urn:some:resource': <IHydraResource>{
+                        id: 'urn:some:resource',
+                    },
+                    'http://example.com/redirected/to': <IHydraResource>{
+                        id: 'http://example.com/redirected/to',
+                    },
+                };
+
+                // when
+                const response = HydraResponse('urn:some:resource', xhr, resources, [ ] );
+                const root = response.root;
+
+                // then
+                expect(root.id).toEqual('http://example.com/redirected/to');
+            });
         });
     });
 

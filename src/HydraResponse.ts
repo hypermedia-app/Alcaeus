@@ -41,6 +41,10 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
             return resources[this.requestedUri];
         }
 
+        get length(): number {
+            return Object.keys(resources).length;
+        }
+
         ofType(classId: string): Array<IHydraResource> {
             return undefined;
         }

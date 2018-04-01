@@ -86,7 +86,7 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine'],
+        frameworks: ['jasmine', 'child-process'],
 
         // list of files / patterns to load in the browser
         files: [
@@ -151,6 +151,12 @@ module.exports = function (config) {
 
         concurrency: process.env.TRAVIS ? 1: Number.MAX_SAFE_INTEGER,
 
-        webpack: webpackConfig
+        webpack: webpackConfig,
+
+        client: {
+            childProcess: {
+                path: 'tests/mock-server.js'
+            }
+        }
     });
 };

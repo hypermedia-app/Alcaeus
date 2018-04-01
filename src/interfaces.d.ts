@@ -28,6 +28,8 @@ export declare interface IHydraResponse {
      * Gets the root of the representation or undefined if it cannot be determined
      */
     root: IHydraResource;
+
+    length: number;
 }
 
 export declare interface IResource {

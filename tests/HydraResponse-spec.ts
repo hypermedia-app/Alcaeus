@@ -115,7 +115,7 @@ describe('HydraResponse', () => {
         });
     });
 
-    describe('[ identifier ]', () => {
+    describe('get', () => {
         it('returns objects from the resource graph', async () => {
             // given
             const childRes = {};
@@ -125,7 +125,7 @@ describe('HydraResponse', () => {
             const response = HydraResponse('urn:some:uri', <IResponseWrapper>{}, resources, []);
 
             // when
-            const actualIndexed = response['urn:child:resource'];
+            const actualIndexed = response.get('urn:child:resource');
 
             // then
             expect(Object.is(actualIndexed, childRes)).toBe(true);

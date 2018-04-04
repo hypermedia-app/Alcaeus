@@ -16,10 +16,13 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
             super(response.xhr);
 
             this.requestedUri = uri;
-            Object.assign(this, resources);
         }
 
         readonly requestedUri: string;
+
+        get(uri: string): IHydraResource {
+            return resources[uri];
+        }
 
         get root(): IHydraResource {
             const selectedRoot = rootSelectors.reduce((resource, selector) => {

@@ -11,6 +11,7 @@ import {async, responseBuilder} from './test-utils';
 import * as FetchUtil from '../src/FetchUtil';
 import * as GraphProcessor from '../src/GraphProcessor';
 import {IResponseWrapper} from '../src/ResponseWrapper';
+import {IPartialCollectionView} from '../src/interfaces';
 
 describe('Hydra', () => {
 
@@ -54,7 +55,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource(id);
-            const res = hydraRes[id];
+            const res = hydraRes.get(id);
 
             // then
             expect(res['@id']).toBe(id);
@@ -82,7 +83,7 @@ describe('Hydra', () => {
 
             // when
             const hydraResponse = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraResponse['http://example.com/resource'];
+            const res = hydraResponse.get('http://example.com/resource');
 
             // then
             const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet']);
@@ -98,7 +99,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes['http://example.com/resource'];
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res[Core.Vocab('member')].length).toBe(4);
@@ -115,7 +116,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3');
-            const res = hydraRes['http://example.com/resource?page=3'];
+            const res = <IPartialCollectionView>hydraRes.get('http://example.com/resource?page=3');
 
             // then
             expect(res.collection).toBeDefined();
@@ -130,7 +131,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes['http://example.com/resource'];
+            const res = hydraRes.get('http://example.com/resource');
             const incomingLinks = ReverseLinks.get(res['http://example.com/vocab#other']);
 
             // then
@@ -170,7 +171,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/root');
-            const res = hydraRes['http://example.com/root'];
+            const res = hydraRes.get('http://example.com/root');
 
             // then
             const p = 'http://example.com/prop';
@@ -187,7 +188,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes['http://example.com/resource'];
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'])
@@ -202,7 +203,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes['http://example.com/resource'];
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res['http://schema.org/age']).toBe(21);
@@ -216,7 +217,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes['http://example.com/resource'];
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top']);
@@ -277,7 +278,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes['http://example.com/resource'];
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res.apiDocumentation).toBe(null);

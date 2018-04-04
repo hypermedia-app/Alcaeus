@@ -53,5 +53,5 @@ module.exports = {
       'root': 'fetch'
     }
   },
-  devtool: 'inline-source-map'
+  devtool: 'source-map'
 };

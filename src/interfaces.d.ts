@@ -15,7 +15,7 @@ export declare interface IHydraResponse {
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    [uri: string]: IHydraResource | any;
+    get(uri: string): IHydraResource;
 
     /**
      * Gets all resources of given RDF type from the representation

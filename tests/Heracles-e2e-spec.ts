@@ -10,7 +10,7 @@ describe('Hydra (e2e)', () => {
         const representation = await client.loadResource(`${mockApiBase}/observations.json`);
 
         // when
-        const resource = representation['http://ld.stadt-zuerich.ch/statistics/code/R00014'];
+        const resource = representation.get('http://ld.stadt-zuerich.ch/statistics/code/R00014');
 
         // then
         expect(resource.id).toBe('http://ld.stadt-zuerich.ch/statistics/code/R00014');

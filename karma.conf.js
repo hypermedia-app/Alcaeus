@@ -121,7 +121,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'saucelabs', 'coverage'] : ['progress', 'coverage'],
+        reporters: process.env.TRAVIS ? ['dots', 'saucelabs'] : ['progress', 'coverage'],
 
 
         // web server port
@@ -144,7 +144,7 @@ module.exports = function (config) {
         customLaunchers: customLaunchers,
 
         browsers: process.env.TRAVIS
-            ? [ 'Chrome', ...Object.keys(customLaunchers) ]
+            ? Object.keys(customLaunchers)
             : ['Chrome'],
 
         singleRun: true,

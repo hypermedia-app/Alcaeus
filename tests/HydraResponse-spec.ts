@@ -6,6 +6,26 @@ import {async, responseBuilder} from './test-utils';
 import Resource from '../src/Resources/Resource';
 
 describe('HydraResponse', () => {
+    it('should be iterable', () => {
+        // given
+        const xhr = <IResponseWrapper>{
+            xhr: <Response>{ },
+        };
+        const resources = {
+            'a': 'a',
+            'b': 'b',
+            'c': 'c',
+            'd': 'd',
+        };
+        const r12n = HydraResponse('urn:some:res', xhr, <IResourceGraph><any>resources, []);
+
+        // when
+        const array = Array.from(r12n);
+
+        // then
+        expect(array.join()).toBe('a,b,c,d');
+    });
+
     describe('requestedUri', () => {
         it('returns the correct value', () => {
             // given

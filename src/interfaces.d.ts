@@ -6,7 +6,7 @@ export declare interface IHydraClient {
     invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResponse>;
 }
 
-export declare interface IHydraResponse {
+export declare interface IHydraResponse extends Iterable<IHydraResource> {
     /**
      * Gets the URI used to perform the request
      */

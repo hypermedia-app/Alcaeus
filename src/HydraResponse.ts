@@ -27,7 +27,7 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
         get root(): IHydraResource {
             const selectedRoot = rootSelectors.reduce((resource, selector) => {
                 if (!resource) {
-                   resource = selector.selectRoot(resources);
+                    resource = selector.selectRoot(resources);
                 }
 
                 return resource;
@@ -37,7 +37,7 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
                 return selectedRoot;
             }
 
-            if(this.xhr.redirected && resources[this.xhr.url]) {
+            if (this.xhr.redirected && resources[this.xhr.url]) {
                 return resources[this.xhr.url];
             }
 
@@ -52,6 +52,9 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
             return Object.values(resources).filter(res => res.types.contains(classId));
         }
 
+        [Symbol.iterator](): Iterator<IHydraResource> {
+            return Object.values(resources)[Symbol.iterator]();
+        }
     }
 
     return new HydraResponse(uri);

@@ -1,7 +1,7 @@
-import {IHydraResource, IHydraResponse } from './interfaces';
+import {IHydraResource, IHydraResponse} from './interfaces';
 import {IResponseWrapper, ResponseWrapper} from './ResponseWrapper';
 
-interface IResourceGraph {
+export interface IResourceGraph {
     [uri: string]: IHydraResource;
 }
 
@@ -46,7 +46,7 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
         }
 
         ofType(classId: string): Array<IHydraResource> {
-            return undefined;
+            return Object.values(resources).filter(res => res.types.contains(classId));
         }
 
     }

@@ -1,8 +1,9 @@
 import * as sinon from 'sinon';
-import {IRootSelector, create as HydraResponse} from '../src/HydraResponse';
+import {IRootSelector, create as HydraResponse, IResourceGraph} from '../src/HydraResponse';
 import {IHydraResource} from '../src/interfaces';
 import {IResponseWrapper} from '../src/ResponseWrapper';
 import {async, responseBuilder} from './test-utils';
+import Resource from '../src/Resources/Resource';
 
 describe('HydraResponse', () => {
     describe('requestedUri', () => {
@@ -128,6 +129,36 @@ describe('HydraResponse', () => {
 
             // then
             expect(Object.is(actualIndexed, childRes)).toBe(true);
+        });
+    });
+
+    describe('ofType', () => {
+        it('should return all matching resources', () => {
+            // given
+            const xhr = <IResponseWrapper>{
+                xhr: <Response>{ },
+            };
+            const resources = {
+                'urn:res:one': new Resource({
+                    '@type': 'urn:some:type'
+                }),
+                'urn:res:two': new Resource({
+                    '@type': 'urn:some:type'
+                }),
+                'urn:res:tri': new Resource({
+                    '@type': 'urn:other:type'
+                }),
+                'urn:res:for': new Resource({
+                    '@type': 'urn:other:type'
+                })
+            };
+            const r12n = HydraResponse('urn:some:res', xhr, <IResourceGraph><any>resources, []);
+
+            // when
+            const ofType = r12n.ofType('urn:some:type');
+
+            // then
+            expect(ofType.length).toBe(2);
         });
     });
 });

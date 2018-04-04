@@ -2,7 +2,7 @@ import {promises as jsonld} from 'jsonld';
 import {nonenumerable} from 'core-decorators';
 import {JsonLd, Core} from '../Constants';
 import {IHydraClient, IResource} from "../interfaces";
-import ensureArray from "../ResourceHelper";
+import TypeCollection from '../TypeCollection';
 
 const _isProcessed = new WeakMap<IResource, boolean>();
 const _alcaeus = new WeakMap<IResource, IHydraClient>();
@@ -22,7 +22,7 @@ export default class implements IResource {
 
     @nonenumerable
     get types() {
-        return ensureArray(this, JsonLd.Type);
+        return TypeCollection.create(this[JsonLd.Type]);
     }
 
     @nonenumerable

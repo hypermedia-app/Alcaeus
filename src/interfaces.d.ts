@@ -22,7 +22,7 @@ export declare interface IHydraResponse {
      * @param {string} classId RDF class identifier
      * @returns {Array<IHydraResource>}
      */
-    ofType(classId: string): Array<IHydraResource>;
+    ofType(classId: string): Array<IResource>;
 
     /**
      * Gets the root of the representation or undefined if it cannot be determined
@@ -34,7 +34,11 @@ export declare interface IHydraResponse {
 
 export declare interface IResource {
     id:string;
-    types:string[];
+    types:ITypeCollection;
+}
+
+export declare interface ITypeCollection extends ReadonlyArray<string> {
+    contains(clas: string): boolean;
 }
 
 export declare interface IApiDocumentation extends IResource {

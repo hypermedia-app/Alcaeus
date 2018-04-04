@@ -7,31 +7,19 @@ import * as HydraResponse from './HydraResponse';
 import {IResponseWrapper} from './ResponseWrapper';
 import * as GraphProcessor from './GraphProcessor';
 
-interface ResponseWrapperPattern {
-    KnownRdfSerialization: (alcaeus: IHydraClient, response: IResponseWrapper, uri: string, apiDocumentation: IApiDocumentation, typeOverrides?) => Promise<IHydraResponse>,
-}
-
-function matchResponse<T>(p: ResponseWrapperPattern): (alcaeus: IHydraClient, res: IResponseWrapper, uri: string, apiDocumentation: IApiDocumentation, typeOverrides?) => Promise<IHydraResponse> {
-    return (alcaeus: IHydraClient, res: IResponseWrapper, uri: string, apiDocumentation?: IApiDocumentation, typeOverrides = {}) => {
-        if(isRdfFormatWeCanHandle(res.mediaType)) {
-            return p.KnownRdfSerialization(alcaeus, res, uri, apiDocumentation, typeOverrides);
-        }
-
-        return Promise.resolve(HydraResponse.create(uri, res, null, null));
-    };
-}
-
 function isRdfFormatWeCanHandle(mediaType: string): boolean {
     return !!GraphProcessor.parserFactory.create(null).find(mediaType);
 }
 
-const getHydraResponse = matchResponse({
-    KnownRdfSerialization: async (alcaeus: IHydraClient, response: IResponseWrapper, uri: string, apiDocumentation?: IApiDocumentation, typeOverrides = {}) => {
+const getHydraResponse = async (alcaeus: IHydraClient, response: IResponseWrapper, uri: string, apiDocumentation?: IApiDocumentation, typeOverrides = {}): Promise<IHydraResponse> => {
+    if(isRdfFormatWeCanHandle(response.mediaType)) {
         const processedGraph = await GraphProcessor.parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType);
 
         return processResources(alcaeus, uri, response, processedGraph, apiDocumentation, typeOverrides);
-    },
-});
+    }
+
+    return Promise.resolve(HydraResponse.create(uri, response, null, null));
+};
 
 export class Alcaeus implements IHydraClient {
     public resourceFactory = new ResourceFactoryCtor();

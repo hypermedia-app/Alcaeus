@@ -1,5 +1,5 @@
 import {Mixin} from '../../src/Resources/Mixins/IriTemplateMapping';
-import Resource from "../../src/Resources/Resource";
+import Resource from '../../src/Resources/Resource';
 
 class IriTemplateMapping extends Mixin(Resource) {}
 

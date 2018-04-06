@@ -1,3 +1,4 @@
+// tslint:disable:no-namespace
 type SchemaTerm = 'description' | 'title';
 
 type RdfsTerm = 'comment' | 'label' | 'range' | 'domain';
@@ -26,6 +27,7 @@ export namespace rdf {
 export namespace xsd {
     export const ns = 'http://www.w3.org/2001/XMLSchema#';
 
+    // tslint:disable:variable-name
     export const string = ns + 'string';
     export const integer = ns + 'integer';
 }

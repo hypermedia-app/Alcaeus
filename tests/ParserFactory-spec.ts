@@ -1,5 +1,5 @@
-import {ParserFactory} from '../src/ParserFactory';
 import {MediaTypes} from '../src/Constants';
+import {ParserFactory} from '../src/ParserFactory';
 
 describe('ParserFactory', () => {
    let parserFactory: ParserFactory;
@@ -14,5 +14,5 @@ describe('ParserFactory', () => {
 
        // then
        expect(parsers[MediaTypes.jsonLd]).toBeDefined();
-   })
+   });
 });

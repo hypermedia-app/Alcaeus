@@ -1,23 +1,23 @@
-import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector';
 import {IHydraResource} from '../../src/interfaces';
 import {IResponseWrapper} from '../../src/ResponseWrapper';
+import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector';
 
 describe('CanonicalLinkSelector', () => {
     it('should select the resource with id matching canonical link', () => {
         // given
-        const expectedRoot = <IHydraResource>{};
+        const expectedRoot = {} as IHydraResource;
         const resources = {
-            'redirected-to': <IHydraResource>{},
-            'the-real-id': expectedRoot
+            'redirected-to': {} as IHydraResource,
+            'the-real-id': expectedRoot,
         };
-        const response = <IResponseWrapper>{
+        const response = {
             xhr: {
-                url: 'redirected-to',
                 headers: new Headers({
-                    'Link': '<the-real-id>; rel=canonical'
-                })
-            }
-        };
+                    Link: '<the-real-id>; rel=canonical',
+                }),
+                url: 'redirected-to',
+            },
+        } as IResponseWrapper;
 
         // when
         const root = CanonicalLinkSelector.selectRoot(resources, response);
@@ -29,13 +29,13 @@ describe('CanonicalLinkSelector', () => {
     it('should return null if canonical link rel is not present', () => {
         // given
         const resources = { };
-        const response = <IResponseWrapper>{
+        const response = {
             xhr: {
                 headers: new Headers({
-                    'Link': '<the-real-id>; rel=prev'
-                })
-            }
-        };
+                    Link: '<the-real-id>; rel=prev',
+                }),
+            },
+        } as IResponseWrapper;
 
         // when
         const root = CanonicalLinkSelector.selectRoot(resources, response);
@@ -47,11 +47,11 @@ describe('CanonicalLinkSelector', () => {
     it('should return null if link header is not present', () => {
         // given
         const resources = { };
-        const response = <IResponseWrapper>{
+        const response = {
             xhr: {
-                headers: new Headers({})
-            }
-        };
+                headers: new Headers({}),
+            },
+        } as IResponseWrapper;
 
         // when
         const root = CanonicalLinkSelector.selectRoot(resources, response);

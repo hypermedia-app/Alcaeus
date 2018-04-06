@@ -6,7 +6,8 @@
     "jsRules": {},
     "rules": {
       "quotemark": [ true, "single" ],
-      "trailing-comma": [ ]
+      "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+      "no-empty": [ "allow-empty-catch" ]
     },
     "rulesDirectory": []
 }

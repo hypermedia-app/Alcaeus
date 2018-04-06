@@ -1,11 +1,11 @@
+import 'core-js/es6/array';
+import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
-import {promises as jsonld} from 'jsonld';
-import {Mixin} from "../../src/Resources/Mixins/ApiDocumentation";
+import {Mixin} from '../../src/Resources/Mixins/ApiDocumentation';
+import Resource from '../../src/Resources/Resource';
 import {Documentations} from '../test-objects';
-import {async, fakeAlcaeusResources} from "../test-utils";
-import 'core-js/es6/array';
-import Resource from "../../src/Resources/Resource";
+import {async, fakeAlcaeusResources} from '../test-utils';
 
 class ApiDocumentation extends Mixin(Resource) {
 }
@@ -17,9 +17,9 @@ describe('ApiDocumentation', () => {
 
     describe('getting classes', () => {
 
-        it('should return classes from documentation', (done:any) => {
+        it('should return classes from documentation', (done: any) => {
 
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
+            jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
                 const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
 
                 expect(docs.classes.length).toBe(1);
@@ -28,9 +28,9 @@ describe('ApiDocumentation', () => {
             }).catch(done.fail);
         });
 
-        it('should return selected class by @id', (done:any) => {
+        it('should return selected class by @id', (done: any) => {
 
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
+            jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
                 const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
 
                 const clas = docs.getClass('http://example.com/api#Class');
@@ -39,13 +39,13 @@ describe('ApiDocumentation', () => {
             }).catch(done.fail);
         });
 
-        it('should return null for missing supported class', (done:any) => {
-            jsonld.compact(Documentations.classWithOperation, {}).then(expanded => {
+        it('should return null for missing supported class', (done: any) => {
+            jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
                 const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
 
                 const clas = docs.getClass('http://example.com/api#UndomcumentedClass');
                 expect(clas).toBe(null);
-                done()
+                done();
             }).catch(done.fail);
         });
 
@@ -53,11 +53,10 @@ describe('ApiDocumentation', () => {
 
     describe('getting entrypoint', () => {
 
-        let alcaeus;
         beforeEach(() => {
             alcaeus = {
-                loadResource: sinon.stub()
-            }
+                loadResource: sinon.stub(),
+            };
         });
 
         async(it, 'should invoke Resource.load', async () => {
@@ -87,8 +86,7 @@ describe('ApiDocumentation', () => {
                     .then(() => {
                         throw new Error('Operation should not succeed');
                     });
-            }
-            catch(e) {
+            } catch (e) {
                 throw new Error('Should not throw unhandled exception');
             }
         });

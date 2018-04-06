@@ -1,6 +1,6 @@
+import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/Collection';
-import {Core} from "../../src/Constants";
-import Resource from "../../src/Resources/Resource";
+import Resource from '../../src/Resources/Resource';
 
 class Collection extends Mixin(Resource) {}
 
@@ -14,7 +14,7 @@ describe('Collection', () => {
 
             // then
             expect(Array.isArray(collection.members)).toBe(true);
-            expect(collection.members[0]['text']).toBe('hello');
+            expect((collection.members[0] as any).text).toBe('hello');
         });
 
         it('should be non-enumerable', () => {

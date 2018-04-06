@@ -1,16 +1,16 @@
-import {Core, JsonLd} from "../../Constants";
-import {isA} from "../../ResourceHelper";
-import {Constructor} from "../Mixin";
-import ExpansionModelBuilder, {ExpandedValue} from './ExpansionModelBuilder';
+import {Core, JsonLd} from '../../Constants';
+import {isA} from '../../ResourceHelper';
+import {Constructor} from '../Mixin';
+import ExpansionModelBuilder, {IExpandedValue} from './ExpansionModelBuilder';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class BasicRepresentationExpansion extends Base {
-        mapShorthandValue(value: any) {
+        public mapShorthandValue(value: any) {
             return value;
         }
 
-        mapExpandedValue(value: ExpandedValue) {
-            return value["@value"] || value["@id"];
+        public mapExpandedValue(value: IExpandedValue) {
+            return value['@value'] || value['@id'];
         }
     }
 

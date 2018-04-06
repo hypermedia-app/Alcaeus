@@ -1,7 +1,7 @@
-import {IHydraResource, IHydraResponse, ResourceGraph} from '../interfaces';
+import {IHydraResource, IHydraResponse, IResourceGraph} from '../interfaces';
 
 export default {
-    selectRoot(resources: ResourceGraph, response: IHydraResponse): IHydraResource {
+    selectRoot(resources: IResourceGraph, response: IHydraResponse): IHydraResource {
         return resources[response.requestedUri];
-    }
-}
+    },
+};

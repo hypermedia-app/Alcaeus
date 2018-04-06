@@ -1,13 +1,15 @@
+import {Core, JsonLd} from '../../Constants';
 import {
-    IClass, IHydraResource, ISupportedOperation, ISupportedProperty
-} from "../../interfaces";
-import {Core, JsonLd} from "../../Constants";
-import {Constructor} from "../Mixin";
-import {isA} from "../../ResourceHelper";
+    IClass, IHydraResource, ISupportedOperation, ISupportedProperty,
+} from '../../interfaces';
+import {isA} from '../../ResourceHelper';
+import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class ApiDocumentation extends Base {
-        get classes(): Array<IClass> {
+    abstract class ApiDocumentation extends Base {
+        public abstract get _alcaeus();
+
+        get classes(): IClass[] {
             if (Array.isArray(this[Core.Vocab('supportedClass')])) {
                 return this[Core.Vocab('supportedClass')];
             }
@@ -15,8 +17,8 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return [this[Core.Vocab('supportedClass')]];
         }
 
-        getOperations(classUri: string, predicateUri?: string): Array<ISupportedOperation> {
-            let clas = this.getClass(classUri);
+        public getOperations(classUri: string, predicateUri?: string): ISupportedOperation[] {
+            const clas = this.getClass(classUri);
             if (!clas) {
                 return [];
             }
@@ -25,7 +27,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
                 return clas.supportedOperations;
             }
 
-            let supportedProperty = clas.supportedProperties.find((prop: ISupportedProperty) => {
+            const supportedProperty = clas.supportedProperties.find((prop: ISupportedProperty) => {
                 return prop.property && prop.property.id === predicateUri;
             });
             if (!supportedProperty) {
@@ -35,28 +37,28 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return supportedProperty.property.supportedOperations;
         }
 
-        getProperties(classUri: string): Array<ISupportedProperty> {
-            let clas = this.getClass(classUri);
+        public getProperties(classUri: string): ISupportedProperty[] {
+            const clas = this.getClass(classUri);
             if (!clas) {
                 return [];
             }
             return clas.supportedProperties;
         }
 
-        getClass(classId): IClass {
-            return this.classes.find(clas => clas[JsonLd.Id] === classId) || null;
+        public getClass(classId): IClass {
+            return this.classes.find((clas) => clas[JsonLd.Id] === classId) || null;
         }
 
-        getEntrypoint(): Promise<IHydraResource> {
+        public getEntrypoint(): Promise<IHydraResource> {
             if (!this[Core.Vocab('entrypoint')]) {
                 return Promise.reject('The ApiDocumentation doesn\'t have an entrypoint.');
             }
 
-            return this['_alcaeus'].loadResource(this[Core.Vocab('entrypoint')][JsonLd.Id]);
+            return this._alcaeus.loadResource(this[Core.Vocab('entrypoint')][JsonLd.Id]);
         }
     }
 
     return ApiDocumentation;
-};
+}
 
 export const shouldApply = isA(Core.Vocab('ApiDocumentation'));

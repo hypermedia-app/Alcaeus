@@ -1,9 +1,9 @@
-import {Core} from "../../Constants";
-import {Constructor} from "../Mixin";
-import {isA} from "../../ResourceHelper";
+import {Core} from '../../Constants';
+import {isA} from '../../ResourceHelper';
+import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    const SupportedProperty = class extends Base {
+    return class extends Base {
 
         get readable() {
             if (typeof this[Core.Vocab('readable')] === 'boolean') {
@@ -33,8 +33,6 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return this[Core.Vocab('property')];
         }
     };
-
-    return SupportedProperty;
 }
 
 export const shouldApply = isA(Core.Vocab('SupportedProperty'));

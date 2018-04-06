@@ -145,7 +145,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Safari'],
+            : ['Chrome'],
 
         singleRun: true,
 

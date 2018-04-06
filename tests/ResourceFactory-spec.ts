@@ -1,9 +1,10 @@
+// tslint:disable:max-classes-per-file
 import { entries } from 'core-js/es7/object';
 import {ResourceFactory} from '../src/ResourceFactory';
 
 describe('ResourceFactory', () => {
 
-    let apiDoc;
+    const apiDoc = null;
     let factory;
 
     beforeEach(() => factory = new ResourceFactory());

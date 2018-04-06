@@ -1,4 +1,4 @@
-import {JsonLd} from "./Constants";
+import {JsonLd} from './Constants';
 
 export default function ensureArray(obj: object, property: string) {
     const values = obj[property];
@@ -7,7 +7,7 @@ export default function ensureArray(obj: object, property: string) {
         return [];
     }
 
-    if(Array.isArray(values) === false) {
+    if (Array.isArray(values) === false) {
         return [ values ];
     }
 
@@ -15,7 +15,7 @@ export default function ensureArray(obj: object, property: string) {
 }
 
 export function isA(typeId) {
-    return obj => {
+    return (obj) => {
         const types = obj[JsonLd.Type];
 
         return types === typeId || (Array.isArray(types) && types.indexOf(typeId) !== -1);

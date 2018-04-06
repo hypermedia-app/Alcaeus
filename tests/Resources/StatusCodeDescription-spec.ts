@@ -1,5 +1,5 @@
-import {Mixin} from "../../src/Resources/Mixins/StatusCodeDescription";
-import Resource from "../../src/Resources/Resource";
+import {Mixin} from '../../src/Resources/Mixins/StatusCodeDescription';
+import Resource from '../../src/Resources/Resource';
 
 class StatusCodeDescription extends Mixin(Resource) {}
 

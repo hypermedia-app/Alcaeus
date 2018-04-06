@@ -1,6 +1,6 @@
-import HydraResource from "./Resources/HydraResource";
-import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
 import {Alcaeus as Client} from './alcaeus';
+import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
+import HydraResource from './Resources/HydraResource';
 import {AllDefault} from './RootSelectors';
 
 const defaultRootSelectors = Object.values(AllDefault);

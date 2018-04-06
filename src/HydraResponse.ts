@@ -1,27 +1,27 @@
 import {IHydraResource, IHydraResponse, IRootSelector} from './interfaces';
 import {IResponseWrapper, ResponseWrapper} from './ResponseWrapper';
 
-type ResourceGraph = {
-    [uri: string]: IHydraResource
+interface IResourceGraph {
+    [uri: string]: IHydraResource;
 }
 
 export function create(
     uri: string,
     response: IResponseWrapper,
-    resources: ResourceGraph,
-    rootSelectors: Array<IRootSelector>): IHydraResponse {
+    resources: IResourceGraph,
+    rootSelectors: IRootSelector[]): IHydraResponse {
 
     class HydraResponse extends ResponseWrapper implements IHydraResponse {
-        constructor(uri: string) {
+        public readonly requestedUri: string;
+
+        constructor(requestedUri: string) {
             super(response.xhr);
 
-            this.requestedUri = uri;
+            this.requestedUri = requestedUri;
         }
 
-        readonly requestedUri: string;
-
-        get(uri: string): IHydraResource {
-            return resources[uri];
+        public get(identifier: string): IHydraResource {
+            return resources[identifier];
         }
 
         get root(): IHydraResource {
@@ -31,18 +31,18 @@ export function create(
                 }
 
                 return resource;
-            }, <IHydraResource>null);
+            }, null as IHydraResource);
         }
 
         get length(): number {
             return Object.keys(resources).length;
         }
 
-        ofType(classId: string): Array<IHydraResource> {
-            return Object.values(resources).filter(res => res.types.contains(classId));
+        public ofType(classId: string): IHydraResource[] {
+            return Object.values(resources).filter((res) => res.types.contains(classId));
         }
 
-        [Symbol.iterator](): Iterator<IHydraResource> {
+        public [Symbol.iterator](): Iterator<IHydraResource> {
             return Object.values(resources)[Symbol.iterator]();
         }
     }

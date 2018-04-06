@@ -1,11 +1,11 @@
+import {promises as jsonld} from 'jsonld';
+import {FlattenOptions} from 'jsonld';
+import * as $rdf from 'rdf-ext';
+import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext';
 import * as stringToStream from 'string-to-stream';
 import * as Constants from './Constants';
-import * as $rdf from 'rdf-ext';
-import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext'
-import {promises as jsonld} from 'jsonld';
-import {FlattenOptions} from "jsonld";
+import {ParserFactory} from './ParserFactory';
 import {rdf} from './Vocabs';
-import {ParserFactory} from "./ParserFactory";
 
 const propertyRangeMappings = [
     [Constants.Core.Vocab('supportedClass'), Constants.Core.Vocab('Class')],
@@ -23,7 +23,7 @@ const jsonldSerializer = new JsonLdSerializer();
 
 export const parserFactory = new ParserFactory();
 
-export async function parseAndNormalizeGraph(responseText: string, uri: string, mediaType: string):Promise<Object> {
+export async function parseAndNormalizeGraph(responseText: string, uri: string, mediaType: string): Promise<object> {
     const parsers = this.parserFactory.create(uri);
 
     const dataset = await parseResourceRepresentation(responseText, mediaType, parsers);
@@ -35,11 +35,11 @@ export async function parseAndNormalizeGraph(responseText: string, uri: string, 
 
 export function addParsers(newParsers) {
     Object.entries(newParsers)
-        .forEach(pair => this.parserFactory.addParser.apply(this.parserFactory, pair));
+        .forEach((pair) => this.parserFactory.addParser.apply(this.parserFactory, pair));
 }
 
-function parseResourceRepresentation(data: string, mediaType:string, parsers: $rdf.Parsers) {
-    let quadStream = parsers.import(stripContentTypeParameters(mediaType), stringToStream(data));
+function parseResourceRepresentation(data: string, mediaType: string, parsers: $rdf.Parsers) {
+    const quadStream = parsers.import(stripContentTypeParameters(mediaType), stringToStream(data));
     if (quadStream == null) {
         throw Error(`Parser not found for media type ${mediaType}`);
     }
@@ -52,14 +52,14 @@ function stripContentTypeParameters(mediaType: string) {
 }
 
 function runInference(dataset) {
-    propertyRangeMappings.map(mapping => {
+    propertyRangeMappings.map((mapping) => {
         const matches = dataset.match(null, $rdf.namedNode(mapping[0]), null, null);
 
-        matches.forEach(triple => {
+        matches.forEach((triple) => {
             dataset.add($rdf.triple(
                 triple.object,
                 $rdf.namedNode(rdf.type),
-                $rdf.namedNode(mapping[1])
+                $rdf.namedNode(mapping[1]),
             ));
         });
     });
@@ -70,7 +70,7 @@ function serializeDataset(dataset) {
 
     let result;
     stream.on('data', (data) => {
-        result = data
+        result = data;
     });
 
     return $rdf.waitFor(stream).then(() => {
@@ -78,7 +78,7 @@ function serializeDataset(dataset) {
     });
 }
 
-async function flatten(json, url):Promise<Object> {
+async function flatten(json, url): Promise<object> {
     const opts: FlattenOptions = {};
     if (url) {
         opts.base = url;

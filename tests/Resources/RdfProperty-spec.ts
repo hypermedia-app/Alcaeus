@@ -1,9 +1,9 @@
 import {promises as jsonld} from 'jsonld';
-import {Mixin} from "../../src/Resources/Mixins/RdfProperty";
 import {Core} from '../../src/Constants';
-import {xsd, rdf, rdfs, owl} from '../../src/Vocabs';
-import {async} from "../test-utils";
-import Resource from "../../src/Resources/Resource";
+import {Mixin} from '../../src/Resources/Mixins/RdfProperty';
+import Resource from '../../src/Resources/Resource';
+import {owl, rdf, rdfs, xsd} from '../../src/Vocabs';
+import {async} from '../test-utils';
 
 class RdfProperty extends Mixin(Resource) {}
 
@@ -13,21 +13,21 @@ describe('RdfProperty', () => {
         '@context': [
             Core.Context,
             {
-                rdfs: rdfs()
-            }
+                rdfs: rdfs(),
+            },
         ],
         '@id': 'http://purl.org/dc/elements/1.1/partOf',
         '@type': rdf.Property,
-        'rdfs:range': { '@id': xsd.string },
         'rdfs:domain': { '@id': xsd.integer },
+        'rdfs:range': { '@id': xsd.string },
         'supportedOperation': [
             {
-                'description': 'Update this property',
-                'expects': xsd.string,
-                'method': 'POST',
-                'returns': owl.Nothing
-            }
-        ]
+                description: 'Update this property',
+                expects: xsd.string,
+                method: 'POST',
+                returns: owl.Nothing,
+            },
+        ],
     };
 
     async(it, 'should link to domain', async () => {

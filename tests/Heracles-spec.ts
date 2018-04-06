@@ -4,20 +4,21 @@ import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Hydra} from '../src';
-import HydraResource from "../src/Resources/HydraResource";
-import {JsonLd, Core, MediaTypes} from '../src/Constants';
-import {Bodies, Documentations} from './test-objects';
-import {async, responseBuilder} from './test-utils';
+import {Core, JsonLd, MediaTypes} from '../src/Constants';
 import * as FetchUtil from '../src/FetchUtil';
 import * as GraphProcessor from '../src/GraphProcessor';
-import {IResponseWrapper} from '../src/ResponseWrapper';
 import {IPartialCollectionView} from '../src/interfaces';
+import HydraResource from '../src/Resources/HydraResource';
 import {ReverseLinks} from '../src/Resources/Maps';
+import {IResponseWrapper} from '../src/ResponseWrapper';
+import {Bodies, Documentations} from './test-objects';
+import {async, responseBuilder} from './test-utils';
 
 describe('Hydra', () => {
 
     let fetchResource;
-    let createResource, parseAndNormalizeGraph;
+    let createResource;
+    let parseAndNormalizeGraph;
 
     beforeEach(() => {
         createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
@@ -117,7 +118,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3');
-            const res = <IPartialCollectionView>hydraRes.get('http://example.com/resource?page=3');
+            const res = hydraRes.get('http://example.com/resource?page=3') as IPartialCollectionView;
 
             // then
             expect(res.collection).toBeDefined();
@@ -143,7 +144,7 @@ describe('Hydra', () => {
                     subjectId: 'http://example.com/resource' })).toBe(true);
             expect(_.some(incomingLinks, {
                 predicate: 'http://example.com/vocab#other_yet',
-                subjectId: 'http://example.com/resource',  })).toBe(true);
+                subjectId: 'http://example.com/resource'  })).toBe(true);
         });
 
         async(it, 'should pass each object through ResourceFactory', async () => {
@@ -353,14 +354,14 @@ async function mockedResponse(includeDocsLink = true, xhrBuilder = null): Promis
     xhrBuilder = xhrBuilder || responseBuilder();
 
     return {
-        mediaType: MediaTypes.jsonLd,
-        xhr: await xhrBuilder.build(),
         apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
+        mediaType: MediaTypes.jsonLd,
         redirectUrl: null,
+        xhr: await xhrBuilder.build(),
     };
 }
 
 function expanded(resource) {
     return jsonld.flatten(resource, {})
-        .then(expanded => expanded[JsonLd.Graph]);
+        .then((graph) => graph[JsonLd.Graph]);
 }

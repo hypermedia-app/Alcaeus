@@ -1,7 +1,7 @@
-import Resource from "../../../src/Resources/Resource";
-import {Mixin, shouldApply} from "../../../src/Resources/Mixins/ExplicitRepresentationExpansion";
-import {Mixin as IriTemplate} from "../../../src/Resources/Mixins/IriTemplate";
-import {Core, JsonLd} from "../../../src/Constants";
+import {Core, JsonLd} from '../../../src/Constants';
+import {Mixin, shouldApply} from '../../../src/Resources/Mixins/ExplicitRepresentationExpansion';
+import {Mixin as IriTemplate} from '../../../src/Resources/Mixins/IriTemplate';
+import Resource from '../../../src/Resources/Resource';
 
 class ExplicitRepresentationExpansion extends Mixin(IriTemplate(Resource)) {}
 
@@ -36,7 +36,7 @@ describe('ExplicitRepresentationExpansion', () => {
         it('is true when variableRepresentation is ExplicitRepresentation', () => {
             // given
             body[Core.Vocab('variableRepresentation')] = {
-                '@id': Core.Vocab('ExplicitRepresentation')
+                '@id': Core.Vocab('ExplicitRepresentation'),
             };
 
             // when
@@ -57,13 +57,13 @@ describe('ExplicitRepresentationExpansion', () => {
                 const body = {
                     [Core.Vocab('mapping')]: [
                         {
-                            variable: 'value',
                             property: {
-                                id: valueProperty
-                            }
+                                id: valueProperty,
+                            },
+                            variable: 'value',
                         },
                     ],
-                    [Core.Vocab('template')]: 'http://example.com/find/{value}'
+                    [Core.Vocab('template')]: 'http://example.com/find/{value}',
                 };
 
                 iriTemplate = new ExplicitRepresentationExpansion(body);
@@ -73,7 +73,7 @@ describe('ExplicitRepresentationExpansion', () => {
                 // when
                 const expanded = iriTemplate.expand({
                     [valueProperty]: {
-                        [JsonLd.Id]: 'http://www.hydra-cg.com/'
+                        [JsonLd.Id]: 'http://www.hydra-cg.com/',
                     },
                 });
 
@@ -95,7 +95,7 @@ describe('ExplicitRepresentationExpansion', () => {
                 // when
                 const expanded = iriTemplate.expand({
                     [valueProperty]: {
-                        [JsonLd.Value]: 'A simple string'
+                        [JsonLd.Value]: 'A simple string',
                     },
                 });
 
@@ -120,6 +120,7 @@ describe('ExplicitRepresentationExpansion', () => {
                 });
 
                 // then
+                // tslint:disable:max-line-length
                 expect(expanded).toBe('http://example.com/find/%225.5%22%5E%5Ehttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23decimal');
             });
 
@@ -132,6 +133,6 @@ describe('ExplicitRepresentationExpansion', () => {
                 // then
                 expect(expanded).toBe('http://example.com/find/%22A%20simple%20string%22%40en');
             });
-        })
+        });
     });
 });

@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import * as n3parser from 'rdf-parser-n3';
-import {async} from './test-utils';
-import {Bodies} from './test-objects';
-import {parseAndNormalizeGraph, addParsers} from '../src/GraphProcessor';
 import {Core, MediaTypes} from '../src/Constants';
+import {addParsers, parseAndNormalizeGraph} from '../src/GraphProcessor';
 import {rdf} from '../src/Vocabs';
+import {Bodies} from './test-objects';
+import {async} from './test-utils';
 
 describe('GraphProcessor', () => {
     describe('parseAndNormalizeGraph', () => {
@@ -22,12 +22,12 @@ describe('GraphProcessor', () => {
         async(it, 'should parse non-json-ld response', async () => {
             // given
             addParsers({
-                [MediaTypes.ntriples]: n3parser
+                [MediaTypes.ntriples]: n3parser,
             });
             const body = Bodies.ntriples;
 
             // when
-            const res = await parseAndNormalizeGraph(body,'http://example.com/resource', MediaTypes.ntriples);
+            const res = await parseAndNormalizeGraph(body, 'http://example.com/resource', MediaTypes.ntriples);
 
             // then
             expect(res[0]['http://example.com/vocab#prop']).toBe('some textual value');
@@ -38,7 +38,10 @@ describe('GraphProcessor', () => {
             const body = JSON.stringify(Bodies.someJsonLd);
 
             // when
-            const res = await parseAndNormalizeGraph(body,'http://example.com/resource', 'application/ld+json; charset=utf-8');
+            const res = await parseAndNormalizeGraph(
+                body,
+                'http://example.com/resource',
+                'application/ld+json; charset=utf-8');
 
             // then
             expect(res[0]['http://example.com/vocab#prop']).toBe('some textual value');
@@ -58,18 +61,21 @@ describe('GraphProcessor', () => {
                 [Core.Vocab('mapping'), Core.Vocab('IriTemplateMapping')],
             ];
 
-            _.forEach(inferredTypes, typePair => {
-                (function(prop, type) {
+            _.forEach(inferredTypes, (typePair) => {
+                ((prop, type) => {
                     async(it, 'should add inferences for property ' + prop, async () => {
                         // given
                         const obj = {'@id': 'http://example.com/resource'};
                         obj[prop] = { '@id': 'http://example.com/child' };
 
                         // when
-                        const res = await parseAndNormalizeGraph(JSON.stringify(obj), 'http://example.com/resource', MediaTypes.jsonLd);
+                        const res = await parseAndNormalizeGraph(
+                            JSON.stringify(obj),
+                            'http://example.com/resource',
+                            MediaTypes.jsonLd);
 
                         // then
-                        const child = Object.values(res).find(r => r['@id'] === 'http://example.com/child');
+                        const child = Object.values(res).find((r) => r['@id'] === 'http://example.com/child');
 
                         expect(child['@type']).toBeDefined();
                         expect(child['@type']).toBe(type);

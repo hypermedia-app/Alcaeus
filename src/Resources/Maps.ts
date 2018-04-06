@@ -1,3 +1,3 @@
-import {IIncomingLink} from "../internals";
+import {IIncomingLink} from '../internals';
 
-export const ReverseLinks = new WeakMap<Object, IIncomingLink[]>();
+export const ReverseLinks = new WeakMap<object, IIncomingLink[]>();

@@ -9,11 +9,11 @@ export interface IResponseWrapper {
 }
 
 export class ResponseWrapper implements IResponseWrapper {
+    public readonly xhr: Response;
+
     constructor(res: Response) {
         this.xhr = res;
     }
-
-    readonly xhr: Response;
 
     get status(): number {
         return this.xhr.status;

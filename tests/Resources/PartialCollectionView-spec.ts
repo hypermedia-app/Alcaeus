@@ -1,8 +1,8 @@
-import {Core} from '../../src/Constants';
-import {Bodies} from '../test-objects';
 import 'core-js/es6/object';
+import {Core} from '../../src/Constants';
+import HydraResource from '../../src/Resources/HydraResource';
 import {Mixin} from '../../src/Resources/Mixins/PartialCollectionView';
-import HydraResource from "../../src/Resources/HydraResource";
+import {Bodies} from '../test-objects';
 
 class PartialCollectionView extends Mixin(HydraResource) {}
 
@@ -12,10 +12,10 @@ describe('PartialCollectionView', () => {
 
         const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, null, [
             {
-                subjectId: 'http://some.id',
                 predicate: Core.Vocab('view'),
-                subject: collection
-            }
+                subject: collection,
+                subjectId: 'http://some.id',
+            },
         ]);
 
         expect(Object.is(collection, pcv.collection)).toBe(true);

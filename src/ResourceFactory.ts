@@ -1,18 +1,22 @@
 import {JsonLd} from './Constants';
-import {IResourceFactory, IHydraClient, IApiDocumentation, IResource} from "./interfaces";
-import {forOwn, values} from "./LodashUtil";
-import HydraResource from "./Resources/HydraResource";
+import {IApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
+import {forOwn, values} from './LodashUtil';
 import DefaultMixins from './ResourceFactoryDefaults';
+import HydraResource from './Resources/HydraResource';
 
 export class ResourceFactory implements IResourceFactory {
 
-    mixins = DefaultMixins;
+    private mixins = DefaultMixins;
 
-    public createResource(alcaeus:IHydraClient, obj:Object, apiDocumentation:IApiDocumentation, resources:Object):IResource {
+    public createResource(
+        alcaeus: IHydraClient,
+        obj: object,
+        apiDocumentation: IApiDocumentation,
+        resources: object): IResource {
         const incomingLinks = findIncomingLinks(obj, resources);
 
         const mixins = this.mixins
-            .filter((mc:any) => {
+            .filter((mc: any) => {
                 if (!mc.shouldApply) {
                     return false;
                 }
@@ -20,42 +24,37 @@ export class ResourceFactory implements IResourceFactory {
                 return mc.shouldApply(obj);
             });
 
-        const AlcaeusGenerated = mixins.reduce((c, mixin:any) => mixin.Mixin(c), HydraResource);
+        const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin.Mixin(c), HydraResource);
 
         return new AlcaeusGenerated(obj, alcaeus, apiDocumentation, incomingLinks);
     }
 }
 
+// tslint:disable:max-classes-per-file
 class IncomingLink {
-    private _id;
-    private _predicate;
-
     constructor(id, predicate, resources) {
-        this._id = id;
-        this._predicate = predicate;
-
-        Object.defineProperty(this, 'subject', <PropertyDescriptor>{
-            get: () => resources[id]
+        Object.defineProperty(this, 'subject', {
+            get: () => resources[id],
         });
-    }
 
-    get subjectId() {
-        return this._id;
-    }
+        Object.defineProperty(this, 'subjectId', {
+            get: () => id,
+        });
 
-    get predicate() {
-        return this._predicate;
+        Object.defineProperty(this, 'predicate', {
+            get: () => predicate,
+        });
     }
 }
 
-function findIncomingLinks(object, resources:Object) {
+function findIncomingLinks(object, resources: object) {
     const instances = values(resources);
 
-    return instances.reduceRight((acc:Array<IncomingLink>, res, index) => {
+    return instances.reduceRight((acc: IncomingLink[], res, index) => {
         forOwn(res, (value, predicate) => {
             if (value && value[JsonLd.Id] && value[JsonLd.Id] === object[JsonLd.Id]) {
                 acc.push(new IncomingLink(
-                    instances[index][JsonLd.Id], predicate, resources
+                    instances[index][JsonLd.Id], predicate, resources,
                 ));
             }
         });

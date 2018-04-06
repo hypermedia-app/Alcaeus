@@ -1,18 +1,18 @@
 import {promises as jsonld} from 'jsonld';
-import {Mixin} from "../../src/Resources/Mixins/Class";
 import {Core} from '../../src/Constants';
-import {async} from "../test-utils";
-import Resource from "../../src/Resources/Resource";
+import {Mixin} from '../../src/Resources/Mixins/Class';
+import Resource from '../../src/Resources/Resource';
+import {async} from '../test-utils';
 
 class Class extends Mixin(Resource) {}
 
 describe('Class', () => {
 
     const hydraClass = {
-        '@id': 'http://example.com/vocab#SomeClass',
         '@context': Core.Context,
+        '@id': 'http://example.com/vocab#SomeClass',
+        'supportedOperation': [{}],
         'supportedProperty': [{}],
-        'supportedOperation': [{}]
     };
 
     describe('getting operations', () => {
@@ -30,7 +30,7 @@ describe('Class', () => {
 
         it('should return empty array if property is missing', () => {
             const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass'
+                '@id': 'http://example.com/vocab#SomeClass',
             });
 
             expect(clas.supportedOperations.length).toBe(0);
@@ -39,7 +39,7 @@ describe('Class', () => {
         it('should return empty array if property is null', () => {
             const clas = new Class({
                 '@id': 'http://example.com/vocab#SomeClass',
-                'http://www.w3.org/ns/hydra/core#supportedOperation': null
+                'http://www.w3.org/ns/hydra/core#supportedOperation': null,
             });
 
             expect(clas.supportedOperations.length).toBe(0);
@@ -62,7 +62,7 @@ describe('Class', () => {
 
         it('should return empty array if property is missing', () => {
             const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass'
+                '@id': 'http://example.com/vocab#SomeClass',
             });
 
             expect(clas.supportedProperties.length).toBe(0);
@@ -71,7 +71,7 @@ describe('Class', () => {
         it('should return empty array if property is null', () => {
             const clas = new Class({
                 '@id': 'http://example.com/vocab#SomeClass',
-                'http://www.w3.org/ns/hydra/core#supportedProperty': null
+                'http://www.w3.org/ns/hydra/core#supportedProperty': null,
             });
 
             expect(clas.supportedProperties.length).toBe(0);

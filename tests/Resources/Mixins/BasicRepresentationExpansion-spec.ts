@@ -1,7 +1,7 @@
-import Resource from "../../../src/Resources/Resource";
-import {Mixin, shouldApply} from "../../../src/Resources/Mixins/BasicRepresentationExpansion";
-import {Mixin as IriTemplate} from "../../../src/Resources/Mixins/IriTemplate";
-import {Core, JsonLd} from "../../../src/Constants";
+import {Core, JsonLd} from '../../../src/Constants';
+import {Mixin, shouldApply} from '../../../src/Resources/Mixins/BasicRepresentationExpansion';
+import {Mixin as IriTemplate} from '../../../src/Resources/Mixins/IriTemplate';
+import Resource from '../../../src/Resources/Resource';
 
 class BasicRepresentationExpansion extends Mixin(IriTemplate(Resource)) {}
 
@@ -57,13 +57,13 @@ describe('BasicRepresentationExpansion', () => {
                 const body = {
                     [Core.Vocab('mapping')]: [
                         {
-                            variable: 'value',
                             property: {
-                                id: valueProperty
-                            }
+                                id: valueProperty,
+                            },
+                            variable: 'value',
                         },
                     ],
-                    [Core.Vocab('template')]: 'http://example.com/find/{value}'
+                    [Core.Vocab('template')]: 'http://example.com/find/{value}',
                 };
 
                 iriTemplate = new BasicRepresentationExpansion(body);
@@ -120,6 +120,6 @@ describe('BasicRepresentationExpansion', () => {
                 // then
                 expect(expanded).toBe('http://example.com/find/A%20simple%20string');
             });
-        })
+        });
     });
 });

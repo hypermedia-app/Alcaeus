@@ -1,8 +1,8 @@
-import {IClass, ISupportedOperation} from "../../interfaces";
-import {rdf, rdfs} from "../../Vocabs";
-import {Core} from "../../Constants";
-import ensureArray, {isA} from "../../ResourceHelper";
-import {Constructor} from "../Mixin";
+import {Core} from '../../Constants';
+import {IClass, ISupportedOperation} from '../../interfaces';
+import ensureArray, {isA} from '../../ResourceHelper';
+import {rdf, rdfs} from '../../Vocabs';
+import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class RdfProperty extends Base {
@@ -14,7 +14,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return this[rdfs('domain')];
         }
 
-        get supportedOperations(): Array<ISupportedOperation> {
+        get supportedOperations(): ISupportedOperation[] {
             return ensureArray(this, Core.Vocab('supportedOperation'));
         }
     }

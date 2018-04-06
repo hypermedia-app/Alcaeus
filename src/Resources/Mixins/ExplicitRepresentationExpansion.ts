@@ -1,28 +1,28 @@
-import {Core, JsonLd} from "../../Constants";
-import {isA} from "../../ResourceHelper";
-import {Constructor} from "../Mixin";
-import ExpansionModelBuilder, {ExpandedValue} from "./ExpansionModelBuilder";
+import {Core, JsonLd} from '../../Constants';
+import {isA} from '../../ResourceHelper';
+import {Constructor} from '../Mixin';
+import ExpansionModelBuilder, {IExpandedValue} from './ExpansionModelBuilder';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class ExplicitRepresentationExpansion extends Base {
-        mapShorthandValue(value: string) {
+        public mapShorthandValue(value: string) {
             return `"${value}"`;
         }
 
-        mapExpandedValue(value: ExpandedValue) {
-            if (value["@id"]) {
-                return value["@id"];
+        public mapExpandedValue(value: IExpandedValue) {
+            if (value['@id']) {
+                return value['@id'];
             }
 
-            if (value["@language"]) {
-               return `"${value["@value"]}"@${value["@language"]}`;
+            if (value['@language']) {
+               return `"${value['@value']}"@${value['@language']}`;
             }
 
-            if (value["@type"]) {
-                return `"${value["@value"]}"^^${value["@type"]}`;
+            if (value['@type']) {
+                return `"${value['@value']}"^^${value['@type']}`;
             }
 
-            return `"${value["@value"]}"`;
+            return `"${value['@value']}"`;
         }
     }
 

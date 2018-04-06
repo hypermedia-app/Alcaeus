@@ -1,9 +1,9 @@
 import {promises as jsonld} from 'jsonld';
-import {Mixin} from '../../src/Resources/Mixins/SupportedOperation';
 import {Core} from '../../src/Constants';
+import {Mixin} from '../../src/Resources/Mixins/SupportedOperation';
+import Resource from '../../src/Resources/Resource';
 import {owl} from '../../src/Vocabs';
-import {async} from "../test-utils";
-import Resource from "../../src/Resources/Resource";
+import {async} from '../test-utils';
 
 class SupportedOperation extends Mixin(Resource) {}
 
@@ -13,11 +13,11 @@ describe('SupportedOperation', () => {
 
     beforeEach(() => operationJsonLd = {
         '@context': Core.Context,
-        'title': 'The operation',
         'description': 'The operation description',
         'expects': owl.Nothing,
+        'method': 'TRACE',
         'returns': 'http://example.com/Something',
-        'method': 'TRACE'
+        'title': 'The operation',
     });
 
     async(it, 'should expose operation method', async () => {
@@ -59,7 +59,7 @@ describe('SupportedOperation', () => {
             // given
             const operation = {
                 '@context': Core.Context,
-                'method': 'GET'
+                'method': 'GET',
             };
 
             const compacted = await jsonld.compact(operation, {});
@@ -75,7 +75,7 @@ describe('SupportedOperation', () => {
             // given
             const operation = {
                 '@context': Core.Context,
-                'method': 'DELETE'
+                'method': 'DELETE',
             };
 
             const compacted = await jsonld.compact(operation, {});
@@ -91,7 +91,7 @@ describe('SupportedOperation', () => {
             // given
             const operation = {
                 '@context': Core.Context,
-                'method': 'POST'
+                'method': 'POST',
             };
 
             const compacted = await jsonld.compact(operation, {});
@@ -107,7 +107,7 @@ describe('SupportedOperation', () => {
             // given
             const operation = {
                 '@context': Core.Context,
-                'method': 'POST'
+                'method': 'POST',
             };
 
             const compacted = await jsonld.compact(operation, {});

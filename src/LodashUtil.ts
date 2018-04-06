@@ -1,17 +1,17 @@
-export function forOwn(obj:Object, iteratee) {
-    for(let key in obj) {
-        if (!obj.hasOwnProperty(key)) continue;
+export function forOwn(obj: object, iteratee) {
+    for (const key in obj) {
+        if (!obj.hasOwnProperty(key)) { continue; }
 
         iteratee(obj[key], key, obj);
     }
 }
 
-export function values(obj:Object):Array<any> {
-    const values = [];
+export function values(obj: object): any[] {
+    const result = [];
 
-    forOwn(obj, o => {
-        values.push(o);
+    forOwn(obj, (o) => {
+        result.push(o);
     });
 
-    return values;
+    return result;
 }

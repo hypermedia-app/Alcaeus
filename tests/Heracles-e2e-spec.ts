@@ -4,7 +4,7 @@ import {async} from './test-utils';
 const mockApiBase = 'http://localhost:8080';
 
 describe('Hydra (e2e)', () => {
-    async(it,'should directly expose all resource from graph', async () => {
+    async(it, 'should directly expose all resource from graph', async () => {
         // given
         const representation = await client.loadResource(`${mockApiBase}/observations.json`);
 

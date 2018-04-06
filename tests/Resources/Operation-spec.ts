@@ -1,23 +1,23 @@
 import * as sinon from 'sinon';
-import {Operation} from "../../src/Resources/Operation";
-import {ISupportedOperation, IHydraClient, IHydraResource, IOperation, IClass} from "../../src/interfaces";
+import {IClass, IHydraClient, IHydraResource, IOperation, ISupportedOperation} from '../../src/interfaces';
+import {Operation} from '../../src/Resources/Operation';
 
 describe('Operation', () => {
 
     describe('property', () => {
 
         let operation: IOperation;
-        const expects: IClass = <IClass>{};
-        const returns: IClass = <IClass>{};
+        const expects: IClass = {} as IClass;
+        const returns: IClass = {} as IClass;
 
         beforeEach(() => {
-            operation = new Operation(<ISupportedOperation>{
+            operation = new Operation({
+                description: 'the description',
+                expects,
                 method: 'POST',
-                expects: expects,
-                returns: returns,
+                returns,
                 title: 'the title',
-                description: 'the description'
-            }, <IHydraClient>{}, <IHydraResource>{});
+            } as ISupportedOperation, {} as IHydraClient, {} as IHydraResource);
         });
 
         it('method should delegate to operation', () => {
@@ -41,13 +41,13 @@ describe('Operation', () => {
     xdescribe('invoke', () => {
 
         let alcaeus;
-        const supportedOperation = <ISupportedOperation>{};
-        const resource = <IHydraResource>{
-            id: 'http://target/resource'
-        };
+        const supportedOperation = {} as ISupportedOperation;
+        const resource = {
+            id: 'http://target/resource',
+        } as IHydraResource;
 
         beforeEach(() => alcaeus = {
-            invokeOperation: sinon.stub()
+            invokeOperation: sinon.stub(),
         });
 
         it('should execute through alcaeus with JSON-LD media type', () => {
@@ -57,8 +57,11 @@ describe('Operation', () => {
 
             op.invoke(payload);
 
-            expect(alcaeus.invokeOperation.calledWithExactly(op, 'http://target/resource', payload, 'application/ld+json'))
-                .toBeTruthy();
+            expect(alcaeus.invokeOperation.calledWithExactly(
+                op,
+                'http://target/resource',
+                payload,
+                'application/ld+json')).toBeTruthy();
         });
 
         it('should execute through alcaeus with changed media type', () => {

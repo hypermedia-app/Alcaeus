@@ -1,8 +1,8 @@
-import {nonenumerable} from "core-decorators";
-import {Core} from "../../Constants";
-import ensureArray, {isA} from "../../ResourceHelper";
-import {IHydraResource, IPartialCollectionView} from "../../interfaces";
-import {Constructor} from "../Mixin";
+import {nonenumerable} from 'core-decorators';
+import {Core} from '../../Constants';
+import {IHydraResource, IPartialCollectionView} from '../../interfaces';
+import ensureArray, {isA} from '../../ResourceHelper';
+import {Constructor} from '../Mixin';
 
 export function Mixin <TBase extends Constructor>(Base: TBase) {
     class Collection extends Base {

@@ -1,18 +1,18 @@
-import {promises as jsonld} from 'jsonld';
 import {nonenumerable} from 'core-decorators';
-import {JsonLd, Core} from '../Constants';
-import {IHydraClient, IResource} from "../interfaces";
+import {promises as jsonld} from 'jsonld';
+import {Core, JsonLd} from '../Constants';
+import {IHydraClient, IResource} from '../interfaces';
 import TypeCollection from '../TypeCollection';
 
-const _isProcessed = new WeakMap<IResource, boolean>();
-const _alcaeus = new WeakMap<IResource, IHydraClient>();
+const isProcessed = new WeakMap<IResource, boolean>();
+const alcaeus = new WeakMap<IResource, IHydraClient>();
 
 export default class implements IResource {
-    constructor(actualResource:object, alcaeus:IHydraClient = null) {
+    constructor(actualResource: object, client: IHydraClient = null) {
         Object.assign(this, actualResource);
 
-        _isProcessed.set(this, false);
-        _alcaeus.set(this, alcaeus);
+        isProcessed.set(this, false);
+        alcaeus.set(this, client);
     }
 
     @nonenumerable
@@ -27,19 +27,19 @@ export default class implements IResource {
 
     @nonenumerable
     get _processed() {
-        return _isProcessed.get(this);
+        return isProcessed.get(this);
+    }
+
+    set _processed(val: boolean) {
+        isProcessed.set(this, val);
     }
 
     @nonenumerable
     get _alcaeus() {
-        return _alcaeus.get(this);
+        return alcaeus.get(this);
     }
 
-    set _processed(val:boolean) {
-        _isProcessed.set(this, val);
-    }
-
-    compact(context:any = null) {
+    public compact(context: any = null) {
         return jsonld.compact(this, context || Core.Context);
     }
 }

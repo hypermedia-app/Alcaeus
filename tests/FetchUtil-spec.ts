@@ -1,8 +1,8 @@
 import * as sinon from 'sinon';
+import 'whatwg-fetch';
 import * as fetchUtil from '../src/FetchUtil';
 import {Bodies} from './test-objects';
 import {async, responseBuilder} from './test-utils';
-import 'whatwg-fetch';
 
 describe('FetchUtil', () => {
 
@@ -24,7 +24,8 @@ describe('FetchUtil', () => {
 
             // then
             const requestHeaders = windowFetch.firstCall.args[1].headers;
-            expect(requestHeaders.get('accept')).toBe('application/ld+json, application/n-triples, application/n-quads');
+            expect(requestHeaders.get('accept'))
+                .toBe('application/ld+json, application/n-triples, application/n-quads');
         });
 
         afterEach(() => {

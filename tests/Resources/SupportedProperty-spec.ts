@@ -1,5 +1,5 @@
-import {Mixin} from "../../src/Resources/Mixins/SupportedProperty";
-import Resource from "../../src/Resources/Resource";
+import {Mixin} from '../../src/Resources/Mixins/SupportedProperty';
+import Resource from '../../src/Resources/Resource';
 
 class SupportedProperty extends Mixin(Resource) {
 }
@@ -47,13 +47,14 @@ describe('SupportedProperty', () => {
             'http://www.w3.org/ns/hydra/core#property': {
                 '@id': 'http://example.com/property',
                 'http://www.w3.org/2000/01/rdf-schema#range': {
-                    '@id': 'http://www.w3.org/2001/XMLSchema#string'
-                }
-            }
+                    '@id': 'http://www.w3.org/2001/XMLSchema#string',
+                },
+            },
         };
         const prop = new SupportedProperty(jsonLd);
 
         expect(prop.property['@id']).toBe('http://example.com/property');
-        expect(prop.property['http://www.w3.org/2000/01/rdf-schema#range']['@id']).toBe('http://www.w3.org/2001/XMLSchema#string');
+        expect(prop.property['http://www.w3.org/2000/01/rdf-schema#range']['@id'])
+            .toBe('http://www.w3.org/2001/XMLSchema#string');
     });
 });

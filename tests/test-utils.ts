@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import {JsonLd, Core, MediaTypes} from "../src/Constants";
+import {Core, JsonLd, MediaTypes} from '../src/Constants';
 
-export function fakeAlcaeusResources(obj: Object) {
+export function fakeAlcaeusResources(obj: object) {
     if (!obj || typeof obj !== 'object') {
         return;
     }
@@ -25,51 +25,51 @@ export function responseBuilder() {
     let responseBody = '{}';
     let responseUri;
     const headers = {
-        'Content-Type': MediaTypes.jsonLd
-    };
+        'Content-Type': MediaTypes.jsonLd,
+    } as any;
 
     return {
 
-        body: function (body: string) {
+        body(body: string) {
             responseBody = body;
             return this;
         },
 
-        redirect: function (redirectUri: string) {
+        redirect(redirectUri: string) {
             responseUri = redirectUri;
             return this;
         },
 
-        contentLocation: function (headerValue: string) {
+        contentLocation(headerValue: string) {
             headers['Content-Location'] = headerValue;
             return this;
         },
 
-        link: function (href: string, rel: string) {
-            headers['Link'] = `<${href}>; rel=${rel}`;
+        link(href: string, rel: string) {
+            headers.Link = `<${href}>; rel=${rel}`;
             return this;
         },
 
-        canonical: function (href: string) {
+        canonical(href: string) {
             return this.link(href, 'canonical');
         },
 
-        contentType: function (value: string) {
+        contentType(value: string) {
             headers['Content-Type'] = value;
             return this;
         },
 
-        jsonLdPayload: function (jsonLd: Object) {
+        jsonLdPayload(jsonLd: object) {
             return this.body(JSON.stringify(jsonLd))
                 .contentType(MediaTypes.jsonLd);
         },
 
-        nTriplesPayload: function (triples: string) {
+        nTriplesPayload(triples: string) {
             return this.body(triples)
                 .contentType(MediaTypes.ntriples);
         },
 
-        statusCode: function (status: number) {
+        statusCode(status: number) {
             statusCode = status;
             if (status >= 400) {
                 isOk = false;
@@ -77,25 +77,24 @@ export function responseBuilder() {
             return this;
         },
 
-        notFound: function () {
+        notFound() {
             return this.statusCode(404);
         },
 
-        serverError: function () {
+        serverError() {
             return this.statusCode(500);
         },
 
-        apiDocumentation: function (docUri: string = 'http://api.example.com/doc/') {
+        apiDocumentation(docUri: string = 'http://api.example.com/doc/') {
             return this.link(docUri, 'http://www.w3.org/ns/hydra/core#apiDocumentation');
         },
 
-        build: function (): Promise<Response> {
+        build(): Promise<Response> {
             let response;
 
             if (responseUri) {
                 response = Response.redirect(responseUri, 302);
-            }
-            else {
+            } else {
                 response = new Response(responseBody, {
                     headers: new Headers(headers),
                     status: statusCode,
@@ -103,13 +102,13 @@ export function responseBuilder() {
             }
 
             return Promise.resolve(response);
-        }
+        },
 
     };
 }
 
 export function async(it, expectation, test) {
-    it(expectation, done => {
+    it(expectation, (done) => {
         test.call(this).then(done).catch(done.fail);
     });
 }
@@ -123,6 +122,6 @@ function addPredicateGetter(prop: string, pred: string, wrapArray: boolean = tru
             }
 
             return ret;
-        }
+        },
     });
 }

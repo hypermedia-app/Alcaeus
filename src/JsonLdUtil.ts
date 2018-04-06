@@ -1,6 +1,6 @@
-export class JsonLdUtil{
-    static trimTrailingSlash(uri:string):string {
-        if(!uri || !uri.replace) {
+export class JsonLdUtil {
+    public static trimTrailingSlash(uri: string): string {
+        if (!uri || !uri.replace) {
             return null;
         }
 

@@ -1,18 +1,18 @@
-import {Constructor} from "../Mixin";
 import URITemplate from 'es6-url-template';
-import {IIriTemplate, IIriTemplateMapping} from "../../interfaces";
+import {IIriTemplate, IIriTemplateMapping} from '../../interfaces';
+import {Constructor} from '../Mixin';
 
-export interface ExpandedValue {
-    ["@value"]: string
-    ["@language"]: string,
-    ["@id"]: string,
-    ["@type"]: string
+export interface IExpandedValue {
+    ['@value']: string;
+    ['@language']: string;
+    ['@id']: string;
+    ['@type']: string;
 }
 
-const Mixin = <TBase extends Constructor>(Base: TBase) => {
-    abstract class Mixin extends Base {
-        expand(model): string {
-            const thisTemplate = <IIriTemplate><any>this;
+export default function <TBase extends Constructor>(Base: TBase) {
+    abstract class Builder extends Base {
+        public expand(model): string {
+            const thisTemplate = this as any as IIriTemplate;
             const uriTemplate = new URITemplate(thisTemplate.template);
 
             const variables = this.buildExpansionModel(thisTemplate.mappings, model);
@@ -20,16 +20,16 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
             return uriTemplate.expand(variables);
         }
 
-        buildExpansionModel(mappings: IIriTemplateMapping[], model: Object) {
-            return mappings.map((mapping:IIriTemplateMapping) => {
+        public buildExpansionModel(mappings: IIriTemplateMapping[], model: object) {
+            return mappings.map((mapping: IIriTemplateMapping) => {
                 return {
+                    value: model[mapping.property.id],
                     variable: mapping.variable,
-                    value: model[mapping.property.id]
-                }
+                };
             }).reduce((result, mapping) => {
                 if (typeof mapping.value === 'object') {
                     result[mapping.variable] = this.mapExpandedValue(mapping.value);
-                } else{
+                } else {
                     result[mapping.variable] = this.mapShorthandValue(mapping.value);
                 }
 
@@ -37,12 +37,10 @@ const Mixin = <TBase extends Constructor>(Base: TBase) => {
             }, {});
         }
 
-        abstract mapShorthandValue(value: string);
+        public abstract mapShorthandValue(value: string);
 
-        abstract mapExpandedValue(value: ExpandedValue);
+        public abstract mapExpandedValue(value: IExpandedValue);
     }
 
-    return Mixin;
-};
-
-export default Mixin;
+    return Builder;
+}

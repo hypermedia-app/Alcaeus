@@ -1,10 +1,10 @@
-import {nonenumerable} from "core-decorators";
-import {Core} from "../../Constants";
-import {IHydraResource} from "../../interfaces";
-import {IIncomingLink} from "../../internals";
-import {Constructor} from "../Mixin";
-import {ReverseLinks} from "../Maps";
-import {isA} from "../../ResourceHelper";
+import {nonenumerable} from 'core-decorators';
+import {Core} from '../../Constants';
+import {IHydraResource} from '../../interfaces';
+import {IIncomingLink} from '../../internals';
+import {isA} from '../../ResourceHelper';
+import {ReverseLinks} from '../Maps';
+import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class PartialCollectionView extends Base {
@@ -31,10 +31,10 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         @nonenumerable
         get collection(): IHydraResource {
             const collectionLink = ReverseLinks.get(this).find((linkArray: IIncomingLink) => {
-                return linkArray.predicate === Core.Vocab('view')
+                return linkArray.predicate === Core.Vocab('view');
             });
 
-            return collectionLink ? collectionLink.subject : null
+            return collectionLink ? collectionLink.subject : null;
         }
     }
 

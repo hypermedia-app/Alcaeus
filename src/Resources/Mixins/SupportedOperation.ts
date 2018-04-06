@@ -1,7 +1,7 @@
-import {IClass} from "../../interfaces";
-import {Core} from "../../Constants";
-import {owl} from "../../Vocabs";
-import {Constructor} from "../Mixin";
+import {Core} from '../../Constants';
+import {IClass} from '../../interfaces';
+import {owl} from '../../Vocabs';
+import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class SupportedOperation extends Base {

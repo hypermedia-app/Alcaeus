@@ -12,6 +12,7 @@ import * as FetchUtil from '../src/FetchUtil';
 import * as GraphProcessor from '../src/GraphProcessor';
 import {IResponseWrapper} from '../src/ResponseWrapper';
 import {IPartialCollectionView} from '../src/interfaces';
+import {ReverseLinks} from '../src/Resources/Maps';
 
 describe('Hydra', () => {
 

@@ -1,18 +1,19 @@
+import 'core-js/es6/array';
+import 'core-js/es6/object';
+import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
-import {promises as jsonld} from 'jsonld';
 import {Hydra} from '../src';
-import HydraResource from "../src/Resources/HydraResource";
-import {JsonLd, Core} from '../src/Constants';
+import {Core, JsonLd} from '../src/Constants';
+import HydraResource from '../src/Resources/HydraResource';
+import {ReverseLinks} from '../src/Resources/Maps';
 import {Bodies, Documentations} from './test-objects';
-import 'core-js/es6/object';
-import 'core-js/es6/array';
-import {async} from "./test-utils";
-import {ReverseLinks} from "../src/Resources/Maps";
+import {async} from './test-utils';
 
 describe('Hydra', () => {
 
-    let fetchResource, createResource: sinon.SinonSpy;
+    let fetchResource;
+    let createResource: sinon.SinonSpy;
 
     beforeEach(() => {
         createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
@@ -22,7 +23,8 @@ describe('Hydra', () => {
     describe('loadResource', () => {
 
         beforeEach(() => {
-            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.classWithOperation));
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse(Documentations.classWithOperation));
         });
 
         async(it, 'should return object with matching @id', async () => {
@@ -44,14 +46,15 @@ describe('Hydra', () => {
                 .returns(mockedResponse(Bodies.unescapedDiacritics));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/bia%C5%82a%20g%C4%99%C5%9B'); // http://example.com/biała gęś
+            // http://example.com/biała gęś
+            const res = await Hydra.loadResource('http://example.com/bia%C5%82a%20g%C4%99%C5%9B');
 
             // then
             expect(res['@id']).toBe('http://example.com/bia%C5%82a%20g%C4%99%C5%9B');
             expect(res instanceof HydraResource).toBe(true);
         });
 
-        async(it, 'should return object with matching redirected @id', async () =>{
+        async(it, 'should return object with matching redirected @id', async () => {
             // given
             fetchResource.withArgs('http://example.com/not-in-response')
                 .returns(mockedResponse(Bodies.someJsonLd, true, 'http://example.com/linked'));
@@ -64,7 +67,7 @@ describe('Hydra', () => {
             expect(res instanceof HydraResource).toBe(true);
         });
 
-        async(it, 'should load documentation', async () =>{
+        async(it, 'should load documentation', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
@@ -76,7 +79,7 @@ describe('Hydra', () => {
             expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
         });
 
-        async(it, 'should turn JSON-LD into a graph of objects', async () =>{
+        async(it, 'should turn JSON-LD into a graph of objects', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
@@ -85,11 +88,12 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/resource');
 
             // then
-            expect(Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet'])).toBe(true);
+            const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet']);
+            expect(sameObj).toBe(true);
             expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked');
         });
 
-        async(it, 'should turn object with arrays into matching object graph', async () =>{
+        async(it, 'should turn object with arrays into matching object graph', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
@@ -99,12 +103,12 @@ describe('Hydra', () => {
 
             // then
             expect(res[Core.Vocab('member')].length).toBe(4);
-            _.each(res[Core.Vocab('member')], member => {
+            _.each(res[Core.Vocab('member')], (member) => {
                 expect(member instanceof HydraResource).toBe(true);
             });
         });
 
-        async(it, 'should make each nested object a Resource', async () =>{
+        async(it, 'should make each nested object a Resource', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.hydraCollection));
@@ -138,7 +142,7 @@ describe('Hydra', () => {
             // when
             try {
                 await Hydra.loadResource('http://example.com/not/there');
-            } catch(err) {
+            } catch (err) {
                 expect(err.message).toBe('Resource http://example.com/not/there was not found in the response');
                 return;
             }
@@ -157,8 +161,13 @@ describe('Hydra', () => {
 
             // then
             expect(incomingLinks.length).toBe(2);
-            expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other' })).toBe(true);
-            expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other_yet' })).toBe(true);
+            expect(
+                _.some(incomingLinks, {
+                    predicate: 'http://example.com/vocab#other',
+                    subjectId: 'http://example.com/resource' })).toBe(true);
+            expect(_.some(incomingLinks, {
+                predicate: 'http://example.com/vocab#other_yet',
+                subjectId: 'http://example.com/resource',  })).toBe(true);
         });
 
         async(it, 'should pass each object through ResourceFactory', async () => {
@@ -171,7 +180,7 @@ describe('Hydra', () => {
             await Hydra.loadResource('http://example.com/resource');
 
             // then
-            const ids = _.map(createResource.getCalls(), call => {
+            const ids = _.map(createResource.getCalls(), (call) => {
                 return call.args[0]['@id'];
             });
             expect(createResource.callCount)
@@ -238,7 +247,8 @@ describe('Hydra', () => {
 
         async(it, 'should return type ApiDocumentation', async () => {
             // given
-            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.classWithOperation, false));
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse(Documentations.classWithOperation, false));
 
             // when
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
@@ -249,7 +259,8 @@ describe('Hydra', () => {
 
         async(it, 'should return type ApiDocumentation when @type is not defined', async () => {
             // given
-            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.untyped, false));
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse(Documentations.untyped, false));
 
             // when
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
@@ -267,7 +278,7 @@ describe('Hydra', () => {
             fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
         });
 
-        async(it, 'should succeed even if ApiDocumentation is not available', async () =>{
+        async(it, 'should succeed even if ApiDocumentation is not available', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse(Bodies.someJsonLd));
@@ -288,9 +299,9 @@ describe('Hydra', () => {
 
 function mockedResponse(resource, includeDocsLink = true, redirectUrl = null) {
     return jsonld.flatten(resource, {})
-        .then(expanded => ({
-            resources: expanded[JsonLd.Graph],
+        .then((expanded) => ({
             apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
-            resourceIdentifier: redirectUrl
+            resourceIdentifier: redirectUrl,
+            resources: expanded[JsonLd.Graph],
         }));
 }

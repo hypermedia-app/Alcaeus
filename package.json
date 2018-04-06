@@ -60,6 +60,7 @@
     "rdf-serializer-jsonld-ext": "^1.2.0",
     "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
+    "tslint": "^5.9.1",
     "typescript": "^2.4.2",
     "webpack": "^3.5.5",
     "webpack-karma-jasmine": "^1.0.4",

@@ -61,6 +61,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sauce-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
+    "karma-summary-reporter": "^1.5.0",
     "karma-webpack": "^2.0.5",
     "rdf-parser-n3": "^1.0.0",
     "rdf-serializer-jsonld-ext": "^1.2.0",

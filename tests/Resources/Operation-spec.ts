@@ -38,7 +38,7 @@ describe('Operation', () => {
 
     });
 
-    describe('invoke', () => {
+    xdescribe('invoke', () => {
 
         let alcaeus;
         const supportedOperation = <ISupportedOperation>{};

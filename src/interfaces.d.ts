@@ -1,14 +1,55 @@
+import {IResponseWrapper} from './ResponseWrapper';
+
 export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
 
+export type ResourceGraph = {
+    [uri: string]: IHydraResource
+};
+
 export declare interface IHydraClient {
+    rootSelectors: Array<IRootSelector>;
     resourceFactory:IResourceFactory;
-    loadResource(uri:string):Promise<IHydraResource>;
-    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResource>;
+    loadResource(uri:string):Promise<IHydraResponse>;
+    invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResponse>;
+}
+
+export declare interface IHydraResponse extends Iterable<IHydraResource> {
+    /**
+     * Gets the URI used to perform the request
+     */
+    readonly requestedUri: string;
+
+    /**
+     * Indexer to look up any arbitrary resource by its id within the representation
+     */
+    get(uri: string): IHydraResource;
+
+    /**
+     * Gets all resources of given RDF type from the representation
+     * @param {string} classId RDF class identifier
+     * @returns {Array<IHydraResource>}
+     */
+    ofType(classId: string): Array<IResource>;
+
+    /**
+     * Gets the root of the representation or undefined if it cannot be determined
+     */
+    root: IHydraResource;
+
+    length: number;
+}
+
+export interface IRootSelector {
+    selectRoot(resources: ResourceGraph, response: IResponseWrapper & IHydraResponse): IHydraResource;
 }
 
 export declare interface IResource {
     id:string;
-    types:string[];
+    types:ITypeCollection;
+}
+
+export declare interface ITypeCollection extends ReadonlyArray<string> {
+    contains(clas: string): boolean;
 }
 
 export declare interface IApiDocumentation extends IResource {

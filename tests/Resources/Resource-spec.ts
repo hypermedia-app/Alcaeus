@@ -32,7 +32,6 @@ describe('Resource', () => {
         it('should return empty array when undefined', () => {
             const resource = new Resource({}, null);
 
-            expect(Array.isArray(resource.types)).toBe(true);
             expect(resource.types.length).toBe(0);
         });
     });

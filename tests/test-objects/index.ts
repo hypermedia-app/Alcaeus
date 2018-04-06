@@ -1,7 +1,5 @@
-import {rdf, xsd, owl} from '../src/Vocabs';
-import {Core} from '../src/Constants';
-import {promises as jsonld} from 'jsonld';
-import {JsonLd} from '../src/Constants';
+import {rdf, xsd, owl} from '../../src/Vocabs';
+import {Core} from '../../src/Constants';
 
 export namespace Bodies {
     export let someJsonLd = {

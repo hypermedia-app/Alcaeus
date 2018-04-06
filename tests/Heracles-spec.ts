@@ -1,73 +1,73 @@
+import 'core-js/es6/array';
+import 'core-js/es6/object';
+import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
-import {promises as jsonld} from 'jsonld';
 import {Hydra} from '../src';
 import HydraResource from "../src/Resources/HydraResource";
-import {JsonLd, Core} from '../src/Constants';
+import {JsonLd, Core, MediaTypes} from '../src/Constants';
 import {Bodies, Documentations} from './test-objects';
-import 'core-js/es6/object';
-import 'core-js/es6/array';
-import {async} from "./test-utils";
-import {ReverseLinks} from "../src/Resources/Maps";
+import {async, responseBuilder} from './test-utils';
+import * as FetchUtil from '../src/FetchUtil';
+import * as GraphProcessor from '../src/GraphProcessor';
+import {IResponseWrapper} from '../src/ResponseWrapper';
+import {IPartialCollectionView} from '../src/interfaces';
+import {ReverseLinks} from '../src/Resources/Maps';
 
 describe('Hydra', () => {
 
-    let fetchResource, createResource: sinon.SinonSpy;
+    let fetchResource;
+    let createResource, parseAndNormalizeGraph;
 
     beforeEach(() => {
         createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
-        fetchResource = sinon.stub(Hydra.fetchUtil, 'fetchResource');
+        fetchResource = sinon.stub(FetchUtil, 'fetchResource');
+        parseAndNormalizeGraph = sinon.stub(GraphProcessor, 'parseAndNormalizeGraph');
     });
 
     describe('loadResource', () => {
 
         beforeEach(() => {
-            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.classWithOperation));
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.withArgs('', 'http://api.example.com/doc/', MediaTypes.jsonLd)
+                .returns(expanded(Documentations.classWithOperation));
         });
 
-        async(it, 'should return object with matching @id', async () => {
+        async(it, 'should return the requested uri back', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.someJsonLd));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
 
             // when
             const res = await Hydra.loadResource('http://example.com/resource');
 
             // then
-            expect(res['@id']).toBe('http://example.com/resource');
-            expect(res instanceof HydraResource).toBe(true);
+            expect(res.requestedUri).toBe('http://example.com/resource');
         });
 
         async(it, 'should return object with matching @id when it is unescaped in response', async () => {
             // given
-            fetchResource.withArgs('http://example.com/bia%C5%82a%20g%C4%99%C5%9B')
-                .returns(mockedResponse(Bodies.unescapedDiacritics));
+            const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'; // http://example.com/biała gęś
+            fetchResource.withArgs(id)
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.unescapedDiacritics));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/bia%C5%82a%20g%C4%99%C5%9B'); // http://example.com/biała gęś
+            const hydraRes = await Hydra.loadResource(id);
+            const res = hydraRes.get(id);
 
             // then
-            expect(res['@id']).toBe('http://example.com/bia%C5%82a%20g%C4%99%C5%9B');
+            expect(res['@id']).toBe(id);
             expect(res instanceof HydraResource).toBe(true);
         });
 
-        async(it, 'should return object with matching redirected @id', async () =>{
-            // given
-            fetchResource.withArgs('http://example.com/not-in-response')
-                .returns(mockedResponse(Bodies.someJsonLd, true, 'http://example.com/linked'));
-
-            // when
-            const res = await Hydra.loadResource('http://example.com/not-in-response');
-
-            // then
-            expect(res['@id']).toBe('http://example.com/linked');
-            expect(res instanceof HydraResource).toBe(true);
-        });
-
-        async(it, 'should load documentation', async () =>{
+        async(it, 'should load documentation', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.someJsonLd));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
 
             // when
             await Hydra.loadResource('http://example.com/resource');
@@ -76,102 +76,88 @@ describe('Hydra', () => {
             expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
         });
 
-        async(it, 'should turn JSON-LD into a graph of objects', async () =>{
+        async(it, 'should turn JSON-LD into linked objects', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.someJsonLd));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraResponse = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraResponse.get('http://example.com/resource');
 
             // then
-            expect(Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet'])).toBe(true);
+            const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet']);
+            expect(sameObj).toBe(true);
             expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked');
         });
 
-        async(it, 'should turn object with arrays into matching object graph', async () =>{
+        async(it, 'should turn object with arrays into matching object graph', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.hydraCollection));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.hydraCollection));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res[Core.Vocab('member')].length).toBe(4);
-            _.each(res[Core.Vocab('member')], member => {
+            _.each(res[Core.Vocab('member')], (member) => {
                 expect(member instanceof HydraResource).toBe(true);
             });
-        });
-
-        async(it, 'should make each nested object a Resource', async () =>{
-            // given
-            fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.hydraCollection));
-
-            // when
-            const res = await Hydra.loadResource('http://example.com/resource');
-
-            // then
-            expect(res['http://example.vocab/managedBy'] instanceof HydraResource)
-                .toBe(true, 'was ' + JSON.stringify(res['http://example.vocab/managedBy']));
         });
 
         async(it, 'should load parent of collection view as Resource', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource?page=3')
-                .returns(mockedResponse(Bodies.hydraCollectionWithView));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.hydraCollectionWithView));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource?page=3');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3');
+            const res = <IPartialCollectionView>hydraRes.get('http://example.com/resource?page=3');
 
             // then
             expect(res.collection).toBeDefined();
             expect(res.collection).not.toBeNull();
         });
 
-        async(it, 'should fail when resource with given @id doesn\'t exist in the representation', async () => {
-            // given
-            fetchResource.withArgs('http://example.com/not/there')
-                .returns(mockedResponse(Bodies.someJsonLd));
-
-            // when
-            try {
-                await Hydra.loadResource('http://example.com/not/there');
-            } catch(err) {
-                expect(err.message).toBe('Resource http://example.com/not/there was not found in the response');
-                return;
-            }
-
-            throw new Error('loadResource should have failed');
-        });
-
         async(it, 'should discover incoming links for resources', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.someJsonLd));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraRes.get('http://example.com/resource');
             const incomingLinks = ReverseLinks.get(res['http://example.com/vocab#other']);
 
             // then
             expect(incomingLinks.length).toBe(2);
-            expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other' })).toBe(true);
-            expect(_.some(incomingLinks, { subjectId: 'http://example.com/resource', predicate: 'http://example.com/vocab#other_yet' })).toBe(true);
+            expect(
+                _.some(incomingLinks, {
+                    predicate: 'http://example.com/vocab#other',
+                    subjectId: 'http://example.com/resource' })).toBe(true);
+            expect(_.some(incomingLinks, {
+                predicate: 'http://example.com/vocab#other_yet',
+                subjectId: 'http://example.com/resource',  })).toBe(true);
         });
 
         async(it, 'should pass each object through ResourceFactory', async () => {
             // given
             fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.hydraCollection));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.hydraCollection));
 
             // when
             await Hydra.loadResource('http://example.com/resource');
 
             // then
-            const ids = _.map(createResource.getCalls(), call => {
+            const ids = _.map(createResource.getCalls(), (call) => {
                 return call.args[0]['@id'];
             });
             expect(createResource.callCount)
@@ -181,10 +167,12 @@ describe('Hydra', () => {
         async(it, 'should load resource with deep blank node structure', async () => {
             // given
             fetchResource.withArgs('http://example.com/root')
-                .returns(mockedResponse(Bodies.deepBlankNodes));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.deepBlankNodes));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/root');
+            const hydraRes = await Hydra.loadResource('http://example.com/root');
+            const res = hydraRes.get('http://example.com/root');
 
             // then
             const p = 'http://example.com/prop';
@@ -196,10 +184,12 @@ describe('Hydra', () => {
         async(it, 'should return typed string literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.typedLiteral));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.typedLiteral));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'])
@@ -209,10 +199,12 @@ describe('Hydra', () => {
         async(it, 'should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.typedNumericLiteral));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.typedNumericLiteral));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res['http://schema.org/age']).toBe(21);
@@ -221,24 +213,31 @@ describe('Hydra', () => {
         async(it, 'should handle cycles', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.cycledResource));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.cycledResource));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top']);
             expect(objectsAreSame).toBeTruthy();
         });
 
-        afterEach(() => fetchResource.restore());
+        afterEach(() => {
+            fetchResource.restore();
+            parseAndNormalizeGraph.restore();
+        });
     });
 
     describe('loadDocumentation', () => {
 
         async(it, 'should return type ApiDocumentation', async () => {
             // given
-            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.classWithOperation, false));
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse(false));
+            parseAndNormalizeGraph.returns(expanded(Documentations.classWithOperation));
 
             // when
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
@@ -249,7 +248,9 @@ describe('Hydra', () => {
 
         async(it, 'should return type ApiDocumentation when @type is not defined', async () => {
             // given
-            fetchResource.withArgs('http://api.example.com/doc/').returns(mockedResponse(Documentations.untyped, false));
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse(false));
+            parseAndNormalizeGraph.returns(expanded(Documentations.untyped));
 
             // when
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
@@ -258,7 +259,10 @@ describe('Hydra', () => {
             expect(doc.id).toBe('http://api.example.com/doc/');
         });
 
-        afterEach(() => fetchResource.restore());
+        afterEach(() => {
+            fetchResource.restore();
+            parseAndNormalizeGraph.restore();
+        });
     });
 
     describe('loadResource with missing ApiDocumentation', () => {
@@ -267,30 +271,96 @@ describe('Hydra', () => {
             fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
         });
 
-        async(it, 'should succeed even if ApiDocumentation is not available', async () =>{
+        async(it, 'should succeed even if ApiDocumentation is not available', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(Bodies.someJsonLd));
+                .returns(mockedResponse());
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource');
+            const res = hydraRes.get('http://example.com/resource');
 
             // then
             expect(res.apiDocumentation).toBe(null);
         });
 
-        afterEach(() => fetchResource.restore());
+        afterEach(() => {
+            fetchResource.restore();
+            parseAndNormalizeGraph.restore();
+        });
 
+    });
+
+    describe('default root selectors', () => {
+        async(it, 'should select by exact id if exists', async () => {
+            // given
+            fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse(false));
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/resource');
+
+            // then
+            expect(res.root.id).toBe('http://example.com/resource');
+        });
+
+        async(xit, 'should select resource with redirected id if original is not present', async () => {
+            // given
+            const requestedUri = 'http://example.com/not-there';
+            const redirectUri = 'http://example.com/resource';
+
+            const xhr = responseBuilder().redirect(redirectUri);
+            fetchResource.withArgs(requestedUri)
+                .returns(mockedResponse(false, xhr));
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/not-there');
+
+            // then
+            expect(res.root.id).toBe('http://example.com/resource');
+        });
+
+        async(it, 'should select resource with canonical id if original is not present', async () => {
+            // given
+            const requestedUri = 'http://example.com/not-there';
+            const redirectUri = 'http://example.com/resource';
+
+            const xhr = responseBuilder().canonical(redirectUri);
+            fetchResource.withArgs(requestedUri)
+                .returns(mockedResponse(false, xhr));
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/not-there');
+
+            // then
+            expect(res.root.id).toBe('http://example.com/resource');
+        });
+
+        afterEach(() => {
+            fetchResource.restore();
+            parseAndNormalizeGraph.restore();
+        });
     });
 
     afterEach(() => createResource.restore());
 });
 
-function mockedResponse(resource, includeDocsLink = true, redirectUrl = null) {
+async function mockedResponse(includeDocsLink = true, xhrBuilder = null): Promise<IResponseWrapper> {
+    xhrBuilder = xhrBuilder || responseBuilder();
+
+    return {
+        mediaType: MediaTypes.jsonLd,
+        xhr: await xhrBuilder.build(),
+        apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
+        redirectUrl: null,
+    };
+}
+
+function expanded(resource) {
     return jsonld.flatten(resource, {})
-        .then(expanded => ({
-            resources: expanded[JsonLd.Graph],
-            apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
-            resourceIdentifier: redirectUrl
-        }));
+        .then(expanded => expanded[JsonLd.Graph]);
 }

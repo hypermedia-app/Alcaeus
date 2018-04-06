@@ -1,4 +1,4 @@
-const webpackConfig = require("./webpack.config");
+const webpackConfig = require("./webpack.config.karma");
 const webpack = require('webpack');
 
 delete webpackConfig.externals;
@@ -24,7 +24,7 @@ module.exports = function (config) {
             platform: 'Windows 7',
             version: '42'
         },*/
-        sl_chrome_latest: {
+        /*sl_chrome_latest: {
             base: 'SauceLabs',
             browserName: 'chrome',
             platform: 'Windows 7'
@@ -39,21 +39,21 @@ module.exports = function (config) {
             browserName: 'firefox'
         },
         /*sl_safari_9: {
-            base: 'SauceLabs',
-            browserName: 'safari',
-            platform: 'OS X 10.11',
-            version: '9.0'
-        },
-        sl_safari_8: {
-            base: 'SauceLabs',
-            browserName: 'safari',
-            platform: 'OS X 10.10',
-            version: '8.0'
-        },*/
-        sl_safari_latest: {
+             base: 'SauceLabs',
+             browserName: 'safari',
+             platform: 'OS X 10.11',
+             version: '9.0'
+         },
+         sl_safari_8: {
+             base: 'SauceLabs',
+             browserName: 'safari',
+             platform: 'OS X 10.10',
+             version: '8.0'
+         },*/
+        /*sl_safari_latest: {
             base: 'SauceLabs',
             browserName: 'safari'
-        },/*
+        },
         sl_ie_11: {
             base: 'SauceLabs',
             browserName: 'internet explorer',
@@ -72,10 +72,10 @@ module.exports = function (config) {
             platform: 'Windows 10',
             version: '14.14393'
         },*/
-        sl_edge_latest: {
+        /*sl_edge_latest: {
             base: 'SauceLabs',
             browserName: 'MicrosoftEdge'
-        }
+        }*/
     };
 
     config.set({
@@ -86,7 +86,7 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine'],
+        frameworks: ['jasmine', 'child-process'],
 
         // list of files / patterns to load in the browser
         files: [
@@ -104,13 +104,24 @@ module.exports = function (config) {
             "src/**/*.ts": ["webpack", "sourcemap" ]
         },
 
+        // optionally, configure the reporter
+        coverageReporter: {
+            reporters: [
+                {
+                  type: 'json',
+                  dir: 'coverage/json',
+                  subdir: '.'
+                }
+            ]
+        },
+
         mime: { 'text/x-typescript': ['ts'] },
 
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'saucelabs'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'summary', 'saucelabs'] : ['progress', 'coverage'],
 
 
         // web server port
@@ -134,12 +145,18 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome', 'Safari', 'Firefox'],
+            : ['Safari'],
 
         singleRun: true,
 
         concurrency: process.env.TRAVIS ? 1: Number.MAX_SAFE_INTEGER,
 
-        webpack: webpackConfig
+        webpack: webpackConfig,
+
+        client: {
+            childProcess: {
+                path: 'tests/mock-server.js'
+            }
+        }
     });
 };

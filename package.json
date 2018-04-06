@@ -13,7 +13,7 @@
     "definition": "index.d.ts"
   },
   "scripts": {
-    "test": "karma start --single-run",
+    "test": "yarn run tslint -p tsconfig.json; yarn run karma start --single-run",
     "build": "webpack",
     "prepublishOnly": "npm run build",
     "ts-coverage-remap": "remap-istanbul -i coverage/json/coverage-final.json -o coverage/coverage.json -t json"

@@ -24,7 +24,7 @@ module.exports = function (config) {
             platform: 'Windows 7',
             version: '42'
         },*/
-        sl_chrome_latest: {
+        /*sl_chrome_latest: {
             base: 'SauceLabs',
             browserName: 'chrome',
             platform: 'Windows 7'
@@ -38,22 +38,22 @@ module.exports = function (config) {
             base: 'SauceLabs',
             browserName: 'firefox'
         },
-        /*sl_safari_9: {
+        sl_safari_9: {
             base: 'SauceLabs',
             browserName: 'safari',
             platform: 'OS X 10.11',
             version: '9.0'
         },
-        sl_safari_8: {
+        /*sl_safari_8: {
             base: 'SauceLabs',
             browserName: 'safari',
             platform: 'OS X 10.10',
             version: '8.0'
         },*/
-        sl_safari_latest: {
+        /*sl_safari_latest: {
             base: 'SauceLabs',
             browserName: 'safari'
-        },/*
+        },
         sl_ie_11: {
             base: 'SauceLabs',
             browserName: 'internet explorer',
@@ -72,10 +72,10 @@ module.exports = function (config) {
             platform: 'Windows 10',
             version: '14.14393'
         },*/
-        sl_edge_latest: {
+        /*sl_edge_latest: {
             base: 'SauceLabs',
             browserName: 'MicrosoftEdge'
-        }
+        }*/
     };
 
     config.set({
@@ -145,7 +145,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? Object.keys(customLaunchers)
-            : ['Chrome'],
+            : ['Safari'],
 
         singleRun: true,
 

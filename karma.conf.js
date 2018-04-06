@@ -38,18 +38,18 @@ module.exports = function (config) {
             base: 'SauceLabs',
             browserName: 'firefox'
         },
-        sl_safari_9: {
-            base: 'SauceLabs',
-            browserName: 'safari',
-            platform: 'OS X 10.11',
-            version: '9.0'
-        },
-        /*sl_safari_8: {
-            base: 'SauceLabs',
-            browserName: 'safari',
-            platform: 'OS X 10.10',
-            version: '8.0'
-        },*/
+        /*sl_safari_9: {
+             base: 'SauceLabs',
+             browserName: 'safari',
+             platform: 'OS X 10.11',
+             version: '9.0'
+         },
+         sl_safari_8: {
+             base: 'SauceLabs',
+             browserName: 'safari',
+             platform: 'OS X 10.10',
+             version: '8.0'
+         },*/
         /*sl_safari_latest: {
             base: 'SauceLabs',
             browserName: 'safari'

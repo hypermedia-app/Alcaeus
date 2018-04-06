@@ -1,7 +1,6 @@
-import {Alcaeus} from '../src/alcaeus';
+import {Hydra as client} from '../src';
 import {async} from './test-utils';
 
-const client = new Alcaeus();
 const mockApiBase = 'http://localhost:8080';
 
 describe('Hydra (e2e)', () => {

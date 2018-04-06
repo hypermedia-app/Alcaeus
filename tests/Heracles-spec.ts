@@ -291,13 +291,69 @@ describe('Hydra', () => {
 
     });
 
+    describe('default root selectors', () => {
+        async(it, 'should select by exact id if exists', async () => {
+            // given
+            fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse(false));
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/resource');
+
+            // then
+            expect(res.root.id).toBe('http://example.com/resource');
+        });
+
+        async(xit, 'should select resource with redirected id if original is not present', async () => {
+            // given
+            const requestedUri = 'http://example.com/not-there';
+            const redirectUri = 'http://example.com/resource';
+
+            const xhr = responseBuilder().redirect(redirectUri);
+            fetchResource.withArgs(requestedUri)
+                .returns(mockedResponse(false, xhr));
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/not-there');
+
+            // then
+            expect(res.root.id).toBe('http://example.com/resource');
+        });
+
+        async(it, 'should select resource with canonical id if original is not present', async () => {
+            // given
+            const requestedUri = 'http://example.com/not-there';
+            const redirectUri = 'http://example.com/resource';
+
+            const xhr = responseBuilder().canonical(redirectUri);
+            fetchResource.withArgs(requestedUri)
+                .returns(mockedResponse(false, xhr));
+            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+
+            // when
+            const res = await Hydra.loadResource('http://example.com/not-there');
+
+            // then
+            expect(res.root.id).toBe('http://example.com/resource');
+        });
+
+        afterEach(() => {
+            fetchResource.restore();
+            parseAndNormalizeGraph.restore();
+        });
+    });
+
     afterEach(() => createResource.restore());
 });
 
-async function mockedResponse(includeDocsLink = true): Promise<IResponseWrapper> {
+async function mockedResponse(includeDocsLink = true, xhrBuilder = null): Promise<IResponseWrapper> {
+    xhrBuilder = xhrBuilder || responseBuilder();
+
     return {
         mediaType: MediaTypes.jsonLd,
-        xhr: await responseBuilder().build(),
+        xhr: await xhrBuilder.build(),
         apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
         redirectUrl: null,
     };

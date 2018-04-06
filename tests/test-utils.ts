@@ -45,6 +45,15 @@ export function responseBuilder() {
             return this;
         },
 
+        link: function (href: string, rel: string) {
+            headers['Link'] = `<${href}>; rel=${rel}`;
+            return this;
+        },
+
+        canonical: function (href: string) {
+            return this.link(href, 'canonical');
+        },
+
         contentType: function (value: string) {
             headers['Content-Type'] = value;
             return this;
@@ -76,10 +85,8 @@ export function responseBuilder() {
             return this.statusCode(500);
         },
 
-        apiDocumentation: function (docUri?: string) {
-            docUri = docUri || 'http://api.example.com/doc/';
-            headers['Link'] = `<${docUri}>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"`;
-            return this;
+        apiDocumentation: function (docUri: string = 'http://api.example.com/doc/') {
+            return this.link(docUri, 'http://www.w3.org/ns/hydra/core#apiDocumentation');
         },
 
         build: function (): Promise<Response> {
@@ -91,7 +98,7 @@ export function responseBuilder() {
             else {
                 response = new Response(responseBody, {
                     headers: new Headers(headers),
-                    status: statusCode
+                    status: statusCode,
                 });
             }
 

@@ -1,8 +1,7 @@
 import * as sinon from 'sinon';
-import {IRootSelector, create as HydraResponse, IResourceGraph} from '../src/HydraResponse';
+import {create as HydraResponse} from '../src/HydraResponse';
 import {IHydraResource} from '../src/interfaces';
 import {IResponseWrapper} from '../src/ResponseWrapper';
-import {async, responseBuilder} from './test-utils';
 import Resource from '../src/Resources/Resource';
 
 describe('HydraResponse', () => {
@@ -17,7 +16,7 @@ describe('HydraResponse', () => {
             'c': 'c',
             'd': 'd',
         };
-        const r12n = HydraResponse('urn:some:res', xhr, <IResourceGraph><any>resources, []);
+        const r12n = HydraResponse('urn:some:res', xhr, <any>resources, []);
 
         // when
         const array = Array.from(r12n);
@@ -55,83 +54,12 @@ describe('HydraResponse', () => {
             });
 
             // when
-            const response = HydraResponse('urn:some:resource', xhr, resources, [ <IRootSelector>selector ] );
+            const response = HydraResponse('urn:some:resource', xhr, resources, [ selector ] );
             const root = response.root;
 
             // then
             expect(root.id).toEqual('urn:other:resource');
             expect(selector.selectRoot.calledWith(resources)).toBeTruthy();
-        });
-
-        it('should fall back to resource with requested id', () => {
-            // given
-            const xhr = <IResponseWrapper>{
-                xhr: <Response>{ },
-            };
-            const resources = {
-                'urn:some:resource': {
-                    operations: null,
-                    apiDocumentation: null,
-                    id: 'urn:some:resource',
-                    types: null
-                }
-            };
-
-            // when
-            const response = HydraResponse('urn:some:resource', xhr, resources, [ ] );
-            const root = response.root;
-
-            // then
-            expect(root.id).toEqual('urn:some:resource');
-        });
-
-        describe('when redirected', () => {
-            it('should fall back to resource with requested id when the redirect id is not found', () => {
-                // given
-                const xhr = <IResponseWrapper>{
-                    xhr: <Response>{
-                        url: 'http://example.com/redirected/to',
-                        redirected: true,
-                    },
-                };
-                const resources = {
-                    'urn:some:resource': <IHydraResource>{
-                        id: 'urn:some:resource',
-                    }
-                };
-
-                // when
-                const response = HydraResponse('urn:some:resource', xhr, resources, [ ] );
-                const root = response.root;
-
-                // then
-                expect(root.id).toEqual('urn:some:resource');
-            });
-
-            it('should return resource identified by redirect target', () => {
-                // given
-                const xhr = <IResponseWrapper>{
-                    xhr: <Response>{
-                        url: 'http://example.com/redirected/to',
-                        redirected: true,
-                    },
-                };
-                const resources = {
-                    'urn:some:resource': <IHydraResource>{
-                        id: 'urn:some:resource',
-                    },
-                    'http://example.com/redirected/to': <IHydraResource>{
-                        id: 'http://example.com/redirected/to',
-                    },
-                };
-
-                // when
-                const response = HydraResponse('urn:some:resource', xhr, resources, [ ] );
-                const root = response.root;
-
-                // then
-                expect(root.id).toEqual('http://example.com/redirected/to');
-            });
         });
     });
 
@@ -172,7 +100,7 @@ describe('HydraResponse', () => {
                     '@type': 'urn:other:type'
                 })
             };
-            const r12n = HydraResponse('urn:some:res', xhr, <IResourceGraph><any>resources, []);
+            const r12n = HydraResponse('urn:some:res', xhr, <any>resources, []);
 
             // when
             const ofType = r12n.ofType('urn:some:type');

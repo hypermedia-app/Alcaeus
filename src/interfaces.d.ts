@@ -1,6 +1,13 @@
+import {IResponseWrapper} from './ResponseWrapper';
+
 export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
 
+export type ResourceGraph = {
+    [uri: string]: IHydraResource
+};
+
 export declare interface IHydraClient {
+    rootSelectors: Array<IRootSelector>;
     resourceFactory:IResourceFactory;
     loadResource(uri:string):Promise<IHydraResponse>;
     invokeOperation(operation:IOperation, uri:string, body:any, mediaType?:string):Promise<IHydraResponse>;
@@ -30,6 +37,10 @@ export declare interface IHydraResponse extends Iterable<IHydraResource> {
     root: IHydraResource;
 
     length: number;
+}
+
+export interface IRootSelector {
+    selectRoot(resources: ResourceGraph, response: IResponseWrapper & IHydraResponse): IHydraResource;
 }
 
 export declare interface IResource {

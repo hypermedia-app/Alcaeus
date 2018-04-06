@@ -1,15 +1,15 @@
-import {IHydraResource, IHydraResponse} from './interfaces';
+import {IHydraResource, IHydraResponse, IRootSelector} from './interfaces';
 import {IResponseWrapper, ResponseWrapper} from './ResponseWrapper';
 
-export interface IResourceGraph {
-    [uri: string]: IHydraResource;
+type ResourceGraph = {
+    [uri: string]: IHydraResource
 }
 
-export interface IRootSelector {
-    selectRoot(resources: IResourceGraph): IHydraResource;
-}
-
-export function create(uri: string, response: IResponseWrapper, resources: IResourceGraph, rootSelectors: Array<IRootSelector>): IHydraResponse {
+export function create(
+    uri: string,
+    response: IResponseWrapper,
+    resources: ResourceGraph,
+    rootSelectors: Array<IRootSelector>): IHydraResponse {
 
     class HydraResponse extends ResponseWrapper implements IHydraResponse {
         constructor(uri: string) {
@@ -25,23 +25,13 @@ export function create(uri: string, response: IResponseWrapper, resources: IReso
         }
 
         get root(): IHydraResource {
-            const selectedRoot = rootSelectors.reduce((resource, selector) => {
+            return rootSelectors.reduce((resource, selector) => {
                 if (!resource) {
-                    resource = selector.selectRoot(resources);
+                    resource = selector.selectRoot(resources, this);
                 }
 
                 return resource;
             }, <IHydraResource>null);
-
-            if (selectedRoot) {
-                return selectedRoot;
-            }
-
-            if (this.xhr.redirected && resources[this.xhr.url]) {
-                return resources[this.xhr.url];
-            }
-
-            return resources[this.requestedUri];
         }
 
         get length(): number {

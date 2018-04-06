@@ -1,7 +1,7 @@
 import * as FetchUtil from './FetchUtil';
 import {JsonLd, Core} from './Constants';
 import {ResourceFactory as ResourceFactoryCtor} from './ResourceFactory';
-import {IHydraClient, IApiDocumentation, IOperation, IHydraResponse} from './interfaces';
+import {IHydraClient, IApiDocumentation, IOperation, IHydraResponse, IRootSelector} from './interfaces';
 import {forOwn} from "./LodashUtil";
 import * as HydraResponse from './HydraResponse';
 import {IResponseWrapper} from './ResponseWrapper';
@@ -23,6 +23,12 @@ const getHydraResponse = async (alcaeus: IHydraClient, response: IResponseWrappe
 
 export class Alcaeus implements IHydraClient {
     public resourceFactory = new ResourceFactoryCtor();
+
+    public rootSelectors: Array<IRootSelector>;
+
+    constructor(rootSelectors) {
+        this.rootSelectors = rootSelectors;
+    }
 
     async loadResource(uri:string):Promise<IHydraResponse> {
         const response = await FetchUtil.fetchResource(uri);
@@ -70,7 +76,7 @@ function processResources(alcaeus:IHydraClient, uri, response, resources, apiDoc
 
     forOwn(resourcified, resource => resourcify(alcaeus, resource, resourcified, apiDocumentation, typeOverrides));
 
-    return HydraResponse.create(uri, response, resourcified, []);
+    return HydraResponse.create(uri, response, resourcified, alcaeus.rootSelectors);
 }
 
 function resourcify(alcaeus:IHydraClient, obj, resourcified:Object, apiDoc:IApiDocumentation, typeOverrides) {

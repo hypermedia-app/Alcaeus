@@ -149,7 +149,7 @@ module.exports = function (config) {
 
         singleRun: true,
 
-        concurrency: process.env.TRAVIS ? 1: Number.MAX_SAFE_INTEGER,
+        concurrency: 1,
 
         webpack: webpackConfig,
 

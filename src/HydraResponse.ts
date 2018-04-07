@@ -10,6 +10,8 @@ export function create(
     response: IResponseWrapper,
     resources: IResourceGraph,
     rootSelectors: IRootSelector[]): IHydraResponse {
+    const safeResources = resources || {};
+    const safeSelectors = rootSelectors || [];
 
     class HydraResponse extends ResponseWrapper implements IHydraResponse {
         public readonly requestedUri: string;
@@ -21,13 +23,13 @@ export function create(
         }
 
         public get(identifier: string): IHydraResource {
-            return resources[identifier];
+            return safeResources[identifier];
         }
 
         get root(): IHydraResource {
-            return rootSelectors.reduce((resource, selector) => {
+            return safeSelectors.reduce((resource, selector) => {
                 if (!resource) {
-                    resource = selector.selectRoot(resources, this);
+                    resource = selector.selectRoot(safeResources, this);
                 }
 
                 return resource;
@@ -35,15 +37,15 @@ export function create(
         }
 
         get length(): number {
-            return Object.keys(resources).length;
+            return Object.keys(safeResources).length;
         }
 
         public ofType(classId: string): IHydraResource[] {
-            return Object.values(resources).filter((res) => res.types.contains(classId));
+            return Object.values(safeResources).filter((res) => res.types.contains(classId));
         }
 
         public [Symbol.iterator](): Iterator<IHydraResource> {
-            return Object.values(resources)[Symbol.iterator]();
+            return Object.values(safeResources)[Symbol.iterator]();
         }
     }
 

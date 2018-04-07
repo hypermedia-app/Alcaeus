@@ -109,4 +109,47 @@ describe('HydraResponse', () => {
             expect(ofType.length).toBe(2);
         });
     });
+
+    describe('when resources are not given', () => {
+        it('should have 0 length', () => {
+            // given
+            const xhr = {
+                xhr: { } as Response,
+            } as IResponseWrapper;
+
+            // when
+            const r12n = HydraResponse('urn:some:res', xhr, null, []);
+
+            // then
+            expect(r12n.length).toBe(0);
+        });
+
+        it('ofType should return empty array', () => {
+            // given
+            const xhr = {
+                xhr: { } as Response,
+            } as IResponseWrapper;
+
+            // when
+            const r12n = HydraResponse('urn:some:res', xhr, null, []);
+
+            // then
+            expect(r12n.ofType('whatever').length).toBe(0);
+        });
+    });
+
+    describe('when root selectors are not given', () => {
+        it('root should return empty', () => {
+            // given
+            const xhr = {
+                xhr: { } as Response,
+            } as IResponseWrapper;
+
+            // when
+            const r12n = HydraResponse('urn:some:res', xhr, {}, null);
+
+            // then
+            expect(r12n.root).toBeNull();
+        });
+    });
 });

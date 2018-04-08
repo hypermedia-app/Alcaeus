@@ -5,8 +5,9 @@ import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext';
 import * as stringToStream from 'string-to-stream';
 import * as Constants from '../Constants';
 import {JsonLd} from '../Constants';
-import * as HydraResponse from '../HydraResponse';
-import {IApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor} from '../interfaces';
+import {
+    IApiDocumentation, IHydraClient, IMediaTypeProcessor, IResourceFactory, IResourceGraph,
+} from '../interfaces';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
 import {IResponseWrapper} from '../ResponseWrapper';
@@ -90,7 +91,12 @@ async function flatten(json, url): Promise<object> {
     return flattened[Constants.JsonLd.Graph];
 }
 
-function resourcify(alcaeus: IHydraClient, obj, resourcified: object, apiDoc: IApiDocumentation) {
+function resourcify(
+    alcaeus: IHydraClient,
+    resourceFactory: IResourceFactory,
+    obj,
+    resourcified: object,
+    apiDoc: IApiDocumentation) {
     if ((typeof obj === 'object') === false) {
         return obj;
     }
@@ -108,7 +114,7 @@ function resourcify(alcaeus: IHydraClient, obj, resourcified: object, apiDoc: IA
     let resource = resourcified[selfId];
     if (!resource || typeof resource._processed === 'undefined') {
         const id = obj[JsonLd.Id];
-        resource = alcaeus.resourceFactory.createResource(alcaeus, obj, apiDoc, resourcified, id);
+        resource = resourceFactory.createResource(alcaeus, obj, apiDoc, resourcified, id);
         resourcified[selfId] = resource;
     }
 
@@ -119,11 +125,11 @@ function resourcify(alcaeus: IHydraClient, obj, resourcified: object, apiDoc: IA
     resource._processed = true;
     forOwn(resource, (value, key) => {
         if (Array.isArray(value)) {
-            resource[key] = value.map((el) => resourcify(alcaeus, el, resourcified, apiDoc));
+            resource[key] = value.map((el) => resourcify(alcaeus, resourceFactory, el, resourcified, apiDoc));
             return;
         }
 
-        resource[key] = resourcify(alcaeus, value, resourcified, apiDoc);
+        resource[key] = resourcify(alcaeus, resourceFactory, value, resourcified, apiDoc);
     });
 
     return resource;
@@ -131,10 +137,10 @@ function resourcify(alcaeus: IHydraClient, obj, resourcified: object, apiDoc: IA
 
 function processResources(
     alcaeus: IHydraClient,
+    resourceFactory: IResourceFactory,
     uri,
-    response,
     resources,
-    apiDocumentation): IHydraResponse {
+    apiDocumentation): IResourceGraph {
     const resourcified = {};
     resources.forEach((res) => {
         try {
@@ -146,20 +152,20 @@ function processResources(
 
     resources.reduceRight((acc: object, val) => {
         const id = val[JsonLd.Id];
-        acc[id] = alcaeus.resourceFactory.createResource(alcaeus, val, apiDocumentation, acc);
+        acc[id] = resourceFactory.createResource(alcaeus, val, apiDocumentation, acc);
         return acc;
     }, resourcified);
 
-    forOwn(resourcified, (resource) => resourcify(alcaeus, resource, resourcified, apiDocumentation));
+    forOwn(resourcified, (resource) => resourcify(alcaeus, resourceFactory, resource, resourcified, apiDocumentation));
 
-    return HydraResponse.create(uri, response, resourcified, alcaeus.rootSelectors);
+    return resourcified;
 }
 
 export default class RdfProcessor implements IMediaTypeProcessor {
-    private alcaeus: IHydraClient;
+    public resourceFactory: IResourceFactory;
 
-    constructor(alcaeus: IHydraClient) {
-        this.alcaeus = alcaeus;
+    constructor(resourceFactory: IResourceFactory) {
+        this.resourceFactory = resourceFactory;
     }
 
     public canProcess(mediaType): boolean {
@@ -167,12 +173,13 @@ export default class RdfProcessor implements IMediaTypeProcessor {
     }
 
     public async process(
+        alcaeus: IHydraClient,
         uri: string,
         response: IResponseWrapper,
-        apiDocumentation: IApiDocumentation): Promise<IHydraResponse> {
+        apiDocumentation: IApiDocumentation): Promise<IResourceGraph> {
         const processedGraph = await parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType);
 
-        return processResources(this.alcaeus, uri, response, processedGraph, apiDocumentation);
+        return processResources(alcaeus, this.resourceFactory, uri, processedGraph, apiDocumentation);
     }
 
     public addParsers(newParsers) {

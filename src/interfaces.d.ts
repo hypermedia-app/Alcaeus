@@ -9,14 +9,17 @@ export interface IResourceGraph {
 export declare interface IHydraClient {
     rootSelectors: IRootSelector[];
     mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
-    resourceFactory: IResourceFactory;
     loadResource(uri: string): Promise<IHydraResponse>;
     invokeOperation(operation: IOperation, uri: string, body: any, mediaType?: string): Promise<IHydraResponse>;
 }
 
 export declare interface IMediaTypeProcessor {
     canProcess(mediaType: string);
-    process(uri: string, response: IResponseWrapper, apiDocumentation: IApiDocumentation): Promise<IHydraResponse>;
+    process(
+        alcaeus: IHydraClient,
+        uri: string,
+        response: IResponseWrapper,
+        apiDocumentation: IApiDocumentation): Promise<IResourceGraph>;
 }
 
 export declare interface IHydraResponse extends Iterable<IHydraResource> {

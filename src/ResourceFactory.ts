@@ -1,12 +1,15 @@
 import {JsonLd} from './Constants';
 import {IApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
 import {forOwn, values} from './LodashUtil';
-import DefaultMixins from './ResourceFactoryDefaults';
 import HydraResource from './Resources/HydraResource';
 
 export class ResourceFactory implements IResourceFactory {
 
-    private mixins = DefaultMixins;
+    public readonly mixins;
+
+    constructor(mixins) {
+        this.mixins = mixins;
+    }
 
     public createResource(
         alcaeus: IHydraClient,

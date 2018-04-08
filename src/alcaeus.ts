@@ -1,8 +1,7 @@
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
 import {
-    IApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IResourceFactory,
-    IRootSelector,
+    IApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IRootSelector,
 } from './interfaces';
 import {IResponseWrapper} from './ResponseWrapper';
 
@@ -16,23 +15,21 @@ const getHydraResponse = async (
         .find((processor) => processor.canProcess(response.mediaType));
 
     if (suitableProcessor) {
-        return await suitableProcessor.process(uri, response, apiDocumentation);
+        const graph = await suitableProcessor.process(alcaeus, uri, response, apiDocumentation);
+        return HydraResponse.create(uri, response, graph, alcaeus.rootSelectors);
     }
 
-    return Promise.resolve(HydraResponse.create(uri, response, null, null));
+    return HydraResponse.create(uri, response, null, null);
 };
 
 export class Alcaeus implements IHydraClient {
-    public resourceFactory: IResourceFactory;
-
     public rootSelectors: IRootSelector[];
 
     public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
 
-    constructor(resourceFactory: IResourceFactory, rootSelectors: IRootSelector[]) {
+    constructor(rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
         this.rootSelectors = rootSelectors;
-        this.resourceFactory = resourceFactory;
-        this.mediaTypeProcessors = {};
+        this.mediaTypeProcessors = mediaTypeProcessors;
     }
 
     public async loadResource(uri: string): Promise<IHydraResponse> {

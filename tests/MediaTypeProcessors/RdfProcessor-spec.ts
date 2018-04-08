@@ -8,15 +8,12 @@ import {async, mockedResponse, responseBuilder} from '../test-utils';
 
 describe('RdfProcessor', () => {
     let processor;
-    let client;
 
     beforeEach(() => {
-        client = {
-            resourceFactory: {
-                createResource: (_1, v) => v,
-            },
+        const resourceFactory = {
+            createResource: (_1, v) => v,
         };
-        processor = new RdfProcessor(client);
+        processor = new RdfProcessor(resourceFactory);
     });
 
     describe('process', () => {
@@ -26,13 +23,10 @@ describe('RdfProcessor', () => {
             const response = await mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
             });
-           /* fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));*/
 
             // when
-            const hydraResponse = await processor.process('http://example.com/resource', response, {});
-            const res = hydraResponse.get('http://example.com/resource');
+            const hydraResponse = await processor.process({}, 'http://example.com/resource', response, {});
+            const res = hydraResponse['http://example.com/resource'];
 
             // then
             const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet']);
@@ -47,8 +41,8 @@ describe('RdfProcessor', () => {
             });
 
             // when
-            const rep = await processor.process('http://example.com/resource', response, {});
-            const res = rep.get('http://example.com/resource');
+            const rep = await processor.process({}, 'http://example.com/resource', response, {});
+            const res = rep['http://example.com/resource'];
 
             // then
             expect(res['http://example.com/vocab#prop']).toBe('some textual value');
@@ -61,8 +55,8 @@ describe('RdfProcessor', () => {
             });
 
             // when
-            const rep = await processor.process('http://example.com/resource', response, {});
-            const res = rep.get('http://example.com/resource');
+            const rep = await processor.process({}, 'http://example.com/resource', response, {});
+            const res = rep['http://example.com/resource'];
 
             // then
             const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet']);
@@ -77,8 +71,8 @@ describe('RdfProcessor', () => {
             });
 
             // when
-            const rep = await processor.process('http://example.com/resource', response, {});
-            const res = rep.get('http://example.com/resource');
+            const rep = await processor.process({}, 'http://example.com/resource', response, {});
+            const res = rep['http://example.com/resource'];
 
             // then
             expect(res[Core.Vocab('member')].length).toBe(4);
@@ -91,8 +85,8 @@ describe('RdfProcessor', () => {
             });
 
             // when
-            const rep = await processor.process('http://api.example.com/doc/', response, {});
-            const doc = rep.get('http://api.example.com/doc/');
+            const rep = await processor.process({}, 'http://api.example.com/doc/', response, {});
+            const doc = rep['http://api.example.com/doc/'];
 
             // then
             expect(doc['@id']).toBe('http://api.example.com/doc/');
@@ -108,8 +102,8 @@ describe('RdfProcessor', () => {
             });
 
             // when
-            const rep = await processor.process('http://example.com/resource', response, {});
-            const res = rep.get('http://example.com/resource');
+            const rep = await processor.process({}, 'http://example.com/resource', response, {});
+            const res = rep['http://example.com/resource'];
 
             // then
             expect(res['http://example.com/vocab#prop']).toBe('some textual value');
@@ -122,8 +116,8 @@ describe('RdfProcessor', () => {
                 });
 
             // when
-            const rep = await processor.process('http://example.com/resource', response, {});
-            const res = rep.get('http://example.com/resource');
+            const rep = await processor.process({}, 'http://example.com/resource', response, {});
+            const res = rep['http://example.com/resource'];
 
             // then
             expect(res['http://example.com/vocab#prop']).toBe('some textual value');
@@ -154,8 +148,8 @@ describe('RdfProcessor', () => {
                         });
 
                         // when
-                        const rep = await processor.process('http://example.com/resource', response, {});
-                        const res = rep.get('http://example.com/resource');
+                        const rep = await processor.process({}, 'http://example.com/resource', response, {});
+                        const res = rep['http://example.com/resource'];
 
                         // then
                         const child = Object.values(res).find((r) => r['@id'] === 'http://example.com/child');

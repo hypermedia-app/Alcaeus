@@ -7,7 +7,7 @@ describe('ResourceFactory', () => {
     const apiDoc = null;
     let factory;
 
-    beforeEach(() => factory = new ResourceFactory());
+    beforeEach(() => factory = new ResourceFactory([]));
 
     describe('createResource', () => {
         it('should apply selected mixins', () => {

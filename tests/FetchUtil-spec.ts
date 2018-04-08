@@ -17,7 +17,7 @@ describe('FetchUtil', () => {
         async(it, 'should load resource with RDF accept header', async () => {
             // given
             windowFetch.withArgs('http://example.com/resource')
-                .returns(responseBuilder().jsonLdPayload(Bodies.someJsonLd).build());
+                .returns(responseBuilder().body(Bodies.someJsonLd).build());
 
             // when
             await fetchUtil.fetchResource('http://example.com/resource');

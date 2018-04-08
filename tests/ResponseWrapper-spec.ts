@@ -5,7 +5,7 @@ import {async, responseBuilder} from './test-utils';
 describe('ResponseWrapper', () => {
     async(it, 'should get documentation link', async () => {
         // given
-        const xhrResponse = await responseBuilder().jsonLdPayload(Bodies.someJsonLd).apiDocumentation().build();
+        const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation().build();
 
         // when
         const res = new ResponseWrapper(xhrResponse);

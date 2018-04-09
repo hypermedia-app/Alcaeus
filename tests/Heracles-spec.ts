@@ -7,7 +7,6 @@ import {Hydra} from '../src';
 import {JsonLd} from '../src/Constants';
 import * as FetchUtil from '../src/FetchUtil';
 import {IPartialCollectionView} from '../src/interfaces';
-import HydraResource from '../src/Resources/HydraResource';
 import {Bodies, Documentations} from './test-objects';
 import {async, mockedResponse, responseBuilder} from './test-utils';
 
@@ -40,7 +39,6 @@ describe('Hydra', () => {
 
             // then
             expect(res['@id']).toBe(id);
-            expect(res instanceof HydraResource).toBe(true);
         });
 
         async(it, 'should load documentation', async () => {

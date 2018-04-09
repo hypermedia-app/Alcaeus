@@ -1,9 +1,8 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
 import {IHydraResource} from '../../interfaces';
-import {IIncomingLink} from '../../internals';
+import {IAsObject, IIncomingLink} from '../../internals';
 import {isA} from '../../ResourceHelper';
-import {ReverseLinks} from '../Maps';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
@@ -30,7 +29,8 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
 
         @nonenumerable
         get collection(): IHydraResource {
-            const collectionLink = ReverseLinks.get(this).find((linkArray: IIncomingLink) => {
+            const reverseLinks = (this as any as IAsObject)._links;
+            const collectionLink = reverseLinks.find((linkArray: IIncomingLink) => {
                 return linkArray.predicate === Core.Vocab('view');
             });
 

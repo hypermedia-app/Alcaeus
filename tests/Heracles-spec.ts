@@ -8,7 +8,6 @@ import {JsonLd} from '../src/Constants';
 import * as FetchUtil from '../src/FetchUtil';
 import {IPartialCollectionView} from '../src/interfaces';
 import HydraResource from '../src/Resources/HydraResource';
-import {ReverseLinks} from '../src/Resources/Maps';
 import {Bodies, Documentations} from './test-objects';
 import {async, mockedResponse, responseBuilder} from './test-utils';
 
@@ -84,7 +83,7 @@ describe('Hydra', () => {
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
             const res = hydraRes.get('http://example.com/resource');
-            const incomingLinks = ReverseLinks.get(res['http://example.com/vocab#other']);
+            const incomingLinks = res['http://example.com/vocab#other']._links;
 
             // then
             expect(incomingLinks.length).toBe(2);

@@ -1,7 +1,9 @@
 import {JsonLd} from './Constants';
-import {IApiDocumentation, IResource, IResourceFactory} from './interfaces';
+import {IApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
+import {IIncomingLink} from './internals';
 import {forOwn, values} from './LodashUtil';
-import HydraResource from './Resources/HydraResource';
+import createLinkAccessor from './Resources/CoreMixins/LinkAccessor';
+import createBase from './Resources/HydraResource';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 interface IMixin {
@@ -20,8 +22,8 @@ export class ResourceFactory implements IResourceFactory {
         obj: object,
         apiDocumentation: IApiDocumentation,
         resources: object,
-        clientAccessorMixin?): IResource {
-        const incomingLinks = findIncomingLinks(obj, resources);
+        alcaeus: IHydraClient): IResource {
+        const incomingLinks = () => findIncomingLinks(obj, resources);
 
         const mixins = this.mixins
             .filter((mc) => {
@@ -33,13 +35,10 @@ export class ResourceFactory implements IResourceFactory {
             })
             .map((mc) => mc.Mixin);
 
-        if (clientAccessorMixin) {
-            mixins.push(clientAccessorMixin);
-        }
-
+        const HydraResource = createBase(alcaeus, incomingLinks);
         const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin(c), HydraResource);
 
-        return new AlcaeusGenerated(obj, apiDocumentation, incomingLinks);
+        return new AlcaeusGenerated(obj, apiDocumentation);
     }
 }
 
@@ -60,7 +59,7 @@ class IncomingLink {
     }
 }
 
-function findIncomingLinks(object, resources: object) {
+function findIncomingLinks(object, resources: object): IIncomingLink[] {
     const instances = values(resources);
 
     return instances.reduceRight((acc: IncomingLink[], res, index) => {

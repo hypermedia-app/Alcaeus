@@ -4,25 +4,29 @@ import HydraResource from '../../src/Resources/HydraResource';
 import {Mixin} from '../../src/Resources/Mixins/PartialCollectionView';
 import {Bodies} from '../test-objects';
 
-class PartialCollectionView extends Mixin(HydraResource) {}
+let links;
+class PartialCollectionView extends Mixin(HydraResource(null, () => links)) {}
 
 describe('PartialCollectionView', () => {
+    beforeEach(() => links = []);
+
     it('should link to the collection', () => {
         const collection = {};
 
-        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, [
+        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null);
+        links = [
             {
                 predicate: Core.Vocab('view'),
                 subject: collection,
                 subjectId: 'http://some.id',
             },
-        ]);
+        ];
 
         expect(Object.is(collection, pcv.collection)).toBe(true);
     });
 
     it('should contain null links to other pages if missing', () => {
-        const pcv = new PartialCollectionView({}, null, []);
+        const pcv = new PartialCollectionView({}, null);
 
         expect(pcv.next).toBe(null);
         expect(pcv.previous).toBe(null);
@@ -31,7 +35,7 @@ describe('PartialCollectionView', () => {
     });
 
     it('should contain links to other pages', () => {
-        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, []);
+        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null);
 
         expect(pcv.next).toBe('http://example.com/resource?page=4');
         expect(pcv.previous).toBe('http://example.com/resource?page=2');

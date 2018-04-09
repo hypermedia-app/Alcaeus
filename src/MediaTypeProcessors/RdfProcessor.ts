@@ -10,7 +10,6 @@ import {
 } from '../interfaces';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
-import createMixin from '../Resources/ClientAccessor';
 import {IResponseWrapper} from '../ResponseWrapper';
 import {rdf} from '../Vocabs';
 
@@ -172,10 +171,8 @@ export default class RdfProcessor implements IMediaTypeProcessor {
         apiDocumentation: IApiDocumentation): Promise<IResourceGraph> {
         const processedGraph = await parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType);
 
-        const clientAccessorMixin = createMixin(alcaeus);
-
         const createResource = (obj, resources) => {
-            return this.resourceFactory.createResource(obj, apiDocumentation, resources, clientAccessorMixin);
+            return this.resourceFactory.createResource(obj, apiDocumentation, resources, alcaeus);
         };
 
         return processResources(createResource, processedGraph);

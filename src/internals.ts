@@ -5,3 +5,7 @@ export interface IIncomingLink {
     subject: IHydraResource;
     predicate: string;
 }
+
+export interface IAsObject {
+    _links: IIncomingLink[];
+}

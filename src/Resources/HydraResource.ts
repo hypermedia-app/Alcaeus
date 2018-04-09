@@ -1,6 +1,6 @@
 import {nonenumerable} from 'core-decorators';
 import {JsonLd} from '../Constants';
-import {IApiDocumentation, IHydraClient, IHydraResource, IResource, ISupportedOperation} from '../interfaces';
+import {IApiDocumentation, IHydraResource, IResource, ISupportedOperation} from '../interfaces';
 import {ReverseLinks} from './Maps';
 import {Operation} from './Operation';
 import Resource from './Resource';
@@ -8,8 +8,8 @@ import Resource from './Resource';
 const apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
 
 export default class extends Resource implements IHydraResource {
-    constructor(actualResource, alcaeus: IHydraClient, apiDoc: IApiDocumentation, incomingLinks) {
-        super(actualResource, alcaeus);
+    constructor(actualResource, apiDoc: IApiDocumentation, incomingLinks) {
+        super(actualResource);
 
         apiDocumentation.set(this, apiDoc);
         ReverseLinks.set(this, incomingLinks);
@@ -23,6 +23,7 @@ export default class extends Resource implements IHydraResource {
     @nonenumerable
     get operations() {
         let classOperations;
+        const alcaeus = (this as any)._alcaeus;
         if (Array.isArray(this[JsonLd.Type])) {
             classOperations = this[JsonLd.Type].map((type: string) => this.apiDocumentation.getOperations(type));
         } else {
@@ -37,7 +38,7 @@ export default class extends Resource implements IHydraResource {
 
         const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
         return operations.map((supportedOperation: ISupportedOperation) => {
-            return new Operation(supportedOperation, this._alcaeus, this);
+            return new Operation(supportedOperation, alcaeus, this);
         });
     }
 }

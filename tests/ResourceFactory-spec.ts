@@ -20,7 +20,7 @@ describe('ResourceFactory', () => {
             factory.mixins.push({ Mixin, shouldApply });
 
             // when
-            const resource = factory.createResource(null, {}, apiDoc, {});
+            const resource = factory.createResource(null, {}, apiDoc);
 
             // then
             expect(resource.mixed).toBe(true);
@@ -36,7 +36,7 @@ describe('ResourceFactory', () => {
             factory.mixins.push({ Mixin, shouldApply });
 
             // when
-            const resource = factory.createResource(null, {}, apiDoc, {});
+            const resource = factory.createResource(null, {}, apiDoc);
 
             // then
             expect(resource.unmixed).toBeUndefined();
@@ -51,7 +51,7 @@ describe('ResourceFactory', () => {
             factory.mixins.push({ Mixin });
 
             // when
-            const resource = factory.createResource(null, {}, apiDoc, {});
+            const resource = factory.createResource(null, {}, apiDoc);
 
             // then
             expect(resource.unmixed).toBeUndefined();

@@ -7,11 +7,14 @@ import Resource from '../../src/Resources/Resource';
 import {Documentations} from '../test-objects';
 import {async, fakeAlcaeusResources} from '../test-utils';
 
+let alcaeus;
 class ApiDocumentation extends Mixin(Resource) {
+    public get _alcaeus() {
+        return alcaeus;
+    }
 }
 
 describe('ApiDocumentation', () => {
-    let alcaeus;
 
     beforeEach(() => alcaeus = {});
 
@@ -20,7 +23,7 @@ describe('ApiDocumentation', () => {
         it('should return classes from documentation', (done: any) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
-                const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+                const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
                 expect(docs.classes.length).toBe(1);
                 expect(docs.classes[0]['@id']).toBe('http://example.com/api#Class');
@@ -31,7 +34,7 @@ describe('ApiDocumentation', () => {
         it('should return selected class by @id', (done: any) => {
 
             jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
-                const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+                const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
                 const clas = docs.getClass('http://example.com/api#Class');
                 expect(clas['@id']).toBe('http://example.com/api#Class');
@@ -41,7 +44,7 @@ describe('ApiDocumentation', () => {
 
         it('should return null for missing supported class', (done: any) => {
             jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
-                const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+                const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
                 const clas = docs.getClass('http://example.com/api#UndomcumentedClass');
                 expect(clas).toBe(null);
@@ -62,7 +65,7 @@ describe('ApiDocumentation', () => {
         async(it, 'should invoke Resource.load', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
-            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
             alcaeus.loadResource.returns(Promise.resolve(null));
 
             // when
@@ -77,7 +80,7 @@ describe('ApiDocumentation', () => {
             const apiDoc = Object.assign({}, Documentations.classWithOperation);
             delete apiDoc.entrypoint;
             const expanded = await jsonld.compact(apiDoc, {});
-            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
             alcaeus.loadResource.returns(Promise.resolve(null));
 
             // when
@@ -97,7 +100,7 @@ describe('ApiDocumentation', () => {
         async(it, 'should return empty array for missing supported class', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
-            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
             // when
             const ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
@@ -110,7 +113,7 @@ describe('ApiDocumentation', () => {
         async(it, 'should return only unique value', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
-            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
             // when
             const ops = docs.getOperations('http://example.com/api#UndomcumentedClass');
@@ -126,7 +129,7 @@ describe('ApiDocumentation', () => {
         async(it, 'should return a value', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
-            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
             // when
             const ops = docs.getOperations('http://example.com/api#Class', 'http://purl.org/dc/elements/1.1/partOf');
@@ -143,7 +146,7 @@ describe('ApiDocumentation', () => {
         async(it, 'should return empty array for missing supported class', async () => {
             // gicven
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
-            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded), alcaeus);
+            const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
 
             // when
             const props = docs.getProperties('http://example.com/api#UndomcumentedClass');

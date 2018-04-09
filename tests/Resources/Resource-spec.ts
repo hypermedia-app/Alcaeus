@@ -30,7 +30,7 @@ describe('Resource', () => {
         });
 
         it('should return empty array when undefined', () => {
-            const resource = new Resource({}, null);
+            const resource = new Resource({});
 
             expect(resource.types.length).toBe(0);
         });

@@ -1,6 +1,6 @@
 {
   "name": "alcaeus",
-  "version": "0.4.0-a1",
+  "version": "0.4.0-a8",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/alcaeus.js",
   "directories": {
@@ -13,8 +13,9 @@
     "definition": "index.d.ts"
   },
   "scripts": {
-    "test": "yarn run tslint -p tsconfig.json; yarn run karma start --single-run",
+    "test": "yarn lint; yarn run karma start --single-run",
     "build": "webpack",
+    "lint": "tslint -p tsconfig.json",
     "prepublishOnly": "npm run build",
     "ts-coverage-remap": "remap-istanbul -i coverage/json/coverage-final.json -o coverage/coverage.json -t json"
   },

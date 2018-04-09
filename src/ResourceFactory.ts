@@ -1,35 +1,45 @@
 import {JsonLd} from './Constants';
-import {IApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
+import {IApiDocumentation, IResource, IResourceFactory} from './interfaces';
 import {forOwn, values} from './LodashUtil';
 import HydraResource from './Resources/HydraResource';
 
-export class ResourceFactory implements IResourceFactory {
+type Constructor<T = {}> = new (...args: any[]) => T;
+interface IMixin {
+    Mixin: Constructor;
+    shouldApply(obj: object): boolean;
+}
 
-    public readonly mixins;
+export class ResourceFactory implements IResourceFactory {
+    public readonly mixins: IMixin[];
 
     constructor(mixins) {
         this.mixins = mixins;
     }
 
     public createResource(
-        alcaeus: IHydraClient,
         obj: object,
         apiDocumentation: IApiDocumentation,
-        resources: object): IResource {
+        resources: object,
+        clientAccessorMixin?): IResource {
         const incomingLinks = findIncomingLinks(obj, resources);
 
         const mixins = this.mixins
-            .filter((mc: any) => {
+            .filter((mc) => {
                 if (!mc.shouldApply) {
                     return false;
                 }
 
                 return mc.shouldApply(obj);
-            });
+            })
+            .map((mc) => mc.Mixin);
 
-        const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin.Mixin(c), HydraResource);
+        if (clientAccessorMixin) {
+            mixins.push(clientAccessorMixin);
+        }
 
-        return new AlcaeusGenerated(obj, alcaeus, apiDocumentation, incomingLinks);
+        const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin(c), HydraResource);
+
+        return new AlcaeusGenerated(obj, apiDocumentation, incomingLinks);
     }
 }
 

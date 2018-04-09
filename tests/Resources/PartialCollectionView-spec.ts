@@ -10,7 +10,7 @@ describe('PartialCollectionView', () => {
     it('should link to the collection', () => {
         const collection = {};
 
-        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, null, [
+        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, [
             {
                 predicate: Core.Vocab('view'),
                 subject: collection,
@@ -22,7 +22,7 @@ describe('PartialCollectionView', () => {
     });
 
     it('should contain null links to other pages if missing', () => {
-        const pcv = new PartialCollectionView({}, null, null, []);
+        const pcv = new PartialCollectionView({}, null, []);
 
         expect(pcv.next).toBe(null);
         expect(pcv.previous).toBe(null);
@@ -31,7 +31,7 @@ describe('PartialCollectionView', () => {
     });
 
     it('should contain links to other pages', () => {
-        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, null, []);
+        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null, []);
 
         expect(pcv.next).toBe('http://example.com/resource?page=4');
         expect(pcv.previous).toBe('http://example.com/resource?page=2');

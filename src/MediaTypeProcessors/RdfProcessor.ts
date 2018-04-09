@@ -6,10 +6,11 @@ import * as stringToStream from 'string-to-stream';
 import * as Constants from '../Constants';
 import {JsonLd} from '../Constants';
 import {
-    IApiDocumentation, IHydraClient, IMediaTypeProcessor, IResourceFactory, IResourceGraph,
+    IApiDocumentation, IHydraClient, IMediaTypeProcessor, IResource, IResourceFactory, IResourceGraph,
 } from '../interfaces';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
+import createMixin from '../Resources/ClientAccessor';
 import {IResponseWrapper} from '../ResponseWrapper';
 import {rdf} from '../Vocabs';
 
@@ -92,11 +93,9 @@ async function flatten(json, url): Promise<object> {
 }
 
 function resourcify(
-    alcaeus: IHydraClient,
-    resourceFactory: IResourceFactory,
+    createResource: (obj, resources) => IResource,
     obj,
-    resourcified: object,
-    apiDoc: IApiDocumentation) {
+    resourcified: object) {
     if ((typeof obj === 'object') === false) {
         return obj;
     }
@@ -113,8 +112,7 @@ function resourcify(
 
     let resource = resourcified[selfId];
     if (!resource || typeof resource._processed === 'undefined') {
-        const id = obj[JsonLd.Id];
-        resource = resourceFactory.createResource(alcaeus, obj, apiDoc, resourcified, id);
+        resource = createResource(obj, resourcified);
         resourcified[selfId] = resource;
     }
 
@@ -125,22 +123,17 @@ function resourcify(
     resource._processed = true;
     forOwn(resource, (value, key) => {
         if (Array.isArray(value)) {
-            resource[key] = value.map((el) => resourcify(alcaeus, resourceFactory, el, resourcified, apiDoc));
+            resource[key] = value.map((el) => resourcify(createResource, el, resourcified));
             return;
         }
 
-        resource[key] = resourcify(alcaeus, resourceFactory, value, resourcified, apiDoc);
+        resource[key] = resourcify(createResource, value, resourcified);
     });
 
     return resource;
 }
 
-function processResources(
-    alcaeus: IHydraClient,
-    resourceFactory: IResourceFactory,
-    uri,
-    resources,
-    apiDocumentation): IResourceGraph {
+function processResources(createResource: (obj, resources) => IResource, resources): IResourceGraph {
     const resourcified = {};
     resources.forEach((res) => {
         try {
@@ -152,11 +145,11 @@ function processResources(
 
     resources.reduceRight((acc: object, val) => {
         const id = val[JsonLd.Id];
-        acc[id] = resourceFactory.createResource(alcaeus, val, apiDocumentation, acc);
+        acc[id] = createResource(val, acc);
         return acc;
     }, resourcified);
 
-    forOwn(resourcified, (resource) => resourcify(alcaeus, resourceFactory, resource, resourcified, apiDocumentation));
+    forOwn(resourcified, (resource) => resourcify(createResource, resource, resourcified));
 
     return resourcified;
 }
@@ -179,7 +172,13 @@ export default class RdfProcessor implements IMediaTypeProcessor {
         apiDocumentation: IApiDocumentation): Promise<IResourceGraph> {
         const processedGraph = await parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType);
 
-        return processResources(alcaeus, this.resourceFactory, uri, processedGraph, apiDocumentation);
+        const clientAccessorMixin = createMixin(alcaeus);
+
+        const createResource = (obj, resources) => {
+            return this.resourceFactory.createResource(obj, apiDocumentation, resources, clientAccessorMixin);
+        };
+
+        return processResources(createResource, processedGraph);
     }
 
     public addParsers(newParsers) {

@@ -129,11 +129,10 @@ export interface ICollection extends IHydraResource {
 
 export interface IResourceFactory {
     createResource(
-        alcaeus: IHydraClient,
         obj: object,
         apiDocumentation: IApiDocumentation,
         resources,
-        typeOverride?: string): IResource;
+        clientAccessorMixin?): IResource;
 }
 
 export interface IStatusCodeDescription {

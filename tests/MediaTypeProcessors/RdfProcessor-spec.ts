@@ -11,7 +11,7 @@ describe('RdfProcessor', () => {
 
     beforeEach(() => {
         const resourceFactory = {
-            createResource: (_1, v) => v,
+            createResource: (v) => v,
         };
         processor = new RdfProcessor(resourceFactory);
     });

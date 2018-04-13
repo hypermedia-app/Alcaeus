@@ -1,10 +1,8 @@
 import 'core-js/es6/array';
 import 'core-js/es6/object';
-import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Hydra} from '../src';
-import {JsonLd} from '../src/Constants';
 import * as FetchUtil from '../src/FetchUtil';
 import {IPartialCollectionView} from '../src/interfaces';
 import {Bodies, Documentations} from './test-objects';
@@ -264,8 +262,3 @@ describe('Hydra', () => {
         });
     });
 });
-
-function expanded(resource) {
-    return jsonld.flatten(resource, {})
-        .then((graph) => graph[JsonLd.Graph]);
-}

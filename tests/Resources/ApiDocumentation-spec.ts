@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 import {Mixin} from '../../src/Resources/Mixins/ApiDocumentation';
 import Resource from '../../src/Resources/Resource';
 import {Documentations} from '../test-objects';
-import {async, fakeAlcaeusResources} from '../test-utils';
+import {fakeAlcaeusResources} from '../test-utils';
 
 let alcaeus;
 class ApiDocumentation extends Mixin(Resource) {
@@ -62,7 +62,7 @@ describe('ApiDocumentation', () => {
             };
         });
 
-        async(it, 'should invoke Resource.load', async () => {
+        it('should invoke Resource.load', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
             const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
@@ -75,7 +75,7 @@ describe('ApiDocumentation', () => {
             expect(alcaeus.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
         });
 
-        async(it, 'should reject if entrypoint missing', async () => {
+        it('should reject if entrypoint missing', async () => {
             // given
             const apiDoc = Object.assign({}, Documentations.classWithOperation);
             delete apiDoc.entrypoint;
@@ -97,7 +97,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting class operations', () => {
 
-        async(it, 'should return empty array for missing supported class', async () => {
+        it('should return empty array for missing supported class', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
             const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
@@ -110,7 +110,7 @@ describe('ApiDocumentation', () => {
             expect(ops.length).toBe(0);
         });
 
-        async(it, 'should return only unique value', async () => {
+        it('should return only unique value', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
             const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
@@ -126,7 +126,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting property operations', () => {
 
-        async(it, 'should return a value', async () => {
+        it('should return a value', async () => {
             // given
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
             const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));
@@ -143,7 +143,7 @@ describe('ApiDocumentation', () => {
 
     describe('getting properties', () => {
 
-        async(it, 'should return empty array for missing supported class', async () => {
+        it('should return empty array for missing supported class', async () => {
             // gicven
             const expanded = await jsonld.compact(Documentations.classWithOperation, {});
             const docs = new ApiDocumentation(fakeAlcaeusResources(expanded));

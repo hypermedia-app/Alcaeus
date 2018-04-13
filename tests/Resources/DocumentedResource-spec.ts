@@ -2,7 +2,6 @@ import {promises as jsonld} from 'jsonld';
 import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/DocumentedResource';
 import Resource from '../../src/Resources/Resource';
-import {async} from '../test-utils';
 
 class DocumentedResource extends Mixin(Resource) {}
 
@@ -15,7 +14,7 @@ describe('DocumentedResource', () => {
         'title': 'The title',
     };
 
-    async(it, 'should use hydra:title for title property', async () => {
+    it('should use hydra:title for title property', async () => {
         // given
         const compacted = await jsonld.compact(hydraDescriptionJsonLd, {});
 
@@ -26,7 +25,7 @@ describe('DocumentedResource', () => {
         expect(op.title).toBe('The title');
     });
 
-    async(it, 'should use hydra:description for title property', async () => {
+    it('should use hydra:description for title property', async () => {
         // given
         const compacted = await jsonld.compact(hydraDescriptionJsonLd, {});
 

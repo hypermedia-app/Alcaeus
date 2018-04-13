@@ -2,7 +2,6 @@ import {promises as jsonld} from 'jsonld';
 import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/Class';
 import Resource from '../../src/Resources/Resource';
-import {async} from '../test-utils';
 
 class Class extends Mixin(Resource) {}
 
@@ -17,7 +16,7 @@ describe('Class', () => {
 
     describe('getting operations', () => {
 
-        async(it, 'should return operations', async () => {
+        it('should return operations', async () => {
             // then
             const compacted = await jsonld.compact(hydraClass, {});
 
@@ -49,7 +48,7 @@ describe('Class', () => {
 
     describe('getting properties', () => {
 
-        async(it, 'should return properties', async () => {
+        it('should return properties', async () => {
             // given
             const compacted = await jsonld.compact(hydraClass, {});
 

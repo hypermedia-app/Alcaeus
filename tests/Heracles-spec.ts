@@ -6,7 +6,7 @@ import {Hydra} from '../src';
 import * as FetchUtil from '../src/FetchUtil';
 import {IPartialCollectionView} from '../src/interfaces';
 import {Bodies, Documentations} from './test-objects';
-import {async, mockedResponse, responseBuilder} from './test-utils';
+import {mockedResponse, responseBuilder} from './test-utils';
 
 describe('Hydra', () => {
 
@@ -23,7 +23,7 @@ describe('Hydra', () => {
                 .returns(mockedResponse({}));
         });
 
-        async(it, 'should return object with matching @id when it is unescaped in response', async () => {
+        it('should return object with matching @id when it is unescaped in response', async () => {
             // given
             const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'; // http://example.com/biała gęś
             fetchResource.withArgs(id)
@@ -39,7 +39,7 @@ describe('Hydra', () => {
             expect(res['@id']).toBe(id);
         });
 
-        async(it, 'should load documentation', async () => {
+        it('should load documentation', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -53,7 +53,7 @@ describe('Hydra', () => {
             expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
         });
 
-        async(it, 'should load parent of collection view as Resource', async () => {
+        it('should load parent of collection view as Resource', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource?page=3')
                 .returns(mockedResponse({
@@ -69,7 +69,7 @@ describe('Hydra', () => {
             expect(res.collection).not.toBeNull();
         });
 
-        async(it, 'should discover incoming links for resources', async () => {
+        it('should discover incoming links for resources', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -92,7 +92,7 @@ describe('Hydra', () => {
                 subjectId: 'http://example.com/resource'  })).toBe(true);
         });
 
-        async(it, 'should load resource with deep blank node structure', async () => {
+        it('should load resource with deep blank node structure', async () => {
             // given
             fetchResource.withArgs('http://example.com/root')
                 .returns(mockedResponse({
@@ -110,7 +110,7 @@ describe('Hydra', () => {
             expect(res[p][p][p][p][t]).toBe('I\'m nested way deep');
         });
 
-        async(it, 'should return typed string literals as their values', async () => {
+        it('should return typed string literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -126,7 +126,7 @@ describe('Hydra', () => {
                 .toBe('http://wikibus-test.gear.host/book/1936/image');
         });
 
-        async(it, 'should return typed numeric literals as their values', async () => {
+        it('should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -141,7 +141,7 @@ describe('Hydra', () => {
             expect(res['http://schema.org/age']).toBe(21);
         });
 
-        async(it, 'should handle cycles', async () => {
+        it('should handle cycles', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -164,7 +164,7 @@ describe('Hydra', () => {
 
     describe('loadDocumentation', () => {
 
-        async(it, 'should return type ApiDocumentation', async () => {
+        it('should return type ApiDocumentation', async () => {
             // given
             fetchResource.withArgs('http://api.example.com/doc/')
                 .returns(mockedResponse({
@@ -189,7 +189,7 @@ describe('Hydra', () => {
             fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
         });
 
-        async(it, 'should succeed even if ApiDocumentation is not available', async () => {
+        it('should succeed even if ApiDocumentation is not available', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -211,7 +211,7 @@ describe('Hydra', () => {
     });
 
     describe('default root selectors', () => {
-        async(it, 'should select by exact id if exists', async () => {
+        it('should select by exact id if exists', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -225,7 +225,7 @@ describe('Hydra', () => {
             expect(res.root.id).toBe('http://example.com/resource');
         });
 
-        async(xit, 'should select resource with redirected id if original is not present', async () => {
+        xit('should select resource with redirected id if original is not present', async () => {
             // given
             const requestedUri = 'http://example.com/not-there';
             const redirectUri = 'http://example.com/resource';
@@ -241,7 +241,7 @@ describe('Hydra', () => {
             expect(res.root.id).toBe('http://example.com/resource');
         });
 
-        async(it, 'should select resource with canonical id if original is not present', async () => {
+        it('should select resource with canonical id if original is not present', async () => {
             // given
             const requestedUri = 'http://example.com/not-there';
             const redirectUri = 'http://example.com/resource';

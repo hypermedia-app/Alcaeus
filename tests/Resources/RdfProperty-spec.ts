@@ -3,7 +3,6 @@ import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/RdfProperty';
 import Resource from '../../src/Resources/Resource';
 import {owl, rdf, rdfs, xsd} from '../../src/Vocabs';
-import {async} from '../test-utils';
 
 class RdfProperty extends Mixin(Resource) {}
 
@@ -30,7 +29,7 @@ describe('RdfProperty', () => {
         ],
     };
 
-    async(it, 'should link to domain', async () => {
+    it('should link to domain', async () => {
         // given
         const compacted = await jsonld.compact(testProperty, {});
 
@@ -41,7 +40,7 @@ describe('RdfProperty', () => {
         expect(property.domain['@id']).toBe(xsd.integer);
     });
 
-    async(it, 'should link to range', async () => {
+    it('should link to range', async () => {
         // given
         const compacted = await jsonld.compact(testProperty, {});
 
@@ -54,7 +53,7 @@ describe('RdfProperty', () => {
 
     describe('supportedOperations', () => {
 
-        async(it, 'should return single operation as array', async () => {
+        it('should return single operation as array', async () => {
             // given
             const compacted = await jsonld.compact(testProperty, {});
 

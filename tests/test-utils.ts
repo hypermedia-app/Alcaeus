@@ -98,12 +98,6 @@ export function responseBuilder() {
     };
 }
 
-export function async(it, expectation, test) {
-    it(expectation, (done) => {
-        test.call(this).then(done).catch(done.fail);
-    });
-}
-
 export async function mockedResponse({ includeDocsLink = true, xhrBuilder = null }): Promise<IResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder();
     const xhr = await xhrBuilder.build();

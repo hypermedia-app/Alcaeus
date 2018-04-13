@@ -2,7 +2,7 @@ import * as sinon from 'sinon';
 import 'whatwg-fetch';
 import * as fetchUtil from '../src/FetchUtil';
 import {Bodies} from './test-objects';
-import {async, responseBuilder} from './test-utils';
+import {responseBuilder} from './test-utils';
 
 describe('FetchUtil', () => {
 
@@ -14,7 +14,7 @@ describe('FetchUtil', () => {
 
     describe('fetchResource', () => {
 
-        async(it, 'should load resource with RDF accept header', async () => {
+        it('should load resource with RDF accept header', async () => {
             // given
             windowFetch.withArgs('http://example.com/resource')
                 .returns(responseBuilder().body(Bodies.someJsonLd).build());

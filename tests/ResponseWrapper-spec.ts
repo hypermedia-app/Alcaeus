@@ -1,9 +1,9 @@
 import {ResponseWrapper} from '../src/ResponseWrapper';
 import {Bodies} from './test-objects';
-import {async, responseBuilder} from './test-utils';
+import {responseBuilder} from './test-utils';
 
 describe('ResponseWrapper', () => {
-    async(it, 'should get documentation link', async () => {
+    it('should get documentation link', async () => {
         // given
         const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation().build();
 
@@ -14,7 +14,7 @@ describe('ResponseWrapper', () => {
         expect(res.apiDocumentationLink).toBe('http://api.example.com/doc/');
     });
 
-    async(it, 'should get redirect URL if redirected', async () => {
+    it('should get redirect URL if redirected', async () => {
         // given
         const xhrResponse = {
             redirected: true,

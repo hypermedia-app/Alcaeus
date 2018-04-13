@@ -1,18 +1,22 @@
 import {nonenumerable} from 'core-decorators';
 import {JsonLd} from '../Constants';
-import {IApiDocumentation, IHydraClient, IHydraResource, IResource, ISupportedOperation} from '../interfaces';
-import {ReverseLinks} from './Maps';
+import {
+    IApiDocumentation, IHydraClient, IHydraResource, IResource,
+    ISupportedOperation,
+} from '../interfaces';
+import {IAsObject, IIncomingLink} from '../internals';
+import ClientAccessor from './CoreMixins/ClientAccessor';
+import LinkAccessor from './CoreMixins/LinkAccessor';
 import {Operation} from './Operation';
 import Resource from './Resource';
 
 const apiDocumentation = new WeakMap<IResource, IApiDocumentation>();
 
-export default class extends Resource implements IHydraResource {
-    constructor(actualResource, alcaeus: IHydraClient, apiDoc: IApiDocumentation, incomingLinks) {
-        super(actualResource, alcaeus);
+class HydraResource extends Resource implements IHydraResource {
+    constructor(actualResource, apiDoc: IApiDocumentation) {
+        super(actualResource);
 
         apiDocumentation.set(this, apiDoc);
-        ReverseLinks.set(this, incomingLinks);
     }
 
     @nonenumerable
@@ -23,13 +27,14 @@ export default class extends Resource implements IHydraResource {
     @nonenumerable
     get operations() {
         let classOperations;
+        const alcaeus = (this as any)._alcaeus;
         if (Array.isArray(this[JsonLd.Type])) {
             classOperations = this[JsonLd.Type].map((type: string) => this.apiDocumentation.getOperations(type));
         } else {
             classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
         }
 
-        const mappedLinks = ReverseLinks.get(this)
+        const mappedLinks = (this as any as IAsObject)._links
             .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
         const flattened = [].concat.apply([], mappedLinks);
         const propertyOperations = flattened.map(
@@ -37,7 +42,14 @@ export default class extends Resource implements IHydraResource {
 
         const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
         return operations.map((supportedOperation: ISupportedOperation) => {
-            return new Operation(supportedOperation, this._alcaeus, this);
+            return new Operation(supportedOperation, alcaeus, this);
         });
     }
+}
+
+export default function generateClass(alcaeus: IHydraClient, getIncomingLinks: () => IIncomingLink[]) {
+    const clientAccessorMixin = ClientAccessor(alcaeus);
+    const linkAccessorMixin = LinkAccessor(getIncomingLinks);
+
+    return clientAccessorMixin(linkAccessorMixin(HydraResource));
 }

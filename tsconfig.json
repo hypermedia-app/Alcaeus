@@ -4,8 +4,7 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "inlineSourceMap": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
@@ -13,6 +12,7 @@
     "suppressImplicitAnyIndexErrors": false,
     "lib": [
       "es2017",
+      "es2015",
       "dom"
     ]
   },

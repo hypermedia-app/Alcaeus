@@ -1,7 +1,9 @@
 import * as sinon from 'sinon';
-import {IHydraClient} from '../../src/interfaces';
-import HydraResource from '../../src/Resources/HydraResource';
+import createClass from '../../src/Resources/HydraResource';
 import {Bodies} from '../test-objects';
+
+let links;
+const HydraResource = createClass(null, () => links);
 
 describe('HydraResource', () => {
     describe('apiDocumentation', () => {
@@ -12,18 +14,21 @@ describe('HydraResource', () => {
     });
 
     describe('get operations', () => {
+        beforeEach(() => links = []);
+
         it('should combine operations from class and property', () => {
             const getOperations = sinon.stub();
             const apiDoc = {
                 getOperations,
             } as any;
             getOperations.returns([]);
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, null, apiDoc, [
+            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
+            links = [
                 {
                     predicate: 'http://example.com/vocab#other',
                     subject: {types: ['http://example.com/vocab#Resource2', 'http://example.com/vocab#Resource3']},
                 },
-            ]);
+            ];
 
             const ops = resource.operations;
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
@@ -41,7 +46,7 @@ describe('HydraResource', () => {
                 getOperations,
             } as any;
             getOperations.returns(Promise.resolve([]));
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as IHydraClient, apiDoc, []);
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, apiDoc);
 
             const ops = resource.operations;
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);

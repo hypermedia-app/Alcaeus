@@ -1,32 +1,44 @@
 import {JsonLd} from './Constants';
 import {IApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
+import {IIncomingLink} from './internals';
 import {forOwn, values} from './LodashUtil';
-import DefaultMixins from './ResourceFactoryDefaults';
-import HydraResource from './Resources/HydraResource';
+import createLinkAccessor from './Resources/CoreMixins/LinkAccessor';
+import createBase from './Resources/HydraResource';
+
+type Constructor<T = {}> = new (...args: any[]) => T;
+interface IMixin {
+    Mixin: Constructor;
+    shouldApply(obj: object): boolean;
+}
 
 export class ResourceFactory implements IResourceFactory {
+    public readonly mixins: IMixin[];
 
-    private mixins = DefaultMixins;
+    constructor(mixins) {
+        this.mixins = mixins;
+    }
 
     public createResource(
-        alcaeus: IHydraClient,
         obj: object,
         apiDocumentation: IApiDocumentation,
-        resources: object): IResource {
-        const incomingLinks = findIncomingLinks(obj, resources);
+        resources: object,
+        alcaeus: IHydraClient): IResource {
+        const incomingLinks = () => findIncomingLinks(obj, resources);
 
         const mixins = this.mixins
-            .filter((mc: any) => {
+            .filter((mc) => {
                 if (!mc.shouldApply) {
                     return false;
                 }
 
                 return mc.shouldApply(obj);
-            });
+            })
+            .map((mc) => mc.Mixin);
 
-        const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin.Mixin(c), HydraResource);
+        const HydraResource = createBase(alcaeus, incomingLinks);
+        const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin(c), HydraResource);
 
-        return new AlcaeusGenerated(obj, alcaeus, apiDocumentation, incomingLinks);
+        return new AlcaeusGenerated(obj, apiDocumentation);
     }
 }
 
@@ -47,7 +59,7 @@ class IncomingLink {
     }
 }
 
-function findIncomingLinks(object, resources: object) {
+function findIncomingLinks(object, resources: object): IIncomingLink[] {
     const instances = values(resources);
 
     return instances.reduceRight((acc: IncomingLink[], res, index) => {

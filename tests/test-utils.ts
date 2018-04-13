@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {Core, JsonLd, MediaTypes} from '../src/Constants';
+import {IResponseWrapper} from '../src/ResponseWrapper';
 
 export function fakeAlcaeusResources(obj: object) {
     if (!obj || typeof obj !== 'object') {
@@ -30,8 +31,13 @@ export function responseBuilder() {
 
     return {
 
-        body(body: string) {
-            responseBody = body;
+        body(body: string | object, contentType = MediaTypes.jsonLd) {
+            if (typeof body === 'object') {
+                responseBody = JSON.stringify(body);
+            } else {
+                responseBody = body as string;
+            }
+            headers['Content-Type'] = contentType;
             return this;
         },
 
@@ -52,21 +58,6 @@ export function responseBuilder() {
 
         canonical(href: string) {
             return this.link(href, 'canonical');
-        },
-
-        contentType(value: string) {
-            headers['Content-Type'] = value;
-            return this;
-        },
-
-        jsonLdPayload(jsonLd: object) {
-            return this.body(JSON.stringify(jsonLd))
-                .contentType(MediaTypes.jsonLd);
-        },
-
-        nTriplesPayload(triples: string) {
-            return this.body(triples)
-                .contentType(MediaTypes.ntriples);
         },
 
         statusCode(status: number) {
@@ -111,6 +102,18 @@ export function async(it, expectation, test) {
     it(expectation, (done) => {
         test.call(this).then(done).catch(done.fail);
     });
+}
+
+export async function mockedResponse({ includeDocsLink = true, xhrBuilder = null }): Promise<IResponseWrapper> {
+    xhrBuilder = xhrBuilder || responseBuilder();
+    const xhr = await xhrBuilder.build();
+
+    return {
+        apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
+        mediaType: xhr.headers.get('Content-Type'),
+        redirectUrl: null,
+        xhr,
+    };
 }
 
 function addPredicateGetter(prop: string, pred: string, wrapArray: boolean = true) {

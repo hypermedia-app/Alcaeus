@@ -5,14 +5,12 @@ import {IHydraClient, IResource} from '../interfaces';
 import TypeCollection from '../TypeCollection';
 
 const isProcessed = new WeakMap<IResource, boolean>();
-const alcaeus = new WeakMap<IResource, IHydraClient>();
 
 export default class implements IResource {
-    constructor(actualResource: object, client: IHydraClient = null) {
+    constructor(actualResource: object) {
         Object.assign(this, actualResource);
 
         isProcessed.set(this, false);
-        alcaeus.set(this, client);
     }
 
     @nonenumerable
@@ -32,11 +30,6 @@ export default class implements IResource {
 
     set _processed(val: boolean) {
         isProcessed.set(this, val);
-    }
-
-    @nonenumerable
-    get _alcaeus() {
-        return alcaeus.get(this);
     }
 
     public compact(context: any = null) {

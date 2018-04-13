@@ -8,9 +8,18 @@ export interface IResourceGraph {
 
 export declare interface IHydraClient {
     rootSelectors: IRootSelector[];
-    resourceFactory: IResourceFactory;
+    mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
     loadResource(uri: string): Promise<IHydraResponse>;
     invokeOperation(operation: IOperation, uri: string, body: any, mediaType?: string): Promise<IHydraResponse>;
+}
+
+export declare interface IMediaTypeProcessor {
+    canProcess(mediaType: string);
+    process(
+        alcaeus: IHydraClient,
+        uri: string,
+        response: IResponseWrapper,
+        apiDocumentation: IApiDocumentation): Promise<IResourceGraph>;
 }
 
 export declare interface IHydraResponse extends Iterable<IHydraResource> {
@@ -120,11 +129,10 @@ export interface ICollection extends IHydraResource {
 
 export interface IResourceFactory {
     createResource(
-        alcaeus: IHydraClient,
         obj: object,
         apiDocumentation: IApiDocumentation,
         resources,
-        typeOverride?: string): IResource;
+        clientAccessorMixin?): IResource;
 }
 
 export interface IStatusCodeDescription {

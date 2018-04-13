@@ -5,11 +5,12 @@ import Resource from './Resource';
 
 const supportedOperations = new WeakMap<IOperation, ISupportedOperation>();
 const resources = new WeakMap<IOperation, IResource>();
+const clients = new WeakMap<IOperation, IHydraClient>();
 
 export class Operation extends Resource implements IOperation {
 
     constructor(supportedOperation: ISupportedOperation, alcaeus: IHydraClient, resource: IHydraResource) {
-        super(resource, alcaeus);
+        super(resource);
 
         if (!supportedOperation) {
             throw new Error('Missing supportedOperation parameter');
@@ -17,6 +18,7 @@ export class Operation extends Resource implements IOperation {
 
         supportedOperations.set(this, supportedOperation);
         resources.set(this, resource);
+        clients.set(this, alcaeus);
     }
 
     get method(): string {
@@ -54,6 +56,7 @@ export class Operation extends Resource implements IOperation {
     }
 
     public invoke(body: any, mediaType = MediaTypes.jsonLd) {
-        return this._alcaeus.invokeOperation(this, this._resource.id, body, mediaType);
+        const alcaeus = clients.get(this);
+        return alcaeus.invokeOperation(this, this._resource.id, body, mediaType);
     }
 }

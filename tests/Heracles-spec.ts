@@ -1,59 +1,35 @@
 import 'core-js/es6/array';
 import 'core-js/es6/object';
-import {promises as jsonld} from 'jsonld';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Hydra} from '../src';
-import {Core, JsonLd, MediaTypes} from '../src/Constants';
 import * as FetchUtil from '../src/FetchUtil';
-import * as GraphProcessor from '../src/GraphProcessor';
 import {IPartialCollectionView} from '../src/interfaces';
-import HydraResource from '../src/Resources/HydraResource';
-import {ReverseLinks} from '../src/Resources/Maps';
-import {IResponseWrapper} from '../src/ResponseWrapper';
 import {Bodies, Documentations} from './test-objects';
-import {async, responseBuilder} from './test-utils';
+import {async, mockedResponse, responseBuilder} from './test-utils';
 
 describe('Hydra', () => {
 
     let fetchResource;
-    let createResource;
-    let parseAndNormalizeGraph;
 
     beforeEach(() => {
-        createResource = sinon.spy(Hydra.resourceFactory, 'createResource');
         fetchResource = sinon.stub(FetchUtil, 'fetchResource');
-        parseAndNormalizeGraph = sinon.stub(GraphProcessor, 'parseAndNormalizeGraph');
     });
 
     describe('loadResource', () => {
 
         beforeEach(() => {
             fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.withArgs('', 'http://api.example.com/doc/', MediaTypes.jsonLd)
-                .returns(expanded(Documentations.classWithOperation));
-        });
-
-        async(it, 'should return the requested uri back', async () => {
-            // given
-            fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
-
-            // when
-            const res = await Hydra.loadResource('http://example.com/resource');
-
-            // then
-            expect(res.requestedUri).toBe('http://example.com/resource');
+                .returns(mockedResponse({}));
         });
 
         async(it, 'should return object with matching @id when it is unescaped in response', async () => {
             // given
             const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'; // http://example.com/biała gęś
             fetchResource.withArgs(id)
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.unescapedDiacritics));
+                .returns(mockedResponse( {
+                    xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource(id);
@@ -61,14 +37,14 @@ describe('Hydra', () => {
 
             // then
             expect(res['@id']).toBe(id);
-            expect(res instanceof HydraResource).toBe(true);
         });
 
         async(it, 'should load documentation', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+                }));
 
             // when
             await Hydra.loadResource('http://example.com/resource');
@@ -77,44 +53,12 @@ describe('Hydra', () => {
             expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
         });
 
-        async(it, 'should turn JSON-LD into linked objects', async () => {
-            // given
-            fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
-
-            // when
-            const hydraResponse = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraResponse.get('http://example.com/resource');
-
-            // then
-            const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet']);
-            expect(sameObj).toBe(true);
-            expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked');
-        });
-
-        async(it, 'should turn object with arrays into matching object graph', async () => {
-            // given
-            fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.hydraCollection));
-
-            // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes.get('http://example.com/resource');
-
-            // then
-            expect(res[Core.Vocab('member')].length).toBe(4);
-            _.each(res[Core.Vocab('member')], (member) => {
-                expect(member instanceof HydraResource).toBe(true);
-            });
-        });
-
         async(it, 'should load parent of collection view as Resource', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource?page=3')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.hydraCollectionWithView));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.hydraCollectionWithView),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3');
@@ -128,13 +72,14 @@ describe('Hydra', () => {
         async(it, 'should discover incoming links for resources', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
             const res = hydraRes.get('http://example.com/resource');
-            const incomingLinks = ReverseLinks.get(res['http://example.com/vocab#other']);
+            const incomingLinks = res['http://example.com/vocab#other']._links;
 
             // then
             expect(incomingLinks.length).toBe(2);
@@ -147,29 +92,12 @@ describe('Hydra', () => {
                 subjectId: 'http://example.com/resource'  })).toBe(true);
         });
 
-        async(it, 'should pass each object through ResourceFactory', async () => {
-            // given
-            fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
-            fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.hydraCollection));
-
-            // when
-            await Hydra.loadResource('http://example.com/resource');
-
-            // then
-            const ids = _.map(createResource.getCalls(), (call) => {
-                return call.args[0]['@id'];
-            });
-            expect(createResource.callCount)
-                .toBe(6, 'Actual calls for: ' + ids);
-        });
-
         async(it, 'should load resource with deep blank node structure', async () => {
             // given
             fetchResource.withArgs('http://example.com/root')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.deepBlankNodes));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.deepBlankNodes),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/root');
@@ -185,8 +113,9 @@ describe('Hydra', () => {
         async(it, 'should return typed string literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.typedLiteral));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
@@ -200,8 +129,9 @@ describe('Hydra', () => {
         async(it, 'should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.typedNumericLiteral));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.typedNumericLiteral),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
@@ -214,8 +144,9 @@ describe('Hydra', () => {
         async(it, 'should handle cycles', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.cycledResource));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.cycledResource),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
@@ -228,7 +159,6 @@ describe('Hydra', () => {
 
         afterEach(() => {
             fetchResource.restore();
-            parseAndNormalizeGraph.restore();
         });
     });
 
@@ -237,21 +167,9 @@ describe('Hydra', () => {
         async(it, 'should return type ApiDocumentation', async () => {
             // given
             fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse(false));
-            parseAndNormalizeGraph.returns(expanded(Documentations.classWithOperation));
-
-            // when
-            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
-
-            // then
-            expect(doc.id).toBe('http://api.example.com/doc/');
-        });
-
-        async(it, 'should return type ApiDocumentation when @type is not defined', async () => {
-            // given
-            fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse(false));
-            parseAndNormalizeGraph.returns(expanded(Documentations.untyped));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
+                }));
 
             // when
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
@@ -262,7 +180,6 @@ describe('Hydra', () => {
 
         afterEach(() => {
             fetchResource.restore();
-            parseAndNormalizeGraph.restore();
         });
     });
 
@@ -275,8 +192,9 @@ describe('Hydra', () => {
         async(it, 'should succeed even if ApiDocumentation is not available', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse());
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+                }));
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
@@ -288,7 +206,6 @@ describe('Hydra', () => {
 
         afterEach(() => {
             fetchResource.restore();
-            parseAndNormalizeGraph.restore();
         });
 
     });
@@ -297,8 +214,9 @@ describe('Hydra', () => {
         async(it, 'should select by exact id if exists', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
-                .returns(mockedResponse(false));
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+                }));
 
             // when
             const res = await Hydra.loadResource('http://example.com/resource');
@@ -312,10 +230,9 @@ describe('Hydra', () => {
             const requestedUri = 'http://example.com/not-there';
             const redirectUri = 'http://example.com/resource';
 
-            const xhr = responseBuilder().redirect(redirectUri);
+            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).redirect(redirectUri);
             fetchResource.withArgs(requestedUri)
-                .returns(mockedResponse(false, xhr));
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+                .returns(mockedResponse({ xhrBuilder }));
 
             // when
             const res = await Hydra.loadResource('http://example.com/not-there');
@@ -329,10 +246,9 @@ describe('Hydra', () => {
             const requestedUri = 'http://example.com/not-there';
             const redirectUri = 'http://example.com/resource';
 
-            const xhr = responseBuilder().canonical(redirectUri);
+            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).canonical(redirectUri);
             fetchResource.withArgs(requestedUri)
-                .returns(mockedResponse(false, xhr));
-            parseAndNormalizeGraph.returns(expanded(Bodies.someJsonLd));
+                .returns(mockedResponse({ xhrBuilder }));
 
             // when
             const res = await Hydra.loadResource('http://example.com/not-there');
@@ -343,25 +259,6 @@ describe('Hydra', () => {
 
         afterEach(() => {
             fetchResource.restore();
-            parseAndNormalizeGraph.restore();
         });
     });
-
-    afterEach(() => createResource.restore());
 });
-
-async function mockedResponse(includeDocsLink = true, xhrBuilder = null): Promise<IResponseWrapper> {
-    xhrBuilder = xhrBuilder || responseBuilder();
-
-    return {
-        apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
-        mediaType: MediaTypes.jsonLd,
-        redirectUrl: null,
-        xhr: await xhrBuilder.build(),
-    };
-}
-
-function expanded(resource) {
-    return jsonld.flatten(resource, {})
-        .then((graph) => graph[JsonLd.Graph]);
-}

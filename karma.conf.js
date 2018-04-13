@@ -12,70 +12,93 @@ webpackConfig.plugins.push(new webpack.SourceMapDevToolPlugin({
 }));
 
 module.exports = function (config) {
-    if (process.env.TRAVIS && (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY)) {
-        console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
+    if (process.env.TRAVIS && (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY)) {
+        console.log('Make sure the BROWSER_STACK_* environment variables are set.');
         process.exit(1);
     }
 
     const customLaunchers = {
-        /*sl_chrome_42: {
-            base: 'SauceLabs',
-            browserName: 'chrome',
+        sl_chrome_42: {
+            base: 'BrowserStack',
+            browser: 'chrome',
+            os: 'Windows',
+            os_version: '10',
+            browser_version: '42'
+        },
+        sl_chrome_latest: {
+            base: 'BrowserStack',
+            browser: 'chrome',
             platform: 'Windows 7',
-            version: '42'
-        },*/
-        /*sl_chrome_latest: {
-            base: 'SauceLabs',
-            browserName: 'chrome',
-            platform: 'Windows 7'
+            os: 'Windows',
+            os_version: '10'
         },
-        /*sl_firefox_39: {
-            base: 'SauceLabs',
-            browserName: 'firefox',
-            version: '39.0'
-        },*/
+        sl_firefox_39: {
+            base: 'BrowserStack',
+            browser: 'firefox',
+            browser_version: '39.0',
+            os: 'Windows',
+            os_version: '8.1'
+        },
         sl_firefox_latest: {
-            base: 'SauceLabs',
-            browserName: 'firefox'
+            base: 'BrowserStack',
+            browser: 'firefox',
+            os: 'OS X',
+            os_version: 'Mountain Lion'
         },
-        /*sl_safari_9: {
-             base: 'SauceLabs',
-             browserName: 'safari',
-             platform: 'OS X 10.11',
-             version: '9.0'
-         },
-         sl_safari_8: {
-             base: 'SauceLabs',
-             browserName: 'safari',
-             platform: 'OS X 10.10',
-             version: '8.0'
-         },*/
-        /*sl_safari_latest: {
-            base: 'SauceLabs',
-            browserName: 'safari'
+        sl_safari_9: {
+            base: 'BrowserStack',
+            browser: 'safari',
+            browser_version: '9.1',
+            os: 'OS X',
+            os_version: 'El Capitan'
+        },
+        sl_safari_8: {
+            base: 'BrowserStack',
+            browser: 'safari',
+            os: 'OS X',
+            os_version: 'Yosemite',
+            browser_version: '8.0'
+        },
+        sl_safari_10: {
+            base: 'BrowserStack',
+            browser: 'safari',
+            os: 'OS X',
+            os_version: 'Sierra',
+            browser_version: '10.1'
+        },
+        sl_safari_latest: {
+            base: 'BrowserStack',
+            browser: 'safari',
+            os: 'OS X',
+            os_version: 'High Sierra'
         },
         sl_ie_11: {
-            base: 'SauceLabs',
-            browserName: 'internet explorer',
-            platform: 'Windows 8.1',
-            version: '11'
-        },
-        sl_edge_13: {
-            base: 'SauceLabs',
-            browserName: 'MicrosoftEdge',
-            platform: 'Windows 10',
-            version: '13.10586'
+            base: 'BrowserStack',
+            browser: 'IE',
+            os: 'Windows',
+            os_version: '8.1',
+            browser_version: '11.0'
         },
         sl_edge_14: {
-            base: 'SauceLabs',
-            browserName: 'MicrosoftEdge',
-            platform: 'Windows 10',
-            version: '14.14393'
-        },*/
-        /*sl_edge_latest: {
-            base: 'SauceLabs',
-            browserName: 'MicrosoftEdge'
-        }*/
+            base: 'BrowserStack',
+            browser: 'Edge',
+            os: 'Windows',
+            os_version: '10',
+            browser_version: '14.0'
+        },
+        sl_edge_15: {
+            base: 'BrowserStack',
+            browser: 'Edge',
+            os: 'Windows',
+            os_version: '10',
+            browser_version: '15.0'
+        },
+        sl_edge_latest: {
+            base: 'BrowserStack',
+            browser: 'Edge',
+            os: 'Windows',
+            os_version: '10'
+        }
     };
 
     config.set({
@@ -86,7 +109,7 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine', 'child-process'],
+        frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
         files: [
@@ -133,19 +156,19 @@ module.exports = function (config) {
         customLaunchers: customLaunchers,
 
         browsers: process.env.TRAVIS
-            ? Object.keys(customLaunchers)
-            : ['Chrome', 'Safari', 'Firefox'],
+            ? ['sl_chrome_latest', 'sl_safari_latest', 'sl_firefox_latest', 'sl_edge_latest']
+            : ['Chrome'],
 
         singleRun: true,
 
-        concurrency: process.env.TRAVIS ? 1: Number.MAX_SAFE_INTEGER,
+        concurrency: process.env.TRAVIS ? 1 : 2,
 
         webpack: webpackConfig,
 
-        client: {
-            childProcess: {
-                path: 'tests/mock-server.js'
-            }
-        }
+        // to avoid DISCONNECTED messages when connecting to BrowserStack
+        browserDisconnectTimeout : 10000, // default 2000
+        browserDisconnectTolerance : 1, // default 0
+        browserNoActivityTimeout : 4*60*1000, //default 10000
+        captureTimeout : 4*60*1000 //default 60000
     });
 };

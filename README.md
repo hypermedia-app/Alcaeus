@@ -1,14 +1,11 @@
-# Alcaeus [![Build Status](https://travis-ci.org/wikibus/Alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/Alcaeus) [![Sauce Test Status](https://saucelabs.com/buildstatus/heracles-tcode)](https://saucelabs.com/u/heracles-tcode)
+# Alcaeus [![Build Status](https://travis-ci.org/wikibus/Alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/Alcaeus) [![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=QVRBWEUwNTc3eWtQUkFXRkNMRDdZcjdZWWxwMHdCSDV3KzdhN2VSa3lIaz0tLU5LYktmMmZvWk1JWis2aVhEVCtjQUE9PQ==--8ad273bf2d71920e02edadd79043d8862d3f1c2e)](https://www.browserstack.com/automate/public-build/QVRBWEUwNTc3eWtQUkFXRkNMRDdZcjdZWWxwMHdCSDV3KzdhN2VSa3lIaz0tLU5LYktmMmZvWk1JWis2aVhEVCtjQUE9PQ==--8ad273bf2d71920e02edadd79043d8862d3f1c2e)
+
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 
 Alcaeus is a Promise-based library for consuming Hydra APIs.
 
 Alcaeus is the birth name of Heracles. The demigod who defeated Hydra.
-
-## Browser support
-
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/heracles-tcode.svg)](https://saucelabs.com/u/heracles-tcode)
 
 ## Installation
 

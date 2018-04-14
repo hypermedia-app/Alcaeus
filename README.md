@@ -1,23 +1,43 @@
-# Initial page
+# Alcaeus [![Build Status](https://travis-ci.org/wikibus/Alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/Alcaeus) [![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=QVRBWEUwNTc3eWtQUkFXRkNMRDdZcjdZWWxwMHdCSDV3KzdhN2VSa3lIaz0tLU5LYktmMmZvWk1JWis2aVhEVCtjQUE9PQ==--8ad273bf2d71920e02edadd79043d8862d3f1c2e)](https://www.browserstack.com/automate/public-build/QVRBWEUwNTc3eWtQUkFXRkNMRDdZcjdZWWxwMHdCSDV3KzdhN2VSa3lIaz0tLU5LYktmMmZvWk1JWis2aVhEVCtjQUE9PQ==--8ad273bf2d71920e02edadd79043d8862d3f1c2e)
 
-## Getting Super Powers
 
-Becoming a super hero is a fairly straight forward process:
+## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 
-```bash
-$ yarn add alcaeus
+Alcaeus is a Promise-based library for consuming Hydra APIs.
+
+Alcaeus is the birth name of Heracles. The demigod who defeated Hydra.
+
+## Installation
+
+Use npm or yarn:
+
+``` bash
+yarn add alcaeus
 ```
 
-{% hint style="info" %}
- Super-powers are granted randomly so please submit an issue if you're not happy with yours.
-{% endhint %}
+## Usage
 
-Once you're strong enough, save the world:
+``` js
+import {Hydra} from 'alcaeus';
 
+Hydra.loadResource('http://example.com/resource')
+  .then(res => {
+    // contains supported classes, operations, etc.
+    var apiDocs = res.apiDocumentation;
+    
+    // same as res['@id']
+    var id = res.id; 
+  });
 ```
-// Ain't no code for that yet, sorry
-echo 'You got to trust me on this, I saved the world'
-```
 
+### More examples
 
+* [Introduction to heracles](http://t-code.pl/blog/2016/04/introducing-heracles/)
+* [Working with jsonld.js](http://t-code.pl/blog/2016/04/heracles-compacting-resources/)
 
+## License
+
+MIT
+
+[p1]: https://github.com/github/fetch
+[p3]: https://developer.mozilla.org/pl/docs/Web/JavaScript/Reference/Global_Objects/WeakMap

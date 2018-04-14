@@ -27,4 +27,4 @@ const client = require("alcaeus@0.4.0-a2").Hydra;
 const representation = await client.loadResource('http://wikibus-test.gear.host/brochures');
 
 representation.root;
-</div
+</div>

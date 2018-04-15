@@ -102,12 +102,17 @@ export async function mockedResponse({ includeDocsLink = true, xhrBuilder = null
     xhrBuilder = xhrBuilder || responseBuilder();
     const xhr = await xhrBuilder.build();
 
-    return {
+    const response = {
         apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
         mediaType: xhr.headers.get('Content-Type'),
         redirectUrl: null,
-        xhr,
     };
+
+    Object.defineProperty(response, 'xhr', {
+        get: () => xhr.clone(),
+    });
+
+    return response as IResponseWrapper;
 }
 
 function addPredicateGetter(prop: string, pred: string, wrapArray: boolean = true) {

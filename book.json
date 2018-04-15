@@ -1,4 +1,7 @@
 {
   "root": "./docs",
-  "plugins": ["runkit"]
+  "plugins": [
+    "runkit",
+    "hints"
+  ]
 }

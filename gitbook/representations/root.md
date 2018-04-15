@@ -12,5 +12,5 @@ const client = require("alcaeus@{{ book.version }}").Hydra;
 
 const rep = await client.loadResource('http://wikibus-test.gear.host/brochures?page=1');
 
-await rep.text();
+await rep.xhr.json();
 {% endrunkit %}

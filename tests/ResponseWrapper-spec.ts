@@ -20,6 +20,7 @@ describe('ResponseWrapper', () => {
             redirected: true,
             url: 'urn:actual:resource',
         } as Response;
+        xhrResponse.clone = () => xhrResponse;
 
         // when
         const res = new ResponseWrapper(xhrResponse);
@@ -38,5 +39,10 @@ describe('ResponseWrapper', () => {
         // then
         expect(await res.xhr.text()).toBe('some text');
         expect(await res.xhr.text()).toBe('some text');
+    });
+
+    it('should not expose originalResponse', () => {
+        expect(Object.getOwnPropertyDescriptor(ResponseWrapper.prototype, 'originalResponse').enumerable)
+            .toBe(false);
     });
 });

@@ -1,6 +1,6 @@
-import {nonenumerable} from 'core-decorators';
 import * as li from 'parse-link-header';
 import * as Constants from './Constants';
+import nonenumerable from './helpers/nonenumerable';
 
 export interface IResponseWrapper {
     mediaType: string;
@@ -14,11 +14,7 @@ export class ResponseWrapper implements IResponseWrapper {
     private readonly originalResponse: Response;
 
     constructor(res: Response) {
-        Object.defineProperty(this, 'originalResponse', {
-            enumerable: false,
-            value: res,
-            writable: true,
-        });
+        this.originalResponse = res;
     }
 
     get xhr() {

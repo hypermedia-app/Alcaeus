@@ -1,3 +1,4 @@
+import {nonenumerable} from 'core-decorators';
 import * as li from 'parse-link-header';
 import * as Constants from './Constants';
 
@@ -9,10 +10,19 @@ export interface IResponseWrapper {
 }
 
 export class ResponseWrapper implements IResponseWrapper {
-    public readonly xhr: Response;
+    @nonenumerable
+    private readonly originalResponse: Response;
 
     constructor(res: Response) {
-        this.xhr = res;
+        Object.defineProperty(this, 'originalResponse', {
+            enumerable: false,
+            value: res,
+            writable: true,
+        });
+    }
+
+    get xhr() {
+        return this.originalResponse.clone();
     }
 
     get status(): number {

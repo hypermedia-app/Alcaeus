@@ -1,28 +1,39 @@
-# Initial page
+# Getting started
 
-## Getting Super Powers
+## Installation
 
-Becoming a super hero is a fairly straight forward process:
+To install Alcaeus is to simply add its package using yarn, npm or your shinier package manager:
 
 ```bash
 $ yarn add alcaeus
 ```
 
+```bash
+$ npm install --save alcaeus
+```
+
+## Basic usage
+
+Typically one would import an instance set up with sensible defaults 
+
+```js
+import {Hydra} from 'alcaeus';
+```
+
 {% hint style="info" %}
- Super-powers are granted randomly so please submit an issue if you're not happy with yours.
+ Throughout these pages runnable examples will be shown using runkit, which only
+ supports commonjs. Hence, the `require` function is used instead of ES6 imports 
 {% endhint %}
 
-Once you're strong enough, save the world:
+Here's a most basic example, which fetches an API entrypoint
 
-```
-// Ain't no code for that yet, sorry
-echo 'You got to trust me on this, I saved the world'
-```
+{% runkit %} 
+const client = require("alcaeus@{{ book.version }}").Hydra;
 
-{% runkit %}
-const client = require("alcaeus@0.4.0-a2").Hydra;
-
-const representation = await client.loadResource('http://wikibus-test.gear.host/brochures');
-
-representation.root;
+await client.loadResource('http://wikibus-test.gear.host/');
 {% endrunkit %}
+
+{% hint style="info" %}
+ Also note that runkit examples will be shown loading a specific version, 
+ which one would not include in real code. 
+{% endhint %}

@@ -208,18 +208,25 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="root-resource">Root resource</h1>
-<p>Hydra resources are expressed as a graph which can contain more than one embedded resources. Even though
-most often the representation will be expressed in a form of a JSON-LD tree, it may not always be true that
-the resource of interest will actually be the root of that JSON document.</p>
-<p>Consider a <code>hydra:Collection</code> which supports paging. Current design of Hydra makes it easier to make the
-collection itself the topmost object in the JSON tree as in the below raw response</p>
+<p>Hydra resources are expressed as a graph which can contain one or more related resources. The returned object 
+comes with a <code>root</code> property which returns a single resource from within the representation graph. In most
+common case it will be the resource identified by the request URI </p>
 <p><pre class="pg-runkit"> 
 const client = require(&quot;alcaeus@0.4.0-a3&quot;).Hydra;
 
-const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/brochures?page=1&apos;);
+const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/426&apos;);
 
-await rep.xhr.json();
+rep.root;
 </pre></p>
+<p>However, there can be many cases when the above is not true. Out of the box Alcaeus handle a few:</p>
+<ul>
+<li><a href="root-trailing-slash.md">Inconsistent trailing slash</a></li>
+<li><a href="root-canonical.md"><code>canonical</code> link relation</a></li>
+<li><a href="root-collection.md"><code>PartialCollectionView</code></a></li>
+<li><a href="root-redirected.md">Redirect target</a></li>
+</ul>
+<p>Even though most often the representation will be expressed in a form of a JSON-LD tree, it may not always be true that
+the resource of interest will actually be the root of that JSON document.</p>
 
                                 
                                 </section>
@@ -259,7 +266,7 @@ await rep.xhr.json();
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a3"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-15T20:08:12.733Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-15T20:20:44.010Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a3"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-16T19:58:02.390Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-16T19:58:32.060Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

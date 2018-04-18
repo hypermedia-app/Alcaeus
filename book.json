@@ -2,8 +2,14 @@
   "root": "./gitbook",
   "plugins": [
     "runkit",
-    "hints"
+    "hints",
+    "etoc"
   ],
+  "pluginsConfig": {
+    "etoc": {
+      "mindepth": 2
+    }
+  },
   "variables": {
     "version": "0.4.0-a3"
   }

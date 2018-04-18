@@ -148,6 +148,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.3" data-path="iterating.html">
+            
+                <a href="iterating.html">
+            
+                    
+                    Iterating resources
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -251,55 +264,50 @@ to abstract concepts and object which cannot be transferred in an eletrconic for
 representation of the resource and also includes a
 <a href="http://webconcepts.info/concepts/link-relation/canonical" target="_blank"><code>canonical</code></a> link relation, thus informing the
 client that the returned payload represents that particular resource instead.</p>
-<p>```http request
-GET /api/data/my-resource.json</p>
-<p>HTTP/1.1 200 OK
-Link: &lt;/api/my-resource&gt;; rel=&quot;canonical&quot;</p>
-<p>{
-  &quot;@id&quot;: &quot;/api/my-resource&quot;
-}</p>
-<pre><code>
-Here&apos;s a running example showing this in the real.
+<pre><code class="lang-http-request">GET /api/data/my-resource.json
 
-{% runkit %} 
-const client = require(&quot;alcaeus@{{ book.version }}&quot;).Hydra;
+HTTP/1.1 200 OK
+Link: &lt;/api/my-resource&gt;; rel=&quot;canonical&quot;
+
+{
+  &quot;@id&quot;: &quot;/api/my-resource&quot;
+}
+</code></pre>
+<p>Here&apos;s a running example showing this in the real.</p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-data-test.gear.host/brochures&apos;);
 
 rep.root;
-{% endrunkit %}
-
-### `PartialCollectionView`
-
-Consider a `hydra:Collection` which supports paging. Current design of Hydra makes is that when requesting
+</pre></p>
+<h3 id="partialcollectionview"><code>PartialCollectionView</code></h3>
+<p>Consider a <code>hydra:Collection</code> which supports paging. Current design of Hydra makes is that when requesting
 a specific page, the client will still be interested in the collection resource itself. This is to make it
-simple to combine multiple
-
-{% runkit %} 
-const client = require(&quot;alcaeus@{{ book.version }}&quot;).Hydra;
+simple to combine multiple</p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/brochures?page=1&apos;);
 
 await rep.xhr.json();
-{% endrunkit %}
-
-As you can see above, the requested resource does not really contain the most &quot;interesting&quot; data, the
-collection `member`s.
-
-```json
-{
-  &quot;@id&quot;: &quot;http://wikibus-test.gear.host/brochures&quot;,
-  &quot;member&quot;: [ {}, {}, {} ],
-  &quot;view&quot;: {
-    &quot;@id&quot;: &quot;http://wikibus-test.gear.host/brochures?page=1&quot;,
-    &quot;@type&quot;: &quot;PartialCollectionView&quot;,
-    &quot;next&quot;: &quot;&quot;,
-    &quot;prev&quot;: &quot;&quot;,
-    &quot;first&quot;: &quot;&quot;,
-    &quot;last&quot;: &quot;&quot;
+</pre></p>
+<p>As you can see above, the requested resource does not really contain the most &quot;interesting&quot; data, the
+collection <code>member</code>s.</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">&quot;@id&quot;</span>: <span class="hljs-string">&quot;http://wikibus-test.gear.host/brochures&quot;</span>,
+  <span class="hljs-string">&quot;member&quot;</span>: [ {}, {}, {} ],
+  <span class="hljs-string">&quot;view&quot;</span>: {
+    <span class="hljs-string">&quot;@id&quot;</span>: <span class="hljs-string">&quot;http://wikibus-test.gear.host/brochures?page=1&quot;</span>,
+    <span class="hljs-string">&quot;@type&quot;</span>: <span class="hljs-string">&quot;PartialCollectionView&quot;</span>,
+    <span class="hljs-string">&quot;next&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
+    <span class="hljs-string">&quot;prev&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
+    <span class="hljs-string">&quot;first&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
+    <span class="hljs-string">&quot;last&quot;</span>: <span class="hljs-string">&quot;&quot;</span>
   }
 }
-</code></pre><p>For that reason, whenever a <code>PartialCollectionView</code> is returned from the API, the root will actually be the
+</code></pre>
+<p>For that reason, whenever a <code>PartialCollectionView</code> is returned from the API, the root will actually be the
 collection itself.</p>
 <p><pre class="pg-runkit"> 
 const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
@@ -366,7 +374,7 @@ case the correct resource, as identified by the redirect target will be returned
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a4"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-18T20:16:45.488Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-18T20:29:09.503Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},{"title":"Iterating resources","level":"1.2.3","depth":2,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a4"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-18T20:33:35.356Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-18T20:57:11.034Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

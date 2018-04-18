@@ -232,7 +232,7 @@
 comes with a <code>root</code> property which returns a single resource from within the representation graph. In most
 common case it will be the resource identified by the request URI </p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a3&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/426&apos;);
 
@@ -302,7 +302,7 @@ collection `member`s.
 </code></pre><p>For that reason, whenever a <code>PartialCollectionView</code> is returned from the API, the root will actually be the
 collection itself.</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a3&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/brochures?page=1&apos;);
 
@@ -316,7 +316,7 @@ gracefully resolve such inconsistency by looking for either both alternatives.</
 <p>Below is such an example, where the request tries an URL without the slash but the actual resource is
 identified with the slash included.</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a3&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host&apos;);
 
@@ -366,7 +366,7 @@ case the correct resource, as identified by the redirect target will be returned
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a3"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-18T20:16:45.488Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-18T20:17:22.129Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a4"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-18T20:16:45.488Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-18T20:29:09.503Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

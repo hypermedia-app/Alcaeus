@@ -8,11 +8,11 @@ export default function(selector: IRootSelector): IRootSelector {
         selectRoot(resources: IResourceGraph, response: IResponseWrapper & IHydraResponse): IHydraResource {
             const maybeView = selector.selectRoot(resources, response) as IPartialCollectionView;
 
-            if (maybeView.types.contains(Vocab('PartialCollectionView'))) {
+            if (maybeView && maybeView.types.contains(Vocab('PartialCollectionView'))) {
                 return maybeView.collection;
             }
 
-            return null;
+            return maybeView;
         },
     };
 }

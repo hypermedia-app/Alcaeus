@@ -1,8 +1,9 @@
 import {Core} from '../../src/Constants';
 import {IHydraResource, IHydraResponse, IResourceGraph} from '../../src/interfaces';
+import Vocab = Core.Vocab;
+import {IResponseWrapper} from '../../src/ResponseWrapper';
 import PartialCollectionViewSelector from '../../src/RootSelectors/PartialCollectionViewSelector';
 import TypeCollection from '../../src/TypeCollection';
-import Vocab = Core.Vocab;
 
 describe('PartialCollectionViewSelector', () => {
     it('should return the collection if resource is collection view', () => {
@@ -17,10 +18,14 @@ describe('PartialCollectionViewSelector', () => {
         };
         const response = {
             requestedUri: 'id',
-        } as IHydraResponse;
+        } as IHydraResponse & IResponseWrapper;
+        const innerSelector = {
+            selectRoot: () => view,
+        } as any;
 
         // when
-        const root = PartialCollectionViewSelector.selectRoot(resources as any as IResourceGraph, response);
+        const root = PartialCollectionViewSelector(innerSelector)
+            .selectRoot(resources as any as IResourceGraph, response);
 
         // then
         expect(Object.is(root, collection)).toBeTruthy();

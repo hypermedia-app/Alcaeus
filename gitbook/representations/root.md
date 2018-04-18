@@ -32,7 +32,7 @@ representation of the resource and also includes a
 [`canonical`](http://webconcepts.info/concepts/link-relation/canonical) link relation, thus informing the
 client that the returned payload represents that particular resource instead.
 
-```http request
+```http-request
 GET /api/data/my-resource.json
 
 HTTP/1.1 200 OK

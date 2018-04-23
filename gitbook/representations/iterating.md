@@ -16,7 +16,7 @@ for(let res of resources) {
 The representation itself doesn't implement the Array interface but it can be trivially converted into one
 so that more complex operation can be performed. 
 
-Here's an example which counts the occurrences of RDF types within n ApiDocumentation.
+Here's an example which counts the occurrences of RDF types within an `ApiDocumentation`.
 
 {% runkit %} 
 const client = require("alcaeus@{{ book.version }}").Hydra;

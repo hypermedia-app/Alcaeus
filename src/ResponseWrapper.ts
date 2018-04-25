@@ -1,20 +1,18 @@
 import * as li from 'parse-link-header';
 import * as Constants from './Constants';
 import nonenumerable from './helpers/nonenumerable';
-
-export interface IResponseWrapper {
-    mediaType: string;
-    apiDocumentationLink: string;
-    redirectUrl: string;
-    xhr: Response;
-}
+import {IResponseWrapper} from './interfaces';
 
 export class ResponseWrapper implements IResponseWrapper {
+    public readonly requestedUri: string;
+
     @nonenumerable
     private readonly originalResponse: Response;
 
-    constructor(res: Response) {
+    constructor(requestedUri: string, res: Response) {
         this.originalResponse = res;
+
+        this.requestedUri = requestedUri;
     }
 
     get xhr() {

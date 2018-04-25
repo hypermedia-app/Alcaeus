@@ -8,7 +8,7 @@ describe('ResponseWrapper', () => {
         const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation().build();
 
         // when
-        const res = new ResponseWrapper(xhrResponse);
+        const res = new ResponseWrapper('', xhrResponse);
 
         // then
         expect(res.apiDocumentationLink).toBe('http://api.example.com/doc/');
@@ -23,7 +23,7 @@ describe('ResponseWrapper', () => {
         xhrResponse.clone = () => xhrResponse;
 
         // when
-        const res = new ResponseWrapper(xhrResponse);
+        const res = new ResponseWrapper('', xhrResponse);
 
         // then
         expect(res.redirectUrl).toBe('urn:actual:resource');
@@ -34,7 +34,7 @@ describe('ResponseWrapper', () => {
         const xhrResponse = await responseBuilder().body('some text').build();
 
         // when
-        const res = new ResponseWrapper(xhrResponse);
+        const res = new ResponseWrapper('', xhrResponse);
 
         // then
         expect(await res.xhr.text()).toBe('some text');

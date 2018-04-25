@@ -1,5 +1,5 @@
-import {IHydraResource, IHydraResponse, IRootSelector} from './interfaces';
-import {IResponseWrapper, ResponseWrapper} from './ResponseWrapper';
+import {IHydraResource, IHydraResponse, IResponseWrapper, IRootSelector} from './interfaces';
+import {ResponseWrapper} from './ResponseWrapper';
 
 interface IResourceGraph {
     [uri: string]: IHydraResource;
@@ -17,9 +17,7 @@ export function create(
         public readonly requestedUri: string;
 
         constructor(requestedUri: string) {
-            super(response.xhr);
-
-            this.requestedUri = requestedUri;
+            super(requestedUri, response.xhr);
         }
 
         public get(identifier: string): IHydraResource {

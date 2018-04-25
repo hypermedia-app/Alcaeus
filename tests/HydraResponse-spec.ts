@@ -1,8 +1,7 @@
 import * as sinon from 'sinon';
 import {create as HydraResponse} from '../src/HydraResponse';
-import {IHydraResource} from '../src/interfaces';
+import {IHydraResource, IResponseWrapper} from '../src/interfaces';
 import Resource from '../src/Resources/Resource';
-import {IResponseWrapper} from '../src/ResponseWrapper';
 
 describe('HydraResponse', () => {
     it('should be iterable', () => {

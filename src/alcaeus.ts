@@ -1,9 +1,8 @@
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
 import {
-    IApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IRootSelector,
+    IApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IResponseWrapper, IRootSelector,
 } from './interfaces';
-import {IResponseWrapper} from './ResponseWrapper';
 
 const getHydraResponse = async (
     alcaeus: IHydraClient,

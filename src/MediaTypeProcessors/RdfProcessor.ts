@@ -6,11 +6,10 @@ import * as stringToStream from 'string-to-stream';
 import * as Constants from '../Constants';
 import {JsonLd} from '../Constants';
 import {
-    IApiDocumentation, IHydraClient, IMediaTypeProcessor, IResource, IResourceFactory, IResourceGraph,
+    IApiDocumentation, IHydraClient, IMediaTypeProcessor, IResource, IResourceFactory, IResourceGraph, IResponseWrapper,
 } from '../interfaces';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
-import {IResponseWrapper} from '../ResponseWrapper';
 import {rdf} from '../Vocabs';
 
 const propertyRangeMappings = [

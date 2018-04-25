@@ -1,6 +1,8 @@
 * [Getting started](README.md)
-* Resource representations
-  * [Root resource](representations/root.md)
-  * [Selecting by type](representations/by-type.md)
-  * [Iterating resources](representations/iterating.md)
+* [Resource representations](representations/readme.md)
+  * [Hydra resources](representations/hydra.md)
+    * [Getting specific resource](representations/get.md)
+    * [Root resource](representations/root.md)
+    * [Selecting by type](representations/by-type.md)
+    * [Iterating resources](representations/iterating.md)
 * API Documentation

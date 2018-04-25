@@ -3,11 +3,15 @@
   "plugins": [
     "runkit",
     "hints",
-    "etoc"
+    "etoc",
+    "github"
   ],
   "pluginsConfig": {
     "etoc": {
       "mindepth": 2
+    },
+    "github": {
+      "url": "https://github.com/wikibus/alcaeus"
     }
   },
   "variables": {

@@ -1,7 +1,9 @@
 import {Core} from '../Constants';
-import {IHydraResource, IHydraResponse, IPartialCollectionView, IResourceGraph, IRootSelector} from '../interfaces';
+import {
+    IHydraResource, IHydraResponse, IPartialCollectionView, IResourceGraph, IResponseWrapper,
+    IRootSelector,
+} from '../interfaces';
 import Vocab = Core.Vocab;
-import {IResponseWrapper} from '../ResponseWrapper';
 
 export default function(selector: IRootSelector): IRootSelector {
     return {

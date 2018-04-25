@@ -1,5 +1,3 @@
-import {IResponseWrapper} from './ResponseWrapper';
-
 export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
 
 export interface IResourceGraph {
@@ -22,17 +20,43 @@ export declare interface IMediaTypeProcessor {
         apiDocumentation: IApiDocumentation): Promise<IResourceGraph>;
 }
 
-export declare interface IHydraResponse extends Iterable<IHydraResource> {
+export interface IResponseWrapper {
     /**
      * Gets the URI used to perform the request
      */
     readonly requestedUri: string;
 
     /**
+     * Gets the response content type, as advertised in response HTTP header
+     */
+    mediaType: string;
+
+    /**
+     * Gets the URI identifying the ApiDocumentation resource if present in the response Link header
+     */
+    apiDocumentationLink: string;
+
+    /**
+     * If the request was redirected, returns the target resource
+     */
+    redirectUrl: string;
+
+    /**
+     * Gets the actual XMLHttpResponse object which can be used to do custom processing
+     */
+    xhr: Response;
+}
+
+export declare interface IHydraResponse extends Iterable<IHydraResource>, IResponseWrapper {
+
+    /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
     root: IHydraResource;
 
+    /**
+     * Gets the number of resource within this representation
+     */
     length: number;
 
     /**

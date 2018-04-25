@@ -12,7 +12,7 @@ export async function fetchResource(uri: string): Promise<ResponseWrapper> {
         }),
     });
 
-    return new ResponseWrapper(res);
+    return new ResponseWrapper(uri, res);
 }
 
 export async function invokeOperation(
@@ -29,5 +29,5 @@ export async function invokeOperation(
         method,
     });
 
-    return new ResponseWrapper(res);
+    return new ResponseWrapper(uri, res);
 }

@@ -4,14 +4,15 @@
     "runkit",
     "hints",
     "etoc",
-    "github"
+    "forkmegithub"
   ],
   "pluginsConfig": {
     "etoc": {
       "mindepth": 2
     },
-    "github": {
-      "url": "https://github.com/wikibus/alcaeus"
+    "forkmegithub": {
+      "url": "https://github.com/wikibus/alcaeus",
+      "color": "darkblue"
     }
   },
   "variables": {

@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Selecting by type · Alcaeus Hydra client</title>
+        <title>Extending resources · Alcaeus Hydra client</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="iterating.html" />
     
-    
-    <link rel="prev" href="root.html" />
+    <link rel="prev" href="resource-objects.html" />
     
 
     </head>
@@ -168,7 +166,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.1.3" data-path="by-type.html">
+        <li class="chapter " data-level="1.2.1.3" data-path="by-type.html">
             
                 <a href="by-type.html">
             
@@ -213,7 +211,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.2.1" data-path="mixins.html">
+        <li class="chapter active" data-level="1.2.2.1" data-path="mixins.html">
             
                 <a href="mixins.html">
             
@@ -279,7 +277,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Selecting by type</a>
+        <a href=".." >Extending resources</a>
     </h1>
 </div>
 
@@ -294,17 +292,85 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="selecting-resources-by-type">Selecting resources by type</h1>
-<p>The representation returned by <code>Alcaeus#loadResource</code> comes with a handy method which returns resources of
-the given RDF type. Code speaks louder than words so here&apos;s an example:</p>
+                                <h1 id="extending-resource-objects-with-mixins">Extending resource objects with mixins</h1>
+<!-- toc --><div id="toc" class="toc">
+
+<ul>
+<li><a href="#adding-mixins-to-resource">Adding mixins to resource</a><ul>
+<li><a href="#example">Example</a></li>
+</ul>
+</li>
+<li><a href="#built-in-mixins">Built-in mixins</a></li>
+</ul>
+
+</div><!-- tocstop -->
+<p>Working with absolute URI properties can prove cumbersome. After all who would want to write code like:</p>
+<pre><code class="lang-js">resource[<span class="hljs-string">&apos;http://schema.org/author&apos;</span>][<span class="hljs-string">&apos;http://schema.org/name&apos;</span>];
+</code></pre>
+<p>This is verbose, error prone and probably will be an issue for declarative binding syntax of some libraries
+(I&apos;m looking at you, Polymer).</p>
+<p>Resources returned from Alcaeus are composed of JavaScript mixins applied on top of plain JS objects coming from
+the JSON-LD processing algorithms. Mixins allow creating friendly getters for RDF properties, and methods
+adding some behaviour to your resources.</p>
+<h2 id="adding-mixins-to-resource">Adding mixins to resource</h2>
+<p>There are two steps necessary to apply a mixin:</p>
+<ol>
+<li><p>Create an object with two members which implements the below interface</p>
+<pre><code class="lang-typescript">  <span class="hljs-keyword">type</span> Constructor&lt;T = {}&gt; = <span class="hljs-keyword">new</span> (...args: <span class="hljs-built_in">any</span>[]) =&gt; T;
+  <span class="hljs-keyword">interface</span> IMixin {
+      Mixin: Constructor;
+      shouldApply(obj: IHydraResource): <span class="hljs-built_in">boolean</span>;
+  }
+</code></pre>
+</li>
+<li><p>Add the object to Alcaeus&apos;s <code>ResourceFactory</code></p>
+</li>
+</ol>
+<p>The <code>Mixin</code> property is, obviously, the actual mixin to apply when creating objects from JSON-LD resources.
+The <code>shouldApply</code> function is used to choose whether a given mixin should be used with a given resource. </p>
+<p><div class="alert alert-info hints-alert"><div class="hints-icon"><i class="fa fa-info-circle"></i></div><div class="hints-container"><p> If <code>shouldApply</code> is missing, the mixin will be ignored.</p>
+</div></div></p>
+<h3 id="example">Example</h3>
 <p><pre class="pg-runkit"> 
 const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
-const resources = await client.loadResource(&apos;http://wikibus-test.gear.host/books/3&apos;);
+const Mixin = Base =&gt; {
+  return class extends Base {
+    get authorName() {
+      return this[&apos;http://schema.org/author&apos;][&apos;http://schema.org/name&apos;];
+    }
+  };
+};
 
-resources.ofType(&apos;http://schema.org/Book&apos;)
-         .map(book =&gt; book[&apos;http://purl.org/dc/terms/title&apos;]);
+const shouldApply = resource =&gt; {
+  return resource.types.contains(&apos;http://schema.org/Book&apos;);
+};
+
+// Add mixin to the client
+client.mediaTypeProcessors.RDF.resourceFactory.mixins.push({ Mixin, shouldApply });
+
+// will include 
+await client.loadResource(&apos;http://wikibus-test.gear.host/book/1331&apos;);
 </pre></p>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><p> A clean way is to export the <code>Mixin</code> and <code>shouldApply</code> function, which is then easily imported to
+ add to resource factory.</p>
+</div></div></p>
+<pre><code class="lang-js"><span class="hljs-comment">// AuthorMixin.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Mixin</span>(<span class="hljs-params">Base</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Base</span> </span>{};
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> shouldApply = () =&gt; <span class="hljs-literal">true</span>;
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">import</span> Hydra <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;alcaeus&apos;</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> AuthorMixin <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./AuthorMixin&apos;</span>;
+
+Hydra.mediaTypeProcessors.RDF.resourceFactory.mixins.push(AuthorMixin);
+</code></pre>
+<h2 id="built-in-mixins">Built-in mixins</h2>
+<p>Alcaeus <a href="https://github.com/wikibus/Alcaeus/tree/master/src/Resources/Mixins" target="_blank">includes a number of mixins</a> which are applied to elements of the Hydra vocabulary. These are mainly 
+resources within the <code>ApiDocumentation</code> but also <code>Collection</code> and <code>PartialCollectionView</code>.</p>
 
                                 
                                 </section>
@@ -332,14 +398,10 @@ resources.ofType(&apos;http://schema.org/Book&apos;)
 
             
                 
-                <a href="root.html" class="navigation navigation-prev " aria-label="Previous page: Root resource">
+                <a href="resource-objects.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Resource objects">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
-                
-                <a href="iterating.html" class="navigation navigation-next " aria-label="Next page: Iterating resources">
-                    <i class="fa fa-angle-right"></i>
-                </a>
                 
             
         
@@ -348,7 +410,7 @@ resources.ofType(&apos;http://schema.org/Book&apos;)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Selecting by type","level":"1.2.1.3","depth":3,"next":{"title":"Iterating resources","level":"1.2.1.4","depth":3,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]},"previous":{"title":"Root resource","level":"1.2.1.2","depth":3,"path":"representations/root.md","ref":"representations/root.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a5"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/by-type.md","mtime":"2018-04-18T20:16:45.487Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-29T19:25:16.472Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Extending resources","level":"1.2.2.1","depth":3,"next":{"title":"API Documentation","level":"1.3","depth":1,"ref":"","articles":[]},"previous":{"title":"Resource objects","level":"1.2.2","depth":2,"path":"representations/resource-objects.md","ref":"representations/resource-objects.md","articles":[{"title":"Extending resources","level":"1.2.2.1","depth":3,"path":"representations/mixins.md","ref":"representations/mixins.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a5"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/mixins.md","mtime":"2018-04-29T19:22:30.264Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-29T19:25:16.472Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

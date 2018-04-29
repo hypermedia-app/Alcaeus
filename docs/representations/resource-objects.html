@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Selecting by type · Alcaeus Hydra client</title>
+        <title>Resource objects · Alcaeus Hydra client</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="iterating.html" />
+    <link rel="next" href="mixins.html" />
     
     
-    <link rel="prev" href="root.html" />
+    <link rel="prev" href="iterating.html" />
     
 
     </head>
@@ -168,7 +168,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.1.3" data-path="by-type.html">
+        <li class="chapter " data-level="1.2.1.3" data-path="by-type.html">
             
                 <a href="by-type.html">
             
@@ -199,7 +199,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="resource-objects.html">
+        <li class="chapter active" data-level="1.2.2" data-path="resource-objects.html">
             
                 <a href="resource-objects.html">
             
@@ -279,7 +279,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Selecting by type</a>
+        <a href=".." >Resource objects</a>
     </h1>
 </div>
 
@@ -294,17 +294,82 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="selecting-resources-by-type">Selecting resources by type</h1>
-<p>The representation returned by <code>Alcaeus#loadResource</code> comes with a handy method which returns resources of
-the given RDF type. Code speaks louder than words so here&apos;s an example:</p>
+                                <h1 id="resource-objects-in-javascript">Resource objects in JavaScript</h1>
+<!-- toc --><div id="toc" class="toc">
+
+<ul>
+<li><a href="#accessing-properties">Accessing properties</a><ul>
+<li><a href="#resource-identifier">Resource identifier</a></li>
+<li><a href="#resource-types">Resource type(s)</a></li>
+</ul>
+</li>
+<li><a href="#reshaping-the-json-structure">Reshaping the JSON structure</a></li>
+</ul>
+
+</div><!-- tocstop -->
+<h2 id="accessing-properties">Accessing properties</h2>
+<p>Individual resources within a representation will be always in the form similar to expanded JSON-LD, with all
+properties and classes as absolute URIs. Getting any objects from within the tree is thus possible using JS
+indexer notation.</p>
 <p><pre class="pg-runkit"> 
 const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
-const resources = await client.loadResource(&apos;http://wikibus-test.gear.host/books/3&apos;);
+const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/1331&apos;);
 
-resources.ofType(&apos;http://schema.org/Book&apos;)
-         .map(book =&gt; book[&apos;http://purl.org/dc/terms/title&apos;]);
+rep.root[&apos;http://schema.org/author&apos;][&apos;http://schema.org/name&apos;];
 </pre></p>
+<p><div class="alert alert-danger hints-alert"><div class="hints-icon"><i class="fa fa-exclamation-circle"></i></div><div class="hints-container"><p> Note that RDF literals are currently unwrapped from their JSON-LD <code>@value</code> object.
+ There is an <a href="https://github.com/wikibus/Alcaeus/issues/26" target="_blank">issue</a> pending to introduce
+ an extensibility point and more semantic behaviour depending on the literal <code>@type</code>.</p>
+</div></div></p>
+<h3 id="resource-identifier">Resource identifier</h3>
+<p>The resource identifier is accessible by the <code>@id</code> keyword just like any other JS property. For convenience
+it is being wrapped by a getter, which makes it easier to use in declarative binding syntax.</p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/1331&apos;);
+
+rep.root.id;
+</pre></p>
+<h3 id="resource-types">Resource type(s)</h3>
+<p>Similarly to the identifier, the JSON-LD <code>@type</code> keyword can be used on any resource object. It is impractical
+though, because JSON-LD allows both an array or a single string value which makes handling types awkward. For
+that reason there is a <code>types</code> getter which wraps them in an Array-like object which also comes with a <code>contains</code>
+method to check if a resource is of give type. </p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/1331&apos;);
+
+const example = {
+  types: rep.root.types,
+  isBook: rep.root.types.contains(&apos;http://schema.org/Book&apos;)
+}
+</pre></p>
+<h2 id="reshaping-the-json-structure">Reshaping the JSON structure</h2>
+<p>It is possible to process a resource using JSON-LD <a href="https://www.w3.org/TR/json-ld-api/#compaction" target="_blank">compaction</a> algorithm as an ad-hoc way of simplifying</p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/1331&apos;);
+
+await rep.root.compact({
+  &apos;@vocab&apos;: &apos;http://wikibus.org/ontology#&apos;,
+  &apos;@base&apos;: &apos;http://wikibus.org/&apos;,
+  &apos;sch&apos;: &apos;http://schema.org/&apos;
+});
+</pre></p>
+<p><div class="alert alert-info hints-alert"><div class="hints-icon"><i class="fa fa-info-circle"></i></div><div class="hints-container"><p> The <code>compact</code> method returns a plain JS object, removing any properties added by Alcaeus.</p>
+</div></div></p>
+<p><div class="alert alert-danger hints-alert"><div class="hints-icon"><i class="fa fa-exclamation-circle"></i></div><div class="hints-container"><p> Compaction will fail miserably if attempted on a graph with cycles. In such case it is necessary to first
+ break the cycles by using some JS library like <a href="https://www.npmjs.com/package/json-cycle" target="_blank">json-cycle</a> or
+ <a href="https://www.mpjs.com/packages/circular-json" target="_blank">circular-json</a>.</p>
+</div></div></p>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><p> There is a more maintainable way of extending the resource objects by applying custom class mixins which
+ can add methods and properties to the JS objects without sacrificing other functionalities. To learn more
+ read the <a href="mixins.html">dedicated page</a>.</p>
+</div></div></p>
 
                                 
                                 </section>
@@ -332,12 +397,12 @@ resources.ofType(&apos;http://schema.org/Book&apos;)
 
             
                 
-                <a href="root.html" class="navigation navigation-prev " aria-label="Previous page: Root resource">
+                <a href="iterating.html" class="navigation navigation-prev " aria-label="Previous page: Iterating resources">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="iterating.html" class="navigation navigation-next " aria-label="Next page: Iterating resources">
+                <a href="mixins.html" class="navigation navigation-next " aria-label="Next page: Extending resources">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -348,7 +413,7 @@ resources.ofType(&apos;http://schema.org/Book&apos;)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Selecting by type","level":"1.2.1.3","depth":3,"next":{"title":"Iterating resources","level":"1.2.1.4","depth":3,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]},"previous":{"title":"Root resource","level":"1.2.1.2","depth":3,"path":"representations/root.md","ref":"representations/root.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a5"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/by-type.md","mtime":"2018-04-18T20:16:45.487Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-29T19:25:16.472Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Resource objects","level":"1.2.2","depth":2,"next":{"title":"Extending resources","level":"1.2.2.1","depth":3,"path":"representations/mixins.md","ref":"representations/mixins.md","articles":[]},"previous":{"title":"Iterating resources","level":"1.2.1.4","depth":3,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a5"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/resource-objects.md","mtime":"2018-04-28T14:30:32.044Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-29T19:25:16.472Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

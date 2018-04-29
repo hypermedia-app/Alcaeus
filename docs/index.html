@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Getting started · GitBook</title>
+        <title>Getting started · Alcaeus Hydra client</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -22,6 +22,10 @@
             
                 
                 <link rel="stylesheet" href="gitbook/gitbook-plugin-etoc/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-forkmegithub/plugin.css">
                 
             
                 
@@ -65,6 +69,8 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
+    <link rel="next" href="representations/readme.html" />
+    
     
 
     </head>
@@ -106,21 +112,48 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" >
+        <li class="chapter " data-level="1.2" data-path="representations/readme.html">
             
-                <span>
+                <a href="representations/readme.html">
             
                     
                     Resource representations
             
-                </span>
+                </a>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.1" data-path="representations/root.html">
+        <li class="chapter " data-level="1.2.1" data-path="representations/hydra.html">
+            
+                <a href="representations/hydra.html">
+            
+                    
+                    Hydra resources
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="representations/get.html">
+            
+                <a href="representations/get.html">
+            
+                    
+                    Getting specific resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="representations/root.html">
             
                 <a href="representations/root.html">
             
@@ -133,7 +166,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="representations/by-type.html">
+        <li class="chapter " data-level="1.2.1.3" data-path="representations/by-type.html">
             
                 <a href="representations/by-type.html">
             
@@ -146,7 +179,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3" data-path="representations/iterating.html">
+        <li class="chapter " data-level="1.2.1.4" data-path="representations/iterating.html">
             
                 <a href="representations/iterating.html">
             
@@ -156,6 +189,43 @@
                 </a>
             
 
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="representations/resource-objects.html">
+            
+                <a href="representations/resource-objects.html">
+            
+                    
+                    Resource objects
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="representations/mixins.html">
+            
+                <a href="representations/mixins.html">
+            
+                    
+                    Extending resources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -246,7 +316,7 @@
 </div></div></p>
 <p>Here&apos;s a most basic example, which fetches an API entrypoint</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
 await client.loadResource(&apos;http://wikibus-test.gear.host/&apos;);
 </pre></p>
@@ -281,6 +351,10 @@ await client.loadResource(&apos;http://wikibus-test.gear.host/&apos;);
             
                 
                 
+                <a href="representations/readme.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Resource representations">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
             
         
     </div>
@@ -288,7 +362,7 @@ await client.loadResource(&apos;http://wikibus-test.gear.host/&apos;);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Getting started","level":"1.1","depth":1,"next":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},{"title":"Iterating resources","level":"1.2.3","depth":2,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a4"},"gitbook":"*"},"file":{"path":"README.md","mtime":"2018-04-18T20:16:45.039Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-18T20:57:11.034Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Getting started","level":"1.1","depth":1,"next":{"title":"Resource representations","level":"1.2","depth":1,"path":"representations/readme.md","ref":"representations/readme.md","articles":[{"title":"Hydra resources","level":"1.2.1","depth":2,"path":"representations/hydra.md","ref":"representations/hydra.md","articles":[{"title":"Getting specific resource","level":"1.2.1.1","depth":3,"path":"representations/get.md","ref":"representations/get.md","articles":[]},{"title":"Root resource","level":"1.2.1.2","depth":3,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.1.3","depth":3,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},{"title":"Iterating resources","level":"1.2.1.4","depth":3,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]}]},{"title":"Resource objects","level":"1.2.2","depth":2,"path":"representations/resource-objects.md","ref":"representations/resource-objects.md","articles":[{"title":"Extending resources","level":"1.2.2.1","depth":3,"path":"representations/mixins.md","ref":"representations/mixins.md","articles":[]}]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a5"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"README.md","mtime":"2018-04-18T20:16:45.039Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-29T19:25:16.472Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
@@ -307,6 +381,10 @@ await client.loadResource(&apos;http://wikibus-test.gear.host/&apos;);
     
         
         <script src="gitbook/gitbook-plugin-etoc/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-forkmegithub/plugin.js"></script>
         
     
         

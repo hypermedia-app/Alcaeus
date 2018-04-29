@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Root resource · GitBook</title>
+        <title>Root resource · Alcaeus Hydra client</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -22,6 +22,10 @@
             
                 
                 <link rel="stylesheet" href="../gitbook/gitbook-plugin-etoc/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-forkmegithub/plugin.css">
                 
             
                 
@@ -68,6 +72,8 @@
     <link rel="next" href="by-type.html" />
     
     
+    <link rel="prev" href="get.html" />
+    
 
     </head>
     <body>
@@ -108,21 +114,48 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" >
+        <li class="chapter " data-level="1.2" data-path="readme.html">
             
-                <span>
+                <a href="readme.html">
             
                     
                     Resource representations
             
-                </span>
+                </a>
             
 
             
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.2.1" data-path="root.html">
+        <li class="chapter " data-level="1.2.1" data-path="hydra.html">
+            
+                <a href="hydra.html">
+            
+                    
+                    Hydra resources
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="get.html">
+            
+                <a href="get.html">
+            
+                    
+                    Getting specific resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.1.2" data-path="root.html">
             
                 <a href="root.html">
             
@@ -135,7 +168,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="by-type.html">
+        <li class="chapter " data-level="1.2.1.3" data-path="by-type.html">
             
                 <a href="by-type.html">
             
@@ -148,7 +181,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3" data-path="iterating.html">
+        <li class="chapter " data-level="1.2.1.4" data-path="iterating.html">
             
                 <a href="iterating.html">
             
@@ -158,6 +191,43 @@
                 </a>
             
 
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="resource-objects.html">
+            
+                <a href="resource-objects.html">
+            
+                    
+                    Resource objects
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="mixins.html">
+            
+                <a href="mixins.html">
+            
+                    
+                    Extending resources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -245,7 +315,7 @@
 comes with a <code>root</code> property which returns a single resource from within the representation graph. In most
 common case it will be the resource identified by the request URI </p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/book/426&apos;);
 
@@ -275,7 +345,7 @@ Link: &lt;/api/my-resource&gt;; rel=&quot;canonical&quot;
 </code></pre>
 <p>Here&apos;s a running example showing this in the real.</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-data-test.gear.host/brochures&apos;);
 
@@ -286,7 +356,7 @@ rep.root;
 a specific page, the client will still be interested in the collection resource itself. This is to make it
 simple to combine multiple</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/brochures?page=1&apos;);
 
@@ -310,7 +380,7 @@ collection <code>member</code>s.</p>
 <p>For that reason, whenever a <code>PartialCollectionView</code> is returned from the API, the root will actually be the
 collection itself.</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host/brochures?page=1&apos;);
 
@@ -324,7 +394,7 @@ gracefully resolve such inconsistency by looking for either both alternatives.</
 <p>Below is such an example, where the request tries an URL without the slash but the actual resource is
 identified with the slash included.</p>
 <p><pre class="pg-runkit"> 
-const client = require(&quot;alcaeus@0.4.0-a4&quot;).Hydra;
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
 
 const rep = await client.loadResource(&apos;http://wikibus-test.gear.host&apos;);
 
@@ -362,8 +432,12 @@ case the correct resource, as identified by the redirect target will be returned
 
             
                 
+                <a href="get.html" class="navigation navigation-prev " aria-label="Previous page: Getting specific resource">
+                    <i class="fa fa-angle-left"></i>
+                </a>
                 
-                <a href="by-type.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Selecting by type">
+                
+                <a href="by-type.html" class="navigation navigation-next " aria-label="Next page: Selecting by type">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -374,7 +448,7 @@ case the correct resource, as identified by the redirect target will be returned
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1","depth":2,"next":{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Resource representations","level":"1.2","depth":1,"ref":"","articles":[{"title":"Root resource","level":"1.2.1","depth":2,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.2","depth":2,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},{"title":"Iterating resources","level":"1.2.3","depth":2,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a4"},"gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-18T20:33:35.356Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-18T20:57:11.034Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Root resource","level":"1.2.1.2","depth":3,"next":{"title":"Selecting by type","level":"1.2.1.3","depth":3,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},"previous":{"title":"Getting specific resource","level":"1.2.1.1","depth":3,"path":"representations/get.md","ref":"representations/get.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0-a5"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/root.md","mtime":"2018-04-18T21:02:04.016Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-29T19:25:16.472Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
@@ -393,6 +467,10 @@ case the correct resource, as identified by the redirect target will be returned
     
         
         <script src="../gitbook/gitbook-plugin-etoc/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-forkmegithub/plugin.js"></script>
         
     
         

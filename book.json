@@ -1,5 +1,6 @@
 {
   "root": "./gitbook",
+  "title": "Alcaeus Hydra client",
   "plugins": [
     "runkit",
     "hints",

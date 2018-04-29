@@ -5,4 +5,6 @@
     * [Root resource](representations/root.md)
     * [Selecting by type](representations/by-type.md)
     * [Iterating resources](representations/iterating.md)
+  * [Resource objects](representations/resource-objects.md)
+    * [Extending resources](representations/mixins.md)
 * API Documentation

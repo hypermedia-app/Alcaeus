@@ -24,6 +24,9 @@ export class ResourceFactory implements IResourceFactory {
         resources: object,
         alcaeus: IHydraClient): IResource {
         const incomingLinks = () => findIncomingLinks(obj, resources);
+        const HydraResource = createBase(alcaeus, incomingLinks);
+
+        const resource = new HydraResource(obj, apiDocumentation);
 
         const mixins = this.mixins
             .filter((mc) => {
@@ -31,11 +34,10 @@ export class ResourceFactory implements IResourceFactory {
                     return false;
                 }
 
-                return mc.shouldApply(obj);
+                return mc.shouldApply(resource);
             })
             .map((mc) => mc.Mixin);
 
-        const HydraResource = createBase(alcaeus, incomingLinks);
         const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin(c), HydraResource);
 
         return new AlcaeusGenerated(obj, apiDocumentation);

@@ -24,9 +24,6 @@ const representation = await Hydra.loadResource('http://example.com/resource');
 const rootResource = representation.root;
 
 // contains supported classes, operations, etc.
-const apiDoc = rootResource.apiDocumentation;
-
-// contains supported classes, operations, etc.
 const apiDocs = rootResource.apiDocumentation;
     
 // same as rootResource['@id']

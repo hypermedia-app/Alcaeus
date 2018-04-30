@@ -20,17 +20,22 @@ yarn add alcaeus
 ``` js
 import {Hydra} from 'alcaeus';
 
-Hydra.loadResource('http://example.com/resource')
-  .then(res => {
-    // contains supported classes, operations, etc.
-    var apiDocs = res.apiDocumentation;
+const representation = await Hydra.loadResource('http://example.com/resource');
+const rootResource = representation.root;
+
+// contains supported classes, operations, etc.
+const apiDoc = rootResource.apiDocumentation;
+
+// contains supported classes, operations, etc.
+const apiDocs = rootResource.apiDocumentation;
     
-    // same as res['@id']
-    var id = res.id; 
-  });
+// same as rootResource['@id']
+const id = rootResource.id; 
 ```
 
-### More examples
+To learn more head to http://alcaeus.hydra.how.
+
+### More examples (outdated)
 
 * [Introduction to heracles](http://t-code.pl/blog/2016/04/introducing-heracles/)
 * [Working with jsonld.js](http://t-code.pl/blog/2016/04/heracles-compacting-resources/)

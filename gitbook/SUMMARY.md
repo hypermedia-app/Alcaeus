@@ -8,4 +8,4 @@
   * [Resource objects](representations/resource-objects.md)
     * [Affordances](representations/resource-affordances.md)
     * [Extending resources](representations/mixins.md)
-* API Documentation
+* [API Documentation](api-documentation/readme.md)

@@ -110,4 +110,7 @@ const rep = await client.loadResource('http://wikibus-test.gear.host/');
 rep.root.apiDocumentation;
 {% endrunkit %} 
 
+For more information about the API Documentation please refer to [its dedicated page][doc] and child pages.
+
 [op]: ../api-documentation/operation.md
+[dpc]: ../api-documentation/readme.md

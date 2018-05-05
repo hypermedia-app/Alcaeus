@@ -1,3 +1,4 @@
+import {deprecated} from 'core-decorators';
 import {Core, JsonLd} from '../../Constants';
 import {
     IClass, IHydraResource, ISupportedOperation, ISupportedProperty,
@@ -49,7 +50,12 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return this.classes.find((clas) => clas[JsonLd.Id] === classId) || null;
         }
 
+        @deprecated
         public getEntrypoint(): Promise<IHydraResource> {
+            return this.loadEntrypoint();
+        }
+
+        public loadEntrypoint(): Promise<IHydraResource> {
             if (!this[Core.Vocab('entrypoint')]) {
                 return Promise.reject('The ApiDocumentation doesn\'t have an entrypoint.');
             }

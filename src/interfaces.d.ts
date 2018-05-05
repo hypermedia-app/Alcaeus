@@ -90,7 +90,13 @@ export declare interface IApiDocumentation extends IResource {
     getClass(classId: string): IClass;
     getOperations(classUri: string, predicateUri?: string): ISupportedOperation[];
     getProperties(classUri: string): ISupportedProperty[];
+
+    /**
+     * @deprecated
+     */
     getEntrypoint(): Promise<IHydraResource>;
+
+    loadEntrypoint(): Promise<IHydraResource>;
 }
 
 export interface IClass extends IDocumentedResource {

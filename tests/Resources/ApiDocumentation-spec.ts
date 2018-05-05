@@ -69,7 +69,7 @@ describe('ApiDocumentation', () => {
             alcaeus.loadResource.returns(Promise.resolve(null));
 
             // when
-            await docs.getEntrypoint();
+            await docs.loadEntrypoint();
 
             // then
             expect(alcaeus.loadResource.calledWithExactly('http://example.com/home')).toBe(true);
@@ -85,7 +85,7 @@ describe('ApiDocumentation', () => {
 
             // when
             try {
-                docs.getEntrypoint()
+                docs.loadEntrypoint()
                     .then(() => {
                         throw new Error('Operation should not succeed');
                     });

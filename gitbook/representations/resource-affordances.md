@@ -99,4 +99,15 @@ const addressOperations = person["v:homeAddress"].operations;
 
 ## Accessing entire `ApiDocumentation`
 
+Additionally every resource object comes provides a `apiDocumentation` getter which returns a tree loaded
+from the linked `ApiDocumentation`.
+
+{% runkit %} 
+const client = require("alcaeus@{{ book.version }}").Hydra;
+
+const rep = await client.loadResource('http://wikibus-test.gear.host/');
+
+rep.root.apiDocumentation;
+{% endrunkit %} 
+
 [op]: ../api-documentation/operation.md

@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "yarn lint; yarn run karma start --single-run",
-    "build": "webpack; gitbook build . docs",
+    "build": "webpack; gitbook build . docs/latest",
     "lint": "tslint -p tsconfig.json",
     "prepublishOnly": "npm run build"
   },

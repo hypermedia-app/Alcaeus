@@ -1,8 +1,7 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IPartialCollectionView} from '../../interfaces';
+import {IPartialCollectionView, IResource} from '../../interfaces';
 import {IAsObject, IIncomingLink} from '../../internals';
-import {isA} from '../../ResourceHelper';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
@@ -41,4 +40,4 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     return PartialCollectionView;
 }
 
-export const shouldApply = isA(Core.Vocab('PartialCollectionView'));
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('PartialCollectionView'));

@@ -1,7 +1,6 @@
 import {deprecated} from 'core-decorators';
 import {Core, JsonLd} from '../../Constants';
-import { IApiDocumentation, ISupportedProperty } from '../../interfaces';
-import {isA} from '../../ResourceHelper';
+import {IApiDocumentation, IResource, ISupportedProperty} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
@@ -65,4 +64,4 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     return ApiDocumentation;
 }
 
-export const shouldApply = isA(Core.Vocab('ApiDocumentation'));
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('ApiDocumentation'));

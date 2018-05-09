@@ -1,21 +1,22 @@
 import {Core} from '../../Constants';
-import {IClass} from '../../interfaces';
-import ensureArray, {isA} from '../../ResourceHelper';
+import {IClass, IResource} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class Class extends Base implements IClass {
+    abstract class Class extends Base implements IClass {
 
         get supportedOperations() {
-            return ensureArray(this, Core.Vocab('supportedOperation'));
+            return this._ensureArray(Core.Vocab('supportedOperation'));
         }
 
         get supportedProperties() {
-            return ensureArray(this, Core.Vocab('supportedProperty'));
+            return this._ensureArray(Core.Vocab('supportedProperty'));
         }
+
+        protected abstract _ensureArray(prop: string);
     }
 
     return Class;
 }
 
-export const shouldApply = isA(Core.Vocab('Class'));
+export const shouldApply = (res: IResource) => res.types.contains((Core.Vocab('Class')));

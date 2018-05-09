@@ -1,5 +1,5 @@
 import {Core, JsonLd} from '../../Constants';
-import {isA} from '../../ResourceHelper';
+import {IResource} from '../../interfaces';
 import {Constructor} from '../Mixin';
 import ExpansionModelBuilder, {IExpandedValue} from './ExpansionModelBuilder';
 
@@ -17,8 +17,8 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     return ExpansionModelBuilder(BasicRepresentationExpansion);
 }
 
-export function shouldApply(resource) {
-    const isTemplate = isA(Core.Vocab('IriTemplate'))(resource);
+export function shouldApply(resource: IResource) {
+    const isTemplate = resource.types.contains(Core.Vocab('IriTemplate'));
 
     const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined'
         || resource[Core.Vocab('variableRepresentation')] === null;

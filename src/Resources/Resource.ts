@@ -35,4 +35,18 @@ export default class implements IResource {
     public compact(context: any = null) {
         return jsonld.compact(this, context || Core.Context);
     }
+
+    protected _ensureArray(property: string) {
+        const values = this[property];
+
+        if (!values) {
+            return [];
+        }
+
+        if (Array.isArray(values) === false) {
+            return [ values ];
+        }
+
+        return values;
+    }
 }

@@ -1,6 +1,5 @@
 import {Core} from '../../Constants';
-import {IStatusCodeDescription} from '../../interfaces';
-import {isA} from '../../ResourceHelper';
+import {IResource, IStatusCodeDescription} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin <TBase extends Constructor>(Base: TBase) {
@@ -16,4 +15,4 @@ export function Mixin <TBase extends Constructor>(Base: TBase) {
     };
 }
 
-export const shouldApply = isA(Core.Vocab('StatusCodeDescription'));
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('StatusCodeDescription'));

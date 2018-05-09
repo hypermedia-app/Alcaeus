@@ -1,7 +1,6 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IIriTemplateMapping} from '../../interfaces';
-import {isA} from '../../ResourceHelper';
+import {IIriTemplateMapping, IResource} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
@@ -25,4 +24,4 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     return IriTemplateMapping;
 }
 
-export const shouldApply = isA(Core.Vocab('IriTemplateMapping'));
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('IriTemplateMapping'));

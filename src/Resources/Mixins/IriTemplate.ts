@@ -1,7 +1,6 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IIriTemplate} from '../../interfaces';
-import ensureArray, {isA} from '../../ResourceHelper';
+import {IIriTemplate, IResource} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
@@ -13,7 +12,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
 
         @nonenumerable
         get mappings() {
-            return ensureArray(this, Core.Vocab('mapping'));
+            return this._ensureArray(Core.Vocab('mapping'));
         }
 
         @nonenumerable
@@ -22,9 +21,10 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         }
 
         public abstract expand(): string;
+        public abstract _ensureArray(prop: string);
     }
 
     return IriTemplate;
 }
 
-export const shouldApply = isA(Core.Vocab('IriTemplate'));
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('IriTemplate'));

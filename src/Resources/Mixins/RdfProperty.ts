@@ -1,11 +1,10 @@
 import {Core} from '../../Constants';
-import {IRdfProperty} from '../../interfaces';
-import ensureArray, {isA} from '../../ResourceHelper';
+import {IRdfProperty, IResource} from '../../interfaces';
 import {rdf, rdfs} from '../../Vocabs';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class RdfProperty extends Base implements IRdfProperty {
+    abstract class RdfProperty extends Base implements IRdfProperty {
         get range() {
             return this[rdfs('range')];
         }
@@ -15,11 +14,13 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         }
 
         get supportedOperations() {
-            return ensureArray(this, Core.Vocab('supportedOperation'));
+            return this._ensureArray(Core.Vocab('supportedOperation'));
         }
+
+        protected abstract _ensureArray(prop: string);
     }
 
     return RdfProperty;
 }
 
-export const shouldApply = isA(rdf.Property);
+export const shouldApply = (res: IResource) => res.types.contains(rdf.Property);

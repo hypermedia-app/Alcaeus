@@ -10,8 +10,9 @@ describe('BasicRepresentationExpansion', () => {
         let body;
 
         beforeEach(() => {
-            body = {};
-            body[JsonLd.Type] = Core.Vocab('IriTemplate');
+            body = new Resource({
+                [JsonLd.Type]: Core.Vocab('IriTemplate'),
+            });
         });
 
         it('is true when variableRepresentation is not defined', () => {

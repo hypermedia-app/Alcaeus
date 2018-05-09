@@ -1,6 +1,5 @@
 import {Core} from '../../Constants';
-import {ISupportedProperty} from '../../interfaces';
-import {isA} from '../../ResourceHelper';
+import {IResource, ISupportedProperty} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
@@ -36,4 +35,4 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     };
 }
 
-export const shouldApply = isA(Core.Vocab('SupportedProperty'));
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('SupportedProperty'));

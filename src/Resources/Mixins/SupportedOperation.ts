@@ -1,20 +1,20 @@
 import {Core} from '../../Constants';
-import {IClass} from '../../interfaces';
+import {IClass, ISupportedOperation} from '../../interfaces';
 import {owl} from '../../Vocabs';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class SupportedOperation extends Base {
+    class SupportedOperation extends Base implements ISupportedOperation {
 
         get method(): string {
             return this[Core.Vocab('method')];
         }
 
-        get expects(): IClass {
+        get expects() {
             return this[Core.Vocab('expects')];
         }
 
-        get returns(): IClass {
+        get returns() {
             return this[Core.Vocab('returns')];
         }
 

@@ -1,9 +1,10 @@
 import {Core} from '../../Constants';
+import {ISupportedProperty} from '../../interfaces';
 import {isA} from '../../ResourceHelper';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    return class extends Base {
+    return class extends Base implements ISupportedProperty {
 
         get readable() {
             if (typeof this[Core.Vocab('readable')] === 'boolean') {

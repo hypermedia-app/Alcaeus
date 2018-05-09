@@ -1,15 +1,18 @@
 import {nonenumerable} from 'core-decorators';
 import {MediaTypes} from '../Constants';
-import {IClass, IHydraClient, IHydraResource, IOperation, IResource, ISupportedOperation} from '../interfaces';
+import {
+    HydraResource, IHydraClient, IOperation, IResource,
+    SupportedOperation,
+} from '../interfaces';
 import Resource from './Resource';
 
-const supportedOperations = new WeakMap<IOperation, ISupportedOperation>();
+const supportedOperations = new WeakMap<IOperation, SupportedOperation>();
 const resources = new WeakMap<IOperation, IResource>();
 const clients = new WeakMap<IOperation, IHydraClient>();
 
 export class Operation extends Resource implements IOperation {
 
-    constructor(supportedOperation: ISupportedOperation, alcaeus: IHydraClient, resource: IHydraResource) {
+    constructor(supportedOperation: SupportedOperation, alcaeus: IHydraClient, resource: HydraResource) {
         super(resource);
 
         if (!supportedOperation) {
@@ -25,11 +28,11 @@ export class Operation extends Resource implements IOperation {
         return this._supportedOperation.method;
     }
 
-    get expects(): IClass {
+    get expects() {
         return this._supportedOperation.expects;
     }
 
-    get returns(): IClass {
+    get returns() {
         return this._supportedOperation.returns;
     }
 
@@ -46,7 +49,7 @@ export class Operation extends Resource implements IOperation {
     }
 
     @nonenumerable
-    get _supportedOperation(): ISupportedOperation {
+    get _supportedOperation() {
         return supportedOperations.get(this);
     }
 

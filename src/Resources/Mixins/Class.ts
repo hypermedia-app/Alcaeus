@@ -1,16 +1,16 @@
 import {Core} from '../../Constants';
-import {ISupportedOperation, ISupportedProperty} from '../../interfaces';
+import {IClass} from '../../interfaces';
 import ensureArray, {isA} from '../../ResourceHelper';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class Class extends Base {
+    class Class extends Base implements IClass {
 
-        get supportedOperations(): ISupportedOperation[] {
+        get supportedOperations() {
             return ensureArray(this, Core.Vocab('supportedOperation'));
         }
 
-        get supportedProperties(): ISupportedProperty[] {
+        get supportedProperties() {
             return ensureArray(this, Core.Vocab('supportedProperty'));
         }
     }

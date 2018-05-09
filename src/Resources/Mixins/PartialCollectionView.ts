@@ -1,12 +1,12 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IHydraResource} from '../../interfaces';
+import {IPartialCollectionView} from '../../interfaces';
 import {IAsObject, IIncomingLink} from '../../internals';
 import {isA} from '../../ResourceHelper';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class PartialCollectionView extends Base {
+    class PartialCollectionView extends Base implements IPartialCollectionView {
         @nonenumerable
         get first() {
             return this[Core.Vocab('first')] || null;
@@ -28,7 +28,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         }
 
         @nonenumerable
-        get collection(): IHydraResource {
+        get collection() {
             const reverseLinks = (this as any as IAsObject)._links;
             const collectionLink = reverseLinks.find((linkArray: IIncomingLink) => {
                 return linkArray.predicate === Core.Vocab('view');

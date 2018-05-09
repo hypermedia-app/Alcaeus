@@ -1,20 +1,20 @@
 import {Core} from '../../Constants';
-import {IClass, ISupportedOperation} from '../../interfaces';
+import {IRdfProperty} from '../../interfaces';
 import ensureArray, {isA} from '../../ResourceHelper';
 import {rdf, rdfs} from '../../Vocabs';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class RdfProperty extends Base {
-        get range(): IClass {
+    class RdfProperty extends Base implements IRdfProperty {
+        get range() {
             return this[rdfs('range')];
         }
 
-        get domain(): IClass {
+        get domain() {
             return this[rdfs('domain')];
         }
 
-        get supportedOperations(): ISupportedOperation[] {
+        get supportedOperations() {
             return ensureArray(this, Core.Vocab('supportedOperation'));
         }
     }

@@ -1,8 +1,8 @@
-import {IHydraResource, IHydraResponse, IResponseWrapper, IRootSelector} from './interfaces';
+import {HydraResource, IHydraResponse, IResponseWrapper, IRootSelector} from './interfaces';
 import {ResponseWrapper} from './ResponseWrapper';
 
 interface IResourceGraph {
-    [uri: string]: IHydraResource;
+    [uri: string]: HydraResource;
 }
 
 export function create(
@@ -20,33 +20,32 @@ export function create(
             super(requestedUri, response.xhr);
         }
 
-        public get(identifier: string): IHydraResource {
+        public get(identifier: string) {
             return safeResources[identifier];
         }
 
-        get root(): IHydraResource {
+        get root() {
             return safeSelectors.reduce((resource, selector) => {
                 if (!resource) {
                     resource = selector.selectRoot(safeResources, this);
                 }
 
                 return resource;
-            }, null as IHydraResource);
+            }, null as HydraResource);
         }
 
         get length(): number {
             return Object.keys(safeResources).length;
         }
 
-        public ofType(classId: string): IHydraResource[] {
+        public ofType(classId: string) {
             return Object.values(safeResources).filter((res) => res.types.contains(classId));
         }
 
-        public [Symbol.iterator](): Iterator<IHydraResource> {
+        public [Symbol.iterator]() {
             return Object.values(safeResources)[Symbol.iterator]();
         }
     }
 
     return new HydraResponse(uri);
-
 }

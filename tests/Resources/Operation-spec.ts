@@ -1,5 +1,5 @@
 import * as sinon from 'sinon';
-import {IClass, IHydraClient, IHydraResource, IOperation, ISupportedOperation} from '../../src/interfaces';
+import {Class, HydraResource, IHydraClient, IOperation, SupportedOperation} from '../../src/interfaces';
 import {Operation} from '../../src/Resources/Operation';
 
 describe('Operation', () => {
@@ -7,8 +7,8 @@ describe('Operation', () => {
     describe('property', () => {
 
         let operation: IOperation;
-        const expects: IClass = {} as IClass;
-        const returns: IClass = {} as IClass;
+        const expects: Class = {} as Class;
+        const returns: Class = {} as Class;
 
         beforeEach(() => {
             operation = new Operation({
@@ -17,7 +17,7 @@ describe('Operation', () => {
                 method: 'POST',
                 returns,
                 title: 'the title',
-            } as ISupportedOperation, {} as IHydraClient, {} as IHydraResource);
+            } as SupportedOperation, {} as IHydraClient, {} as HydraResource);
         });
 
         it('method should delegate to operation', () => {
@@ -41,10 +41,10 @@ describe('Operation', () => {
     xdescribe('invoke', () => {
 
         let alcaeus;
-        const supportedOperation = {} as ISupportedOperation;
+        const supportedOperation = {} as SupportedOperation;
         const resource = {
             id: 'http://target/resource',
-        } as IHydraResource;
+        } as HydraResource;
 
         beforeEach(() => alcaeus = {
             invokeOperation: sinon.stub(),

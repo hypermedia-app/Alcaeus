@@ -1,14 +1,15 @@
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
 import {
-    IApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IResponseWrapper, IRootSelector,
+    ApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IResource, IResponseWrapper,
+    IRootSelector,
 } from './interfaces';
 
 const getHydraResponse = async (
     alcaeus: IHydraClient,
     response: IResponseWrapper,
     uri: string,
-    apiDocumentation?: IApiDocumentation): Promise<IHydraResponse> => {
+    apiDocumentation?: ApiDocumentation): Promise<IHydraResponse> => {
 
     const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
         .find((processor) => processor.canProcess(response.mediaType));
@@ -38,11 +39,11 @@ export class Alcaeus implements IHydraClient {
         return getHydraResponse(this, response, uri, apiDocumentation);
     }
 
-    public async loadDocumentation(uri: string): Promise<IApiDocumentation> {
+    public async loadDocumentation(uri: string) {
         try {
             const response = await FetchUtil.fetchResource(uri);
             const representation = await getHydraResponse(this, response, uri, null);
-            return representation.root as any as IApiDocumentation;
+            return representation.root as any as ApiDocumentation;
         } catch (e) {
             return null;
         }

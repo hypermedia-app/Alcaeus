@@ -1,10 +1,10 @@
-import {IHydraResource, IResponseWrapper} from '../../src/interfaces';
+import {HydraResource, IResponseWrapper} from '../../src/interfaces';
 import RedirectTargetSelector from '../../src/RootSelectors/RedirectTargetSelector';
 
 describe('RedirectTargetSelector', () => {
     it('when resource is in response should select the redirect target', () => {
         // given
-        const expectedRoot = {} as IHydraResource;
+        const expectedRoot = {} as HydraResource;
         const resources = {
             'redirected-to': expectedRoot,
         };
@@ -24,7 +24,7 @@ describe('RedirectTargetSelector', () => {
     it('when resource is in response should select the redirect target', () => {
         // given
         const resources = {
-            'something-else': {} as IHydraResource,
+            'something-else': {} as HydraResource,
         };
         const response = {
             xhr: {

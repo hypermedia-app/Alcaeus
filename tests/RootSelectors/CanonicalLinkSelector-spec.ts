@@ -1,12 +1,12 @@
-import {IHydraResource, IResponseWrapper} from '../../src/interfaces';
+import {HydraResource, IResponseWrapper} from '../../src/interfaces';
 import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector';
 
 describe('CanonicalLinkSelector', () => {
     it('should select the resource with id matching canonical link', () => {
         // given
-        const expectedRoot = {} as IHydraResource;
+        const expectedRoot = {} as HydraResource;
         const resources = {
-            'redirected-to': {} as IHydraResource,
+            'redirected-to': {} as HydraResource,
             'the-real-id': expectedRoot,
         };
         const response = {

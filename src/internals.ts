@@ -1,8 +1,8 @@
-import {IHydraResource} from './interfaces';
+import {HydraResource} from './interfaces';
 
 export interface IIncomingLink {
     subjectId: string;
-    subject: IHydraResource;
+    subject: HydraResource;
     predicate: string;
 }
 

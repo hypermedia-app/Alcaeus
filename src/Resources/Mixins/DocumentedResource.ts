@@ -1,4 +1,5 @@
 import {Core} from '../../Constants';
+import {IDocumentedResource} from '../../interfaces';
 import {rdfs, Schema} from '../../Vocabs';
 import {Constructor} from '../Mixin';
 
@@ -11,7 +12,7 @@ function getDescription(res) {
 }
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    return class extends Base {
+    return class extends Base implements IDocumentedResource {
         get description(): string {
             return getDescription(this);
         }

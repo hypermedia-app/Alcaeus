@@ -1,11 +1,11 @@
-import {IHydraResource, IHydraResponse} from '../../src/interfaces';
+import {HydraResource, IHydraResponse} from '../../src/interfaces';
 import TrailingSlashSelector from '../../src/RootSelectors/TrailingSlashSelector';
 
 describe('TrailingSlashSelector', () => {
     describe('when requested id has a trailing slash but representation does not', () => {
         it('should return the correct one', () => {
             // given
-            const expectedRoot = {} as IHydraResource;
+            const expectedRoot = {} as HydraResource;
             const resources = {
                 'http://some/id': expectedRoot,
             };
@@ -24,7 +24,7 @@ describe('TrailingSlashSelector', () => {
     describe('when representation has a trailing slash but requested id does not', () => {
         it('should return the correct one', () => {
             // given
-            const expectedRoot = {} as IHydraResource;
+            const expectedRoot = {} as HydraResource;
             const resources = {
                 'http://some/id/': expectedRoot,
             };

@@ -1,7 +1,7 @@
 export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
 
 export interface IResourceGraph {
-    [uri: string]: IHydraResource;
+    [uri: string]: HydraResource;
 }
 
 export declare interface IHydraClient {
@@ -17,7 +17,7 @@ export declare interface IMediaTypeProcessor {
         alcaeus: IHydraClient,
         uri: string,
         response: IResponseWrapper,
-        apiDocumentation: IApiDocumentation): Promise<IResourceGraph>;
+        apiDocumentation: ApiDocumentation): Promise<IResourceGraph>;
 }
 
 export interface IResponseWrapper {
@@ -47,12 +47,12 @@ export interface IResponseWrapper {
     xhr: Response;
 }
 
-export declare interface IHydraResponse extends Iterable<IHydraResource>, IResponseWrapper {
+export declare interface IHydraResponse extends Iterable<HydraResource>, IResponseWrapper {
 
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
-    root: IHydraResource;
+    root: HydraResource;
 
     /**
      * Gets the number of resource within this representation
@@ -62,18 +62,18 @@ export declare interface IHydraResponse extends Iterable<IHydraResource>, IRespo
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    get(uri: string): IHydraResource;
+    get(uri: string): HydraResource;
 
     /**
      * Gets all resources of given RDF type from the representation
      * @param {string} classId RDF class identifier
-     * @returns {Array<IHydraResource>}
+     * @returns {Array<HydraResource>}
      */
     ofType(classId: string): IResource[];
 }
 
 export interface IRootSelector {
-    selectRoot(resources: IResourceGraph, response: IResponseWrapper & IHydraResponse): IHydraResource;
+    selectRoot(resources: IResourceGraph, response: IResponseWrapper & IHydraResponse): HydraResource;
 }
 
 export declare interface IResource {
@@ -85,82 +85,89 @@ export declare interface ITypeCollection extends ReadonlyArray<string> {
     contains(clas: string): boolean;
 }
 
-export declare interface IApiDocumentation extends IResource {
-    classes: IClass[];
-    getClass(classId: string): IClass;
-    getOperations(classUri: string, predicateUri?: string): ISupportedOperation[];
-    getProperties(classUri: string): ISupportedProperty[];
+export declare interface IApiDocumentation {
+    classes: Class[];
+    getClass(classId: string): Class;
+    getOperations(classUri: string, predicateUri?: string): SupportedOperation[];
+    getProperties(classUri: string): SupportedProperty[];
 
     /**
      * @deprecated
      */
-    getEntrypoint(): Promise<IHydraResource>;
+    getEntrypoint(): Promise<HydraResource>;
 
-    loadEntrypoint(): Promise<IHydraResource>;
+    loadEntrypoint(): Promise<HydraResource>;
 }
 
-export interface IClass extends IDocumentedResource {
-    supportedOperations: ISupportedOperation[];
-    supportedProperties: ISupportedProperty[];
+export interface IClass {
+    /**
+     * Gets the operations supported by this class
+     */
+    supportedOperations: SupportedOperation[];
+
+    /**
+     * Gets the properties supported by this class
+     */
+    supportedProperties: SupportedProperty[];
 }
 
-export interface IDocumentedResource extends IResource {
+export interface IDocumentedResource {
     title: string;
     description: string;
 }
 
-export interface ISupportedProperty extends IDocumentedResource {
+export interface ISupportedProperty {
     readable: boolean;
     writable: boolean;
     required: boolean;
-    property: IRdfProperty;
+    property: RdfProperty;
 }
 
-export interface ISupportedOperation extends IDocumentedResource {
+export interface ISupportedOperation {
     method: string;
-    expects: IClass;
-    returns: IClass;
+    expects: Class;
+    returns: Class;
     requiresInput: boolean;
 }
 
-export interface IRdfProperty extends IDocumentedResource {
-    range: IClass;
-    domain: IClass;
-    supportedOperations: ISupportedOperation[];
+export interface IRdfProperty {
+    range: Class;
+    domain: Class;
+    supportedOperations: SupportedOperation[];
 }
 
-export interface IOperation extends IResource {
+export interface IOperation {
     title: string;
     description: string;
     method: string;
-    expects: IClass;
-    returns: IClass;
+    expects: Class;
+    returns: Class;
     requiresInput: boolean;
     invoke(body: any, mediaType?: string);
 }
 
-export interface IHydraResource extends IResource {
+export interface IHydraResource {
     operations: IOperation[];
-    apiDocumentation: IApiDocumentation;
+    apiDocumentation: ApiDocumentation;
 }
 
-export interface IPartialCollectionView extends IHydraResource {
-    first: IHydraResource;
-    previous: IHydraResource;
-    next: IHydraResource;
-    last: IHydraResource;
-    collection: IHydraResource;
+export interface IPartialCollectionView {
+    first: HydraResource;
+    previous: HydraResource;
+    next: HydraResource;
+    last: HydraResource;
+    collection: HydraResource;
 }
 
-export interface ICollection extends IHydraResource {
-    members: IHydraResource[];
-    views: IPartialCollectionView[];
+export interface ICollection {
+    members: HydraResource[];
+    views: PartialCollectionView[];
 }
 
 export interface IResourceFactory {
     createResource(
         obj: object,
-        apiDocumentation: IApiDocumentation,
+        apiDocumentation: ApiDocumentation,
         resources,
         clientAccessorMixin?): IResource;
 }
@@ -178,9 +185,19 @@ export interface IIriTemplate {
 }
 
 export interface IIriTemplateMapping {
-    property: IRdfProperty;
+    property: RdfProperty;
     variable: string;
     required: boolean;
 }
+
+export type HydraResource = IHydraResource & IResource;
+export type DocumentedResource = IDocumentedResource & HydraResource;
+export type Class = IClass & DocumentedResource;
+export type SupportedOperation = ISupportedOperation & DocumentedResource;
+export type SupportedProperty = ISupportedProperty & DocumentedResource;
+export type Collection = ICollection & HydraResource;
+export type PartialCollectionView = IPartialCollectionView & HydraResource;
+export type RdfProperty = IRdfProperty & DocumentedResource;
+export type ApiDocumentation = IApiDocumentation & IResource;
 
 export default IHydraClient;

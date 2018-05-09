@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
 import {create as HydraResponse} from '../src/HydraResponse';
-import {IHydraResource, IResponseWrapper} from '../src/interfaces';
+import {HydraResource, IResponseWrapper} from '../src/interfaces';
 import Resource from '../src/Resources/Resource';
 
 describe('HydraResponse', () => {
@@ -67,7 +67,7 @@ describe('HydraResponse', () => {
             // given
             const childRes = {};
             const resources = {
-                'urn:child:resource': childRes as IHydraResource,
+                'urn:child:resource': childRes as HydraResource,
             };
             const response = HydraResponse('urn:some:uri', {} as IResponseWrapper, resources, []);
 

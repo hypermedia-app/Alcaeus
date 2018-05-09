@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Hydra} from '../src';
 import * as FetchUtil from '../src/FetchUtil';
-import {IPartialCollectionView} from '../src/interfaces';
+import {PartialCollectionView} from '../src/interfaces';
 import {Bodies, Documentations} from './test-objects';
 import {mockedResponse, responseBuilder} from './test-utils';
 
@@ -62,7 +62,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3');
-            const res = hydraRes.get('http://example.com/resource?page=3') as IPartialCollectionView;
+            const res = hydraRes.get('http://example.com/resource?page=3') as PartialCollectionView;
 
             // then
             expect(res.collection).toBeDefined();

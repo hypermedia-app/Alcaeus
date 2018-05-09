@@ -1,11 +1,11 @@
 import * as li from 'parse-link-header';
 import * as Constants from '../Constants';
-import {IHydraResource, IResourceGraph, IResponseWrapper} from '../interfaces';
+import {IResourceGraph, IResponseWrapper} from '../interfaces';
 
 const CanonicalLinkRel = 'canonical';
 
 export default {
-    selectRoot(resources: IResourceGraph, response: IResponseWrapper): IHydraResource {
+    selectRoot(resources: IResourceGraph, response: IResponseWrapper) {
         const linkHeaders = response.xhr.headers.get(Constants.Headers.Link);
         const links = li(linkHeaders);
 

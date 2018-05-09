@@ -1,10 +1,10 @@
-import {IHydraResource, IHydraResponse} from '../../src/interfaces';
+import {HydraResource, IHydraResponse} from '../../src/interfaces';
 import ExactIdMatchSelector from '../../src/RootSelectors/ExactIdMatchSelector';
 
 describe('ExactIdMatchSelector', () => {
     it('when resource is in response should select the redirect target', () => {
         // given
-        const expectedRoot = {} as IHydraResource;
+        const expectedRoot = {} as HydraResource;
         const resources = {
             id: expectedRoot,
         };

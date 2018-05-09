@@ -1,8 +1,7 @@
 import {JsonLd} from './Constants';
-import {IApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
+import {ApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
 import {IIncomingLink} from './internals';
 import {forOwn, values} from './LodashUtil';
-import createLinkAccessor from './Resources/CoreMixins/LinkAccessor';
 import createBase from './Resources/HydraResource';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
@@ -20,7 +19,7 @@ export class ResourceFactory implements IResourceFactory {
 
     public createResource(
         obj: object,
-        apiDocumentation: IApiDocumentation,
+        apiDocumentation: ApiDocumentation,
         resources: object,
         alcaeus: IHydraClient): IResource {
         const incomingLinks = () => findIncomingLinks(obj, resources);

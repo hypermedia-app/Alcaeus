@@ -6,7 +6,7 @@ import * as stringToStream from 'string-to-stream';
 import * as Constants from '../Constants';
 import {JsonLd} from '../Constants';
 import {
-    IApiDocumentation, IHydraClient, IMediaTypeProcessor, IResource, IResourceFactory, IResourceGraph, IResponseWrapper,
+    ApiDocumentation, IHydraClient, IMediaTypeProcessor, IResource, IResourceFactory, IResourceGraph, IResponseWrapper,
 } from '../interfaces';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
@@ -167,7 +167,7 @@ export default class RdfProcessor implements IMediaTypeProcessor {
         alcaeus: IHydraClient,
         uri: string,
         response: IResponseWrapper,
-        apiDocumentation: IApiDocumentation): Promise<IResourceGraph> {
+        apiDocumentation: ApiDocumentation): Promise<IResourceGraph> {
         const processedGraph = await parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType);
 
         const createResource = (obj, resources) => {

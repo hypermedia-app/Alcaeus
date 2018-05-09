@@ -10,7 +10,7 @@ describe('Hydra (e2e)', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
-    it('should directly expose all resource from graph', async () => {
+    xit('should directly expose all resource from graph', async () => {
         // given
         const slice = 'http://stat.stadt-zuerich.ch/api/dataset/GEB-RAUM-ZEIT/slice';
         const representation = await client.loadResource(slice);

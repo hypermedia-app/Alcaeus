@@ -1,16 +1,14 @@
 import {deprecated} from 'core-decorators';
 import {Core, JsonLd} from '../../Constants';
-import {
-    IClass, IHydraResource, ISupportedOperation, ISupportedProperty,
-} from '../../interfaces';
+import { IApiDocumentation, ISupportedProperty } from '../../interfaces';
 import {isA} from '../../ResourceHelper';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    abstract class ApiDocumentation extends Base {
+    abstract class ApiDocumentation extends Base implements IApiDocumentation {
         public abstract get _alcaeus();
 
-        get classes(): IClass[] {
+        get classes() {
             if (Array.isArray(this[Core.Vocab('supportedClass')])) {
                 return this[Core.Vocab('supportedClass')];
             }
@@ -18,7 +16,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return [this[Core.Vocab('supportedClass')]];
         }
 
-        public getOperations(classUri: string, predicateUri?: string): ISupportedOperation[] {
+        public getOperations(classUri: string, predicateUri?: string) {
             const clas = this.getClass(classUri);
             if (!clas) {
                 return [];
@@ -38,7 +36,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return supportedProperty.property.supportedOperations;
         }
 
-        public getProperties(classUri: string): ISupportedProperty[] {
+        public getProperties(classUri: string) {
             const clas = this.getClass(classUri);
             if (!clas) {
                 return [];
@@ -46,16 +44,16 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
             return clas.supportedProperties;
         }
 
-        public getClass(classId): IClass {
+        public getClass(classId) {
             return this.classes.find((clas) => clas[JsonLd.Id] === classId) || null;
         }
 
         @deprecated
-        public getEntrypoint(): Promise<IHydraResource> {
+        public getEntrypoint() {
             return this.loadEntrypoint();
         }
 
-        public loadEntrypoint(): Promise<IHydraResource> {
+        public loadEntrypoint() {
             if (!this[Core.Vocab('entrypoint')]) {
                 return Promise.reject('The ApiDocumentation doesn\'t have an entrypoint.');
             }

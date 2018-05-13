@@ -6,6 +6,11 @@ import {Constructor} from '../Mixin';
 export function Mixin <TBase extends Constructor>(Base: TBase) {
     abstract class Collection extends Base implements ICollection {
         @nonenumerable
+        public get totalItems() {
+            return this[Core.Vocab('totalItems')];
+        }
+
+        @nonenumerable
         get members() {
             return this._ensureArray(Core.Vocab('member'));
         }

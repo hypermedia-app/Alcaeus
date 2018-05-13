@@ -3,7 +3,7 @@ import {IResource, ISupportedProperty} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    return class extends Base implements ISupportedProperty {
+    return class SupportedProperty extends Base implements ISupportedProperty {
 
         get readable() {
             if (typeof this[Core.Vocab('readable')] === 'boolean') {

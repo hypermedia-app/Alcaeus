@@ -1,11 +1,11 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IPartialCollectionView, IResource} from '../../interfaces';
+import {IPartialCollectionView, IResource, IView} from '../../interfaces';
 import {IAsObject, IIncomingLink} from '../../internals';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    class PartialCollectionView extends Base implements IPartialCollectionView {
+    class PartialCollectionView extends Base implements IPartialCollectionView, IView {
         @nonenumerable
         get first() {
             return this[Core.Vocab('first')] || null;

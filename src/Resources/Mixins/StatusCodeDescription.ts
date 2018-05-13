@@ -3,7 +3,7 @@ import {IResource, IStatusCodeDescription} from '../../interfaces';
 import {Constructor} from '../Mixin';
 
 export function Mixin <TBase extends Constructor>(Base: TBase) {
-    return class extends Base implements IStatusCodeDescription {
+    return class StatusCodeDescription extends Base implements IStatusCodeDescription {
 
         get code(): number {
             return this[Core.Vocab('code')];

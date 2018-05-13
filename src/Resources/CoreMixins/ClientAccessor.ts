@@ -4,13 +4,13 @@ import {Constructor} from '../Mixin';
 
 export default function(alcaeus: IHydraClient) {
     return <TBase extends Constructor>(Base: TBase) => {
-        class ClientAccessor extends Base {
+        class HydraResource extends Base {
             @nonenumerable
             private get _alcaeus() {
                 return alcaeus;
             }
         }
 
-        return ClientAccessor;
+        return HydraResource;
     };
 }

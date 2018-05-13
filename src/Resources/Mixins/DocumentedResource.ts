@@ -12,7 +12,7 @@ function getDescription(res) {
 }
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
-    return class extends Base implements IDocumentedResource {
+    return class HydraResource extends Base implements IDocumentedResource {
         get description(): string {
             return getDescription(this);
         }

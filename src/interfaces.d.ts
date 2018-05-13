@@ -147,21 +147,57 @@ export interface IOperation {
 }
 
 export interface IHydraResource {
-    operations: IOperation[];
-    apiDocumentation: ApiDocumentation;
+    /**
+     * Gets the operations which can be performed on this resource
+     */
+    readonly operations: IOperation[];
+    /**
+     * Gets the API Documentation which was linked to this resource representation
+     */
+    readonly apiDocumentation: ApiDocumentation;
+}
+
+export interface IView {
+    /**
+     * Gets the actual collection resource, of which this view is part
+     */
+    readonly collection: HydraResource;
 }
 
 export interface IPartialCollectionView {
-    first: HydraResource;
-    previous: HydraResource;
-    next: HydraResource;
-    last: HydraResource;
-    collection: HydraResource;
+    /**
+     * Gets the first page resource of a collection
+     */
+    readonly first: HydraResource;
+    /**
+     * Gets the previous page resource of a collection
+     */
+    readonly previous: HydraResource;
+    /**
+     * Gets the next page resource of a collection
+     */
+    readonly next: HydraResource;
+    /**
+     * Gets the last page resource of a collection
+     */
+    readonly last: HydraResource;
 }
 
 export interface ICollection {
-    members: HydraResource[];
-    views: PartialCollectionView[];
+    /**
+     * Gets the total number of items within the entire collection.
+     * Note that this number can be larger then the number of `members` in the case of partial collections
+     */
+    readonly totalItems: number;
+    /**
+     * Gets the collection member included in the current representation.
+     * In the case of partial collections they may only be a subset of all members
+     */
+    readonly members: HydraResource[];
+    /**
+     * Gets the views of a partial collection
+     */
+    readonly views?: IView[];
 }
 
 export interface IResourceFactory {
@@ -196,7 +232,7 @@ export type Class = IClass & DocumentedResource;
 export type SupportedOperation = ISupportedOperation & DocumentedResource;
 export type SupportedProperty = ISupportedProperty & DocumentedResource;
 export type Collection = ICollection & HydraResource;
-export type PartialCollectionView = IPartialCollectionView & HydraResource;
+export type PartialCollectionView = IPartialCollectionView & IView & HydraResource;
 export type RdfProperty = IRdfProperty & DocumentedResource;
 export type ApiDocumentation = IApiDocumentation & IResource;
 

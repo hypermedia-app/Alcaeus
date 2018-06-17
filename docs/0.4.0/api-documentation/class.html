@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Resource representations · Alcaeus Hydra client</title>
+        <title>Supported classes · Alcaeus Hydra client</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="hydra.html" />
     
-    
-    <link rel="prev" href="../" />
+    <link rel="prev" href="readme.html" />
     
 
     </head>
@@ -114,9 +112,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2" data-path="readme.html">
+        <li class="chapter " data-level="1.2" data-path="../representations/readme.html">
             
-                <a href="readme.html">
+                <a href="../representations/readme.html">
             
                     
                     Resource representations
@@ -128,9 +126,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.1" data-path="hydra.html">
+        <li class="chapter " data-level="1.2.1" data-path="../representations/hydra.html">
             
-                <a href="hydra.html">
+                <a href="../representations/hydra.html">
             
                     
                     Hydra resources
@@ -142,9 +140,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.1.1" data-path="get.html">
+        <li class="chapter " data-level="1.2.1.1" data-path="../representations/get.html">
             
-                <a href="get.html">
+                <a href="../representations/get.html">
             
                     
                     Getting specific resource
@@ -155,9 +153,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.1.2" data-path="root.html">
+        <li class="chapter " data-level="1.2.1.2" data-path="../representations/root.html">
             
-                <a href="root.html">
+                <a href="../representations/root.html">
             
                     
                     Root resource
@@ -168,9 +166,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.1.3" data-path="by-type.html">
+        <li class="chapter " data-level="1.2.1.3" data-path="../representations/by-type.html">
             
-                <a href="by-type.html">
+                <a href="../representations/by-type.html">
             
                     
                     Selecting by type
@@ -181,9 +179,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.1.4" data-path="iterating.html">
+        <li class="chapter " data-level="1.2.1.4" data-path="../representations/iterating.html">
             
-                <a href="iterating.html">
+                <a href="../representations/iterating.html">
             
                     
                     Iterating resources
@@ -199,9 +197,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="resource-objects.html">
+        <li class="chapter " data-level="1.2.2" data-path="../representations/resource-objects.html">
             
-                <a href="resource-objects.html">
+                <a href="../representations/resource-objects.html">
             
                     
                     Resource objects
@@ -213,9 +211,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.2.1" data-path="collections.html">
+        <li class="chapter " data-level="1.2.2.1" data-path="../representations/collections.html">
             
-                <a href="collections.html">
+                <a href="../representations/collections.html">
             
                     
                     Collections
@@ -226,9 +224,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2.2" data-path="mixins.html">
+        <li class="chapter " data-level="1.2.2.2" data-path="../representations/mixins.html">
             
-                <a href="mixins.html">
+                <a href="../representations/mixins.html">
             
                     
                     Extending resources
@@ -244,9 +242,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3" data-path="resource-affordances.html">
+        <li class="chapter " data-level="1.2.3" data-path="../representations/resource-affordances.html">
             
-                <a href="resource-affordances.html">
+                <a href="../representations/resource-affordances.html">
             
                     
                     Affordances
@@ -262,9 +260,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3" data-path="../api-documentation/readme.html">
+        <li class="chapter " data-level="1.3" data-path="readme.html">
             
-                <a href="../api-documentation/readme.html">
+                <a href="readme.html">
             
                     
                     API Documentation
@@ -276,9 +274,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="../api-documentation/class.html">
+        <li class="chapter active" data-level="1.3.1" data-path="class.html">
             
-                <a href="../api-documentation/class.html">
+                <a href="class.html">
             
                     
                     Supported classes
@@ -324,7 +322,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Resource representations</a>
+        <a href=".." >Supported classes</a>
     </h1>
 </div>
 
@@ -339,39 +337,42 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="resource-representations">Resource representations</h1>
-<p>The main method of Alcaeus client is <code>loadResource(string)</code> which performs a <code>GET</code>
-request for the given identifier and returns an object wrapping the XHR object and the actual response. The
-JS object will implement the below interface. </p>
-<pre><code class="lang-typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IResponseWrapper {
-    <span class="hljs-comment">/**
-     * Gets the URI used to perform the request
-     */</span>
-    readonly requestedUri: <span class="hljs-built_in">string</span>;
+                                <h1 id="supported-classes">Supported classes</h1>
+<!-- toc --><div id="toc" class="toc">
 
-    <span class="hljs-comment">/**
-     * Gets the response content type, as advertised in response HTTP header
-     */</span>
-    mediaType: <span class="hljs-built_in">string</span>;
+<ul>
+<li><a href="#getting-classes-from-documentation">Getting classes from documentation</a></li>
+</ul>
 
-    <span class="hljs-comment">/**
-     * Gets the URI identifying the ApiDocumentation resource if present in the
-     * response Link header
-     */</span>
-    apiDocumentationLink: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-comment">/**
-     * If the request was redirected, returns the target resource
-     */</span>
-    redirectUrl: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-comment">/**
-     * Gets the actual XMLHttpResponse object which can be used to do custom
-     * processing
-     */</span>
-    xhr: Response;
+</div><!-- tocstop -->
+<p>The core concept of Hydra is a class, which defines API-wide description of resource structures and their 
+behaviour. In addition to the standard interface of <a href="../representations/resource-objects.html">resource objects</a>, classes define a number of handy
+properties:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> IClass {
+    title: <span class="hljs-built_in">string</span>;
+    description: <span class="hljs-built_in">string</span>;
+    supportedOperations: ISupportedOperation[];
+    supportedProperties: ISupportedProperty[];
 }
 </code></pre>
+<h2 id="getting-classes-from-documentation">Getting classes from documentation</h2>
+<p>First, it is possible to get all classes using a simple getter. It will return an array of all supported
+classes from the documentation resource.</p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
+
+const doc = await client.loadDocumentation(&apos;http://wikibus-data-test.gear.host/doc&apos;);
+
+doc.classes;
+</pre></p>
+<p>If you know a specific RDF type you can also get look it up within the API documentation:</p>
+<p><pre class="pg-runkit"> 
+const client = require(&quot;alcaeus@0.4.0-a5&quot;).Hydra;
+
+const doc = await client.loadDocumentation(&apos;http://wikibus-data-test.gear.host/doc&apos;);
+
+doc.getClass(&apos;http://wikibus.org/ontology#Book&apos;);
+</pre></p>
 
                                 
                                 </section>
@@ -399,14 +400,10 @@ JS object will implement the below interface. </p>
 
             
                 
-                <a href="../" class="navigation navigation-prev " aria-label="Previous page: Getting started">
+                <a href="readme.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: API Documentation">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
-                
-                <a href="hydra.html" class="navigation navigation-next " aria-label="Next page: Hydra resources">
-                    <i class="fa fa-angle-right"></i>
-                </a>
                 
             
         
@@ -415,7 +412,7 @@ JS object will implement the below interface. </p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Resource representations","level":"1.2","depth":1,"next":{"title":"Hydra resources","level":"1.2.1","depth":2,"path":"representations/hydra.md","ref":"representations/hydra.md","articles":[{"title":"Getting specific resource","level":"1.2.1.1","depth":3,"path":"representations/get.md","ref":"representations/get.md","articles":[]},{"title":"Root resource","level":"1.2.1.2","depth":3,"path":"representations/root.md","ref":"representations/root.md","articles":[]},{"title":"Selecting by type","level":"1.2.1.3","depth":3,"path":"representations/by-type.md","ref":"representations/by-type.md","articles":[]},{"title":"Iterating resources","level":"1.2.1.4","depth":3,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]}]},"previous":{"title":"Getting started","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/readme.md","mtime":"2018-04-25T14:15:58.884Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-06-17T12:21:43.227Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Supported classes","level":"1.3.1","depth":2,"previous":{"title":"API Documentation","level":"1.3","depth":1,"path":"api-documentation/readme.md","ref":"api-documentation/readme.md","articles":[{"title":"Supported classes","level":"1.3.1","depth":2,"path":"api-documentation/class.md","ref":"api-documentation/class.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"h2lb":3,"header":1,"maxdepth":4,"mindepth":2,"notoc":false},"search":{},"runkit":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.4.0"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"api-documentation/class.md","mtime":"2018-06-17T12:17:35.002Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-06-17T12:21:43.227Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

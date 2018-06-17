@@ -6,14 +6,12 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     abstract class Class extends Base implements IClass {
 
         get supportedOperations() {
-            return this._ensureArray(Core.Vocab('supportedOperation'));
+            return this._getArray(Core.Vocab('supportedOperation'));
         }
 
         get supportedProperties() {
-            return this._ensureArray(Core.Vocab('supportedProperty'));
+            return this._getArray(Core.Vocab('supportedProperty'));
         }
-
-        protected abstract _ensureArray(prop: string);
     }
 
     return Class;

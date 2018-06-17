@@ -12,7 +12,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
 
         @nonenumerable
         get mappings() {
-            return this._ensureArray(Core.Vocab('mapping'));
+            return this._getArray(Core.Vocab('mapping'));
         }
 
         @nonenumerable
@@ -21,7 +21,6 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         }
 
         public abstract expand(): string;
-        public abstract _ensureArray(prop: string);
     }
 
     return IriTemplate;

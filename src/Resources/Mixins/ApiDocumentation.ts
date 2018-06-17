@@ -8,11 +8,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         public abstract get _alcaeus();
 
         get classes() {
-            if (Array.isArray(this[Core.Vocab('supportedClass')])) {
-                return this[Core.Vocab('supportedClass')];
-            }
-
-            return [this[Core.Vocab('supportedClass')]];
+            return this._getArray(Core.Vocab('supportedClass'));
         }
 
         public getOperations(classUri: string, predicateUri?: string) {

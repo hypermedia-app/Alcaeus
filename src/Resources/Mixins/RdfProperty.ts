@@ -14,10 +14,8 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         }
 
         get supportedOperations() {
-            return this._ensureArray(Core.Vocab('supportedOperation'));
+            return this._getArray(Core.Vocab('supportedOperation'));
         }
-
-        protected abstract _ensureArray(prop: string);
     }
 
     return RdfProperty;

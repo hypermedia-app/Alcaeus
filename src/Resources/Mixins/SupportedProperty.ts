@@ -6,31 +6,34 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
     return class SupportedProperty extends Base implements ISupportedProperty {
 
         get readable() {
-            if (typeof this[Core.Vocab('readable')] === 'boolean') {
-                return this[Core.Vocab('readable')];
+            const readable = this._get(Core.Vocab('readable'));
+            if (typeof readable === 'boolean') {
+                return readable;
             }
 
             return true;
         }
 
         get writable() {
-            if (typeof this[Core.Vocab('writable')] === 'boolean') {
-                return this[Core.Vocab('writable')];
+            const writable = this._get(Core.Vocab('writable'));
+            if (typeof writable === 'boolean') {
+                return writable;
             }
 
             return true;
         }
 
         get required() {
-            if (typeof this[Core.Vocab('required')] === 'boolean') {
-                return this[Core.Vocab('required')];
+            const required = this._get(Core.Vocab('required'));
+            if (typeof required === 'boolean') {
+                return required;
             }
 
             return false;
         }
 
         get property() {
-            return this[Core.Vocab('property')];
+            return this._get(Core.Vocab('property'));
         }
     };
 }

@@ -11,11 +11,11 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         }
 
         get expects() {
-            return this[Core.Vocab('expects')];
+            return this._get(Core.Vocab('expects'));
         }
 
         get returns() {
-            return this[Core.Vocab('returns')];
+            return this._get(Core.Vocab('returns'));
         }
 
         get requiresInput(): boolean {

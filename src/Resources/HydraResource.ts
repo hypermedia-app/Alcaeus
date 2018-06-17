@@ -25,13 +25,8 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
     @nonenumerable
     get operations() {
-        let classOperations;
         const alcaeus = (this as any)._alcaeus;
-        if (Array.isArray(this[JsonLd.Type])) {
-            classOperations = this[JsonLd.Type].map((type: string) => this.apiDocumentation.getOperations(type));
-        } else {
-            classOperations = [ this.apiDocumentation.getOperations(this[JsonLd.Type]) ];
-        }
+        const classOperations = this.types.map((type: string) => this.apiDocumentation.getOperations(type));
 
         const mappedLinks = (this as any as IAsObject)._links
             .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));

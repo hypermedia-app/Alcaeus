@@ -1,1 +1,3 @@
-export type Constructor<T = {}> = new (...args: any[]) => T;
+import Resource from './Resource';
+
+export type Constructor<T = Resource> = new (...args: any[]) => T;

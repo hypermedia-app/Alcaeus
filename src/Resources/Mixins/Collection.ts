@@ -12,15 +12,13 @@ export function Mixin <TBase extends Constructor>(Base: TBase) {
 
         @nonenumerable
         get members() {
-            return this._ensureArray(Core.Vocab('member'));
+            return this._getArray(Core.Vocab('member'));
         }
 
         @nonenumerable
         get views() {
-            return this._ensureArray(Core.Vocab('view'));
+            return this._getArray(Core.Vocab('view'));
         }
-
-        protected abstract _ensureArray(prop: string);
     }
 
     return Collection;

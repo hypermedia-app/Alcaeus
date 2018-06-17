@@ -1,7 +1,7 @@
 import {nonenumerable} from 'core-decorators';
 import {promises as jsonld} from 'jsonld';
 import {Core, JsonLd} from '../Constants';
-import {IHydraClient, IResource} from '../interfaces';
+import {IResource} from '../interfaces';
 import TypeCollection from '../TypeCollection';
 
 const isProcessed = new WeakMap<IResource, boolean>();
@@ -36,7 +36,11 @@ export default class implements IResource {
         return jsonld.compact(this, context || Core.Context);
     }
 
-    protected _ensureArray(property: string) {
+    protected _get(property: string) {
+        return this[property] || null;
+    }
+
+    protected _getArray(property: string) {
         const values = this[property];
 
         if (!values) {

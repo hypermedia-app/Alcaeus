@@ -84,6 +84,30 @@ import * as AuthorMixin from './AuthorMixin';
 Hydra.mediaTypeProcessors.RDF.resourceFactory.mixins.push(AuthorMixin);
 ```
 
+### Helper methods
+
+When defining a resource mixin it is possible to take advantage of protected methods which make it easier to
+access the underlying triples.
+
+```typescript
+export function Mixin(Base) {
+  return class extends Base {
+    get authorName() {
+      // The `_get` method will simply return coalesce missing property to a `null`
+      // In other words, it will prevent the `undefined` value from being returned
+      return this._get('http://schema.org/author');
+    }
+    
+    get chapters() {
+      // `_getArray` will ensure that an `Array` is always returned:
+      // * Wrapping a non-array value
+      // * Empty array if the property is missing
+      return this._getArray('http://purl.org/ontology/bibo/chapter');
+    }
+  };
+}
+```
+
 ## Built-in mixins
 
 Alcaeus [includes a number of mixins][m] which are applied to elements of the Hydra vocabulary. These are mainly 

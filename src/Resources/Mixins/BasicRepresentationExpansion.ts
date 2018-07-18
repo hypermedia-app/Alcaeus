@@ -1,6 +1,6 @@
 import {Core, JsonLd} from '../../Constants';
-import {IResource} from '../../interfaces';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 import ExpansionModelBuilder, {IExpandedValue} from './ExpansionModelBuilder';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {

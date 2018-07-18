@@ -1,4 +1,5 @@
-import {HydraResource, IHydraResponse} from '../../src/interfaces';
+import {IHydraResponse} from '../../src/HydraResponse';
+import {HydraResource} from '../../src/Resources';
 import TrailingSlashSelector from '../../src/RootSelectors/TrailingSlashSelector';
 
 describe('TrailingSlashSelector', () => {

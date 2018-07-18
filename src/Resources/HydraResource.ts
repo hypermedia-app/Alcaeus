@@ -1,13 +1,11 @@
 import {nonenumerable} from 'core-decorators';
-import {JsonLd} from '../Constants';
-import {
-    ApiDocumentation, IHydraClient, IHydraResource, IResource,
-} from '../interfaces';
+import {IHydraClient} from '../alcaeus';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
+import {ApiDocumentation, IHydraResource} from './index';
 import {Operation} from './Operation';
-import Resource from './Resource';
+import Resource, {IResource} from './Resource';
 
 const apiDocumentation = new WeakMap<IResource, ApiDocumentation>();
 

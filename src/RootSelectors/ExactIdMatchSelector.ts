@@ -1,4 +1,4 @@
-import {IHydraResponse, IResourceGraph} from '../interfaces';
+import {IHydraResponse, IResourceGraph} from '../HydraResponse';
 
 export default {
     selectRoot(resources: IResourceGraph, response: IHydraResponse) {

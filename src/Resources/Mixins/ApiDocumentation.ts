@@ -1,7 +1,8 @@
 import {deprecated} from 'core-decorators';
 import {Core, JsonLd} from '../../Constants';
-import {IApiDocumentation, IResource, ISupportedProperty} from '../../interfaces';
+import {IApiDocumentation, ISupportedProperty} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     abstract class ApiDocumentation extends Base implements IApiDocumentation {

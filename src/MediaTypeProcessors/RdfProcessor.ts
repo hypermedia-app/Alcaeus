@@ -3,14 +3,26 @@ import {FlattenOptions} from 'jsonld';
 import * as $rdf from 'rdf-ext';
 import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext';
 import * as stringToStream from 'string-to-stream';
+import {IHydraClient} from '../alcaeus';
 import * as Constants from '../Constants';
 import {JsonLd} from '../Constants';
-import {
-    ApiDocumentation, IHydraClient, IMediaTypeProcessor, IResource, IResourceFactory, IResourceGraph, IResponseWrapper,
-} from '../interfaces';
+import {IResourceGraph} from '../HydraResponse';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
+import {IResourceFactory} from '../ResourceFactory';
+import {ApiDocumentation} from '../Resources';
+import {IResource} from '../Resources/Resource';
+import {IResponseWrapper} from '../ResponseWrapper';
 import {rdf} from '../Vocabs';
+
+export interface IMediaTypeProcessor {
+    canProcess(mediaType: string);
+    process(
+        alcaeus: IHydraClient,
+        uri: string,
+        response: IResponseWrapper,
+        apiDocumentation: ApiDocumentation): Promise<IResourceGraph>;
+}
 
 const propertyRangeMappings = [
     [Constants.Core.Vocab('supportedClass'), Constants.Core.Vocab('Class')],

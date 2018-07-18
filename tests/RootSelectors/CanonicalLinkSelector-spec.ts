@@ -1,4 +1,5 @@
-import {HydraResource, IResponseWrapper} from '../../src/interfaces';
+import {HydraResource} from '../../src/Resources';
+import {IResponseWrapper} from '../../src/ResponseWrapper';
 import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector';
 
 describe('CanonicalLinkSelector', () => {

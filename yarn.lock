@@ -1515,10 +1515,6 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitbook-plugin-runkit@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/gitbook-plugin-runkit/-/gitbook-plugin-runkit-0.0.1.tgz#512ca4c110775ee23249bac611fd6a6588fe1f72"
-
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"
@@ -3905,9 +3901,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.4.2:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.6.1.tgz#ef39cdea27abac0b500242d6726ab90e0c846631"
+typescript@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
 
 uglify-js@1.x:
   version "1.3.5"

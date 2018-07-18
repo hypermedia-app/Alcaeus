@@ -1,6 +1,7 @@
 import {Core} from '../../Constants';
-import {IClass, IResource} from '../../interfaces';
+import {IClass} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     abstract class Class extends Base implements IClass {

@@ -1,7 +1,8 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {ICollection, IResource} from '../../interfaces';
+import {ICollection} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin <TBase extends Constructor>(Base: TBase) {
     abstract class Collection extends Base implements ICollection {

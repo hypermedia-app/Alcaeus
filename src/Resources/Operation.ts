@@ -1,10 +1,8 @@
 import {nonenumerable} from 'core-decorators';
+import {IHydraClient} from '../alcaeus';
 import {MediaTypes} from '../Constants';
-import {
-    HydraResource, IHydraClient, IOperation, IResource,
-    SupportedOperation,
-} from '../interfaces';
-import Resource from './Resource';
+import {HydraResource, IOperation, SupportedOperation} from './index';
+import Resource, {IResource} from './Resource';
 
 const supportedOperations = new WeakMap<IOperation, SupportedOperation>();
 const resources = new WeakMap<IOperation, IResource>();

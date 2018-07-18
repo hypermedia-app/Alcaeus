@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/alcaeus.js",
+  "types": "dist/src/index.d.ts",
   "directories": {
     "test": "tests"
   },
@@ -64,7 +65,7 @@
     "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
     "tslint": "^5.9.1",
-    "typescript": "^2.4.2",
+    "typescript": "^2.9.2",
     "webpack": "^3.5.5",
     "webpack-karma-jasmine": "^1.0.4",
     "whatwg-fetch": "^2.0.3"

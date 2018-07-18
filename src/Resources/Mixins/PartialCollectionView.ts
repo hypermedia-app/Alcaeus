@@ -1,8 +1,9 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IPartialCollectionView, IResource, IView} from '../../interfaces';
 import {IAsObject, IIncomingLink} from '../../internals';
+import {IPartialCollectionView, IView} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class PartialCollectionView extends Base implements IPartialCollectionView, IView {

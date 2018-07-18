@@ -1,9 +1,17 @@
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
-import {
-    ApiDocumentation, IHydraClient, IHydraResponse, IMediaTypeProcessor, IOperation, IResource, IResponseWrapper,
-    IRootSelector,
-} from './interfaces';
+import {IHydraResponse} from './HydraResponse';
+import {IMediaTypeProcessor} from './MediaTypeProcessors/RdfProcessor';
+import {ApiDocumentation, IOperation} from './Resources';
+import {IResponseWrapper} from './ResponseWrapper';
+import {IRootSelector} from './RootSelectors';
+
+export interface IHydraClient {
+    rootSelectors: IRootSelector[];
+    mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
+    loadResource(uri: string): Promise<IHydraResponse>;
+    invokeOperation(operation: IOperation, uri: string, body: any, mediaType?: string): Promise<IHydraResponse>;
+}
 
 const getHydraResponse = async (
     alcaeus: IHydraClient,

@@ -1,6 +1,6 @@
 import {Core} from '../../Constants';
-import {IClass, ISupportedOperation} from '../../interfaces';
 import {owl} from '../../Vocabs';
+import {ISupportedOperation} from '../index';
 import {Constructor} from '../Mixin';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {

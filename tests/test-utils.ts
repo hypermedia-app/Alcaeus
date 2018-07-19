@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {Core, JsonLd, MediaTypes} from '../src/Constants';
-import {IResponseWrapper} from '../src/interfaces';
+import {IResponseWrapper} from '../src/ResponseWrapper';
 
 export function fakeAlcaeusResources(obj: object) {
     if (!obj || typeof obj !== 'object') {

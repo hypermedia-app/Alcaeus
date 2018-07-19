@@ -1,7 +1,7 @@
 import {Core, JsonLd} from '../../Constants';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 import ExpansionModelBuilder, {IExpandedValue} from './ExpansionModelBuilder';
-import {IResource} from '../../interfaces';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class ExplicitRepresentationExpansion extends Base {

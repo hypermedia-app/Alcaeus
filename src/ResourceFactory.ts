@@ -1,11 +1,21 @@
+import {IHydraClient} from './alcaeus';
 import {JsonLd} from './Constants';
-import {ApiDocumentation, IHydraClient, IResource, IResourceFactory} from './interfaces';
 import {IIncomingLink} from './internals';
 import {forOwn, values} from './LodashUtil';
+import {ApiDocumentation} from './Resources';
 import createBase from './Resources/HydraResource';
+import {IResource} from './Resources/Resource';
 
-type Constructor<T = {}> = new (...args: any[]) => T;
-interface IMixin {
+export interface IResourceFactory {
+    createResource(
+        obj: object,
+        apiDocumentation: ApiDocumentation,
+        resources,
+        clientAccessorMixin?): IResource;
+}
+
+export type Constructor<T = {}> = new (...args: any[]) => T;
+export interface IMixin {
     Mixin: Constructor;
     shouldApply(obj: object): boolean;
 }

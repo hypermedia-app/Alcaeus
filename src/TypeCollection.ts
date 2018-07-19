@@ -1,4 +1,6 @@
-import {ITypeCollection} from './interfaces';
+export interface ITypeCollection extends ReadonlyArray<string> {
+    contains(clas: string): boolean;
+}
 
 export default class TypeCollection extends Array<string> implements ITypeCollection {
     public static create(classes: any) {

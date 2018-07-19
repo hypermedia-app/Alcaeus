@@ -1,7 +1,8 @@
 import {nonenumerable} from 'core-decorators';
 import {Core} from '../../Constants';
-import {IIriTemplate, IResource} from '../../interfaces';
+import {IIriTemplate} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     abstract class IriTemplate extends Base implements IIriTemplate {

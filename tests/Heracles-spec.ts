@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import * as sinon from 'sinon';
 import {Hydra} from '../src';
 import * as FetchUtil from '../src/FetchUtil';
-import {PartialCollectionView} from '../src/interfaces';
+import {PartialCollectionView} from '../src/Resources';
 import {Bodies, Documentations} from './test-objects';
 import {mockedResponse, responseBuilder} from './test-utils';
 

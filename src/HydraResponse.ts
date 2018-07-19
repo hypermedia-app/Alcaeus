@@ -1,8 +1,35 @@
-import {HydraResource, IHydraResponse, IResponseWrapper, IRootSelector} from './interfaces';
-import {ResponseWrapper} from './ResponseWrapper';
+import {HydraResource} from './Resources';
+import {IResource} from './Resources/Resource';
+import {IResponseWrapper, ResponseWrapper} from './ResponseWrapper';
+import {IRootSelector} from './RootSelectors';
 
-interface IResourceGraph {
+export interface IResourceGraph {
     [uri: string]: HydraResource;
+}
+
+export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrapper {
+
+    /**
+     * Gets the root of the representation or undefined if it cannot be determined
+     */
+    root: HydraResource;
+
+    /**
+     * Gets the number of resource within this representation
+     */
+    length: number;
+
+    /**
+     * Indexer to look up any arbitrary resource by its id within the representation
+     */
+    get(uri: string): HydraResource;
+
+    /**
+     * Gets all resources of given RDF type from the representation
+     * @param {string} classId RDF class identifier
+     * @returns {Array<HydraResource>}
+     */
+    ofType(classId: string): IResource[];
 }
 
 export function create(

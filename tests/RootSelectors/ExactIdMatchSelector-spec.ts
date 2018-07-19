@@ -1,4 +1,5 @@
-import {HydraResource, IHydraResponse} from '../../src/interfaces';
+import {IHydraResponse} from '../../src/HydraResponse';
+import {HydraResource} from '../../src/Resources';
 import ExactIdMatchSelector from '../../src/RootSelectors/ExactIdMatchSelector';
 
 describe('ExactIdMatchSelector', () => {

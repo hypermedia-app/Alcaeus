@@ -1,5 +1,7 @@
 import {Core} from '../../src/Constants';
-import {IHydraResource, IHydraResponse, IResourceGraph, IResponseWrapper} from '../../src/interfaces';
+import {IHydraResponse, IResourceGraph} from '../../src/HydraResponse';
+import {IHydraResource} from '../../src/Resources';
+import {IResponseWrapper} from '../../src/ResponseWrapper';
 import Vocab = Core.Vocab;
 import PartialCollectionViewSelector from '../../src/RootSelectors/PartialCollectionViewSelector';
 import TypeCollection from '../../src/TypeCollection';

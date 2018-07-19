@@ -1,6 +1,6 @@
 // tslint:disable:no-namespace object-literal-sort-keys
 
-type HydraTerm = 'apiDocumentation' |
+export type HydraTerm = 'apiDocumentation' |
     'ApiDocumentation' |
     'title' |
     'description' |

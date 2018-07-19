@@ -1,7 +1,33 @@
 import * as li from 'parse-link-header';
 import * as Constants from './Constants';
 import nonenumerable from './helpers/nonenumerable';
-import {IResponseWrapper} from './interfaces';
+
+export interface IResponseWrapper {
+    /**
+     * Gets the URI used to perform the request
+     */
+    readonly requestedUri: string;
+
+    /**
+     * Gets the response content type, as advertised in response HTTP header
+     */
+    mediaType: string;
+
+    /**
+     * Gets the URI identifying the ApiDocumentation resource if present in the response Link header
+     */
+    apiDocumentationLink: string;
+
+    /**
+     * If the request was redirected, returns the target resource
+     */
+    redirectUrl: string;
+
+    /**
+     * Gets the actual XMLHttpResponse object which can be used to do custom processing
+     */
+    xhr: Response;
+}
 
 export class ResponseWrapper implements IResponseWrapper {
     public readonly requestedUri: string;

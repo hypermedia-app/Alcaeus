@@ -1,6 +1,7 @@
 import {Core} from '../../Constants';
-import {IResource, ISupportedProperty} from '../../interfaces';
+import {ISupportedProperty} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     return class SupportedProperty extends Base implements ISupportedProperty {

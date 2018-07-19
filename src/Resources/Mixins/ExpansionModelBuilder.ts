@@ -1,5 +1,5 @@
 import URITemplate from 'es6-url-template';
-import {IIriTemplate, IIriTemplateMapping} from '../../interfaces';
+import {IIriTemplate, IIriTemplateMapping} from '../index';
 import {Constructor} from '../Mixin';
 
 export interface IExpandedValue {

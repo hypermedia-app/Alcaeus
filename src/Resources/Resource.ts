@@ -1,8 +1,12 @@
 import {nonenumerable} from 'core-decorators';
 import {promises as jsonld} from 'jsonld';
 import {Core, JsonLd} from '../Constants';
-import {IResource} from '../interfaces';
-import TypeCollection from '../TypeCollection';
+import TypeCollection, {ITypeCollection} from '../TypeCollection';
+
+export interface IResource {
+    id: string;
+    types: ITypeCollection;
+}
 
 const isProcessed = new WeakMap<IResource, boolean>();
 
@@ -36,7 +40,7 @@ export default class implements IResource {
         return jsonld.compact(this, context || Core.Context);
     }
 
-    protected _get(property: string) {
+    public _get(property: string) {
         if (this[property] === false) {
             return false;
         }
@@ -44,7 +48,7 @@ export default class implements IResource {
         return this[property] || null;
     }
 
-    protected _getArray(property: string) {
+    public _getArray(property: string) {
         const values = this[property];
 
         if (!values) {

@@ -41,6 +41,10 @@ export default class implements IResource {
     }
 
     public _get(property: string) {
+        if (this[property] === false) {
+            return false;
+        }
+
         return this[property] || null;
     }
 

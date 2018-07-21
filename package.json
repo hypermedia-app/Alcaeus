@@ -1,23 +1,21 @@
 {
   "name": "alcaeus",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "dist/alcaeus.js",
-  "types": "dist/src/index.d.ts",
+  "types": "types/src/index.d.ts",
   "directories": {
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
-  "typescript": {
-    "definition": "index.d.ts"
-  },
   "scripts": {
     "test": "yarn lint; yarn run karma start --single-run",
-    "build": "webpack; gitbook build . docs/latest",
+    "build": "webpack; gitbook install; gitbook build . docs/latest",
     "lint": "tslint -p tsconfig.json",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "rm -rf dist; npm run build"
   },
   "repository": {
     "type": "git",
@@ -39,6 +37,10 @@
   "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
     "es6-url-template": "^1.0.0",
+    "gitbook-plugin-etoc": "^1.2.2",
+    "gitbook-plugin-forkmegithub": "^2.2.0",
+    "gitbook-plugin-hints": "^1.0.2",
+    "gitbook-plugin-runkit": "0.0.1",
     "isomorphic-fetch": "^2.2.1",
     "jsonld": "^0.4.12",
     "parse-link-header": "^1.0.1",
@@ -65,7 +67,7 @@
     "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
     "tslint": "^5.9.1",
-    "typescript": "^2.9.2",
+    "typescript": "^3.1.0-dev.20180721",
     "webpack": "^3.5.5",
     "webpack-karma-jasmine": "^1.0.4",
     "whatwg-fetch": "^2.0.3"

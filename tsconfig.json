@@ -11,6 +11,7 @@
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": false,
     "declaration": true,
+    "declarationDir": "../types",
     "lib": [
       "es2017",
       "es2015",
@@ -22,9 +23,6 @@
     "tests/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "jspm_packages",
-    "typings",
-    "index.d.ts"
+    "node_modules"
   ]
 }

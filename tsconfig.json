@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "target": "es5",
-    "module": "commonjs",
+    "outDir": "./lib/",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
@@ -11,7 +11,7 @@
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": false,
     "declaration": true,
-    "declarationDir": "../types",
+    "declarationDir": "types",
     "lib": [
       "es2017",
       "es2015",
@@ -19,8 +19,7 @@
     ]
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"

@@ -1,19 +1,21 @@
 {
   "name": "alcaeus",
-  "version": "0.4.2",
+  "version": "0.5.0-b",
   "description": "Hydra Core hypermedia-aware client library",
-  "main": "dist/alcaeus.js",
-  "types": "types/src/index.d.ts",
+  "main": "lib/index.js",
+  "types": "types/index.d.ts",
   "directories": {
     "test": "tests"
   },
   "files": [
     "dist",
-    "types"
+    "types",
+    "lib",
+    "src"
   ],
   "scripts": {
     "test": "yarn lint; yarn run karma start --single-run",
-    "build": "webpack; gitbook install; gitbook build . docs/latest",
+    "build": "tsc; webpack; gitbook install; gitbook build . docs/latest",
     "lint": "tslint -p tsconfig.json",
     "prepublishOnly": "rm -rf dist; npm run build"
   },

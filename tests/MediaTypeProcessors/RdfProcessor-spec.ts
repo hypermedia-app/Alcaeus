@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as n3parser from 'rdf-parser-n3';
-import {Core, MediaTypes} from '../../src/Constants';
+import {Core, JsonLd, MediaTypes} from '../../src/Constants';
 import RdfProcessor from '../../src/MediaTypeProcessors/RdfProcessor';
 import {rdf} from '../../src/Vocabs';
 import {Bodies, Documentations} from '../test-objects';
@@ -11,7 +11,10 @@ describe('RdfProcessor', () => {
 
     beforeEach(() => {
         const resourceFactory = {
-            createResource: (v) => v,
+            createResource: (v) => {
+                v.id = v[JsonLd.Id];
+                return v;
+            },
         };
         processor = new RdfProcessor(resourceFactory);
     });

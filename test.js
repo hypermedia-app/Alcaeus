@@ -3,9 +3,9 @@ const client = alcaeus.Hydra;
 
 async function run()
 {
-  const representation = await  client.loadResource('http://stat.stadt-zuerich.ch/api/dataset/GEB-RAUM-ZEIT/slice');
+  const representation = await  client.loadResource('http://wikibus-test.gear.host/brochures?title=salon%20ca');
 
-  console.log(representation.root);
+  console.log(representation.get('http://wikibus-test.gear.host/brochures?title=salon ca'));
 }
 
 run().catch(console.error);

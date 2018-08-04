@@ -6,10 +6,10 @@ import * as stringToStream from 'string-to-stream';
 import {IHydraClient} from '../alcaeus';
 import * as Constants from '../Constants';
 import {JsonLd} from '../Constants';
-import {IResourceGraph} from '../HydraResponse';
 import {forOwn} from '../LodashUtil';
 import {ParserFactory} from '../ParserFactory';
 import {IResourceFactory} from '../ResourceFactory';
+import {IResourceGraph, ResourceGraph} from '../ResourceGraph';
 import {ApiDocumentation} from '../Resources';
 import {IResource} from '../Resources/Resource';
 import {IResponseWrapper} from '../ResponseWrapper';
@@ -105,7 +105,7 @@ async function flatten(json, url): Promise<object> {
 function resourcify(
     createResource: (obj, resources) => IResource,
     obj,
-    resourcified: object) {
+    resourcified: IResourceGraph) {
     if ((typeof obj === 'object') === false) {
         return obj;
     }
@@ -144,18 +144,13 @@ function resourcify(
 }
 
 function processResources(createResource: (obj, resources) => IResource, resources): IResourceGraph {
-    const resourcified = {};
+    const resourcified = new ResourceGraph();
     resources.forEach((res) => {
-        try {
-            res[JsonLd.Id] = new URL(res[JsonLd.Id]).href;
-        } catch (e) {}
-
         resourcified[res[JsonLd.Id]] = res;
     });
 
-    resources.reduceRight((acc: object, val) => {
-        const id = val[JsonLd.Id];
-        acc[id] = createResource(val, acc);
+    resources.reduceRight((acc: IResourceGraph, val) => {
+        acc.add(createResource(val, acc));
         return acc;
     }, resourcified);
 

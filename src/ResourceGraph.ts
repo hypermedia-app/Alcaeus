@@ -3,7 +3,6 @@ import {IResource} from './Resources/Resource';
 
 export interface IResourceGraph {
     get(uri: string): HydraResource;
-    add(resource: IResource);
 }
 
 export class ResourceGraph implements IResourceGraph {

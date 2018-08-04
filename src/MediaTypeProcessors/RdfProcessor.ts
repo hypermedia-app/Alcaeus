@@ -149,7 +149,7 @@ function processResources(createResource: (obj, resources) => IResource, resourc
         resourcified[res[JsonLd.Id]] = res;
     });
 
-    resources.reduceRight((acc: IResourceGraph, val) => {
+    resources.reduceRight((acc: ResourceGraph, val) => {
         acc.add(createResource(val, acc));
         return acc;
     }, resourcified);

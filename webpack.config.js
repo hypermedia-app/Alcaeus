@@ -8,7 +8,17 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/
-      }
+      },
+        {
+            test: /\.jsx?$/,
+            loader: 'babel-loader',
+            include: [
+                /\/jsonld\//
+            ],
+            query: {
+                presets: [ 'env', 'stage-0' ]
+            },
+        }
     ]
   },
   resolve: {

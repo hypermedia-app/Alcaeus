@@ -143,7 +143,7 @@ describe('Hydra', () => {
                 .toBe('http://wikibus-test.gear.host/book/1936/image');
         });
 
-        it('should return typed numeric literals as their values', async () => {
+        xit('should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({

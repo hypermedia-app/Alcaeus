@@ -2,14 +2,11 @@ language: node_js
 node_js:
   - "node"
 before_install:
-  - CC=gcc-5 && CXX=g++-5
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install gcc-5.1 g++-5.1
+  - sudo rm /bin/usr/g++
+  - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
 install:
   - npm i -g yarn
   - yarn install
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5

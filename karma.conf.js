@@ -42,8 +42,8 @@ module.exports = function (config) {
         sl_firefox_latest: {
             base: 'BrowserStack',
             browser: 'firefox',
-            os: 'OS X',
-            os_version: 'Mountain Lion'
+            os: 'Windows',
+            os_version: '8.1'
         },
         sl_safari_9: {
             base: 'BrowserStack',

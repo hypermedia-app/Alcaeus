@@ -6,9 +6,9 @@ import ExactIdMatchSelector from '../../src/RootSelectors/ExactIdMatchSelector';
 describe('ExactIdMatchSelector', () => {
     it('when resource is in response should select the redirect target', () => {
         // given
-        const expectedRoot = {} as HydraResource;
+        const expectedRoot = { id: 'id' } as HydraResource;
         const resources = new ResourceGraph();
-        resources['id'] = expectedRoot;
+        resources.add(expectedRoot);
         const response = {
             requestedUri: 'id',
         } as IHydraResponse;

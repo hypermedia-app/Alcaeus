@@ -1,3 +1,4 @@
+import {ResourceGraph} from '../../src/ResourceGraph';
 import {HydraResource} from '../../src/Resources';
 import {IResponseWrapper} from '../../src/ResponseWrapper';
 import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector';
@@ -6,10 +7,9 @@ describe('CanonicalLinkSelector', () => {
     it('should select the resource with id matching canonical link', () => {
         // given
         const expectedRoot = {} as HydraResource;
-        const resources = {
-            'redirected-to': {} as HydraResource,
-            'the-real-id': expectedRoot,
-        };
+        const resources = new ResourceGraph();
+        resources['redirected-to'] = {} as HydraResource;
+        resources['the-real-id'] = expectedRoot;
         const response = {
             xhr: {
                 headers: new Headers({
@@ -28,7 +28,7 @@ describe('CanonicalLinkSelector', () => {
 
     it('should return null if canonical link rel is not present', () => {
         // given
-        const resources = { };
+        const resources = new ResourceGraph();
         const response = {
             xhr: {
                 headers: new Headers({
@@ -46,7 +46,7 @@ describe('CanonicalLinkSelector', () => {
 
     it('should return null if link header is not present', () => {
         // given
-        const resources = { };
+        const resources = new ResourceGraph();
         const response = {
             xhr: {
                 headers: new Headers({}),

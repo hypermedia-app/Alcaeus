@@ -1,11 +1,8 @@
+import {IResourceGraph, ResourceGraph} from './ResourceGraph';
 import {HydraResource} from './Resources';
 import {IResource} from './Resources/Resource';
 import {IResponseWrapper, ResponseWrapper} from './ResponseWrapper';
 import {IRootSelector} from './RootSelectors';
-
-export interface IResourceGraph {
-    [uri: string]: HydraResource;
-}
 
 export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrapper {
 
@@ -37,7 +34,7 @@ export function create(
     response: IResponseWrapper,
     resources: IResourceGraph,
     rootSelectors: IRootSelector[]): IHydraResponse {
-    const safeResources = resources || {};
+    const safeResources = resources || new ResourceGraph();
     const safeSelectors = rootSelectors || [];
 
     class HydraResponse extends ResponseWrapper implements IHydraResponse {
@@ -48,7 +45,7 @@ export function create(
         }
 
         public get(identifier: string) {
-            return safeResources[identifier];
+            return safeResources.get(identifier);
         }
 
         get root() {

@@ -1,6 +1,6 @@
 import * as li from 'parse-link-header';
 import * as Constants from '../Constants';
-import {IResourceGraph} from '../HydraResponse';
+import {IResourceGraph} from '../ResourceGraph';
 import {IResponseWrapper} from '../ResponseWrapper';
 
 const CanonicalLinkRel = 'canonical';

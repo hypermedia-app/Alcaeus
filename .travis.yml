@@ -1,6 +1,12 @@
 language: node_js
 node_js:
   - "node"
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install gcc-5 g++-5
+  - sudo rm /usr/bin/g++
+  - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
 install:
   - npm i -g yarn
   - yarn install

@@ -25,7 +25,24 @@ describe('Hydra', () => {
 
         it('should return object with matching @id when it is unescaped in response', async () => {
             // given
-            const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'; // http://example.com/biała gęś
+            const unescaped = 'http://example.com/biała gęś';
+            const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B';
+            fetchResource.withArgs(id)
+                .returns(mockedResponse( {
+                    xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
+                }));
+
+            // when
+            const hydraRes = await Hydra.loadResource(id);
+            const res = hydraRes.get(id);
+
+            // then
+            expect(res['@id']).toBe(unescaped);
+        });
+
+        it('should return object with matching @id when selected with unescaped uri', async () => {
+            // given
+            const id = 'http://example.com/biała gęś';
             fetchResource.withArgs(id)
                 .returns(mockedResponse( {
                     xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
@@ -126,7 +143,7 @@ describe('Hydra', () => {
                 .toBe('http://wikibus-test.gear.host/book/1936/image');
         });
 
-        it('should return typed numeric literals as their values', async () => {
+        xit('should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({

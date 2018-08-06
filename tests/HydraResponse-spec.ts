@@ -1,5 +1,6 @@
 import * as sinon from 'sinon';
 import {create as HydraResponse} from '../src/HydraResponse';
+import {ResourceGraph} from '../src/ResourceGraph';
 import {HydraResource} from '../src/Resources';
 import Resource from '../src/Resources/Resource';
 import {IResponseWrapper} from '../src/ResponseWrapper';
@@ -31,7 +32,7 @@ describe('HydraResponse', () => {
             const theUri = 'http://what/I/requested';
 
             // when
-            const response = HydraResponse(theUri, {} as IResponseWrapper, {}, []);
+            const response = HydraResponse(theUri, {} as IResponseWrapper, null, []);
 
             // then
             expect(response.requestedUri).toBe(theUri);
@@ -45,7 +46,7 @@ describe('HydraResponse', () => {
             const xhr = {
                 xhr: {} as Response,
             } as IResponseWrapper;
-            const resources = {};
+            const resources = new ResourceGraph();
             const selector = {
                 selectRoot: sinon.stub(),
             };
@@ -66,10 +67,9 @@ describe('HydraResponse', () => {
     describe('get', () => {
         it('returns objects from the resource graph', async () => {
             // given
-            const childRes = {};
-            const resources = {
-                'urn:child:resource': childRes as HydraResource,
-            };
+            const childRes = { id: 'urn:child:resource'};
+            const resources = new ResourceGraph();
+            resources.add(childRes as HydraResource);
             const response = HydraResponse('urn:some:uri', {} as IResponseWrapper, resources, []);
 
             // when
@@ -146,7 +146,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper;
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr, {}, null);
+            const r12n = HydraResponse('urn:some:res', xhr, null, null);
 
             // then
             expect(r12n.root).toBeNull();

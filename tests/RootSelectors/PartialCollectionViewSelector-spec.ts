@@ -1,5 +1,6 @@
 import {Core} from '../../src/Constants';
-import {IHydraResponse, IResourceGraph} from '../../src/HydraResponse';
+import {IHydraResponse} from '../../src/HydraResponse';
+import {IResourceGraph} from '../../src/ResourceGraph';
 import {IHydraResource} from '../../src/Resources';
 import {IResponseWrapper} from '../../src/ResponseWrapper';
 import Vocab = Core.Vocab;

@@ -42,8 +42,8 @@ module.exports = function (config) {
         sl_firefox_latest: {
             base: 'BrowserStack',
             browser: 'firefox',
-            os: 'OS X',
-            os_version: 'Mountain Lion'
+            os: 'Windows',
+            os_version: '8.1'
         },
         sl_safari_9: {
             base: 'BrowserStack',
@@ -169,6 +169,10 @@ module.exports = function (config) {
         browserDisconnectTimeout : 10000, // default 2000
         browserDisconnectTolerance : 1, // default 0
         browserNoActivityTimeout : 4*60*1000, //default 10000
-        captureTimeout : 4*60*1000 //default 60000
+        captureTimeout : 4*60*1000, //default 60000
+
+        browserStack: {
+            startTunnel: true
+        }
     });
 };

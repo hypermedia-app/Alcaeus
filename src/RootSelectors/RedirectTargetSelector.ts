@@ -1,4 +1,4 @@
-import {IResourceGraph} from '../HydraResponse';
+import {IResourceGraph} from '../ResourceGraph';
 import {IResponseWrapper} from '../ResponseWrapper';
 
 export default {

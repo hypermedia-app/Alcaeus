@@ -1,4 +1,5 @@
-import {IHydraResponse, IResourceGraph} from '../HydraResponse';
+import {IHydraResponse} from '../HydraResponse';
+import {IResourceGraph} from '../ResourceGraph';
 import {HydraResource} from '../Resources';
 import {IResponseWrapper} from '../ResponseWrapper';
 import CanonicalLinkSelector from './CanonicalLinkSelector';

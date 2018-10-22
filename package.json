@@ -11,7 +11,7 @@
     "dist",
     "types",
     "lib",
-    "src"
+    "src/*.ts"
   ],
   "scripts": {
     "test": "yarn lint; yarn run karma start --single-run",

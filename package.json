@@ -21,7 +21,7 @@
     "build:default": "tsc --target esnext --module esnext --outDir lib/es",
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "lint": "tslint -p tsconfig.json",
-    "prepublishOnly": "rm -rf dist; npm run build"
+    "prepublishOnly": "rm -rf dist lib; yarn build"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/",
     "target": "esnext",
-    "module": "esnext",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,

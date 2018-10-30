@@ -2,20 +2,24 @@
   "name": "alcaeus",
   "version": "0.4.3",
   "description": "Hydra Core hypermedia-aware client library",
-  "main": "lib/index.js",
+  "main": "lib/node/index.js",
   "types": "types/index.d.ts",
+  "module": "lib/es/index.js",
+  "module.root": "lib/es",
   "directories": {
     "test": "tests"
   },
   "files": [
     "dist",
     "types",
-    "lib",
-    "src/*.ts"
+    "lib"
   ],
   "scripts": {
     "test": "yarn lint; yarn run karma start --single-run",
-    "build": "tsc; webpack; gitbook install; gitbook build . docs/latest",
+    "build": "yarn run build:nodejs; yarn run build:default; webpack; yarn run build:gitbook",
+    "build:nodejs": "tsc --target es2017 --module commonjs --outDir lib/node",
+    "build:default": "tsc --target esnext --module esnext --outDir lib/es",
+    "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "lint": "tslint -p tsconfig.json",
     "prepublishOnly": "rm -rf dist; npm run build"
   },
@@ -38,9 +42,9 @@
   },
   "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
-    "es6-url-template": "^1.0.0",
+    "es6-url-template": "^1.0.3",
     "isomorphic-fetch": "^2.2.1",
-    "jsonld": "^0.4.12",
+    "jsonld": "^1.1.0",
     "parse-link-header": "^1.0.1",
     "rdf-ext": "^1.0.0",
     "rdf-parser-jsonld": "^1.1.0",

@@ -2029,9 +2029,9 @@ es6-symbol@3.1.1, es6-symbol@^3.1.1, es6-symbol@~3.1.1:
     d "1"
     es5-ext "~0.10.14"
 
-es6-url-template@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-1.0.0.tgz#8987412d1b95e90b529804709a5186cc3f26d456"
+es6-url-template@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-1.0.3.tgz#a753580a67b01c232f41b08e26e1234e3688003e"
 
 es6-weak-map@^2.0.1:
   version "2.0.2"
@@ -3168,7 +3168,7 @@ jsonify@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
 
-jsonld@^0.4.11, jsonld@^0.4.12:
+jsonld@^0.4.11:
   version "0.4.12"
   resolved "https://registry.yarnpkg.com/jsonld/-/jsonld-0.4.12.tgz#a02f205d5341414df1b6d8414f1b967a712073e8"
   dependencies:
@@ -3180,6 +3180,15 @@ jsonld@^0.4.11, jsonld@^0.4.12:
 jsonld@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/jsonld/-/jsonld-1.0.2.tgz#c08118a4fa4a8457bf98891653ed1f1613eb6152"
+  dependencies:
+    rdf-canonize "^0.2.1"
+    request "^2.83.0"
+    semver "^5.5.0"
+    xmldom "0.1.19"
+
+jsonld@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/jsonld/-/jsonld-1.1.0.tgz#afcb168c44557a7bddead4d4513c3cbcae3bc5b9"
   dependencies:
     rdf-canonize "^0.2.1"
     request "^2.83.0"

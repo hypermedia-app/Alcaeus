@@ -1,3 +1,4 @@
+import {IHydraResponse} from '../HydraResponse';
 import {IResource} from './Resource';
 
 export interface IApiDocumentation {
@@ -9,9 +10,9 @@ export interface IApiDocumentation {
     /**
      * @deprecated
      */
-    getEntrypoint(): Promise<HydraResource>;
+    getEntrypoint(): Promise<IHydraResponse>;
 
-    loadEntrypoint(): Promise<HydraResource>;
+    loadEntrypoint(): Promise<IHydraResponse>;
 }
 
 export interface IClass {

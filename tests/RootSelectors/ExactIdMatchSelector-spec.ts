@@ -19,4 +19,20 @@ describe('ExactIdMatchSelector', () => {
         // then
         expect(Object.is(root, expectedRoot)).toBeTruthy();
     });
+
+    it('should handle inconsistently encoded id', () => {
+        // given
+        const expectedRoot = { id: 'http://wikibus-test.gear.host/magazine/Ciężarówki Świata' } as HydraResource;
+        const resources = new ResourceGraph();
+        resources.add(expectedRoot);
+        const response = {
+            requestedUri: 'http://wikibus-test.gear.host/magazine/Ciężarówki%20Świata',
+        } as IHydraResponse;
+
+        // when
+        const root = ExactIdMatchSelector.selectRoot(resources, response);
+
+        // then
+        expect(Object.is(root, expectedRoot)).toBeTruthy();
+    });
 });

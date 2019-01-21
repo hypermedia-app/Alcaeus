@@ -2,6 +2,7 @@ import {Core} from '../../Constants';
 import {owl} from '../../Vocabs';
 import {ISupportedOperation} from '../index';
 import {Constructor} from '../Mixin';
+import {IResource} from '../Resource';
 
 export function Mixin<TBase extends Constructor>(Base: TBase) {
     class SupportedOperation extends Base implements ISupportedOperation {
@@ -30,3 +31,5 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
 
     return SupportedOperation;
 }
+
+export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('Operation'));

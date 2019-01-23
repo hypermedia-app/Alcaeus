@@ -1,5 +1,8 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <MarkdownNavigatorCodeStyleSettings>
+      <option name="RIGHT_MARGIN" value="72" />
+    </MarkdownNavigatorCodeStyleSettings>
     <TypeScriptCodeStyleSettings>
       <option name="USE_DOUBLE_QUOTES" value="false" />
       <option name="FORCE_QUOTE_STYlE" value="true" />

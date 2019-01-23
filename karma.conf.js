@@ -1,15 +1,7 @@
 const webpackConfig = require("./webpack.config");
-const webpack = require('webpack');
+const path = require('path');
 
-delete webpackConfig.externals;
 delete webpackConfig.entry;
-webpackConfig.bail = false;
-webpackConfig.stats = 'errors-only';
-webpackConfig.plugins = [];
-webpackConfig.plugins.push(new webpack.SourceMapDevToolPlugin({
-  filename: null,
-  test: /\.(ts|js)($|\?)/i
-}));
 
 module.exports = function (config) {
     if (process.env.TRAVIS && (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY)) {
@@ -133,7 +125,18 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'summary', 'BrowserStack'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'summary', 'BrowserStack', 'coverage-istanbul'] : ['progress', 'coverage-istanbul'],
+
+
+        coverageIstanbulReporter: {
+            reports: [ 'html', 'lcovonly', 'text-summary' ],
+            dir: path.join(__dirname, 'coverage'),
+            combineBrowserReports: true,
+            fixWebpackSourcePaths: true,
+            'report-config': {
+                html: { outdir: 'html' }
+            }
+        },
 
 
         // web server port
@@ -157,7 +160,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? ['sl_chrome_latest', 'sl_safari_latest', 'sl_firefox_latest', 'sl_edge_latest']
-            : ['Chrome'],
+            : ['ChromeHeadless'],
 
         singleRun: true,
 

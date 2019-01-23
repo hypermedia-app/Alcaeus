@@ -33,16 +33,12 @@ export class ResponseWrapper implements IResponseWrapper {
     public readonly requestedUri: string;
 
     @nonenumerable
-    private readonly originalResponse: Response;
+    public readonly xhr: Response;
 
     constructor(requestedUri: string, res: Response) {
-        this.originalResponse = res;
+        this.xhr = res;
 
         this.requestedUri = requestedUri;
-    }
-
-    get xhr() {
-        return this.originalResponse.clone();
     }
 
     get status(): number {

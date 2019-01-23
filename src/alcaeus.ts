@@ -42,7 +42,11 @@ export class Alcaeus implements IHydraClient {
 
     public async loadResource(uri: string): Promise<IHydraResponse> {
         const response = await FetchUtil.fetchResource(uri);
-        const apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
+
+        let apiDocumentation;
+        if (response.apiDocumentationLink) {
+            apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
+        }
 
         return getHydraResponse(this, response, uri, apiDocumentation);
     }

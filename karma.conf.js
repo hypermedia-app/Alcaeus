@@ -1,15 +1,7 @@
 const webpackConfig = require("./webpack.config");
-const webpack = require('webpack');
+const path = require('path');
 
-delete webpackConfig.externals;
 delete webpackConfig.entry;
-webpackConfig.bail = false;
-webpackConfig.stats = 'errors-only';
-webpackConfig.plugins = [];
-webpackConfig.plugins.push(new webpack.SourceMapDevToolPlugin({
-  filename: null,
-  test: /\.(ts|js)($|\?)/i
-}));
 
 module.exports = function (config) {
     if (process.env.TRAVIS && (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY)) {

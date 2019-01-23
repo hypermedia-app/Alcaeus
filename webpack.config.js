@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.ts',
@@ -34,5 +35,13 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
     mainFields: ['jsnext:main', 'browser', 'main']
   },
-  devtool: 'source-map'
+  devtool: 'inline-source-map',
+  plugins: [
+    new webpack.SourceMapDevToolPlugin({
+      filename: null,
+      test: /\.(ts|js)($|\?)/i
+    })
+  ],
+  bail: false,
+  stats: 'errors-only'
 };

@@ -160,7 +160,7 @@ module.exports = function (config) {
 
         browsers: process.env.TRAVIS
             ? ['sl_chrome_latest', 'sl_safari_latest', 'sl_firefox_latest', 'sl_edge_latest']
-            : ['Chrome'],
+            : ['ChromeHeadless'],
 
         singleRun: true,
 

@@ -10,6 +10,15 @@ module.exports = {
         exclude: /node_modules/
       },
         {
+            test: /\.ts$/,
+            exclude: [ path.resolve(__dirname, "tests") ],
+            enforce: 'post',
+            use: {
+                loader: 'istanbul-instrumenter-loader',
+                options: { esModules: true }
+            }
+        },
+        {
             test: /\.jsx?$/,
             loader: 'babel-loader',
             include: [

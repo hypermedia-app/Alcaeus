@@ -133,7 +133,18 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'summary', 'BrowserStack'] : ['progress'],
+        reporters: process.env.TRAVIS ? ['dots', 'summary', 'BrowserStack', 'coverage-istanbul'] : ['progress', 'coverage-istanbul'],
+
+
+        coverageIstanbulReporter: {
+            reports: [ 'html', 'lcovonly', 'text-summary' ],
+            dir: path.join(__dirname, 'coverage'),
+            combineBrowserReports: true,
+            fixWebpackSourcePaths: true,
+            'report-config': {
+                html: { outdir: 'html' }
+            }
+        },
 
 
         // web server port

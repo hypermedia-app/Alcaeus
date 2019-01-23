@@ -2,6 +2,7 @@ import 'core-js/es6/array';
 import 'core-js/es6/object';
 import * as _ from 'lodash';
 import * as sinon from 'sinon';
+import {SinonStub} from 'sinon';
 import {Hydra} from '../src';
 import * as FetchUtil from '../src/FetchUtil';
 import {PartialCollectionView} from '../src/Resources';
@@ -10,7 +11,7 @@ import {mockedResponse, responseBuilder} from './test-utils';
 
 describe('Hydra', () => {
 
-    let fetchResource;
+    let fetchResource: SinonStub;
 
     beforeEach(() => {
         fetchResource = sinon.stub(FetchUtil, 'fetchResource');
@@ -68,6 +69,21 @@ describe('Hydra', () => {
 
             // then
             expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
+        });
+
+        it('should not load documentation in absence of Link header', async () => {
+            // given
+            fetchResource.withArgs('http://example.com/resource')
+                .returns(mockedResponse({
+                    includeDocsLink: false,
+                    xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+                }));
+
+            // when
+            await Hydra.loadResource('http://example.com/resource');
+
+            // then
+            expect(fetchResource.callCount).toBe(1);
         });
 
         it('should load parent of collection view as Resource', async () => {

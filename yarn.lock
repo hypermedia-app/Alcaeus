@@ -4960,9 +4960,9 @@ ms@^2.0.0, ms@^2.1.1:
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
 mute-stream@~0.0.4:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
-  integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
+  integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
 n3@^0.11.2:
   version "0.11.3"
@@ -7099,6 +7099,7 @@ stream-shift@^1.0.0:
 string-to-stream@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/string-to-stream/-/string-to-stream-1.1.1.tgz#aba78f73e70661b130ee3e1c0192be4fef6cb599"
+  integrity sha512-QySF2+3Rwq0SdO3s7BAp4x+c3qsClpPQ6abAmb0DGViiSBAkT5kL6JT2iyzEVP+T1SmzHrQD1TwlP9QAHCc+Sw==
   dependencies:
     inherits "^2.0.1"
     readable-stream "^2.1.0"

@@ -14,7 +14,7 @@ $ npm install --save alcaeus
 
 ## Basic usage
 
-Typically one would import an instance set up with sensible defaults 
+Typically one would import an instance set up with sensible defaults
 
 ```js
 import {Hydra} from 'alcaeus';
@@ -22,18 +22,18 @@ import {Hydra} from 'alcaeus';
 
 {% hint style="info" %}
  Throughout these pages runnable examples will be shown using runkit, which only
- supports commonjs. Hence, the `require` function is used instead of ES6 imports 
+ supports commonjs. Hence, the `require` function is used instead of ES6 imports
 {% endhint %}
 
 Here's a most basic example, which fetches an API entrypoint
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-await client.loadResource('http://wikibus-test.gear.host/');
+await client.loadResource('https://wikibus-test.gear.host/');
 {% endrunkit %}
 
 {% hint style="info" %}
- Also note that runkit examples will be shown loading a specific version, 
- which one would not include in real code. 
+ Also note that runkit examples will be shown loading a specific version,
+ which one would not include in real code.
 {% endhint %}

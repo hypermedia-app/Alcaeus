@@ -6,10 +6,10 @@ Individual resources within a representation will be always in the form similar 
 properties and classes as absolute URIs. Getting any objects from within the tree is thus possible using JS
 indexer notation.
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
 
 rep.root['http://schema.org/author']['http://schema.org/name'];
 {% endrunkit %}
@@ -25,10 +25,10 @@ rep.root['http://schema.org/author']['http://schema.org/name'];
 The resource identifier is accessible by the `@id` keyword just like any other JS property. For convenience
 it is being wrapped by a getter, which makes it easier to use in declarative binding syntax.
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
 
 rep.root.id;
 {% endrunkit %}
@@ -38,12 +38,12 @@ rep.root.id;
 Similarly to the identifier, the JSON-LD `@type` keyword can be used on any resource object. It is impractical
 though, because JSON-LD allows both an array or a single string value which makes handling types awkward. For
 that reason there is a `types` getter which wraps them in an Array-like object which also comes with a `contains`
-method to check if a resource is of give type. 
+method to check if a resource is of give type.
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
 
 const example = {
   types: rep.root.types,
@@ -55,14 +55,14 @@ const example = {
 
 It is possible to process a resource using JSON-LD [compaction][compact] algorithm as an ad-hoc way of simplifying
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
 
 await rep.root.compact({
-  '@vocab': 'http://wikibus.org/ontology#',
-  '@base': 'http://wikibus.org/',
+  '@vocab': 'https://wikibus.org/ontology#',
+  '@base': 'https://wikibus.org/',
   'sch': 'http://schema.org/'
 });
 {% endrunkit %}
@@ -84,4 +84,4 @@ await rep.root.compact({
 {% endhint %}
 
 
-[compact]: https://www.w3.org/TR/json-ld-api/#compaction 
+[compact]: https://www.w3.org/TR/json-ld-api/#compaction

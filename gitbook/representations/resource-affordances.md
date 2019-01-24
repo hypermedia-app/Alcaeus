@@ -6,13 +6,13 @@ include two properties giving access to hypermedia descriptions coming from the 
 ## Getting resource's operations
 
 {% hint style="working" %}
- WARNING! Operations are a work in progress 
+ WARNING! Operations are a work in progress
 {% endhint %}
 
 Resource objects come with an `operations` property which will return an array of [`IOperation`][op]
 instances which represent a combination of
- 
-* inline operations 
+
+* inline operations
 * supported operations for all of the resource's types
 * supported operations for the supported property, where the resource is an object of said property
 
@@ -82,14 +82,14 @@ import {Hydra} from 'Alcaeus';
 const representation = await Hydra.loadResource('/a/Person');
 const person = representation.root;
 
-/* 
+/*
  * will return operations:
  * v:RequestFriend (inline)
  * v:UpdatePerson (supported by class v:Person)
  */
 const personOperations = person.operations;
 
-/* 
+/*
  * will return operations:
  * v:UpdateAddress (supported by type v:Address)
  * v:RemoveAddress (supported by objects of property v:homeAddress)
@@ -102,13 +102,13 @@ const addressOperations = person["v:homeAddress"].operations;
 Additionally every resource object comes provides a `apiDocumentation` getter which returns a tree loaded
 from the linked `ApiDocumentation`.
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/');
+const rep = await client.loadResource('https://wikibus-test.gear.host/');
 
 rep.root.apiDocumentation;
-{% endrunkit %} 
+{% endrunkit %}
 
 For more information about the API Documentation please refer to [its dedicated page][doc] and child pages.
 

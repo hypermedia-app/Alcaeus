@@ -18,19 +18,19 @@ adding some behaviour to your resources.
 There are two steps necessary to apply a mixin:
 
 1. Create an object with two members which implements the below interface
-     
+
      ```typescript
      type Constructor<T = {}> = new (...args: any[]) => T;
      interface IMixin {
          Mixin: Constructor;
          shouldApply(obj: IHydraResource): boolean;
      }
-     ``` 
-     
+     ```
+
 1. Add the object to Alcaeus's `ResourceFactory`
 
 The `Mixin` property is, obviously, the actual mixin to apply when creating objects from JSON-LD resources.
-The `shouldApply` function is used to choose whether a given mixin should be used with a given resource. 
+The `shouldApply` function is used to choose whether a given mixin should be used with a given resource.
 
 {% hint style="info" %}
  If `shouldApply` is missing, the mixin will be ignored.
@@ -38,7 +38,7 @@ The `shouldApply` function is used to choose whether a given mixin should be use
 
 ### Example
 
-{% runkit %} 
+{% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
 const Mixin = Base => {
@@ -55,8 +55,8 @@ const shouldApply = resource => {
 
 // Add mixin to the client
 client.mediaTypeProcessors.RDF.resourceFactory.mixins.push({ Mixin, shouldApply });
- 
-const rep = await client.loadResource('http://wikibus-test.gear.host/book/1331');
+
+const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
 
 // access property defined in mixin
 rep.root.authorName;
@@ -97,7 +97,7 @@ export function Mixin(Base) {
       // In other words, it will prevent the `undefined` value from being returned
       return this._get('http://schema.org/author');
     }
-    
+
     get chapters() {
       // `_getArray` will ensure that an `Array` is always returned:
       // * Wrapping a non-array value
@@ -110,7 +110,7 @@ export function Mixin(Base) {
 
 ## Built-in mixins
 
-Alcaeus [includes a number of mixins][m] which are applied to elements of the Hydra vocabulary. These are mainly 
+Alcaeus [includes a number of mixins][m] which are applied to elements of the Hydra vocabulary. These are mainly
 resources within the `ApiDocumentation` but also `Collection` and `PartialCollectionView`.
 
 [m]: https://github.com/wikibus/Alcaeus/tree/master/src/Resources/Mixins

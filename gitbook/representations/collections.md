@@ -24,12 +24,12 @@ interface ICollection {
 ```
 
 Here's an example of loading a collection which is not paged. In such case the server should respond with a
-representation where the `totalItems` property equals `members.length`.   
+representation where the `totalItems` property equals `members.length`.
 
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/magazine/Buses/issues');
+const rep = await client.loadResource('https://wikibus-test.gear.host/magazine/Buses/issues');
 
 rep.root;
 {% endrunkit %}
@@ -38,7 +38,7 @@ rep.root;
 
 It is a common scenario to split a large collections into smaller chunks. Typically called pages, Hydra
 uses the term **view** which means to be more generic way of splitting the collection. Currently the only
-one actually specified is a `PartialCollectionView`. Alcaeus represents it by implementing the 
+one actually specified is a `PartialCollectionView`. Alcaeus represents it by implementing the
 `IPartialCollectionView`.
 
 ```typescript
@@ -73,7 +73,7 @@ actual collection resource.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('http://wikibus-test.gear.host/magazines?page=2');
+const rep = await client.loadResource('https://wikibus-test.gear.host/magazines?page=2');
 
 rep.root;
 {% endrunkit %}

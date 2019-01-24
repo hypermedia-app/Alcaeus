@@ -29,7 +29,7 @@ It is also possible to load the documentation resource directly using dedicated 
 a typical resource object. After all the API Documentation is also a JSON-LD resource like any other.
 
 {% runkit %}
-const client = require("alcaeus@0{{ book.version }}").Hydra;
+const client = require("alcaeus@{{ book.version }}").Hydra;
 
 await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
 {% endrunkit %}

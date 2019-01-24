@@ -21,7 +21,7 @@ First, it is possible to get all classes using a simple getter. It will return a
 classes from the documentation resource.
 
 {% runkit %}
-const client = require("alcaeus@0{{ book.version }}").Hydra;
+const client = require("alcaeus@{{ book.version }}").Hydra;
 
 const doc = await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
 
@@ -31,7 +31,7 @@ doc.classes;
 If you know a specific RDF type you can also get look it up within the API documentation:
 
 {% runkit %}
-const client = require("alcaeus@0{{ book.version }}").Hydra;
+const client = require("alcaeus@{{ book.version }}").Hydra;
 
 const doc = await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
 

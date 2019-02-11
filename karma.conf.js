@@ -175,7 +175,8 @@ module.exports = function (config) {
         captureTimeout : 4*60*1000, //default 60000
 
         browserStack: {
-            startTunnel: true
+            startTunnel: true,
+            hostname: 'bs-local.com'
         }
     });
 };

@@ -33,7 +33,7 @@ const getHydraResponse = async (
 export class Alcaeus implements IHydraClient {
     public rootSelectors: IRootSelector[];
 
-    public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
+    public mediaTypeProcessors: { [name: string]: any };
 
     constructor(rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
         this.rootSelectors = rootSelectors;

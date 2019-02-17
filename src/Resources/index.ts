@@ -60,6 +60,7 @@ export interface ISupportedOperation {
     expects: Class;
     returns: Class;
     requiresInput: boolean;
+    isLink: boolean;
 }
 
 export interface IRdfProperty {

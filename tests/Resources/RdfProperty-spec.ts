@@ -8,26 +8,30 @@ class RdfProperty extends Mixin(Resource) {}
 
 describe('RdfProperty', () => {
 
-    const testProperty = {
-        '@context': [
-            Core.Context,
-            {
-                rdfs: rdfs(),
-            },
-        ],
-        '@id': 'http://purl.org/dc/elements/1.1/partOf',
-        '@type': rdf.Property,
-        'rdfs:domain': { '@id': xsd.integer },
-        'rdfs:range': { '@id': xsd.string },
-        'supportedOperation': [
-            {
-                description: 'Update this property',
-                expects: xsd.string,
-                method: 'POST',
-                returns: owl.Nothing,
-            },
-        ],
-    };
+    let testProperty;
+
+    beforeEach(() => {
+        testProperty = {
+            '@context': [
+                Core.Context,
+                {
+                    rdfs: rdfs(),
+                },
+            ],
+            '@id': 'http://purl.org/dc/elements/1.1/partOf',
+            '@type': [ rdf.Property ],
+            'rdfs:domain': { '@id': xsd.integer },
+            'rdfs:range': { '@id': xsd.string },
+            'supportedOperation': [
+                {
+                    description: 'Update this property',
+                    expects: xsd.string,
+                    method: 'POST',
+                    returns: owl.Nothing,
+                },
+            ],
+        };
+    });
 
     it('should link to domain', async () => {
         // given
@@ -49,6 +53,31 @@ describe('RdfProperty', () => {
 
         // them
         expect(property.range['@id']).toBe(xsd.string);
+    });
+
+    describe('link', () => {
+        it('should not be a link by default', async () => {
+            // given
+            const compacted = await jsonld.compact(testProperty, {});
+
+            // when
+            const property = new RdfProperty(compacted);
+
+            // then
+            expect(property.isLink).toBe(false);
+        });
+
+        it('should not be a link by default', async () => {
+            // given
+            testProperty['@type'] = Core.Vocab('Link');
+            const compacted = await jsonld.compact(testProperty, {});
+
+            // when
+            const property = new RdfProperty(compacted);
+
+            // then
+            expect(property.isLink).toBe(true);
+        });
     });
 
     describe('supportedOperations', () => {

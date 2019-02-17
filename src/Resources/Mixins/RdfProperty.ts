@@ -17,6 +17,10 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
         get supportedOperations() {
             return this._getArray(Core.Vocab('supportedOperation'));
         }
+
+        get isLink() {
+            return this.types.contains(Core.Vocab('Link'));
+        }
     }
 
     return RdfProperty;

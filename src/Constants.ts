@@ -39,7 +39,8 @@ export type HydraTerm = 'apiDocumentation' |
     'template' |
     'BasicRepresentation' |
     'ExplicitRepresentation' |
-    'totalItems';
+    'totalItems' |
+    'Link';
 
 export namespace Core {
     export const Context = {

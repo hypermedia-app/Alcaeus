@@ -60,13 +60,13 @@ export interface ISupportedOperation {
     expects: Class;
     returns: Class;
     requiresInput: boolean;
-    isLink: boolean;
 }
 
 export interface IRdfProperty {
     range: Class;
     domain: Class;
     supportedOperations: SupportedOperation[];
+    isLink: boolean;
 }
 
 export interface IOperation {

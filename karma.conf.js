@@ -176,6 +176,7 @@ module.exports = function (config) {
 
         hostname: 'bs-local.com',
         browserStack: {
+            project: 'Alcaeus',
             startTunnel: true
         }
     });

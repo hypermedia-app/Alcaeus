@@ -1,5 +1,5 @@
+import * as JsonLdParser from '@rdfjs/parser-jsonld';
 import * as $rdf from 'rdf-ext';
-import * as JsonLdParser from 'rdf-parser-jsonld';
 import {MediaTypes} from './Constants';
 
 type ParserFactoryMethod = (baseIRI: string) => any;

@@ -1,5 +1,5 @@
+import * as n3parser from '@rdfjs/parser-n3';
 import * as _ from 'lodash';
-import * as n3parser from 'rdf-parser-n3';
 import {Core, JsonLd, MediaTypes} from '../../src/Constants';
 import RdfProcessor from '../../src/MediaTypeProcessors/RdfProcessor';
 import {rdf} from '../../src/Vocabs';

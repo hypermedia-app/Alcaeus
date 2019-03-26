@@ -1,7 +1,7 @@
+import * as JsonLdSerializer from '@rdfjs/serializer-jsonld';
 import {promises as jsonld} from 'jsonld';
 import {FlattenOptions} from 'jsonld';
 import * as $rdf from 'rdf-ext';
-import * as JsonLdSerializer from 'rdf-serializer-jsonld-ext';
 import * as stringToStream from 'string-to-stream';
 import {IHydraClient} from '../alcaeus';
 import * as Constants from '../Constants';

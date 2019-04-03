@@ -1,6 +1,5 @@
 import * as sinon from 'sinon';
 import {IHydraClient} from '../../src/alcaeus';
-import {JsonLd} from '../../src/Constants';
 import {Class, HydraResource, IOperation, SupportedOperation} from '../../src/Resources';
 import {Operation} from '../../src/Resources/Operation';
 
@@ -45,7 +44,7 @@ describe('Operation', () => {
         let alcaeus;
         const supportedOperation = {} as SupportedOperation;
         const resource = {
-            [JsonLd.Id]: 'http://target/resource',
+            id: 'http://target/resource',
         } as any;
 
         beforeEach(() => alcaeus = {

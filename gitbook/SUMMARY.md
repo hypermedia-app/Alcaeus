@@ -9,6 +9,7 @@
     * [Collections](representations/collections.md)
     * [Extending resources](representations/mixins.md)
   * [Affordances](representations/resource-affordances.md)
+    * [Invoking operations](representations/affordances/invoking-operations.md)
 * [API Documentation](api-documentation/readme.md)
   * [Entrypoint](api-documentation/entrypoint.md)
   * [Supported classes](api-documentation/class.md)

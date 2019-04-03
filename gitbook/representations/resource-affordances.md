@@ -5,10 +5,6 @@ include two properties giving access to hypermedia descriptions coming from the 
 
 ## Getting resource's operations
 
-{% hint style="working" %}
- WARNING! Operations are a work in progress
-{% endhint %}
-
 Resource objects come with an `operations` property which will return an array of [`IOperation`][op]
 instances which represent a combination of
 

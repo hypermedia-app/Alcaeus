@@ -12,3 +12,4 @@
 * [API Documentation](api-documentation/readme.md)
   * [Entrypoint](api-documentation/entrypoint.md)
   * [Supported classes](api-documentation/class.md)
+  * [Supported operations](api-documentation/operation.md)

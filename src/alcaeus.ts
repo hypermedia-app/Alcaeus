@@ -61,7 +61,7 @@ export class Alcaeus implements IHydraClient {
         }
     }
 
-    public async invokeOperation(operation: IOperation, uri: string, body: any, mediaType?: string): Promise<any> {
+    public async invokeOperation(operation: IOperation, uri: string, body: BodyInit, mediaType?: string): Promise<any> {
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mediaType);
         const apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
 

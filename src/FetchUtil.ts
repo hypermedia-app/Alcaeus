@@ -18,10 +18,11 @@ export async function fetchResource(uri: string): Promise<ResponseWrapper> {
 export async function invokeOperation(
     method: string,
     uri: string,
-    body?: any,
+    body?: BodyInit,
     mediaType = Constants.MediaTypes.jsonLd): Promise<ResponseWrapper> {
 
     const res = await fetch(uri, {
+        body,
         headers: new Headers({
             'Accept': requestAcceptHeaders,
             'Content-Type': mediaType,

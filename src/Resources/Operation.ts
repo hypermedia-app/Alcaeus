@@ -5,7 +5,6 @@ import {HydraResource, IOperation, SupportedOperation} from './index';
 import Resource, {IResource} from './Resource';
 
 const supportedOperations = new WeakMap<IOperation, SupportedOperation>();
-const resources = new WeakMap<IOperation, IResource>();
 const clients = new WeakMap<IOperation, IHydraClient>();
 
 export class Operation extends Resource implements IOperation {
@@ -18,7 +17,6 @@ export class Operation extends Resource implements IOperation {
         }
 
         supportedOperations.set(this, supportedOperation);
-        resources.set(this, resource);
         clients.set(this, alcaeus);
     }
 
@@ -51,13 +49,8 @@ export class Operation extends Resource implements IOperation {
         return supportedOperations.get(this);
     }
 
-    @nonenumerable
-    get _resource(): IResource {
-        return resources.get(this);
-    }
-
-    public invoke(body: any, mediaType = MediaTypes.jsonLd) {
+    public invoke(body: BodyInit, mediaType = MediaTypes.jsonLd) {
         const alcaeus = clients.get(this);
-        return alcaeus.invokeOperation(this, this._resource.id, body, mediaType);
+        return alcaeus.invokeOperation(this, this.id, body, mediaType);
     }
 }

@@ -1,5 +1,6 @@
 import * as sinon from 'sinon';
 import {IHydraClient} from '../../src/alcaeus';
+import {JsonLd} from '../../src/Constants';
 import {Class, HydraResource, IOperation, SupportedOperation} from '../../src/Resources';
 import {Operation} from '../../src/Resources/Operation';
 
@@ -39,38 +40,36 @@ describe('Operation', () => {
 
     });
 
-    xdescribe('invoke', () => {
+    describe('invoke', () => {
 
         let alcaeus;
         const supportedOperation = {} as SupportedOperation;
         const resource = {
-            id: 'http://target/resource',
-        } as HydraResource;
+            [JsonLd.Id]: 'http://target/resource',
+        } as any;
 
         beforeEach(() => alcaeus = {
-            invokeOperation: sinon.stub(),
+            invokeOperation: sinon.spy(),
         });
 
         it('should execute through alcaeus with JSON-LD media type', () => {
 
             const op = new Operation(supportedOperation, alcaeus, resource);
-            const payload = {};
 
-            op.invoke(payload);
+            op.invoke('');
 
             expect(alcaeus.invokeOperation.calledWithExactly(
                 op,
                 'http://target/resource',
-                payload,
+                sinon.match.string,
                 'application/ld+json')).toBeTruthy();
         });
 
         it('should execute through alcaeus with changed media type', () => {
 
             const op = new Operation(supportedOperation, alcaeus, resource);
-            const payload = {};
 
-            op.invoke(payload, 'text/turtle');
+            op.invoke('', 'text/turtle');
 
             expect(alcaeus.invokeOperation.firstCall.args[3])
                 .toBeTruthy('text/turtle');

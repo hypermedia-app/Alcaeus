@@ -1,3 +1,6 @@
+/**
+ * Maybe monad inspired by https://codewithstyle.info/advanced-functional-programming-in-typescript-maybe-monad/
+ */
 export class Maybe<T> {
     public static some<T>(value: T) {
         if (!value) {

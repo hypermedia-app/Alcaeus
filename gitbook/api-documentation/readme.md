@@ -16,6 +16,9 @@ console.log(`The documentation URI is: '${li(rep.xhr.headers.get('Link'))[docUri
 const apiDoc = rep.root.apiDocumentation;
 {% endrunkit %}
 
+The getter returns a `Maybe<ApiDocumentation>` object which makes it easier to handle representations
+without or when it failed to load for some reason. See [this post][mm] for usage examples.
+
 {% hint style="working" %}
  For a
  single representation (in other words a single call to `loadResource`) the documentation will be fetched
@@ -36,3 +39,4 @@ await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
 
 [a]: ../representations/resource-affordances.md#accessing-entire-apidocumentation
 [api-doc-spec]: http://www.hydra-cg.com/spec/latest/core/#discovering-a-hydra-powered-web-api
+[mm]: https://codewithstyle.info/advanced-functional-programming-in-typescript-maybe-monad/

@@ -1,6 +1,7 @@
 import {nonenumerable} from 'core-decorators';
 import {IHydraClient} from '../alcaeus';
 import {IAsObject, IIncomingLink} from '../internals';
+import {Maybe} from '../support/Maybe';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
 import {ApiDocumentation, IHydraResource} from './index';
@@ -17,25 +18,35 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    get apiDocumentation() {
-        return apiDocumentation.get(this);
+    get apiDocumentation(): Maybe<ApiDocumentation> {
+        const currentDoc = apiDocumentation.get(this);
+
+        if (currentDoc) {
+            return Maybe.some(currentDoc);
+        } else {
+            return Maybe.none();
+        }
     }
 
     @nonenumerable
     get operations() {
         const alcaeus = (this as any)._alcaeus;
-        const classOperations = this.types.map((type: string) => this.apiDocumentation.getOperations(type));
+        const maybeOperations = this.apiDocumentation.map((apiDoc) => {
+            const classOperations = this.types.map((type: string) => apiDoc.getOperations(type));
 
-        const mappedLinks = (this as any as IAsObject)._links
-            .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
-        const flattened = [].concat.apply([], mappedLinks);
-        const propertyOperations = flattened.map(
-            (link: any) => this.apiDocumentation.getOperations(link.type, link.predicate));
+            const mappedLinks = (this as any as IAsObject)._links
+                .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
+            const flattened = [].concat.apply([], mappedLinks);
+            const propertyOperations = flattened.map(
+                (link: any) => apiDoc.getOperations(link.type, link.predicate));
 
-        const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
-        return operations.map((supportedOperation) => {
-            return new Operation(supportedOperation, alcaeus, this);
+            const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
+            return operations.map((supportedOperation) => {
+                return new Operation(supportedOperation, alcaeus, this);
+            });
         });
+
+        return maybeOperations.getOrElse([]);
     }
 }
 

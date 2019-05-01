@@ -30,6 +30,17 @@ const getHydraResponse = async (
     return HydraResponse.create(uri, response, null, null);
 };
 
+function getApiDocumentation(this: Alcaeus, response: IResponseWrapper): Promise<ApiDocumentation> {
+    if (response.apiDocumentationLink) {
+        return this.loadDocumentation(response.apiDocumentationLink);
+    } else {
+        // tslint:disable-next-line:no-console
+        console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`);
+
+        return null;
+    }
+}
+
 export class Alcaeus implements IHydraClient {
     public rootSelectors: IRootSelector[];
 
@@ -43,10 +54,7 @@ export class Alcaeus implements IHydraClient {
     public async loadResource(uri: string): Promise<IHydraResponse> {
         const response = await FetchUtil.fetchResource(uri);
 
-        let apiDocumentation;
-        if (response.apiDocumentationLink) {
-            apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
-        }
+        const apiDocumentation = await getApiDocumentation.call(this, response);
 
         return getHydraResponse(this, response, uri, apiDocumentation);
     }
@@ -63,8 +71,8 @@ export class Alcaeus implements IHydraClient {
 
     public async invokeOperation(operation: IOperation, uri: string, body: BodyInit, mediaType?: string): Promise<any> {
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mediaType);
-        const apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
+        const apiDocumentation = await getApiDocumentation.call(this, response);
 
-        return await getHydraResponse(this, response, uri, apiDocumentation);
+        return getHydraResponse(this, response, uri, apiDocumentation);
     }
 }

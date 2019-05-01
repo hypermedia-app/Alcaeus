@@ -1,4 +1,5 @@
 import {IHydraResponse} from '../HydraResponse';
+import {Maybe} from '../support/Maybe';
 import {IResource} from './Resource';
 
 export interface IApiDocumentation {
@@ -35,7 +36,7 @@ export interface IHydraResource {
     /**
      * Gets the API Documentation which was linked to this resource representation
      */
-    readonly apiDocumentation: ApiDocumentation;
+    readonly apiDocumentation: Maybe<ApiDocumentation>;
 }
 
 export interface IStatusCodeDescription {

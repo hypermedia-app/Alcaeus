@@ -4,6 +4,10 @@ As explained on the [Affordances][a] page, each and every resource object within
 with an `apiDoumentation` getter. This API Documentation is fetched from the web by following the HTTP `Link`
 header as specified by [Hydra][api-doc-spec].
 
+{% hint style="tip" %}
+ The Hydra server needs to give Alcaeus explicit permissions to read the `Link` header if **CORS is enabled**. In order to achieve that `Access-Control-Expose-Headers` has to contain `Link`.
+{% endhint %}
+
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 const li = require('parse-link-header');

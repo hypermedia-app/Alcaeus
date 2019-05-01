@@ -10,7 +10,7 @@ const li = require('parse-link-header');
 
 const docUri = 'http://www.w3.org/ns/hydra/core#apiDocumentation';
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/');
+const rep = await client.loadResource('https://sources.test.wikibus.org/');
 
 console.log(`The documentation URI is: '${li(rep.xhr.headers.get('Link'))[docUri].url}'`);
 const apiDoc = rep.root.apiDocumentation;

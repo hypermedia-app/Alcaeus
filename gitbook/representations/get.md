@@ -7,9 +7,9 @@ resources.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/books');
+const rep = await client.loadResource('https://sources.test.wikibus.org/books');
 
-rep.get('https://wikibus-test.gear.host/books/5');
+rep.get('https://sources.test.wikibus.org/books/5');
 {% endrunkit %}
 
 {% hint style="info" %}

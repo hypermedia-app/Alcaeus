@@ -29,7 +29,7 @@ representation where the `totalItems` property equals `members.length`.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/magazine/Buses/issues');
+const rep = await client.loadResource('https://sources.test.wikibus.org/magazine/Buses/issues');
 
 rep.root;
 {% endrunkit %}
@@ -73,7 +73,7 @@ actual collection resource.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/magazines?page=2');
+const rep = await client.loadResource('https://sources.test.wikibus.org/magazines?page=2');
 
 rep.root;
 {% endrunkit %}

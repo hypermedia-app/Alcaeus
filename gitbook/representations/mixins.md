@@ -56,7 +56,7 @@ const shouldApply = resource => {
 // Add mixin to the client
 client.mediaTypeProcessors.RDF.resourceFactory.mixins.push({ Mixin, shouldApply });
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://sources.test.wikibus.org/book/1331');
 
 // access property defined in mixin
 rep.root.authorName;

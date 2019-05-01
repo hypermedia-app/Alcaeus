@@ -60,11 +60,11 @@ a specific page, the client will still be interested in the collection resource 
 simple to combine multiple
 
 {% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+const fetch = require("isomorphic-fetch");
 
-const rep = await client.loadResource('https://sources.test.wikibus.org/brochures?page=1');
+const rep = await fetch('https://sources.test.wikibus.org/brochures?page=1');
 
-await rep.xhr.json();
+await rep.json();
 {% endrunkit %}
 
 As you can see above, the requested resource does not really contain the most "interesting" data, the

@@ -52,5 +52,16 @@ describe('HydraResource', () => {
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
             expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
         });
+
+        it('returns empty array when api documentation is unavailable', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, null);
+
+            // when
+            const ops = resource.operations;
+
+            // then
+            expect(ops.length).toBe(0);
+        });
     });
 });

@@ -1,3 +1,4 @@
+// tslint:disable no-console
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
 import {IHydraResponse} from './HydraResponse';
@@ -34,7 +35,6 @@ function getApiDocumentation(this: Alcaeus, response: IResponseWrapper): Promise
     if (response.apiDocumentationLink) {
         return this.loadDocumentation(response.apiDocumentationLink);
     } else {
-        // tslint:disable-next-line:no-console
         console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`);
 
         return null;
@@ -65,6 +65,8 @@ export class Alcaeus implements IHydraClient {
             const representation = await getHydraResponse(this, response, uri, null);
             return representation.root as any as ApiDocumentation;
         } catch (e) {
+            console.warn(`Failed to load ApiDocumentation from ${uri}`);
+            console.warn(e);
             return null;
         }
     }

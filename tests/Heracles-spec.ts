@@ -234,7 +234,7 @@ describe('Hydra', () => {
             const res = hydraRes.get('http://example.com/resource');
 
             // then
-            expect(res.apiDocumentation.getOrElse(null)).toBe(null);
+            expect(res.apiDocumentation.valueOr(null)).toBe(null);
         });
 
         afterEach(() => {

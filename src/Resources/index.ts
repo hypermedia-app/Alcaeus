@@ -1,5 +1,5 @@
+import {Maybe} from 'tsmonad';
 import {IHydraResponse} from '../HydraResponse';
-import {Maybe} from '../support/Maybe';
 import {IResource} from './Resource';
 
 export interface IApiDocumentation {

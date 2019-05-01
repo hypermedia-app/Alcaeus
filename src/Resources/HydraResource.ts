@@ -1,7 +1,7 @@
 import {nonenumerable} from 'core-decorators';
+import {Maybe} from 'tsmonad';
 import {IHydraClient} from '../alcaeus';
 import {IAsObject, IIncomingLink} from '../internals';
-import {Maybe} from '../support/Maybe';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
 import {ApiDocumentation, IHydraResource} from './index';
@@ -19,19 +19,14 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
     @nonenumerable
     get apiDocumentation(): Maybe<ApiDocumentation> {
-        const currentDoc = apiDocumentation.get(this);
-
-        if (currentDoc) {
-            return Maybe.some(currentDoc);
-        } else {
-            return Maybe.none();
-        }
+        return Maybe.maybe(apiDocumentation.get(this));
     }
 
     @nonenumerable
     get operations() {
         const alcaeus = (this as any)._alcaeus;
-        const maybeOperations = this.apiDocumentation.map((apiDoc) => {
+
+        const getClassOperations = (apiDoc: ApiDocumentation): Operation[] => {
             const classOperations = this.types.map((type: string) => apiDoc.getOperations(type));
 
             const mappedLinks = (this as any as IAsObject)._links
@@ -44,9 +39,12 @@ class HydraResource extends Resource implements IHydraResource, IResource {
             return operations.map((supportedOperation) => {
                 return new Operation(supportedOperation, alcaeus, this);
             });
-        });
+        };
 
-        return maybeOperations.getOrElse([]);
+        return this.apiDocumentation.caseOf({
+            just: getClassOperations,
+            nothing: () => [],
+        });
     }
 }
 

@@ -4,9 +4,11 @@ const path = require('path');
 delete webpackConfig.entry;
 
 module.exports = function (config) {
-    if (process.env.TRAVIS && (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY)) {
-        console.log('Make sure the BROWSER_STACK_* environment variables are set.');
-        process.exit(1);
+    if (process.env.TRAVIS && !process.env.TRAVIS_PULL_REQUEST) {
+        if (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY) {
+            console.log('Make sure the BROWSER_STACK_* environment variables are set.');
+            process.exit(1);
+        }
     }
 
     const customLaunchers = {
@@ -125,7 +127,11 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: process.env.TRAVIS ? ['dots', 'summary', 'BrowserStack', 'coverage-istanbul'] : ['progress', 'coverage-istanbul'],
+        reporters: process.env.TRAVIS 
+            ? process.env.TRAVIS_PULL_REQUEST 
+                ? ['dots', 'summary', 'coverage-istanbul'] 
+                : ['dots', 'summary', 'BrowserStack', 'coverage-istanbul'] 
+            : ['progress', 'coverage-istanbul'],
 
 
         coverageIstanbulReporter: {
@@ -158,7 +164,7 @@ module.exports = function (config) {
         // define browsers
         customLaunchers: customLaunchers,
 
-        browsers: process.env.TRAVIS
+        browsers: process.env.TRAVIS && !process.env.TRAVIS_PULL_REQUEST
             ? ['sl_chrome_latest', 'sl_safari_latest', 'sl_firefox_latest', 'sl_edge_latest']
             : ['ChromeHeadless'],
 

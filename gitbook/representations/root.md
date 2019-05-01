@@ -9,7 +9,7 @@ common case it will be the resource identified by the request URI
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/book/426');
+const rep = await client.loadResource('https://sources.test.wikibus.org/book/426');
 
 rep.root;
 {% endrunkit %}
@@ -62,7 +62,7 @@ simple to combine multiple
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/brochures?page=1');
+const rep = await client.loadResource('https://sources.test.wikibus.org/brochures?page=1');
 
 await rep.xhr.json();
 {% endrunkit %}
@@ -72,10 +72,10 @@ collection `member`s.
 
 ```json
 {
-  "@id": "https://wikibus-test.gear.host/brochures",
+  "@id": "https://sources.test.wikibus.org/brochures",
   "member": [ {}, {}, {} ],
   "view": {
-    "@id": "https://wikibus-test.gear.host/brochures?page=1",
+    "@id": "https://sources.test.wikibus.org/brochures?page=1",
     "@type": "PartialCollectionView",
     "next": "",
     "prev": "",
@@ -91,7 +91,7 @@ collection itself.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/brochures?page=1');
+const rep = await client.loadResource('https://sources.test.wikibus.org/brochures?page=1');
 
 rep.root;
 {% endrunkit %}

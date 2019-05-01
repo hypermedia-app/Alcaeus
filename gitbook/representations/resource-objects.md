@@ -9,7 +9,7 @@ indexer notation.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://sources.test.wikibus.org/book/1331');
 
 rep.root['http://schema.org/author']['http://schema.org/name'];
 {% endrunkit %}
@@ -28,7 +28,7 @@ it is being wrapped by a getter, which makes it easier to use in declarative bin
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://sources.test.wikibus.org/book/1331');
 
 rep.root.id;
 {% endrunkit %}
@@ -43,7 +43,7 @@ method to check if a resource is of give type.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://sources.test.wikibus.org/book/1331');
 
 const example = {
   types: rep.root.types,
@@ -58,7 +58,7 @@ It is possible to process a resource using JSON-LD [compaction][compact] algorit
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/book/1331');
+const rep = await client.loadResource('https://sources.test.wikibus.org/book/1331');
 
 await rep.root.compact({
   '@vocab': 'https://wikibus.org/ontology#',

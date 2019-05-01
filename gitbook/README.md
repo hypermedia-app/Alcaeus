@@ -30,7 +30,7 @@ Here's a most basic example, which fetches an API entrypoint
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-await client.loadResource('https://wikibus-test.gear.host/');
+await client.loadResource('https://sources.test.wikibus.org/');
 {% endrunkit %}
 
 {% hint style="info" %}

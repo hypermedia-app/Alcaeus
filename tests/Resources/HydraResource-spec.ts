@@ -63,5 +63,16 @@ describe('HydraResource', () => {
             // then
             expect(ops.length).toBe(0);
         });
+
+        it('returns empty array when api documentation does not implement the necessary method', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as any);
+
+            // when
+            const ops = resource.operations;
+
+            // then
+            expect(ops.length).toBe(0);
+        });
     });
 });

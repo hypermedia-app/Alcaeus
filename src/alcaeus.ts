@@ -1,4 +1,5 @@
 // tslint:disable no-console
+import {Core} from './Constants';
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
 import {IHydraResponse} from './HydraResponse';
@@ -63,7 +64,13 @@ export class Alcaeus implements IHydraClient {
         try {
             const response = await FetchUtil.fetchResource(uri);
             const representation = await getHydraResponse(this, response, uri, null);
-            return representation.root as any as ApiDocumentation;
+            const resource = representation.root;
+
+            if (resource.types.contains(Core.Vocab('ApiDocumentation'))) {
+                console.warn(`The resource ${uri} does not appear to be an API Documentation`);
+            }
+
+            return resource as any as ApiDocumentation;
         } catch (e) {
             console.warn(`Failed to load ApiDocumentation from ${uri}`);
             console.warn(e);

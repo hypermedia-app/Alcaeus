@@ -4,7 +4,7 @@ import {IHydraClient} from '../alcaeus';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, IHydraResource} from './index';
+import {ApiDocumentation, IHydraResource, SupportedOperation} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
@@ -26,14 +26,14 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     get operations() {
         const alcaeus = (this as any)._alcaeus;
 
-        const getClassOperations = (apiDoc: ApiDocumentation): Operation[] => {
-            const classOperations = this.types.map((type: string) => apiDoc.getOperations(type));
+        const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]): Operation[] => {
+            const classOperations = this.types.map((type: string) => getOperations(type));
 
             const mappedLinks = (this as any as IAsObject)._links
                 .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
             const flattened = [].concat.apply([], mappedLinks);
             const propertyOperations = flattened.map(
-                (link: any) => apiDoc.getOperations(link.type, link.predicate));
+                (link: any) => getOperations(link.type, link.predicate));
 
             const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
             return operations.map((supportedOperation) => {
@@ -41,10 +41,12 @@ class HydraResource extends Resource implements IHydraResource, IResource {
             });
         };
 
-        return this.apiDocumentation.caseOf({
-            just: getClassOperations,
-            nothing: () => [],
-        });
+        return this.apiDocumentation
+            .map((apiDoc) => apiDoc.getOperations)
+            .caseOf({
+                just: getClassOperations,
+                nothing: () => [],
+            });
     }
 }
 

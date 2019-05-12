@@ -41,12 +41,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
     @nonenumerable
     public getLinks() {
-        const properties = this.types.map((t) => this.apiDocumentation.getProperties(t))
-            .reduce((supportedProps, moreProps) => {
-                return [...supportedProps, ...moreProps.map((sp) => sp.property)];
-            }, [] as RdfProperty[]);
-
-        return properties
+        return this.getProperties()
             .filter((prop) => prop.isLink)
             .reduce((map, property) => {
                 const value = this._getArray(property.id);
@@ -57,6 +52,14 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
                 return map;
             }, {});
+    }
+
+    @nonenumerable
+    public getProperties() {
+        return this.types.map((t) => this.apiDocumentation.getProperties(t))
+            .reduce((supportedProps, moreProps) => {
+                return [...supportedProps, ...moreProps.map((sp) => sp.property)];
+            }, [] as RdfProperty[]);
     }
 
     @nonenumerable

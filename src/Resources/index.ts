@@ -42,6 +42,11 @@ export interface IHydraResource {
     readonly apiDocumentation: ApiDocumentation;
 
     /**
+     * Gathers all properties from all classes
+     */
+    getProperties(): IRdfProperty[];
+
+    /**
      * Get all property/value pairs for hydra:Link properties
      */
     getLinks(): LinkMap;

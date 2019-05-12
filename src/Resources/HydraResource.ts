@@ -3,11 +3,15 @@ import {IHydraClient} from '../alcaeus';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, IHydraResource} from './index';
+import {ApiDocumentation, IHydraResource, RdfProperty} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
 const apiDocumentation = new WeakMap<IResource, ApiDocumentation>();
+
+type LinkMap = {
+    [key: string]: IResource[],
+};
 
 class HydraResource extends Resource implements IHydraResource, IResource {
     constructor(actualResource, apiDoc: ApiDocumentation) {
@@ -39,8 +43,23 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    get links() {
-        return [];
+    public getLinks(): LinkMap {
+        const properties = this.types.map((t) => this.apiDocumentation.getProperties(t))
+            .reduce((supportedProps, moreProps) => {
+                return [...supportedProps, ...moreProps.map((sp) => sp.property)];
+            }, [] as RdfProperty[]);
+
+        return properties
+            .filter((prop) => prop.isLink)
+            .reduce((map, property) => {
+                const value = this._getArray(property.id);
+
+                if (value) {
+                    map[property.id] = value;
+                }
+
+                return map;
+            }, {});
     }
 }
 

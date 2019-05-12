@@ -58,14 +58,42 @@ describe('HydraResource', () => {
         it('should return empty array when no property is link', () => {
             // given
             const apiDoc = {
+                getProperties: sinon.stub().returns([]),
             } as any;
             const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
 
             // when
-            const links = resource.links;
+            const links = resource.getLinks();
 
             // then
-            expect(links.length).toBe(0);
+            expect(Object.keys(links).length).toBe(0);
+        });
+
+        it('should return ids and values for hydra:Link properties', () => {
+            // given
+            const getProperties = sinon.stub()
+                .returns([{
+                    property: {
+                        id: 'http://example.com/vocab#other',
+                        isLink: true,
+                    },
+                }, {
+                    property: {
+                        id: 'http://example.com/vocab#prop',
+                        isLink: false,
+                    },
+                }]);
+            const apiDoc = {
+                getProperties,
+            } as any;
+            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
+
+            // when
+            const links = resource.getLinks();
+
+            // then
+            expect(Object.keys(links).length).toBe(1);
+            expect(links['http://example.com/vocab#other'][0]['@id']).toBe('http://example.com/linked');
         });
     });
 });

@@ -54,7 +54,7 @@ describe('HydraResource', () => {
         });
     });
 
-    describe('get links', () => {
+    describe('getLinks', () => {
         it('should return empty array when no property is link', () => {
             // given
             const apiDoc = {
@@ -95,5 +95,18 @@ describe('HydraResource', () => {
             expect(Object.keys(links).length).toBe(1);
             expect(links['http://example.com/vocab#other'][0]['@id']).toBe('http://example.com/linked');
         });
+    });
+
+    describe('getCollections', () => {
+       it('returns all hydra:collections', () => {
+           // given
+           const resource = new HydraResource(Bodies.withHydraCollections, {} as any);
+
+           // when
+           const collections = resource.getCollections();
+
+           // then
+           expect(collections.length).toBe(4);
+       });
     });
 });

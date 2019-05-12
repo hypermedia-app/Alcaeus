@@ -1,5 +1,6 @@
 import {nonenumerable} from 'core-decorators';
 import {IHydraClient} from '../alcaeus';
+import {Core} from '../Constants';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
@@ -8,10 +9,6 @@ import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
 const apiDocumentation = new WeakMap<IResource, ApiDocumentation>();
-
-type LinkMap = {
-    [key: string]: IResource[],
-};
 
 class HydraResource extends Resource implements IHydraResource, IResource {
     constructor(actualResource, apiDoc: ApiDocumentation) {
@@ -43,7 +40,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    public getLinks(): LinkMap {
+    public getLinks() {
         const properties = this.types.map((t) => this.apiDocumentation.getProperties(t))
             .reduce((supportedProps, moreProps) => {
                 return [...supportedProps, ...moreProps.map((sp) => sp.property)];
@@ -60,6 +57,11 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
                 return map;
             }, {});
+    }
+
+    @nonenumerable
+    public getCollections() {
+        return this._getArray(Core.Vocab('collection'));
     }
 }
 

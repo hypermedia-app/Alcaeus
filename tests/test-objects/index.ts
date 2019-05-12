@@ -101,6 +101,18 @@ export namespace Bodies {
         },
     };
 
+    export let withHydraCollections = {
+        [Core.Vocab('collection')]: [{
+            '@id': 'http://example.com/collection1',
+        }, {
+            '@id': 'http://example.com/collection2',
+        }, {
+            '@id': 'http://example.com/collection3',
+        }, {
+            '@id': 'http://example.com/collection4',
+        }],
+    };
+
     export let ntriples = `
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .

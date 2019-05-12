@@ -1,6 +1,10 @@
 import {IHydraResponse} from '../HydraResponse';
 import {IResource} from './Resource';
 
+type LinkMap = {
+    [key: string]: IResource[],
+};
+
 export interface IApiDocumentation {
     classes: Class[];
     getClass(classId: string): Class;
@@ -36,6 +40,16 @@ export interface IHydraResource {
      * Gets the API Documentation which was linked to this resource representation
      */
     readonly apiDocumentation: ApiDocumentation;
+
+    /**
+     * Get all property/value pairs for hydra:Link properties
+     */
+    getLinks(): LinkMap;
+
+    /**
+     * Gets objects of hydra:collection property
+     */
+    getCollections(): IResource[];
 }
 
 export interface IStatusCodeDescription {

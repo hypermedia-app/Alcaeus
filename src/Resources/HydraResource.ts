@@ -26,7 +26,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
         const alcaeus = (this as any)._alcaeus;
         const classOperations = this.types.map((type: string) => this.apiDocumentation.getOperations(type));
 
-        const mappedLinks = (this as any as IAsObject)._links
+        const mappedLinks = (this as any as IAsObject)._reverseLinks
             .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
         const flattened = [].concat.apply([], mappedLinks);
         const propertyOperations = flattened.map(
@@ -36,6 +36,11 @@ class HydraResource extends Resource implements IHydraResource, IResource {
         return operations.map((supportedOperation) => {
             return new Operation(supportedOperation, alcaeus, this);
         });
+    }
+
+    @nonenumerable
+    get links() {
+        return [];
     }
 }
 

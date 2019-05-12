@@ -6,7 +6,7 @@ export default function(getIncomingLinks: () => IIncomingLink[]) {
     return <TBase extends Constructor>(Base: TBase) => {
         class HydraResource extends Base implements IAsObject {
             @nonenumerable
-            public get _links(): IIncomingLink[] {
+            public get _reverseLinks(): IIncomingLink[] {
                 return getIncomingLinks();
             }
         }

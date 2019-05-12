@@ -112,7 +112,7 @@ describe('Hydra', () => {
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource');
             const res = hydraRes.get('http://example.com/resource');
-            const incomingLinks = res['http://example.com/vocab#other']._links;
+            const incomingLinks = res['http://example.com/vocab#other']._reverseLinks;
 
             // then
             expect(incomingLinks.length).toBe(2);

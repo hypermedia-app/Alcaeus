@@ -2,8 +2,8 @@ import * as sinon from 'sinon';
 import createClass from '../../src/Resources/HydraResource';
 import {Bodies} from '../test-objects';
 
-let links;
-const HydraResource = createClass(null, () => links);
+let reverseLinks;
+const HydraResource = createClass(null, () => reverseLinks);
 
 describe('HydraResource', () => {
     describe('apiDocumentation', () => {
@@ -14,7 +14,7 @@ describe('HydraResource', () => {
     });
 
     describe('get operations', () => {
-        beforeEach(() => links = []);
+        beforeEach(() => reverseLinks = []);
 
         it('should combine operations from class and property', () => {
             const getOperations = sinon.stub();
@@ -23,7 +23,7 @@ describe('HydraResource', () => {
             } as any;
             getOperations.returns([]);
             const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
-            links = [
+            reverseLinks = [
                 {
                     predicate: 'http://example.com/vocab#other',
                     subject: {types: ['http://example.com/vocab#Resource2', 'http://example.com/vocab#Resource3']},
@@ -51,6 +51,21 @@ describe('HydraResource', () => {
             const ops = resource.operations;
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
             expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
+        });
+    });
+
+    describe('get links', () => {
+        it('should return empty array when no property is link', () => {
+            // given
+            const apiDoc = {
+            } as any;
+            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
+
+            // when
+            const links = resource.links;
+
+            // then
+            expect(links.length).toBe(0);
         });
     });
 });

@@ -6,7 +6,7 @@ the given RDF type. Code speaks louder than words so here's an example:
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const resources = await client.loadResource('https://wikibus-test.gear.host/books/3');
+const resources = await client.loadResource('https://sources.test.wikibus.org/books/3');
 
 resources.ofType('http://schema.org/Book')
          .map(book => book['http://purl.org/dc/terms/title']);

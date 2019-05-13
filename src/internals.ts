@@ -7,5 +7,5 @@ export interface IIncomingLink {
 }
 
 export interface IAsObject {
-    _links: IIncomingLink[];
+    _reverseLinks: IIncomingLink[];
 }

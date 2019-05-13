@@ -2,6 +2,10 @@ import {Maybe} from 'tsmonad';
 import {IHydraResponse} from '../HydraResponse';
 import {IResource} from './Resource';
 
+type LinkMap = {
+    [key: string]: IResource[],
+};
+
 export interface IApiDocumentation {
     classes: Class[];
     getClass(classId: string): Class;
@@ -37,6 +41,23 @@ export interface IHydraResource {
      * Gets the API Documentation which was linked to this resource representation
      */
     readonly apiDocumentation: Maybe<ApiDocumentation>;
+
+    /**
+     * Gathers all properties from all classes
+     */
+    getProperties(): IRdfProperty[];
+
+    /**
+     * Get all property/value pairs for hydra:Link properties
+     *
+     * @param includeMissing if true, will include properties not present in resource representation
+     */
+    getLinks(includeMissing: boolean): LinkMap;
+
+    /**
+     * Gets objects of hydra:collection property
+     */
+    getCollections(): IResource[];
 }
 
 export interface IStatusCodeDescription {

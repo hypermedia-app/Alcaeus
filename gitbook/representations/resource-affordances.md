@@ -101,7 +101,7 @@ from the linked `ApiDocumentation`.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const rep = await client.loadResource('https://wikibus-test.gear.host/');
+const rep = await client.loadResource('https://sources.test.wikibus.org/');
 
 rep.root.apiDocumentation;
 {% endrunkit %}

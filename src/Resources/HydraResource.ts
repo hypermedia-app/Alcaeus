@@ -1,10 +1,11 @@
 import {nonenumerable} from 'core-decorators';
 import {Maybe} from 'tsmonad';
 import {IHydraClient} from '../alcaeus';
+import {Core} from '../Constants';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, IHydraResource, SupportedOperation} from './index';
+import {ApiDocumentation, IHydraResource, RdfProperty, SupportedOperation} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
@@ -29,7 +30,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
         const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]): Operation[] => {
             const classOperations = this.types.map((type: string) => getOperations(type));
 
-            const mappedLinks = (this as any as IAsObject)._links
+            const mappedLinks = (this as any as IAsObject)._reverseLinks
                 .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
             const flattened = [].concat.apply([], mappedLinks);
             const propertyOperations = flattened.map(
@@ -47,6 +48,34 @@ class HydraResource extends Resource implements IHydraResource, IResource {
                 just: getClassOperations,
                 nothing: () => [],
             });
+    }
+
+    @nonenumerable
+    public getLinks(includeMissing: boolean = false) {
+        return this.getProperties()
+            .filter((prop) => prop.isLink)
+            .reduce((map, property) => {
+                const value = this._getArray(property.id);
+
+                if (value.length > 0 || includeMissing) {
+                    map[property.id] = value;
+                }
+
+                return map;
+            }, {});
+    }
+
+    @nonenumerable
+    public getProperties() {
+        return this.types.map((t) => this.apiDocumentation.getProperties(t))
+            .reduce((supportedProps, moreProps) => {
+                return [...supportedProps, ...moreProps.map((sp) => sp.property)];
+            }, [] as RdfProperty[]);
+    }
+
+    @nonenumerable
+    public getCollections() {
+        return this._getArray(Core.Vocab('collection'));
     }
 }
 

@@ -6,7 +6,7 @@ that it can be used directly in a `for..of` loop.
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const resources = await client.loadResource('https://wikibus-test.gear.host/');
+const resources = await client.loadResource('https://sources.test.wikibus.org/');
 
 for(let res of resources) {
   console.log(res.id);
@@ -21,7 +21,7 @@ Here's an example which counts the occurrences of RDF types within an `ApiDocume
 {% runkit %}
 const client = require("alcaeus@{{ book.version }}").Hydra;
 
-const resources = await client.loadResource('https://wikibus-test.gear.host/doc');
+const resources = await client.loadResource('https://sources.test.wikibus.org/doc');
 
 Array.from(resources).reduce((acc, item) => {
             item.types.forEach(type => {

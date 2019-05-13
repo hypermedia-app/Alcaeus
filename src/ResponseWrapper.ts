@@ -51,7 +51,9 @@ export class ResponseWrapper implements IResponseWrapper {
             const links = li(linkHeaders);
 
             if (links[Constants.Core.Vocab('apiDocumentation')]) {
-                return links[Constants.Core.Vocab('apiDocumentation')].url;
+                const linkUrl = links[Constants.Core.Vocab('apiDocumentation')].url;
+
+                return new URL(linkUrl, this.redirectUrl || this.requestedUri).toString();
             }
         }
 

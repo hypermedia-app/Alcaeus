@@ -20,6 +20,10 @@ export function Mixin <TBase extends Constructor>(Base: TBase) {
         get views() {
             return this._getArray(Core.Vocab('view'));
         }
+
+        get manages() {
+            return this._getArray(Core.Vocab('manages'));
+        }
     }
 
     return Collection;

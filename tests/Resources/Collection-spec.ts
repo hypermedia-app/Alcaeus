@@ -50,4 +50,21 @@ describe('Collection', () => {
                 .toBe(false);
         });
     });
+
+    describe('manages', () => {
+        it('should return array even for one element', () => {
+            // given
+            const collectionBody = {};
+            collectionBody[Core.Vocab('manages')] = { };
+            const collection = new Collection(collectionBody);
+
+            // then
+            expect(Array.isArray(collection.manages)).toBe(true);
+        });
+
+        it('should be non-enumerable', () => {
+            expect(Collection.prototype.propertyIsEnumerable('manages'))
+                .toBe(false);
+        });
+    });
 });

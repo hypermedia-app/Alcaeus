@@ -85,7 +85,7 @@ const { Hydra } = require("alcaeus@{{ book.version }}")
 
 const rep = await Hydra.loadResource('https://sources.test.wikibus.org/')
 
-rep.root.apiDocumentation
+const apiDoc = rep.root.apiDocumentation.valueOrThrow()
   .getClass('https://wikibus.org/api#EntryPoint')
   .supportedProperties.map(sp => ({
     id: sp.property.id, isLink: sp.property.isLink

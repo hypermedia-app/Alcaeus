@@ -43,11 +43,9 @@ class HydraResource extends Resource implements IHydraResource, IResource {
         };
 
         return this.apiDocumentation
-            .map((apiDoc) => apiDoc.getOperations)
-            .caseOf({
-                just: getClassOperations,
-                nothing: () => [],
-            });
+            .map((apiDoc) => apiDoc.getOperations ? apiDoc.getOperations.bind(apiDoc) : null)
+            .map(getClassOperations)
+            .valueOr([]);
     }
 
     @nonenumerable
@@ -66,7 +64,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    public getProperties() {
+    public getProperties(): RdfProperty[] {
         const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
             this.types.map(propertiesForType)
                 .reduce((supportedProps, moreProps) => {
@@ -74,11 +72,9 @@ class HydraResource extends Resource implements IHydraResource, IResource {
                 }, [] as RdfProperty[]);
 
         return this.apiDocumentation
-            .map((apiDoc) => apiDoc.getProperties)
-            .caseOf({
-                just: getProperties,
-                nothing: () => [],
-            });
+            .map((apiDoc) => apiDoc.getProperties ? apiDoc.getProperties.bind(apiDoc) : null)
+            .map(getProperties)
+            .valueOr([]);
     }
 
     @nonenumerable

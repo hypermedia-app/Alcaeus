@@ -66,7 +66,11 @@ export class Alcaeus implements IHydraClient {
             const representation = await getHydraResponse(this, response, uri, null);
             const resource = representation.root;
 
-            if (resource.types.contains(Core.Vocab('ApiDocumentation'))) {
+            const resourceHasApiDocType =
+                resource['@type'] === Core.Vocab('ApiDocumentation') ||
+                (Array.isArray(resource['@type']) && resource['@type'].includes(Core.Vocab('ApiDocumentation')));
+
+            if (resourceHasApiDocType === false) {
                 console.warn(`The resource ${uri} does not appear to be an API Documentation`);
             }
 
@@ -74,6 +78,7 @@ export class Alcaeus implements IHydraClient {
         } catch (e) {
             console.warn(`Failed to load ApiDocumentation from ${uri}`);
             console.warn(e);
+            console.warn(e.stack);
             return null;
         }
     }

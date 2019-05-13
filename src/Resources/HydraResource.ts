@@ -5,7 +5,7 @@ import {Core} from '../Constants';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, IHydraResource, RdfProperty, SupportedOperation} from './index';
+import {ApiDocumentation, IHydraResource, RdfProperty, SupportedOperation, SupportedProperty} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
@@ -67,12 +67,14 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
     @nonenumerable
     public getProperties() {
-        const getProperties = (apiDoc: ApiDocumentation) => this.types.map((t) => apiDoc.getProperties(t))
-            .reduce((supportedProps, moreProps) => {
-                return [...supportedProps, ...moreProps.map((sp) => sp.property)];
-            }, [] as RdfProperty[]);
+        const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
+            this.types.map(propertiesForType)
+                .reduce((supportedProps, moreProps) => {
+                    return [...supportedProps, ...moreProps.map((sp) => sp.property)];
+                }, [] as RdfProperty[]);
 
         return this.apiDocumentation
+            .map((apiDoc) => apiDoc.getProperties)
             .caseOf({
                 just: getProperties,
                 nothing: () => [],

@@ -76,6 +76,30 @@ describe('HydraResource', () => {
         });
     });
 
+    describe('getProperties', () => {
+        it('returns empty array when ApiDocumentation is missing', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, null);
+
+            // when
+            const ops = resource.getProperties();
+
+            // then
+            expect(ops.length).toBe(0);
+        });
+
+        it('returns empty array when ApiDocumentation does not implement the interface', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as any);
+
+            // when
+            const ops = resource.getProperties();
+
+            // then
+            expect(ops.length).toBe(0);
+        });
+    });
+
     describe('getLinks', () => {
         it('should return empty array when no property is link', () => {
             // given

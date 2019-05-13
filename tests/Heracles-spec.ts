@@ -11,17 +11,47 @@ import {mockedResponse, responseBuilder} from './test-utils';
 
 describe('Hydra', () => {
 
+    describe('loadDocumentation', () => {
+        let fetchResource: SinonStub;
+
+        beforeEach(() => {
+            fetchResource = sinon.stub(FetchUtil, 'fetchResource');
+        });
+
+        it('should return type ApiDocumentation', async () => {
+            // given
+            fetchResource.withArgs('http://api.example.com/doc/')
+                .returns(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
+                }));
+
+            // when
+            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
+
+            // then
+            expect(doc.id).toBe('http://api.example.com/doc/');
+        });
+
+        afterEach(() => {
+            fetchResource.restore();
+        });
+    });
+});
+
+describe('Hydra', () => {
+
+    let loadDocumentation: SinonStub;
     let fetchResource: SinonStub;
 
     beforeEach(() => {
         fetchResource = sinon.stub(FetchUtil, 'fetchResource');
+        loadDocumentation = sinon.stub(Hydra, 'loadDocumentation');
     });
 
     describe('loadResource', () => {
 
         beforeEach(() => {
-            fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse({}));
+            loadDocumentation.returns({});
         });
 
         it('should return object with matching @id when it is unescaped in response', async () => {
@@ -68,7 +98,7 @@ describe('Hydra', () => {
             await Hydra.loadResource('http://example.com/resource');
 
             // then
-            expect(fetchResource.calledWithMatch('http://api.example.com/doc/')).toBe(true);
+            expect(loadDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true);
         });
 
         it('should not load documentation in absence of Link header', async () => {
@@ -191,27 +221,7 @@ describe('Hydra', () => {
         });
 
         afterEach(() => {
-            fetchResource.restore();
-        });
-    });
-
-    describe('loadDocumentation', () => {
-
-        it('should return type ApiDocumentation', async () => {
-            // given
-            fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse({
-                    xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
-                }));
-
-            // when
-            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
-
-            // then
-            expect(doc.id).toBe('http://api.example.com/doc/');
-        });
-
-        afterEach(() => {
+            loadDocumentation.restore();
             fetchResource.restore();
         });
     });
@@ -219,7 +229,7 @@ describe('Hydra', () => {
     describe('loadResource with missing ApiDocumentation', () => {
 
         beforeEach(() => {
-            fetchResource.withArgs('http://api.example.com/doc/').returns(Promise.reject(null));
+            loadDocumentation.returns(null);
         });
 
         it('should succeed even if ApiDocumentation is not available', async () => {
@@ -238,9 +248,9 @@ describe('Hydra', () => {
         });
 
         afterEach(() => {
+            loadDocumentation.restore();
             fetchResource.restore();
         });
-
     });
 
     describe('default root selectors', () => {
@@ -291,6 +301,7 @@ describe('Hydra', () => {
         });
 
         afterEach(() => {
+            loadDocumentation.restore();
             fetchResource.restore();
         });
     });

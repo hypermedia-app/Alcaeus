@@ -40,13 +40,13 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    public getLinks() {
+    public getLinks(includeMissing: boolean = false) {
         return this.getProperties()
             .filter((prop) => prop.isLink)
             .reduce((map, property) => {
                 const value = this._getArray(property.id);
 
-                if (value) {
+                if (value.length > 0 || includeMissing) {
                     map[property.id] = value;
                 }
 

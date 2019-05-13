@@ -48,8 +48,10 @@ export interface IHydraResource {
 
     /**
      * Get all property/value pairs for hydra:Link properties
+     *
+     * @param includeMissing if true, will include properties not present in resource representation
      */
-    getLinks(): LinkMap;
+    getLinks(includeMissing: boolean): LinkMap;
 
     /**
      * Gets objects of hydra:collection property

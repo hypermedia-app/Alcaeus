@@ -95,6 +95,48 @@ describe('HydraResource', () => {
             expect(Object.keys(links).length).toBe(1);
             expect(links['http://example.com/vocab#other'][0]['@id']).toBe('http://example.com/linked');
         });
+
+        it('should return empty result if a Link property is not used in a resource', () => {
+            // given
+            const getProperties = sinon.stub()
+                .returns([{
+                    property: {
+                        id: 'http://example.com/vocab#unused',
+                        isLink: true,
+                    },
+                }]);
+            const apiDoc = {
+                getProperties,
+            } as any;
+            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
+
+            // when
+            const links = resource.getLinks();
+
+            // then
+            expect(Object.keys(links).length).toBe(0);
+        });
+
+        it('should all Link properties if requested explicitly', () => {
+            // given
+            const getProperties = sinon.stub()
+                .returns([{
+                    property: {
+                        id: 'http://example.com/vocab#unused',
+                        isLink: true,
+                    },
+                }]);
+            const apiDoc = {
+                getProperties,
+            } as any;
+            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc);
+
+            // when
+            const links = resource.getLinks(true);
+
+            // then
+            expect(Object.keys(links).length).toBe(1);
+        });
     });
 
     describe('getCollections', () => {

@@ -9,6 +9,8 @@
     * [Collections](representations/collections.md)
     * [Extending resources](representations/mixins.md)
   * [Affordances](representations/resource-affordances.md)
+    * [hydra:Link](representations/affordances/links.md)
+    * [hydra:collection](representations/affordances/collections.md)
     * [Invoking operations](representations/affordances/invoking-operations.md)
 * [API Documentation](api-documentation/readme.md)
   * [Entrypoint](api-documentation/entrypoint.md)

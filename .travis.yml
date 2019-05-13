@@ -15,13 +15,3 @@ after_success:
 - codecov
 after_failure:
 - codecov
-before_deploy:
-- npm install -g firebase-tools
-- yarn build:gitbook
-deploy:
-  provider: firebase
-  on:
-    tags: true
-  skip_cleanup: true
-  token:
-    secure: Pc/8zH6AItvVGVFj+vetdC1CNNhTYj3UwmJBr3PIhtzlEKeT4I6OfPy/hOWkiON8/SsLdVsEkRSyDTP6ZrwZkcPTk5uX+z/eQvZOfpCTnNElULGEa6S96cFxGtZI8HkOzjNDvRbFjEJalyd8WWuTMrcsyYisfm2WpvUC/MEJoZCqUJCzDA0/f2lt1kaWbCnrUuov6FT/WpW4n02zvljrdXP/eY5UCGpbzID3E7bAKfg5h1uzIBcaMWmquV258cXiZIKG0Fw4qYbQu/jWZddoLaMgf6cJwq3ef+Qlhys4EYfhPnS/vxekrRXIXZFmRI8+RijqNdEEBjh9IQQEtIMstUp0MdMrLENAw8e9GNeYYpCq+26f9SAIdqZ8BaiRNMvxoA1ucO45FZp6BbgjB+gNE5FwOZFxsJHQd/tNRm2Idud7IMvbUAQ/x62WZaqQUMVl4ztN+xr1yAx0Z3UW8KZbpjrvKY82VnpC9oH56inBkXOuVBCHwHm7RO9R5k9zOvmlasqh+BEUwhpohWCQ1W6FiFOnujNL+SqvDEKPxvPUYI1m3oU7iSw0ZsEM+gwH4ES6s4wPZfP6UTVgpxukpHYSzpWZ69uP/1opqjvuOmbcRIyGW9FJnXu4HqcXtvC+nwMAX5wnPvG3QV4kk1cgOx21FYbFniFFdqJM2V2X8RujFmo=

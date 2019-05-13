@@ -29,7 +29,7 @@ export function Mixin<TBase extends Constructor>(Base: TBase) {
 
         @nonenumerable
         get collection() {
-            const reverseLinks = (this as any as IAsObject)._links;
+            const reverseLinks = (this as any as IAsObject)._reverseLinks;
             const collectionLink = reverseLinks.find((linkArray: IIncomingLink) => {
                 return linkArray.predicate === Core.Vocab('view');
             });

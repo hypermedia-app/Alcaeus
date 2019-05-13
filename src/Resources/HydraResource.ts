@@ -67,10 +67,16 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
     @nonenumerable
     public getProperties() {
-        return this.types.map((t) => this.apiDocumentation.getProperties(t))
+        const getProperties = (apiDoc: ApiDocumentation) => this.types.map((t) => apiDoc.getProperties(t))
             .reduce((supportedProps, moreProps) => {
                 return [...supportedProps, ...moreProps.map((sp) => sp.property)];
             }, [] as RdfProperty[]);
+
+        return this.apiDocumentation
+            .caseOf({
+                just: getProperties,
+                nothing: () => [],
+            });
     }
 
     @nonenumerable

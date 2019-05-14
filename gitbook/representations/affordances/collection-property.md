@@ -25,7 +25,45 @@ const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
 rep.root.getCollections()
 {% endrunkit %}
 
-{% hint style="working" %}
- In a future version this method will be extended with a parameter to filter the collections
- by their manages block specification.
+## Discovering specific collections
+
+The `getCollections` method accepts and optional parameter which is used to find only
+collections conforming to given ["manages block" pattern](../collections.md#manages-block).
+
+Below is an example for finding collection with members of a given `SupportedClass`.
+
+```js
+const { Hydra } = require("alcaeus")
+
+const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
+const supportedClass = rep.root.apiDocumentation.classes[0]
+
+rep.root.getCollections({
+    object: supportedClass
+})
+```
+
+{% hint style="danger" %}
+ When using the `object` parameter, `predicate` will implicitly be `rdf:type`. Changing
+ it to anything else will cause an empty result.
+{% endhint %}
+
+Second option is to looks for collections by subject and predicate:
+
+```js
+const { Hydra } = require("alcaeus")
+
+const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
+const supportedClass = rep.root.apiDocumentation.classes[0]
+
+rep.root.getCollections({
+    subject: 'https://sources.test.wikibus.org/magazine/Buses',
+    predicate: 'http://purl.org/dc/terms/isPartOf'
+})
+```
+
+{% hint style="tip" %}
+ You may notice in the second snippet that strings are used for `subject`
+ and `predicate` parameters. Same is true for `object`; all three parameters can be either
+ strings (URI) or resource objects. 
 {% endhint %}

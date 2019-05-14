@@ -41,7 +41,8 @@ export type HydraTerm = 'apiDocumentation' |
     'ExplicitRepresentation' |
     'totalItems' |
     'Link' |
-    'collection';
+    'collection' |
+    'manages';
 
 export namespace Core {
     export const Context = {
@@ -92,6 +93,7 @@ export namespace Core {
         IriTemplateMapping: 'hydra:IriTemplateMapping',
         variable: 'hydra:variable',
         collection: 'hydra:collection',
+        manages: 'hydra:manages',
     };
 
     export function Vocab(term: HydraTerm) {

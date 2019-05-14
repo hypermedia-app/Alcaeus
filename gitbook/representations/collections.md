@@ -20,6 +20,10 @@ interface ICollection {
      * Gets the views of a partial collection
      */
     readonly views?: IView[];
+    /**
+     * Gets the manages block for current collection
+     */
+    readonly manages: IManagesBlock[];
 }
 ```
 
@@ -33,6 +37,49 @@ const rep = await client.loadResource('https://sources.test.wikibus.org/magazine
 
 rep.root;
 {% endrunkit %}
+
+## Manages block
+
+Hydra introduces the so-called "manages block" which adds additional metadata to collections. It can serve
+two purposes:
+
+:one: Inform clients about collection members' relation with another resource 
+
+:two: Inform clients about the type of collection elements
+
+In case of member relations, a manages block can look like this (excerpt):
+
+```json
+{
+  "@id": "https://sources.test.wikibus.org/magazine/Buses/issues",
+  "hydra:manages": {
+    "rdf:subject": "https://sources.test.wikibus.org/magazine/Buses",
+    "rdf:predicate": "dcterms:isPartOf"
+  }
+}
+```
+
+This tells the client that all members of the `/magazine/Buses/issues` collection are in relation with 
+`/magazine/Buses` defined as
+
+```
+?member dcterms:isPartOf </magazine/Buses> .
+```
+
+The second case is to declare that all members will be of a certain type:
+
+```json
+{
+  "@id": "https://sources.test.wikibus.org/magazine/Buses/issues",
+  "hydra:manages": {
+    "rdf:predicate": "rdf:type",
+    "rdf:object": "https://wikibus.org/vocab#MagazineIssue"
+  }
+}
+```
+
+Please see the [`hydra:collection` page](./affordances/collection-property.md) for details on discovering
+collections based on their manages block specifications.
 
 ## Paged (partial) collections
 

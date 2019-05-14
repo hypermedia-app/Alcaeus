@@ -5,7 +5,8 @@
     "runkit",
     "hints",
     "etoc",
-    "forkmegithub"
+    "forkmegithub",
+    "advanced-emoji"
   ],
   "pluginsConfig": {
     "etoc": {

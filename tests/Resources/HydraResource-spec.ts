@@ -1,4 +1,5 @@
 import * as sinon from 'sinon';
+import {Core} from '../../src/Constants';
 import createClass from '../../src/Resources/HydraResource';
 import {Bodies} from '../test-objects';
 
@@ -195,6 +196,23 @@ describe('HydraResource', () => {
 
            // then
            expect(collections.length).toBe(4);
+       });
+
+       it('returns collections matching manages block Class given by id', () => {
+           // given
+           const resource = new HydraResource(Bodies.withHydraCollections, {} as any);
+           resource[Core.Vocab('collection')][0].manages = [{
+               matches: () => true,
+           }];
+
+           // when
+           const collections = resource.getCollections({
+               object: 'http://example.org/Class',
+           });
+
+           // then
+           expect(collections.length).toBe(1);
+           expect(collections[0]['@id']).toBe('http://example.com/collection1');
        });
     });
 });

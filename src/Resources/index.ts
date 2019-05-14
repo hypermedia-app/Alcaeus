@@ -59,7 +59,7 @@ export interface IHydraResource {
      *
      * @param includeMissing if true, will include properties not present in resource representation
      */
-    getLinks(includeMissing: boolean): LinkMap;
+    getLinks(includeMissing?: boolean): LinkMap;
 
     /**
      * Gets objects of hydra:collection property

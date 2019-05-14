@@ -103,7 +103,7 @@ const client = require("alcaeus@{{ book.version }}").Hydra;
 
 const rep = await client.loadResource('https://sources.test.wikibus.org/');
 
-rep.root.apiDocumentation;
+rep.root.apiDocumentation.valueOr(null);
 {% endrunkit %}
 
 For more information about the API Documentation please refer to [its dedicated page][doc] and child pages.

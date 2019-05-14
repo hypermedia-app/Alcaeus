@@ -1,3 +1,4 @@
+import {Maybe} from 'tsmonad';
 import {IHydraResponse} from '../HydraResponse';
 import {IResource} from './Resource';
 
@@ -39,7 +40,7 @@ export interface IHydraResource {
     /**
      * Gets the API Documentation which was linked to this resource representation
      */
-    readonly apiDocumentation: ApiDocumentation;
+    readonly apiDocumentation: Maybe<ApiDocumentation>;
 
     /**
      * Gathers all properties from all classes

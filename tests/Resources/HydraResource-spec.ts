@@ -52,6 +52,52 @@ describe('HydraResource', () => {
             expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true);
             expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true);
         });
+
+        it('returns empty array when api documentation is unavailable', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, null);
+
+            // when
+            const ops = resource.operations;
+
+            // then
+            expect(ops.length).toBe(0);
+        });
+
+        it('returns empty array when api documentation does not implement the necessary method', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as any);
+
+            // when
+            const ops = resource.operations;
+
+            // then
+            expect(ops.length).toBe(0);
+        });
+    });
+
+    describe('getProperties', () => {
+        it('returns empty array when ApiDocumentation is missing', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, null);
+
+            // when
+            const ops = resource.getProperties();
+
+            // then
+            expect(ops.length).toBe(0);
+        });
+
+        it('returns empty array when ApiDocumentation does not implement the interface', () => {
+            // given
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as any);
+
+            // when
+            const ops = resource.getProperties();
+
+            // then
+            expect(ops.length).toBe(0);
+        });
     });
 
     describe('getLinks', () => {

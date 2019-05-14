@@ -1,10 +1,11 @@
 import {nonenumerable} from 'core-decorators';
+import {Maybe} from 'tsmonad';
 import {IHydraClient} from '../alcaeus';
 import {Core} from '../Constants';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, IHydraResource, RdfProperty} from './index';
+import {ApiDocumentation, IHydraResource, RdfProperty, SupportedOperation, SupportedProperty} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
@@ -18,25 +19,33 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    get apiDocumentation() {
-        return apiDocumentation.get(this);
+    get apiDocumentation(): Maybe<ApiDocumentation> {
+        return Maybe.maybe(apiDocumentation.get(this));
     }
 
     @nonenumerable
     get operations() {
         const alcaeus = (this as any)._alcaeus;
-        const classOperations = this.types.map((type: string) => this.apiDocumentation.getOperations(type));
 
-        const mappedLinks = (this as any as IAsObject)._reverseLinks
-            .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
-        const flattened = [].concat.apply([], mappedLinks);
-        const propertyOperations = flattened.map(
-            (link: any) => this.apiDocumentation.getOperations(link.type, link.predicate));
+        const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]): Operation[] => {
+            const classOperations = this.types.map((type: string) => getOperations(type));
 
-        const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
-        return operations.map((supportedOperation) => {
-            return new Operation(supportedOperation, alcaeus, this);
-        });
+            const mappedLinks = (this as any as IAsObject)._reverseLinks
+                .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
+            const flattened = [].concat.apply([], mappedLinks);
+            const propertyOperations = flattened.map(
+                (link: any) => getOperations(link.type, link.predicate));
+
+            const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
+            return operations.map((supportedOperation) => {
+                return new Operation(supportedOperation, alcaeus, this);
+            });
+        };
+
+        return this.apiDocumentation
+            .map((apiDoc) => apiDoc.getOperations ? apiDoc.getOperations.bind(apiDoc) : null)
+            .map(getClassOperations)
+            .valueOr([]);
     }
 
     @nonenumerable
@@ -55,11 +64,17 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    public getProperties() {
-        return this.types.map((t) => this.apiDocumentation.getProperties(t))
-            .reduce((supportedProps, moreProps) => {
-                return [...supportedProps, ...moreProps.map((sp) => sp.property)];
-            }, [] as RdfProperty[]);
+    public getProperties(): RdfProperty[] {
+        const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
+            this.types.map(propertiesForType)
+                .reduce((supportedProps, moreProps) => {
+                    return [...supportedProps, ...moreProps.map((sp) => sp.property)];
+                }, [] as RdfProperty[]);
+
+        return this.apiDocumentation
+            .map((apiDoc) => apiDoc.getProperties ? apiDoc.getProperties.bind(apiDoc) : null)
+            .map(getProperties)
+            .valueOr([]);
     }
 
     @nonenumerable

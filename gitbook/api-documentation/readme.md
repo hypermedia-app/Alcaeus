@@ -17,8 +17,11 @@ const docUri = 'http://www.w3.org/ns/hydra/core#apiDocumentation';
 const rep = await client.loadResource('https://sources.test.wikibus.org/');
 
 console.log(`The documentation URI is: '${li(rep.xhr.headers.get('Link'))[docUri].url}'`);
-const apiDoc = rep.root.apiDocumentation;
+const apiDoc = rep.root.apiDocumentation.valueOr(null);
 {% endrunkit %}
+
+The getter returns a `Maybe<ApiDocumentation>` object which makes it easier to handle representations
+without it or when it failed to load for some reason.
 
 {% hint style="working" %}
  For a

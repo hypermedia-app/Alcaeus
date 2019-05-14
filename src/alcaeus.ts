@@ -1,3 +1,5 @@
+// tslint:disable no-console
+import {Core} from './Constants';
 import * as FetchUtil from './FetchUtil';
 import * as HydraResponse from './HydraResponse';
 import {IHydraResponse} from './HydraResponse';
@@ -30,6 +32,16 @@ const getHydraResponse = async (
     return HydraResponse.create(uri, response, null, null);
 };
 
+function getApiDocumentation(this: Alcaeus, response: IResponseWrapper): Promise<ApiDocumentation> {
+    if (response.apiDocumentationLink) {
+        return this.loadDocumentation(response.apiDocumentationLink);
+    } else {
+        console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`);
+
+        return null;
+    }
+}
+
 export class Alcaeus implements IHydraClient {
     public rootSelectors: IRootSelector[];
 
@@ -43,10 +55,7 @@ export class Alcaeus implements IHydraClient {
     public async loadResource(uri: string): Promise<IHydraResponse> {
         const response = await FetchUtil.fetchResource(uri);
 
-        let apiDocumentation;
-        if (response.apiDocumentationLink) {
-            apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
-        }
+        const apiDocumentation = await getApiDocumentation.call(this, response);
 
         return getHydraResponse(this, response, uri, apiDocumentation);
     }
@@ -55,16 +64,29 @@ export class Alcaeus implements IHydraClient {
         try {
             const response = await FetchUtil.fetchResource(uri);
             const representation = await getHydraResponse(this, response, uri, null);
-            return representation.root as any as ApiDocumentation;
+            const resource = representation.root;
+
+            const resourceHasApiDocType =
+                resource['@type'] === Core.Vocab('ApiDocumentation') ||
+                (Array.isArray(resource['@type']) && resource['@type'].includes(Core.Vocab('ApiDocumentation')));
+
+            if (resourceHasApiDocType === false) {
+                console.warn(`The resource ${uri} does not appear to be an API Documentation`);
+            }
+
+            return resource as any as ApiDocumentation;
         } catch (e) {
+            console.warn(`Failed to load ApiDocumentation from ${uri}`);
+            console.warn(e);
+            console.warn(e.stack);
             return null;
         }
     }
 
     public async invokeOperation(operation: IOperation, uri: string, body: BodyInit, mediaType?: string): Promise<any> {
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mediaType);
-        const apiDocumentation = await this.loadDocumentation(response.apiDocumentationLink);
+        const apiDocumentation = await getApiDocumentation.call(this, response);
 
-        return await getHydraResponse(this, response, uri, apiDocumentation);
+        return getHydraResponse(this, response, uri, apiDocumentation);
     }
 }

@@ -1,7 +1,8 @@
+import {Maybe} from 'tsmonad';
 import {Core} from '../../Constants';
 import {IAsObject} from '../../internals';
 import {rdf} from '../../Vocabs';
-import {IManagesBlock, ManagesBlockPattern} from '../index';
+import {Class, IManagesBlock, ManagesBlockPattern} from '../index';
 import {HydraConstructor} from '../Mixin';
 
 export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
@@ -15,13 +16,19 @@ export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
         }
 
         get object() {
-            const obj = this._get(rdf.object);
-            if (!obj) {
-                return null;
-            }
+            const maybeObject = Maybe.maybe(this._get(rdf.object));
 
-            return (this.apiDocumentation && this.apiDocumentation.getClass && this.apiDocumentation.getClass(obj.id))
-                || obj;
+            const seq = Maybe.sequence({
+                getClass: this.apiDocumentation.map((doc) => doc.getClass),
+                object: maybeObject,
+            });
+
+            return seq
+                .map((t) => t.getClass(t.object.id) as Class)
+                .caseOf({
+                    just: (t) => t,
+                    nothing: () => maybeObject.valueOr(null),
+                });
         }
 
         public matches({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {

@@ -4,7 +4,7 @@ import {Core} from '../Constants';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, IHydraResource, RdfProperty} from './index';
+import {ApiDocumentation, Collection, IHydraResource, ManagesBlockPattern, RdfProperty} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
@@ -63,8 +63,15 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     }
 
     @nonenumerable
-    public getCollections() {
-        return this._getArray(Core.Vocab('collection'));
+    public getCollections(filter?: ManagesBlockPattern) {
+        let collections = this._getArray(Core.Vocab('collection')) as Collection[];
+
+        if (filter) {
+            collections = collections.filter((c) => c.manages
+                && c.manages.find((managesBlock) => managesBlock.matches(filter)));
+        }
+
+        return collections;
     }
 }
 

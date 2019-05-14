@@ -3,7 +3,7 @@ export interface ITypeCollection extends ReadonlyArray<string> {
 }
 
 export default class TypeCollection extends Array<string> implements ITypeCollection {
-    public static create(classes: any) {
+    public static create(classes?: any) {
         const collection: TypeCollection = Object.create(TypeCollection.prototype);
 
         if (typeof classes === 'undefined') {

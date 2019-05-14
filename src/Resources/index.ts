@@ -1,8 +1,15 @@
+/* tslint:disable:interface-over-type-literal */
 import {IHydraResponse} from '../HydraResponse';
 import {IResource} from './Resource';
 
 type LinkMap = {
     [key: string]: IResource[],
+};
+
+export type ManagesBlockPattern = {
+    subject?: string | IResource,
+    predicate?: string | (IRdfProperty & IResource),
+    object?: string | (IClass & IResource),
 };
 
 export interface IApiDocumentation {
@@ -56,7 +63,7 @@ export interface IHydraResource {
     /**
      * Gets objects of hydra:collection property
      */
-    getCollections(): IResource[];
+    getCollections(filter?: ManagesBlockPattern): IResource[];
 }
 
 export interface IStatusCodeDescription {
@@ -115,6 +122,10 @@ export interface ICollection {
      * Gets the views of a partial collection
      */
     readonly views?: IView[];
+    /**
+     * Gets the manages block for current collection
+     */
+    readonly manages: IManagesBlock[];
 }
 
 export interface IView {
@@ -158,10 +169,28 @@ export interface IIriTemplateMapping {
     required: boolean;
 }
 
+/**
+ * Represents the "manages block"
+ */
 export interface IManagesBlock {
+    /**
+     * Gets the subject resource from the manages block
+     */
     subject: IResource;
+    /**
+     * Gets the predicate from the manages block
+     */
     predicate: RdfProperty;
-    object: IClass;
+    /**
+     * Gets the object class from the manages block
+     */
+    object: Class;
+
+    /**
+     * Checks if the current manages block matches the given pattern
+     * @param filter {ManagesBlockPattern}
+     */
+    matches(filter: ManagesBlockPattern): boolean;
 }
 
 export type HydraResource = IHydraResource & IResource;

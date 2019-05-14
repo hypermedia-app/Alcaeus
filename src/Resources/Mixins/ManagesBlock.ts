@@ -1,7 +1,7 @@
 import {Core} from '../../Constants';
 import {IAsObject} from '../../internals';
 import {rdf} from '../../Vocabs';
-import {IManagesBlock} from '../index';
+import {IManagesBlock, ManagesBlockPattern} from '../index';
 import {HydraConstructor} from '../Mixin';
 
 export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
@@ -20,7 +20,26 @@ export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
                 return null;
             }
 
-            return this.apiDocumentation.getClass(obj.id) || obj;
+            return (this.apiDocumentation && this.apiDocumentation.getClass && this.apiDocumentation.getClass(obj.id))
+                || obj;
+        }
+
+        public matches({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
+            const predicateId = typeof predicate === 'string' ? predicate : predicate.id;
+            const objectId = typeof object === 'string' ? object : object.id;
+            const subjectId = typeof subject === 'string' ? subject : subject.id;
+
+            if (object && this.object && this.predicate) {
+                const predicateIsRdfType = predicateId === rdf.type;
+
+                return predicateIsRdfType && this.object.id === objectId && this.predicate.id === predicateId;
+            }
+
+            if (subject && predicate && this.subject && this.predicate) {
+                return this.subject.id === subjectId && this.predicate.id === predicateId;
+            }
+
+            return false;
         }
     }
 

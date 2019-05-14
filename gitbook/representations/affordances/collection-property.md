@@ -27,7 +27,7 @@ rep.root.getCollections()
 
 ## Discovering specific collections
 
-The `getCollections` method accepts and optional parameter which is used to find only
+The `getCollections` method accepts an optional parameter which is used to find only
 collections conforming to given ["manages block" pattern](../collections.md#manages-block).
 
 Below is an example for finding collection with members of a given `SupportedClass`.
@@ -48,13 +48,12 @@ rep.root.getCollections({
  it to anything else will cause an empty result.
 {% endhint %}
 
-Second option is to looks for collections by subject and predicate:
+Second option is to look for collections by subject and predicate:
 
 ```js
 const { Hydra } = require("alcaeus")
 
 const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
-const supportedClass = rep.root.apiDocumentation.classes[0]
 
 rep.root.getCollections({
     subject: 'https://sources.test.wikibus.org/magazine/Buses',

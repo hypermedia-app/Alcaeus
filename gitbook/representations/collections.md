@@ -43,7 +43,7 @@ rep.root;
 Hydra introduces the so-called "manages block" which adds additional metadata to collections. It can serve
 two purposes:
 
-:one: Inform the clients about collection members' relation with another resource 
+:one: Inform clients about collection members' relation with another resource 
 
 :two: Inform clients about the type of collection elements
 
@@ -59,14 +59,14 @@ In case of member relations, a manages block can look like this (excerpt):
 }
 ```
 
-This informs the client that all members of the `/magazine/Buses/issues` collection are in relation with 
+This tells the client that all members of the `/magazine/Buses/issues` collection are in relation with 
 `/magazine/Buses` defined as
 
 ```
 ?member dcterms:isPartOf </magazine/Buses> .
 ```
 
-The second case is to describe the client that all members will be of a certain type:
+The second case is to declare that all members will be of a certain type:
 
 ```json
 {

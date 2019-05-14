@@ -85,5 +85,43 @@ describe('ManagesBlock', () => {
                 expect(obj).toBeNull();
             });
         });
+
+        describe('subject', () => {
+            it('returns rdf:subject', () => {
+                // given
+                const value = {
+                    id: 'http://example.org/term',
+                };
+                const resource = {
+                    [rdf.subject]: value,
+                };
+                const mb = new ManagesBlock(resource, {} as any as ApiDocumentation);
+
+                // when
+                const obj = mb.subject;
+
+                // then
+                expect(obj).toBe(value);
+            });
+        });
+
+        describe('predicate', () => {
+            it('returns rdf:subject', () => {
+                // given
+                const value = {
+                    id: 'http://example.org/predicate',
+                };
+                const resource = {
+                    [rdf.predicate]: value,
+                };
+                const mb = new ManagesBlock(resource, {} as any as ApiDocumentation);
+
+                // when
+                const obj = mb.predicate;
+
+                // then
+                expect(obj).toBe(value);
+            });
+        });
     });
 });

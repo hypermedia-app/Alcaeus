@@ -158,6 +158,12 @@ export interface IIriTemplateMapping {
     required: boolean;
 }
 
+export interface IManagesBlock {
+    subject: IResource;
+    predicate: RdfProperty;
+    object: IClass;
+}
+
 export type HydraResource = IHydraResource & IResource;
 export type DocumentedResource = IDocumentedResource & HydraResource;
 export type Class = IClass & DocumentedResource;

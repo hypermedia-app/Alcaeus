@@ -37,3 +37,11 @@ await client.loadResource('https://sources.test.wikibus.org/');
  Also note that runkit examples will be shown loading a specific version,
  which one would not include in real code.
 {% endhint %}
+
+## Past docs
+
+For reference, here are snapshots of docs at their state in previous versions:
+
+* [0.4.0](../0.4.0)
+* [0.4.3](../0.4.3)
+* [0.5.3](../0.5.3)

@@ -1,14 +1,14 @@
 import {promises as jsonld} from 'jsonld';
-import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/DocumentedResource';
 import Resource from '../../src/Resources/Resource';
+import Context from '../test-objects/Context';
 
 class DocumentedResource extends Mixin(Resource) {}
 
 describe('DocumentedResource', () => {
 
     const hydraDescriptionJsonLd = {
-        '@context': Core.Context,
+        '@context': Context,
         'description': 'The longer description',
         'http://some/custom/property': 'The value',
         'title': 'The title',

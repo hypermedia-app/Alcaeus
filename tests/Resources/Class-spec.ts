@@ -1,14 +1,14 @@
 import {promises as jsonld} from 'jsonld';
-import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/Class';
 import Resource from '../../src/Resources/Resource';
+import Context from '../test-objects/Context';
 
 class Class extends Mixin(Resource) {}
 
 describe('Class', () => {
 
     const hydraClass = {
-        '@context': Core.Context,
+        '@context': Context,
         '@id': 'http://example.com/vocab#SomeClass',
         'supportedOperation': [{}],
         'supportedProperty': [{}],

@@ -2,6 +2,7 @@
 
 import {Core} from '../../src/Constants';
 import {owl, rdf, xsd} from '../../src/Vocabs';
+import Context from '../test-objects/Context';
 
 export namespace Bodies {
     export let someJsonLd = {
@@ -120,7 +121,7 @@ export namespace Bodies {
 
     export let hydraCollection = {
         '@id': 'http://example.com/resource',
-        '@context': Core.Context,
+        '@context': Context,
         'hydra:member': [
             {'@id': 'http://example.com/element/1'},
             {'@id': 'http://example.com/element/2'},
@@ -135,7 +136,7 @@ export namespace Bodies {
 
     export let hydraCollectionWithView = {
         '@id': 'http://example.com/resource',
-        '@context': Core.Context,
+        '@context': Context,
         'member': [
             {'@id': 'http://example.com/element/1'},
             {'@id': 'http://example.com/element/2'},
@@ -162,7 +163,7 @@ export namespace Documentations {
     export let classWithOperation = {
         '@id': 'http://api.example.com/doc/',
         '@type': Core.Vocab('ApiDocumentation'),
-        '@context': Core.Context,
+        '@context': Context,
         'entrypoint': 'http://example.com/home',
         'supportedClass': [
             {
@@ -215,7 +216,7 @@ export namespace Documentations {
     };
 
     export let untyped = {
-        '@context': Core.Context,
+        '@context': Context,
         '@id': 'http://api.example.com/doc/',
         'entrypoint': 'http://example.com/home',
     };

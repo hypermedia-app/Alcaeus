@@ -5,7 +5,14 @@ import {Core} from '../Constants';
 import {IAsObject, IIncomingLink} from '../internals';
 import ClientAccessor from './CoreMixins/ClientAccessor';
 import LinkAccessor from './CoreMixins/LinkAccessor';
-import {ApiDocumentation, Collection, IHydraResource, ManagesBlockPattern, RdfProperty, SupportedOperation, SupportedProperty} from './index';
+import {
+    ApiDocumentation,
+    Collection,
+    IHydraResource,
+    ManagesBlockPattern,
+    SupportedOperation,
+    SupportedProperty,
+} from './index';
 import {Operation} from './Operation';
 import Resource, {IResource} from './Resource';
 
@@ -51,25 +58,24 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     @nonenumerable
     public getLinks(includeMissing: boolean = false) {
         return this.getProperties()
-            .filter((prop) => prop.isLink)
-            .reduce((map, property) => {
-                const value = this._getArray(property.id);
-
-                if (value.length > 0 || includeMissing) {
-                    map[property.id] = value;
-                }
-
-                return map;
-            }, {});
+            .filter((tuple) => tuple.supportedProperty.property.isLink)
+            .filter((tuple) => tuple.objects.length > 0 || includeMissing)
+            .map((tuple) => ({
+                resources: tuple.objects,
+                supportedProperty: tuple.supportedProperty,
+            }));
     }
 
     @nonenumerable
-    public getProperties(): RdfProperty[] {
+    public getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }> {
         const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
             this.types.map(propertiesForType)
                 .reduce((supportedProps, moreProps) => {
-                    return [...supportedProps, ...moreProps.map((sp) => sp.property)];
-                }, [] as RdfProperty[]);
+                    return [...supportedProps, ...moreProps.map((supportedProperty) => ({
+                        objects: this._getArray(supportedProperty.property.id),
+                        supportedProperty,
+                    }))];
+                }, [] as Array<{ supportedProperty: SupportedProperty, objects: any[] }>);
 
         return this.apiDocumentation
             .map((apiDoc) => apiDoc.getProperties ? apiDoc.getProperties.bind(apiDoc) : null)

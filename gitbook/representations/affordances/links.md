@@ -58,8 +58,8 @@ effects if the Hydra statements are leaked into other datasets.
 
 ## Links within a resource representation
 
-Any resource object fetched from a Hydra-compliant API allows implements a method
-which returns a map of links and their values.
+Each resource object fetched from a Hydra-compliant API implements a method
+which returns a set of links and their values.
 
 {% runkit %}
 const { Hydra } = require("alcaeus@{{ book.version }}")

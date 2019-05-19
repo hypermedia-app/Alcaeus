@@ -3,10 +3,6 @@ import {Maybe} from 'tsmonad';
 import {IHydraResponse} from '../HydraResponse';
 import {IResource} from './Resource';
 
-type LinkMap = {
-    [key: string]: IResource[],
-};
-
 export type ManagesBlockPattern = {
     subject?: string | IResource,
     predicate?: string | (IRdfProperty & IResource),
@@ -50,16 +46,16 @@ export interface IHydraResource {
     readonly apiDocumentation: Maybe<ApiDocumentation>;
 
     /**
-     * Gathers all properties from all classes
+     * Gathers all properties from current resource's classes
      */
-    getProperties(): IRdfProperty[];
+    getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }>;
 
     /**
      * Get all property/value pairs for hydra:Link properties
      *
      * @param includeMissing if true, will include properties not present in resource representation
      */
-    getLinks(includeMissing?: boolean): LinkMap;
+    getLinks(includeMissing?: boolean): Array<{ supportedProperty: SupportedProperty, resources: IResource[]}>;
 
     /**
      * Gets objects of hydra:collection property

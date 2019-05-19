@@ -164,7 +164,7 @@ describe('HydraResource', () => {
             expect(links.length).toBe(0);
         });
 
-        it('should all Link properties if requested explicitly', () => {
+        it('should return all Link properties if requested explicitly', () => {
             // given
             const getProperties = sinon.stub()
                 .returns([{

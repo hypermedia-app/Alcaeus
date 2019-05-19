@@ -3,6 +3,7 @@ import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/RdfProperty';
 import Resource from '../../src/Resources/Resource';
 import {owl, rdf, rdfs, xsd} from '../../src/Vocabs';
+import Context from '../test-objects/Context';
 
 class RdfProperty extends Mixin(Resource) {}
 
@@ -13,7 +14,7 @@ describe('RdfProperty', () => {
     beforeEach(() => {
         testProperty = {
             '@context': [
-                Core.Context,
+                Context,
                 {
                     rdfs: rdfs(),
                 },

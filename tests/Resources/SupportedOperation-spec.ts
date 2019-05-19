@@ -3,6 +3,7 @@ import {Core} from '../../src/Constants';
 import {Mixin} from '../../src/Resources/Mixins/SupportedOperation';
 import Resource from '../../src/Resources/Resource';
 import {owl} from '../../src/Vocabs';
+import Context from '../test-objects/Context';
 
 class SupportedOperation extends Mixin(Resource) {}
 
@@ -11,7 +12,7 @@ describe('SupportedOperation', () => {
     let operationJsonLd;
 
     beforeEach(() => operationJsonLd = {
-        '@context': Core.Context,
+        '@context': Context,
         'description': 'The operation description',
         'expects': owl.Nothing,
         'method': 'TRACE',
@@ -57,7 +58,7 @@ describe('SupportedOperation', () => {
         it('should return false for GET operation', async () => {
             // given
             const operation = {
-                '@context': Core.Context,
+                '@context': Context,
                 'method': 'GET',
             };
 
@@ -73,7 +74,7 @@ describe('SupportedOperation', () => {
         it('should return false for DELETE operation', async () => {
             // given
             const operation = {
-                '@context': Core.Context,
+                '@context': Context,
                 'method': 'DELETE',
             };
 
@@ -89,7 +90,7 @@ describe('SupportedOperation', () => {
         it('should return true if operation expects a body', async () => {
             // given
             const operation = {
-                '@context': Core.Context,
+                '@context': Context,
                 'method': 'POST',
             };
 
@@ -105,7 +106,7 @@ describe('SupportedOperation', () => {
         it('should return true if operation expects nothing', async () => {
             // given
             const operation = {
-                '@context': Core.Context,
+                '@context': Context,
                 'method': 'POST',
             };
 

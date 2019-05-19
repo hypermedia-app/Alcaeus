@@ -36,8 +36,8 @@ export default class implements IResource {
         isProcessed.set(this, val);
     }
 
-    public compact(context: any = null) {
-        return jsonld.compact(this, context || Core.Context);
+    public compact(context: any = 'https://www.w3.org/ns/hydra/core') {
+        return jsonld.compact(this, context);
     }
 
     public _get(property: string) {

@@ -52,9 +52,9 @@ In case of member relations, a manages block can look like this (excerpt):
 ```json
 {
   "@id": "https://sources.test.wikibus.org/magazine/Buses/issues",
-  "hydra:manages": {
-    "rdf:subject": "https://sources.test.wikibus.org/magazine/Buses",
-    "rdf:predicate": "dcterms:isPartOf"
+  "manages": {
+    "subject": "https://sources.test.wikibus.org/magazine/Buses",
+    "predicate": "dcterms:isPartOf"
   }
 }
 ```
@@ -71,15 +71,29 @@ The second case is to declare that all members will be of a certain type:
 ```json
 {
   "@id": "https://sources.test.wikibus.org/magazine/Buses/issues",
-  "hydra:manages": {
-    "rdf:predicate": "rdf:type",
-    "rdf:object": "https://wikibus.org/vocab#MagazineIssue"
+  "manages": {
+    "predicate": "rdf:type",
+    "object": "https://wikibus.org/vocab#MagazineIssue"
   }
 }
 ```
 
-Please see the [`hydra:collection` page](./affordances/collection-property.md) for details on discovering
+Here's an example showing how the manages block is retrieved from a collection to find the `rdf:type`
+of collection members. Nothing more than a simple array filter.
+
+{% runkit %}
+const { Hydra } = require('alcaeus@0.6.0-beta.1')
+const rdfType = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+
+const rep = await Hydra.loadResource('https://sources.test.wikibus.org/magazines')
+
+rep.root.manages.find(managesBlock => managesBlock.property.id === rdfType)
+{% endrunkit %}
+
+{% hint style="tip" %}
+Do see the [`hydra:collection` page](./affordances/collection-property.md) for details on discovering
 collections based on their manages block specifications.
+{% endhint %}
 
 ## Paged (partial) collections
 

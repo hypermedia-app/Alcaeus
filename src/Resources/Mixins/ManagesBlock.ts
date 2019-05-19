@@ -8,15 +8,15 @@ import {HydraConstructor} from '../Mixin';
 export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
     abstract class ManagesBlock extends Base implements IManagesBlock {
         get subject() {
-            return this._get(rdf.subject);
+            return this._get(Core.Vocab('subject'));
         }
 
-        get predicate() {
-            return this._get(rdf.predicate);
+        get property() {
+            return this._get(Core.Vocab('property'));
         }
 
         get object() {
-            const maybeObject = Maybe.maybe(this._get(rdf.object));
+            const maybeObject = Maybe.maybe(this._get(Core.Vocab('object')));
 
             const seq = Maybe.sequence({
                 getClass: this.apiDocumentation.map((doc) => doc.getClass),
@@ -36,14 +36,14 @@ export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
             const objectId = typeof object === 'string' ? object : object.id;
             const subjectId = typeof subject === 'string' ? subject : subject.id;
 
-            if (object && this.object && this.predicate) {
+            if (object && this.object && this.property) {
                 const predicateIsRdfType = predicateId === rdf.type;
 
-                return predicateIsRdfType && this.object.id === objectId && this.predicate.id === predicateId;
+                return predicateIsRdfType && this.object.id === objectId && this.property.id === predicateId;
             }
 
-            if (subject && predicate && this.subject && this.predicate) {
-                return this.subject.id === subjectId && this.predicate.id === predicateId;
+            if (subject && predicate && this.subject && this.property) {
+                return this.subject.id === subjectId && this.property.id === predicateId;
             }
 
             return false;

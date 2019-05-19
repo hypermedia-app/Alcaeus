@@ -177,7 +177,7 @@ export interface IManagesBlock {
     /**
      * Gets the predicate from the manages block
      */
-    predicate: RdfProperty;
+    property: RdfProperty;
     /**
      * Gets the object class from the manages block
      */

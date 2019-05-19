@@ -1,11 +1,10 @@
 import {Core} from '../../../src/Constants';
-import {ApiDocumentation, IClass, RdfProperty} from '../../../src/Resources';
+import {ApiDocumentation, RdfProperty} from '../../../src/Resources';
 import Resource from '../../../src/Resources/HydraResource';
 import {Mixin, shouldApply} from '../../../src/Resources/Mixins/ManagesBlock';
 import {IResource} from '../../../src/Resources/Resource';
 import TypeCollection from '../../../src/TypeCollection';
 import {rdf} from '../../../src/Vocabs';
-import predicate = rdf.predicate;
 
 class ManagesBlock extends Mixin(Resource(null, () => [])) {}
 
@@ -38,7 +37,7 @@ describe('ManagesBlock', () => {
                     getClass: () => clas,
                 } as any as ApiDocumentation;
                 const resource = {
-                    [rdf.object]: {
+                    [Core.Vocab('object')]: {
                         id: 'http://vocab/class',
                     },
                 };
@@ -60,7 +59,7 @@ describe('ManagesBlock', () => {
                     getClass: () => null,
                 } as any as ApiDocumentation;
                 const resource = {
-                    [rdf.object]: clas,
+                    [Core.Vocab('object')]: clas,
                 };
                 const mb = new ManagesBlock(resource, apiDoc);
 
@@ -77,7 +76,7 @@ describe('ManagesBlock', () => {
                     getClass: () => null,
                 } as any as ApiDocumentation;
                 const resource = {
-                    [rdf.object]: null,
+                    [Core.Vocab('object')]: null,
                 };
                 const mb = new ManagesBlock(resource, apiDoc);
 
@@ -96,7 +95,7 @@ describe('ManagesBlock', () => {
                     id: 'http://example.org/term',
                 };
                 const resource = {
-                    [rdf.subject]: value,
+                    [Core.Vocab('subject')]: value,
                 };
                 const mb = new ManagesBlock(resource, {} as any as ApiDocumentation);
 
@@ -115,12 +114,12 @@ describe('ManagesBlock', () => {
                     id: 'http://example.org/predicate',
                 };
                 const resource = {
-                    [rdf.predicate]: value,
+                    [Core.Vocab('property')]: value,
                 };
                 const mb = new ManagesBlock(resource, {} as any as ApiDocumentation);
 
                 // when
-                const obj = mb.predicate;
+                const obj = mb.property;
 
                 // then
                 expect(obj).toBe(value);
@@ -134,10 +133,10 @@ describe('ManagesBlock', () => {
                 it('returns true when object is string found of the rdf:object resource', () => {
                     // given
                     const resource = {
-                        [rdf.object]: {
+                        [Core.Vocab('object')]: {
                             id: 'http://example.com/vocab#class',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: rdf.type,
                         },
                     };
@@ -155,10 +154,10 @@ describe('ManagesBlock', () => {
                 it('returns true when object is resource with id of rdf:object resource', () => {
                     // given
                     const resource = {
-                        [rdf.object]: {
+                        [Core.Vocab('object')]: {
                             id: 'http://example.com/vocab#class',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: rdf.type,
                         },
                     };
@@ -181,10 +180,10 @@ describe('ManagesBlock', () => {
                 it ('returns false when predicate is not rdf:type', () => {
                     // given
                     const resource = {
-                        [rdf.object]: {
+                        [Core.Vocab('object')]: {
                             id: 'http://example.com/vocab#class',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: rdf.type,
                         },
                     };
@@ -211,10 +210,10 @@ describe('ManagesBlock', () => {
                 it('returns true if pattern is matching string object and string property', () => {
                     // given
                     const resource = {
-                        [rdf.subject]: {
+                        [Core.Vocab('subject')]: {
                             id: 'http://example.com/person/Tomasz',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: 'http://xmlns.com/foaf/0.1/knows',
                         },
                     };
@@ -233,10 +232,10 @@ describe('ManagesBlock', () => {
                 it('returns true if pattern is matching string object and resource property', () => {
                     // given
                     const resource = {
-                        [rdf.subject]: {
+                        [Core.Vocab('subject')]: {
                             id: 'http://example.com/person/Tomasz',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: 'http://xmlns.com/foaf/0.1/knows',
                         },
                     };
@@ -257,10 +256,10 @@ describe('ManagesBlock', () => {
                 it('returns true if pattern is matching resource object and string property', () => {
                     // given
                     const resource = {
-                        [rdf.subject]: {
+                        [Core.Vocab('subject')]: {
                             id: 'http://example.com/person/Tomasz',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: 'http://xmlns.com/foaf/0.1/knows',
                         },
                     };
@@ -281,10 +280,10 @@ describe('ManagesBlock', () => {
                 it('returns true if pattern is matching resource object and resource property', () => {
                     // given
                     const resource = {
-                        [rdf.subject]: {
+                        [Core.Vocab('subject')]: {
                             id: 'http://example.com/person/Tomasz',
                         },
-                        [rdf.predicate]: {
+                        [Core.Vocab('property')]: {
                             id: 'http://xmlns.com/foaf/0.1/knows',
                         },
                     };

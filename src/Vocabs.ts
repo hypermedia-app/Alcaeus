@@ -22,9 +22,6 @@ export namespace rdf {
 
     export const Property = ns + 'Property';
     export const type = ns + 'type';
-    export const subject = ns + 'subject';
-    export const predicate = ns + 'predicate';
-    export const object = ns + 'object';
 }
 
 export namespace xsd {

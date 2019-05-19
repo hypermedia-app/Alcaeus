@@ -70,11 +70,17 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     public getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }> {
         const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
             this.types.map(propertiesForType)
-                .reduce((supportedProps, moreProps) => {
-                    return [...supportedProps, ...moreProps.map((supportedProperty) => ({
-                        objects: this._getArray(supportedProperty.property.id),
-                        supportedProperty,
-                    }))];
+                .reduce((current, supportedProperties) => {
+                    const next = supportedProperties
+                        .filter((sp) => {
+                            return !current.find((tuple) => tuple.supportedProperty.property.id === sp.property.id);
+                        })
+                        .map((supportedProperty) => ({
+                            objects: this._getArray(supportedProperty.property.id),
+                            supportedProperty,
+                        }));
+
+                    return [...current, ...next];
                 }, [] as Array<{ supportedProperty: SupportedProperty, objects: any[] }>);
 
         return this.apiDocumentation

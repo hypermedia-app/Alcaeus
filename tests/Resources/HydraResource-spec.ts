@@ -99,6 +99,26 @@ describe('HydraResource', () => {
             // then
             expect(ops.length).toBe(0);
         });
+
+        it('deduplicates multiple usage same rdf:property in supported properties', () => {
+            // given
+            const getProperties = sinon.stub()
+                .returns([ {
+                    property: {
+                        id: 'http://example.com/vocab#prop',
+                    },
+                }]);
+            const apiDoc = {
+                getProperties,
+            } as any;
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, apiDoc);
+
+            // when
+            const links = resource.getProperties();
+
+            // then
+            expect(links.length).toBe(1);
+        });
     });
 
     describe('getLinks', () => {

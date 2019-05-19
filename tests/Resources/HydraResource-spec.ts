@@ -113,7 +113,7 @@ describe('HydraResource', () => {
             const links = resource.getLinks();
 
             // then
-            expect(Object.keys(links).length).toBe(0);
+            expect(links.length).toBe(0);
         });
 
         it('should return ids and values for hydra:Link properties', () => {
@@ -139,8 +139,8 @@ describe('HydraResource', () => {
             const links = resource.getLinks();
 
             // then
-            expect(Object.keys(links).length).toBe(1);
-            expect(links['http://example.com/vocab#other'][0]['@id']).toBe('http://example.com/linked');
+            expect(links.length).toBe(1);
+            expect(links[0].resources[0]['@id']).toBe('http://example.com/linked');
         });
 
         it('should return empty result if a Link property is not used in a resource', () => {
@@ -161,7 +161,7 @@ describe('HydraResource', () => {
             const links = resource.getLinks();
 
             // then
-            expect(Object.keys(links).length).toBe(0);
+            expect(links.length).toBe(0);
         });
 
         it('should all Link properties if requested explicitly', () => {
@@ -182,7 +182,7 @@ describe('HydraResource', () => {
             const links = resource.getLinks(true);
 
             // then
-            expect(Object.keys(links).length).toBe(1);
+            expect(links.length).toBe(1);
         });
     });
 

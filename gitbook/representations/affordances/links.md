@@ -10,7 +10,7 @@ a resource (URI node) could be treated as a link.
 <http://example.com/Barney> foaf:knows <http://example.com/Fred>
 ``` 
 
-## Not all links are dereferencable
+## Not all resources are meant to be dereferenced
 
 The problem this causes is that without additional information, the client has no way to tell
 if a given resource is actually intended for dereferencing. In other words it does not make sense

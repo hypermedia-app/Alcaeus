@@ -58,26 +58,24 @@ class HydraResource extends Resource implements IHydraResource, IResource {
     @nonenumerable
     public getLinks(includeMissing: boolean = false) {
         return this.getProperties()
-            .filter((sp) => sp.property.isLink)
-            .reduce((array, sp) => {
-                const value = this._getArray(sp.property.id);
-
-                if (value.length > 0 || includeMissing) {
-                    return [...array, {
-                        resources: value,
-                        supportedProperty: sp,
-                    }];
-                }
-
-                return array;
-            }, []);
+            .filter((tuple) => tuple.supportedProperty.property.isLink)
+            .filter((tuple) => tuple.objects.length > 0 || includeMissing)
+            .map((tuple) => ({
+                resources: tuple.objects,
+                supportedProperty: tuple.supportedProperty,
+            }));
     }
 
     @nonenumerable
-    public getProperties(): SupportedProperty[] {
+    public getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }> {
         const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
             this.types.map(propertiesForType)
-                .reduce((supportedProps, moreProps) => [...supportedProps, ...moreProps], []);
+                .reduce((supportedProps, moreProps) => {
+                    return [...supportedProps, ...moreProps.map((supportedProperty) => ({
+                        objects: this._getArray(supportedProperty.property.id),
+                        supportedProperty,
+                    }))];
+                }, [] as Array<{ supportedProperty: SupportedProperty, objects: any[] }>);
 
         return this.apiDocumentation
             .map((apiDoc) => apiDoc.getProperties ? apiDoc.getProperties.bind(apiDoc) : null)

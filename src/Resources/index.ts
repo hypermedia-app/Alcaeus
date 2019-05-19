@@ -48,7 +48,7 @@ export interface IHydraResource {
     /**
      * Gathers all properties from current resource's classes
      */
-    getProperties(): SupportedProperty[];
+    getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }>;
 
     /**
      * Get all property/value pairs for hydra:Link properties

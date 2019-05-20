@@ -6,10 +6,10 @@ the most important element of a APIs design.
 
 [link]: ../representations/affordances/links.md
 
-But properties are of course on only links between resource but also simple datatype attributes.
+But properties are of course not only links between resource but also simple datatype attributes.
 
 Hydra builds on top of plain `rdf:Property` and defines a `SupportedProperty` class which
-extends the raw construct with API-specific information important for the client.
+extends the raw construct with API-specific information important to the client.
 
 Here's the `SupportedProperty` interface of Alcaeus (excerpt):
 
@@ -26,7 +26,7 @@ interface ISupportedProperty {
     property: RdfProperty;
 }
 
-export interface IRdfProperty {
+interface IRdfProperty {
     range: Class;
     domain: Class;
     supportedOperations: SupportedOperation[];
@@ -39,11 +39,11 @@ type SupportedProperty = ISupportedProperty & IDocumentedResource;
 
 Few things to notice here:
 
-1. `SupportedProperty` wraps `rdf:Property` and adds client-specific attributes such as writability
+1. `SupportedProperty` wraps `rdf:Property` and adds additonal information attributes such as writability
 and human-readable labels
-1. A property can also define supported operations which will apply to all object where that property is used
-(learn more [here](./operation.md#propertys-supported-operations)
-1. The `isLink` getter is not a property; its value is based on the property type. Learn more [here](../representations/affordances/links.md)
+1. A property can also define supported operations which will apply to all object where that property is used,
+regardless of the type of the resource (learn more [here](./operation.md#propertys-supported-operations))
+1. The `isLink` getter is not backed by a property; its value is based on the property type. Learn more [here](../representations/affordances/links.md)
 
 ## Discovering properties from ApiDocumentation
 
@@ -66,13 +66,13 @@ const { Hydra } = require("alcaeus@{{ book.version }}")
 const doc = await Hydra.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
 
 doc.classes
-    .find(c => c.id === 'https://wikibus.org/ontology#Book')
+    .getClass('https://wikibus.org/ontology#Book')
     .supportedProperties
 {% endrunkit %}
 
 ## Getting properties of an instance
 
-Any instance of a resource can have multiple types, some of which are APIs supported classes. 
+Any instance of a resource can have multiple types, some of which are API's supported classes. 
 For convenience a `getProperties` method also exists on all resource objects and returns a 
 combined set of all types' supported properties as well as their values.
 
@@ -92,6 +92,6 @@ doc.root.getProperties()
 {% endrunkit %}
 
 {% hint style="tip" %}
- `getProperties()` always returns all properties, even if the are not used in the given resource.
+ `getProperties()` always returns all properties, even if those not used in a given resource.
  They can be filtered as seen above by excluding results with an empty `objects` array.
 {% endhint %}

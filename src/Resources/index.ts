@@ -69,14 +69,32 @@ export interface IStatusCodeDescription {
 }
 
 export interface IDocumentedResource {
+    /**
+     * Gets the value of either hydra:title or schema:title or rdfs:label property
+     */
     title: string;
+    /**
+     * Gets the value of either hydra:description or schema:description or rdfs:comment property
+     */
     description: string;
 }
 
 export interface ISupportedProperty {
+    /**
+     * Gets the value indicating if the property can be read from responses
+     */
     readable: boolean;
+    /**
+     * Gets the value indicating if the property can be written by requests
+     */
     writable: boolean;
+    /**
+     * Gets the value indicating if the property in required in request payload
+     */
     required: boolean;
+    /**
+     * The actual RDF predicate to use in representations
+     */
     property: RdfProperty;
 }
 
@@ -88,9 +106,21 @@ export interface ISupportedOperation {
 }
 
 export interface IRdfProperty {
+    /**
+     * Gets the rdfs:range of a property
+     */
     range: Class;
+    /**
+     * Gets the rdfs:domain of a property
+     */
     domain: Class;
+    /**
+     * Gets the property's supported operations
+     */
     supportedOperations: SupportedOperation[];
+    /**
+     * Gets a value indicating whether the property is a hydra:Link
+     */
     isLink: boolean;
 }
 

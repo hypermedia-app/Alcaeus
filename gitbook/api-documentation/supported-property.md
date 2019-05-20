@@ -6,7 +6,7 @@ the most important element of a APIs design.
 
 [link]: ../representations/affordances/links.md
 
-But properties are of course on only links between resource but also ye old attributes.
+But properties are of course on only links between resource but also simple datatype attributes.
 
 Hydra builds on top of plain `rdf:Property` and defines a `SupportedProperty` class which
 extends the raw construct with API-specific information important for the client.

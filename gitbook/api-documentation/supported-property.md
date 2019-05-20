@@ -53,7 +53,7 @@ of that class:
 {% runkit %}
 const { Hydra } = require("alcaeus@{{ book.version }}")
 
-const doc = await client.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
+const doc = await Hydra.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
 
 doc.getProperties('https://wikibus.org/ontology#Book')
 {% endrunkit %}
@@ -63,7 +63,7 @@ Alternatively, it's possible to reach the same properties from an instance of `C
 {% runkit %}
 const { Hydra } = require("alcaeus@{{ book.version }}")
 
-const doc = await client.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
+const doc = await Hydra.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
 
 doc.classes
     .find(c => c.id === 'https://wikibus.org/ontology#Book')
@@ -81,7 +81,7 @@ Here's an example which returns a key/value map of property labels and their val
 {% runkit %}
 const { Hydra } = require("alcaeus@{{ book.version }}")
 
-const doc = await client.loadDocumentation('http://www.markus-lanthaler.com/hydra/api-demo/vocab')
+const doc = await Hydra.loadResource('https://sources.test.wikibus.org/book/433')
 
 doc.root.getProperties()
     .filter(tuple => tuple.objects.length > 0)

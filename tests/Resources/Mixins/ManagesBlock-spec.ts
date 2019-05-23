@@ -169,6 +169,7 @@ describe('ManagesBlock', () => {
                     const isMatch = mb.matches({
                         object: {
                             id: 'http://example.com/vocab#class',
+                            isAnonymous: false,
                             supportedOperations: [],
                             supportedProperties: [],
                             types: TypeCollection.create(),
@@ -195,6 +196,7 @@ describe('ManagesBlock', () => {
                     const isMatch = mb.matches({
                         object: {
                             id: 'http://example.com/vocab#class',
+                            isAnonymous: false,
                             supportedOperations: [],
                             supportedProperties: [],
                             types: TypeCollection.create(),

@@ -6,6 +6,7 @@ import TypeCollection, {ITypeCollection} from '../TypeCollection';
 export interface IResource {
     id: string;
     types: ITypeCollection;
+    isAnonymous: boolean;
 }
 
 const isProcessed = new WeakMap<IResource, boolean>();
@@ -18,13 +19,17 @@ export default class implements IResource {
     }
 
     @nonenumerable
-    get id() {
+    get id(): string {
         return this[JsonLd.Id];
     }
 
     @nonenumerable
     get types() {
         return TypeCollection.create(this[JsonLd.Type]);
+    }
+
+    get isAnonymous() {
+        return this.id.startsWith('_');
     }
 
     @nonenumerable

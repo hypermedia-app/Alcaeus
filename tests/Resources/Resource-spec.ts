@@ -7,10 +7,14 @@ describe('Resource', () => {
             expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id').enumerable)
                 .toBe(false);
         });
-
     });
 
     describe('isAnonymous', () => {
+        it('should be non-enumerable', () => {
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'isAnonymous').enumerable)
+                .toBe(false);
+        });
+
         it('returns true when id in an URL', () => {
             // given
             const resource = new Resource({

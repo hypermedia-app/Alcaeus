@@ -1,6 +1,6 @@
 import {nonenumerable} from 'core-decorators';
 import {promises as jsonld} from 'jsonld';
-import {Core, JsonLd} from '../Constants';
+import {JsonLd} from '../Constants';
 import TypeCollection, {ITypeCollection} from '../TypeCollection';
 
 export interface IResource {
@@ -28,6 +28,7 @@ export default class implements IResource {
         return TypeCollection.create(this[JsonLd.Type]);
     }
 
+    @nonenumerable
     get isAnonymous() {
         return this.id.startsWith('_');
     }

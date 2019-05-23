@@ -17,3 +17,5 @@
   * [Supported classes](api-documentation/class.md)
   * [Supported properties](api-documentation/supported-property.md)
   * [Supported operations](api-documentation/operation.md)
+* Other
+  * [Hydra vocabulary](./hydra-vocab.md)

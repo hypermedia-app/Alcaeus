@@ -47,8 +47,8 @@ export type HydraTerm = 'apiDocumentation' |
     'object';
 
 export namespace Core {
-    export function Vocab(term: HydraTerm) {
-        return 'http://www.w3.org/ns/hydra/core#' + term;
+    export function Vocab(term?: HydraTerm) {
+        return 'http://www.w3.org/ns/hydra/core#' + (term || '');
     }
 }
 

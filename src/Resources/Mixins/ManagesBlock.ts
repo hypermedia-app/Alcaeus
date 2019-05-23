@@ -19,7 +19,7 @@ export function Mixin<TBase extends HydraConstructor>(Base: TBase) {
             const maybeObject = Maybe.maybe(this._get(Core.Vocab('object')));
 
             const seq = Maybe.sequence({
-                getClass: this.apiDocumentation.map((doc) => doc.getClass),
+                getClass: this.apiDocumentation.map((doc) => doc.getClass.bind(doc)),
                 object: maybeObject,
             });
 

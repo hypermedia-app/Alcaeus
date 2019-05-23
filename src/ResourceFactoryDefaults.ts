@@ -6,6 +6,7 @@ import * as DocumentedResource from './Resources/Mixins/DocumentedResource';
 import * as ExplicitRepresentationExpansion from './Resources/Mixins/ExplicitRepresentationExpansion';
 import * as IriTemplate from './Resources/Mixins/IriTemplate';
 import * as IriTemplateMapping from './Resources/Mixins/IriTemplateMapping';
+import * as ManagesBlock from './Resources/Mixins/ManagesBlock';
 import * as PartialCollectionView from './Resources/Mixins/PartialCollectionView';
 import * as RdfProperty from './Resources/Mixins/RdfProperty';
 import * as StatusCodeDescription from './Resources/Mixins/StatusCodeDescription';
@@ -26,4 +27,5 @@ export default [
     IriTemplate,
     IriTemplateMapping,
     DocumentedResource,
+    ManagesBlock,
 ];

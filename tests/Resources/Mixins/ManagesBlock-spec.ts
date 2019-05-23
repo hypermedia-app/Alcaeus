@@ -127,7 +127,9 @@ describe('ManagesBlock', () => {
         });
 
         describe('matches', () => {
-            const apiDoc = {} as any as ApiDocumentation;
+            const apiDoc = {
+                getClass: (id) => ({id}),
+            } as any as ApiDocumentation;
 
             describe('by class type', () => {
                 it('returns true when object is string found of the rdf:object resource', () => {

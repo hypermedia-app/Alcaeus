@@ -44,7 +44,8 @@ export type HydraTerm = 'apiDocumentation' |
     'collection' |
     'manages' |
     'subject' |
-    'object';
+    'object' |
+    'search';
 
 export namespace Core {
     export function Vocab(term?: HydraTerm) {

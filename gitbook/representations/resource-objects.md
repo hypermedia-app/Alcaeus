@@ -33,6 +33,30 @@ const rep = await client.loadResource('https://sources.test.wikibus.org/book/133
 rep.root.id;
 {% endrunkit %}
 
+### Recognizing anonymous resources
+
+RDF recognizes two kinds of resource identifiers: 
+
+* URIs, such as `http://www.wikidata.org/entity/Q61694`
+* Blank nodes, such as identified by as pseudo URI staring with `_:`
+
+Resources identified by blank nodes are only recognizable within a single graph and
+they are called **anonymous resource**.
+
+While it is trivial to tell one from the other just by looking at the `id`, Alcaeus
+resources provide a convenience getter:
+
+{% runkit %}
+const { Hydra } = require("alcaeus@{{ book.version }}");
+
+const representation = await Hydra.loadResource('https://sources.test.wikibus.org/book/1331');
+
+[...representation].map(resource => ({
+  id: resource.id,
+  isAnonymous: resource.isAnonymous
+}))
+{% endrunkit %}
+
 ### Resource type(s)
 
 Similarly to the identifier, the JSON-LD `@type` keyword can be used on any resource object. It is impractical

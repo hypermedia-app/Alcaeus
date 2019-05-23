@@ -10,6 +10,38 @@ describe('Resource', () => {
 
     });
 
+    describe('isAnonymous', () => {
+        it('returns true when id in an URL', () => {
+            // given
+            const resource = new Resource({
+                id: 'https://example.com/res',
+            });
+
+            // then
+            expect(resource.isAnonymous).toBeFalsy();
+        });
+
+        it('returns true when id in an URN', () => {
+            // given
+            const resource = new Resource({
+                id: 'urn:not:uri',
+            });
+
+            // then
+            expect(resource.isAnonymous).toBeFalsy();
+        });
+
+        it('returns true when id in an blank identifier', () => {
+            // given
+            const resource = new Resource({
+                id: '_:blank',
+            });
+
+            // then
+            expect(resource.isAnonymous).toBeTruthy();
+        });
+    });
+
     describe('types', () => {
         it('should be non-enumerable', () => {
             expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'types').enumerable)

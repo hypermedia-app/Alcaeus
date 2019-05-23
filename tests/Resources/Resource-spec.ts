@@ -14,7 +14,7 @@ describe('Resource', () => {
         it('returns true when id in an URL', () => {
             // given
             const resource = new Resource({
-                id: 'https://example.com/res',
+                ['@id']: 'https://example.com/res',
             });
 
             // then
@@ -24,7 +24,7 @@ describe('Resource', () => {
         it('returns true when id in an URN', () => {
             // given
             const resource = new Resource({
-                id: 'urn:not:uri',
+                ['@id']: 'urn:not:uri',
             });
 
             // then
@@ -34,7 +34,7 @@ describe('Resource', () => {
         it('returns true when id in an blank identifier', () => {
             // given
             const resource = new Resource({
-                id: '_:blank',
+                ['@id']: '_:blank',
             });
 
             // then

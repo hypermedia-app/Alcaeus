@@ -43,7 +43,7 @@
   "dependencies": {
     "@rdfjs/parser-jsonld": "^1.1.1",
     "@rdfjs/serializer-jsonld": "^1.2.0",
-    "core-decorators": "^0.19.0",
+    "core-decorators": "^0.20.0",
     "es6-url-template": "^1.0.3",
     "isomorphic-fetch": "^2.2.1",
     "jsonld": "^1.4.0",

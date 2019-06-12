@@ -80,7 +80,7 @@
     "tslint": "^5.9.1",
     "typescript": "^3.1.0-dev.20180721",
     "webpack": "^3.5.5",
-    "webpack-karma-jasmine": "^1.0.4",
+    "webpack-karma-jasmine": "^3.0.6",
     "whatwg-fetch": "^2.0.3"
   }
 }

@@ -2043,9 +2043,10 @@ copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
 
-core-decorators@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/core-decorators/-/core-decorators-0.19.0.tgz#28c9b44aa6208902934627a28f4f5950bd5b463e"
+core-decorators@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/core-decorators/-/core-decorators-0.20.0.tgz#605896624053af8c28efbe735c25a301a61c65c5"
+  integrity sha1-YFiWYkBTr4wo775zXCWjAaYcZcU=
 
 core-js@^2.2.0, core-js@^2.4.0, core-js@^2.5.0:
   version "2.5.7"

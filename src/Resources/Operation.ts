@@ -20,31 +20,30 @@ export class Operation implements IOperation {
     }
 
     public get method (): string {
-        return this._supportedOperation.method
+        return this.supportedOperation.method
     }
 
     public get expects () {
-        return this._supportedOperation.expects
+        return this.supportedOperation.expects
     }
 
     public get returns () {
-        return this._supportedOperation.returns
+        return this.supportedOperation.returns
     }
 
     public get requiresInput (): boolean {
-        return this._supportedOperation.requiresInput
+        return this.supportedOperation.requiresInput
     }
 
     public get title (): string {
-        return this._supportedOperation.title
+        return this.supportedOperation.title
     }
 
     public get description (): string {
-        return this._supportedOperation.description
+        return this.supportedOperation.description
     }
 
-    @nonenumerable
-    protected get _supportedOperation () {
+    public get supportedOperation () {
         return supportedOperations.get(this)
     }
 

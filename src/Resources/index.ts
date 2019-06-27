@@ -149,7 +149,7 @@ export interface ICollection {
     /**
      * Gets the views of a partial collection
      */
-    readonly views?: IView[];
+    readonly views?: View[];
     /**
      * Gets the manages block for current collection
      */
@@ -230,3 +230,4 @@ export type Collection = ICollection & HydraResource;
 export type PartialCollectionView = IPartialCollectionView & IView & HydraResource;
 export type RdfProperty = IRdfProperty & DocumentedResource;
 export type ApiDocumentation = IApiDocumentation & IResource;
+export type View = IView & IResource;

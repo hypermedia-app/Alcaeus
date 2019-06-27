@@ -1,6 +1,6 @@
-import * as li from 'parse-link-header';
-import * as Constants from './Constants';
-import nonenumerable from './helpers/nonenumerable';
+import * as li from 'parse-link-header'
+import * as Constants from './Constants'
+import nonenumerable from './helpers/nonenumerable'
 
 export interface IResponseWrapper {
     /**
@@ -35,40 +35,40 @@ export class ResponseWrapper implements IResponseWrapper {
     @nonenumerable
     public readonly xhr: Response;
 
-    constructor(requestedUri: string, res: Response) {
-        this.xhr = res;
+    public constructor (requestedUri: string, res: Response) {
+        this.xhr = res
 
-        this.requestedUri = requestedUri;
+        this.requestedUri = requestedUri
     }
 
-    get status(): number {
-        return this.xhr.status;
+    public get status (): number {
+        return this.xhr.status
     }
 
-    get apiDocumentationLink(): string {
+    public get apiDocumentationLink (): string {
         if (this.xhr.headers.has(Constants.Headers.Link)) {
-            const linkHeaders = this.xhr.headers.get(Constants.Headers.Link);
-            const links = li(linkHeaders);
+            const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
+            const links = li(linkHeaders)
 
             if (links[Constants.Core.Vocab('apiDocumentation')]) {
-                const linkUrl = links[Constants.Core.Vocab('apiDocumentation')].url;
+                const linkUrl = links[Constants.Core.Vocab('apiDocumentation')].url
 
-                return new URL(linkUrl, this.redirectUrl || this.requestedUri).toString();
+                return new URL(linkUrl, this.redirectUrl || this.requestedUri).toString()
             }
         }
 
-        return null;
+        return null
     }
 
-    get mediaType(): string {
-        return this.xhr.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd;
+    public get mediaType (): string {
+        return this.xhr.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd
     }
 
-    get redirectUrl(): string {
+    public get redirectUrl (): string {
         if (this.xhr.redirected) {
-            return this.xhr.url;
+            return this.xhr.url
         }
 
-        return null;
+        return null
     }
 }

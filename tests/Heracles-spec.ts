@@ -1,105 +1,101 @@
-import 'core-js/es6/array';
-import 'core-js/es6/object';
-import * as _ from 'lodash';
-import * as sinon from 'sinon';
-import {SinonStub} from 'sinon';
-import {Hydra} from '../src';
-import * as FetchUtil from '../src/FetchUtil';
-import {PartialCollectionView} from '../src/Resources';
-import {Bodies, Documentations} from './test-objects';
-import {mockedResponse, responseBuilder} from './test-utils';
+import 'core-js/es6/array'
+import 'core-js/es6/object'
+import * as _ from 'lodash'
+import { SinonStub, stub } from 'sinon'
+import { Hydra } from '../src'
+import * as FetchUtil from '../src/FetchUtil'
+import { PartialCollectionView } from '../src/Resources'
+import { Bodies, Documentations } from './test-objects'
+import { mockedResponse, responseBuilder } from './test-utils'
 
 describe('Hydra', () => {
-
     describe('loadDocumentation', () => {
-        let fetchResource: SinonStub;
+        let fetchResource: SinonStub
 
         beforeEach(() => {
-            fetchResource = sinon.stub(FetchUtil, 'fetchResource');
-        });
+            fetchResource = stub(FetchUtil, 'fetchResource')
+        })
 
         it('should return type ApiDocumentation', async () => {
             // given
             fetchResource.withArgs('http://api.example.com/doc/')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
-                }));
+                }))
 
             // when
-            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/');
+            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/')
 
             // then
-            expect(doc.id).toBe('http://api.example.com/doc/');
-        });
+            expect(doc.id).toBe('http://api.example.com/doc/')
+        })
 
         afterEach(() => {
-            fetchResource.restore();
-        });
-    });
-});
+            fetchResource.restore()
+        })
+    })
+})
 
 describe('Hydra', () => {
-
-    let loadDocumentation: SinonStub;
-    let fetchResource: SinonStub;
+    let loadDocumentation: SinonStub
+    let fetchResource: SinonStub
 
     beforeEach(() => {
-        fetchResource = sinon.stub(FetchUtil, 'fetchResource');
-        loadDocumentation = sinon.stub(Hydra, 'loadDocumentation');
-    });
+        fetchResource = stub(FetchUtil, 'fetchResource')
+        loadDocumentation = stub(Hydra, 'loadDocumentation')
+    })
 
     describe('loadResource', () => {
-
         beforeEach(() => {
-            loadDocumentation.returns({});
-        });
+            loadDocumentation.returns({})
+        })
 
         it('should return object with matching @id when it is unescaped in response', async () => {
             // given
-            const unescaped = 'http://example.com/biała gęś';
-            const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B';
+            const unescaped = 'http://example.com/biała gęś'
+            const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'
             fetchResource.withArgs(id)
-                .returns(mockedResponse( {
+                .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource(id);
-            const res = hydraRes.get(id);
+            const hydraRes = await Hydra.loadResource(id)
+            const res = hydraRes.get(id)
 
             // then
-            expect(res['@id']).toBe(unescaped);
-        });
+            expect(res['@id']).toBe(unescaped)
+        })
 
         it('should return object with matching @id when selected with unescaped uri', async () => {
             // given
-            const id = 'http://example.com/biała gęś';
+            const id = 'http://example.com/biała gęś'
             fetchResource.withArgs(id)
-                .returns(mockedResponse( {
+                .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource(id);
-            const res = hydraRes.get(id);
+            const hydraRes = await Hydra.loadResource(id)
+            const res = hydraRes.get(id)
 
             // then
-            expect(res['@id']).toBe(id);
-        });
+            expect(res['@id']).toBe(id)
+        })
 
         it('should load documentation', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
-                }));
+                }))
 
             // when
-            await Hydra.loadResource('http://example.com/resource');
+            await Hydra.loadResource('http://example.com/resource')
 
             // then
-            expect(loadDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true);
-        });
+            expect(loadDocumentation.calledWithMatch('http://api.example.com/doc/')).toBe(true)
+        })
 
         it('should not load documentation in absence of Link header', async () => {
             // given
@@ -107,151 +103,150 @@ describe('Hydra', () => {
                 .returns(mockedResponse({
                     includeDocsLink: false,
                     xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
-                }));
+                }))
 
             // when
-            await Hydra.loadResource('http://example.com/resource');
+            await Hydra.loadResource('http://example.com/resource')
 
             // then
-            expect(fetchResource.callCount).toBe(1);
-        });
+            expect(fetchResource.callCount).toBe(1)
+        })
 
         it('should load parent of collection view as Resource', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource?page=3')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.hydraCollectionWithView),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3');
-            const res = hydraRes.get('http://example.com/resource?page=3') as PartialCollectionView;
+            const hydraRes = await Hydra.loadResource('http://example.com/resource?page=3')
+            const res = hydraRes.get('http://example.com/resource?page=3') as PartialCollectionView
 
             // then
-            expect(res.collection).toBeDefined();
-            expect(res.collection).not.toBeNull();
-        });
+            expect(res.collection).toBeDefined()
+            expect(res.collection).not.toBeNull()
+        })
 
         it('should discover incoming links for resources', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes.get('http://example.com/resource');
-            const incomingLinks = res['http://example.com/vocab#other']._reverseLinks;
+            const hydraRes = await Hydra.loadResource('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource')
+            const incomingLinks = res['http://example.com/vocab#other']._reverseLinks
 
             // then
-            expect(incomingLinks.length).toBe(2);
+            expect(incomingLinks.length).toBe(2)
             expect(
                 _.some(incomingLinks, {
                     predicate: 'http://example.com/vocab#other',
-                    subjectId: 'http://example.com/resource' })).toBe(true);
+                    subjectId: 'http://example.com/resource' })).toBe(true)
             expect(_.some(incomingLinks, {
                 predicate: 'http://example.com/vocab#other_yet',
-                subjectId: 'http://example.com/resource'  })).toBe(true);
-        });
+                subjectId: 'http://example.com/resource' })).toBe(true)
+        })
 
         it('should load resource with deep blank node structure', async () => {
             // given
             fetchResource.withArgs('http://example.com/root')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.deepBlankNodes),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/root');
-            const res = hydraRes.get('http://example.com/root');
+            const hydraRes = await Hydra.loadResource('http://example.com/root')
+            const res = hydraRes.get('http://example.com/root')
 
             // then
-            const p = 'http://example.com/prop';
-            const t = 'http://example.com/text';
+            const p = 'http://example.com/prop'
+            const t = 'http://example.com/text'
 
-            expect(res[p][p][p][p][t]).toBe('I\'m nested way deep');
-        });
+            expect(res[p][p][p][p][t]).toBe('I\'m nested way deep')
+        })
 
         it('should return typed string literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes.get('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource')
 
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'])
-                .toBe('http://wikibus-test.gear.host/book/1936/image');
-        });
+                .toBe('http://wikibus-test.gear.host/book/1936/image')
+        })
 
         xit('should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.typedNumericLiteral),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes.get('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource')
 
             // then
-            expect(res['http://schema.org/age']).toBe(21);
-        });
+            expect(res['http://schema.org/age']).toBe(21)
+        })
 
         it('should handle cycles', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.cycledResource),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes.get('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource')
 
             // then
-            const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top']);
-            expect(objectsAreSame).toBeTruthy();
-        });
+            const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top'])
+            expect(objectsAreSame).toBeTruthy()
+        })
 
         afterEach(() => {
-            loadDocumentation.restore();
-            fetchResource.restore();
-        });
-    });
+            loadDocumentation.restore()
+            fetchResource.restore()
+        })
+    })
 
     describe('loadResource with missing ApiDocumentation', () => {
-
         beforeEach(() => {
-            loadDocumentation.returns(null);
-        });
+            loadDocumentation.returns(null)
+        })
 
         it('should succeed even if ApiDocumentation is not available', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
-                }));
+                }))
 
             // when
-            const hydraRes = await Hydra.loadResource('http://example.com/resource');
-            const res = hydraRes.get('http://example.com/resource');
+            const hydraRes = await Hydra.loadResource('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource')
 
             // then
-            expect(res.apiDocumentation.valueOr(null)).toBe(null);
-        });
+            expect(res.apiDocumentation.valueOr(null)).toBe(null)
+        })
 
         afterEach(() => {
-            loadDocumentation.restore();
-            fetchResource.restore();
-        });
-    });
+            loadDocumentation.restore()
+            fetchResource.restore()
+        })
+    })
 
     describe('default root selectors', () => {
         it('should select by exact id if exists', async () => {
@@ -259,50 +254,50 @@ describe('Hydra', () => {
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
-                }));
+                }))
 
             // when
-            const res = await Hydra.loadResource('http://example.com/resource');
+            const res = await Hydra.loadResource('http://example.com/resource')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource');
-        });
+            expect(res.root.id).toBe('http://example.com/resource')
+        })
 
         xit('should select resource with redirected id if original is not present', async () => {
             // given
-            const requestedUri = 'http://example.com/not-there';
-            const redirectUri = 'http://example.com/resource';
+            const requestedUri = 'http://example.com/not-there'
+            const redirectUri = 'http://example.com/resource'
 
-            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).redirect(redirectUri);
+            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).redirect(redirectUri)
             fetchResource.withArgs(requestedUri)
-                .returns(mockedResponse({ xhrBuilder }));
+                .returns(mockedResponse({ xhrBuilder }))
 
             // when
-            const res = await Hydra.loadResource('http://example.com/not-there');
+            const res = await Hydra.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource');
-        });
+            expect(res.root.id).toBe('http://example.com/resource')
+        })
 
         it('should select resource with canonical id if original is not present', async () => {
             // given
-            const requestedUri = 'http://example.com/not-there';
-            const redirectUri = 'http://example.com/resource';
+            const requestedUri = 'http://example.com/not-there'
+            const redirectUri = 'http://example.com/resource'
 
-            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).canonical(redirectUri);
+            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).canonical(redirectUri)
             fetchResource.withArgs(requestedUri)
-                .returns(mockedResponse({ xhrBuilder }));
+                .returns(mockedResponse({ xhrBuilder }))
 
             // when
-            const res = await Hydra.loadResource('http://example.com/not-there');
+            const res = await Hydra.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource');
-        });
+            expect(res.root.id).toBe('http://example.com/resource')
+        })
 
         afterEach(() => {
-            loadDocumentation.restore();
-            fetchResource.restore();
-        });
-    });
-});
+            loadDocumentation.restore()
+            fetchResource.restore()
+        })
+    })
+})

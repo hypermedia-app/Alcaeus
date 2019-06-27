@@ -5,7 +5,8 @@
     "standard"
   ],
   "env": {
-    "browser": true
+    "browser": true,
+    "jasmine": true
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -13,9 +14,17 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint/eslint-plugin"
+    "@typescript-eslint/eslint-plugin",
+    "jasmine"
   ],
   "rules": {
-    "indent": "off"
+    "indent": "off",
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "@typescript-eslint/interface-name-prefix": "warn",
+    "@typescript-eslint/no-use-before-define": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off"
   }
 }

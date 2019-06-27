@@ -1,15 +1,14 @@
-import {promises as jsonld} from 'jsonld';
-import {Core} from '../../src/Constants';
-import {Mixin} from '../../src/Resources/Mixins/RdfProperty';
-import Resource from '../../src/Resources/Resource';
-import {owl, rdf, rdfs, xsd} from '../../src/Vocabs';
-import Context from '../test-objects/Context';
+import { promises as jsonld } from 'jsonld'
+import { Core } from '../../src/Constants'
+import { Mixin } from '../../src/Resources/Mixins/RdfProperty'
+import Resource from '../../src/Resources/Resource'
+import { owl, rdf, rdfs, xsd } from '../../src/Vocabs'
+import Context from '../test-objects/Context'
 
 class RdfProperty extends Mixin(Resource) {}
 
 describe('RdfProperty', () => {
-
-    let testProperty;
+    let testProperty
 
     beforeEach(() => {
         testProperty = {
@@ -31,77 +30,73 @@ describe('RdfProperty', () => {
                     returns: owl.Nothing,
                 },
             ],
-        };
-    });
+        }
+    })
 
     it('should link to domain', async () => {
         // given
-        const compacted = await jsonld.compact(testProperty, {});
+        const compacted = await jsonld.compact(testProperty, {})
 
         // when
-        const property = new RdfProperty(compacted);
+        const property = new RdfProperty(compacted)
 
         // then
-        expect(property.domain['@id']).toBe(xsd.integer);
-    });
+        expect(property.domain['@id']).toBe(xsd.integer)
+    })
 
     it('should link to range', async () => {
         // given
-        const compacted = await jsonld.compact(testProperty, {});
+        const compacted = await jsonld.compact(testProperty, {})
 
         // when
-        const property = new RdfProperty(compacted);
+        const property = new RdfProperty(compacted)
 
         // them
-        expect(property.range['@id']).toBe(xsd.string);
-    });
+        expect(property.range['@id']).toBe(xsd.string)
+    })
 
     describe('link', () => {
         it('should not be a link by default', async () => {
             // given
-            const compacted = await jsonld.compact(testProperty, {});
+            const compacted = await jsonld.compact(testProperty, {})
 
             // when
-            const property = new RdfProperty(compacted);
+            const property = new RdfProperty(compacted)
 
             // then
-            expect(property.isLink).toBe(false);
-        });
+            expect(property.isLink).toBe(false)
+        })
 
         it('should not be a link by default', async () => {
             // given
-            testProperty['@type'] = Core.Vocab('Link');
-            const compacted = await jsonld.compact(testProperty, {});
+            testProperty['@type'] = Core.Vocab('Link')
+            const compacted = await jsonld.compact(testProperty, {})
 
             // when
-            const property = new RdfProperty(compacted);
+            const property = new RdfProperty(compacted)
 
             // then
-            expect(property.isLink).toBe(true);
-        });
-    });
+            expect(property.isLink).toBe(true)
+        })
+    })
 
     describe('supportedOperations', () => {
-
         it('should return single operation as array', async () => {
             // given
-            const compacted = await jsonld.compact(testProperty, {});
+            const compacted = await jsonld.compact(testProperty, {})
 
             // when
-            const property = new RdfProperty(compacted);
+            const property = new RdfProperty(compacted)
 
             // then
-            expect(property.supportedOperations.length).toBe(1);
-        });
+            expect(property.supportedOperations.length).toBe(1)
+        })
 
         it('should return empty array when property is missing', () => {
+            const property = new RdfProperty({})
 
-            const property = new RdfProperty({});
-
-            expect(Array.isArray(property.supportedOperations)).toBeTruthy();
-            expect(property.supportedOperations.length).toBe(0);
-        });
-
-    });
-
-});
+            expect(Array.isArray(property.supportedOperations)).toBeTruthy()
+            expect(property.supportedOperations.length).toBe(0)
+        })
+    })
+})

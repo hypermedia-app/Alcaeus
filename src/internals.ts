@@ -1,4 +1,4 @@
-import {HydraResource} from './Resources';
+import { HydraResource } from './Resources'
 
 export interface IIncomingLink {
     subjectId: string;

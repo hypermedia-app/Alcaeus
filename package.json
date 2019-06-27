@@ -19,7 +19,7 @@
     "build:nodejs": "tsc --target es2017 --module commonjs --outDir lib/node",
     "build:default": "tsc --target esnext --module esnext --outDir lib/es",
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "eslint . --ext .ts --quiet",
     "prepare": "rm -rf lib; yarn build"
   },
   "repository": {
@@ -77,7 +77,10 @@
     "karma-webpack": "^2.0.5",
     "sinon": "^3.2.1",
     "ts-loader": "^2.3.3",
-    "tslint": "^5.9.1",
+    "eslint": "^6.0.1",
+    "@typescript-eslint/parser": "^1.11.0",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "standard": "^12.0.1",
     "typescript": "^3.1.0-dev.20180721",
     "webpack": "^3.5.5",
     "webpack-karma-jasmine": "^1.0.4",
@@ -88,6 +91,12 @@
     "husky": "^1.0.0",
     "lint-staged": "^8.0.0",
     "cz-conventional-changelog": "^2.1.0"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "config": {
     "commitizen": {

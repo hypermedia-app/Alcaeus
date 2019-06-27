@@ -14,13 +14,13 @@
     "lib"
   ],
   "scripts": {
-    "test": "yarn lint; yarn run karma start --single-run",
-    "build": "yarn run build:nodejs; yarn run build:default",
+    "test": "npm run lint; npm run karma start --single-run",
+    "build": "npm run build:nodejs; npm run build:default",
     "build:nodejs": "tsc --target es2017 --module commonjs --outDir lib/node",
     "build:default": "tsc --target esnext --module esnext --outDir lib/es",
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "lint": "eslint . --ext .ts --quiet",
-    "prepare": "rm -rf lib; yarn build",
+    "prepare": "rm -rf lib; npm run build",
     "release": "standard-version"
   },
   "repository": {

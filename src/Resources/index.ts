@@ -132,6 +132,7 @@ export interface IOperation {
     returns: Class;
     requiresInput: boolean;
     invoke(body: any, mediaType?: string);
+    supportedOperation: SupportedOperation;
 }
 
 export interface ICollection {

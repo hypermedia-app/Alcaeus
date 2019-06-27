@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "standard"
+  ],
+  "env": {
+    "browser": true,
+    "jasmine": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "jasmine"
+  ],
+  "rules": {
+    "indent": "off",
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "@typescript-eslint/interface-name-prefix": "warn",
+    "@typescript-eslint/no-use-before-define": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off"
+  }
+}

@@ -1,13 +1,13 @@
 /* tslint:disable:interface-over-type-literal */
-import {Maybe} from 'tsmonad';
-import {IHydraResponse} from '../HydraResponse';
-import {IResource} from './Resource';
+import { Maybe } from 'tsmonad'
+import { IHydraResponse } from '../HydraResponse'
+import { IResource } from './Resource'
 
-export type ManagesBlockPattern = {
-    subject?: string | IResource,
-    predicate?: string | (IRdfProperty & IResource),
-    object?: string | (IClass & IResource),
-};
+export interface ManagesBlockPattern {
+    subject?: string | IResource;
+    predicate?: string | (IRdfProperty & IResource);
+    object?: string | (IClass & IResource);
+}
 
 export interface IApiDocumentation {
     classes: Class[];
@@ -48,14 +48,14 @@ export interface IHydraResource {
     /**
      * Gathers all properties from current resource's classes
      */
-    getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }>;
+    getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[];
 
     /**
      * Get all property/value pairs for hydra:Link properties
      *
      * @param includeMissing if true, will include properties not present in resource representation
      */
-    getLinks(includeMissing?: boolean): Array<{ supportedProperty: SupportedProperty, resources: IResource[]}>;
+    getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: IResource[]}[];
 
     /**
      * Gets objects of hydra:collection property

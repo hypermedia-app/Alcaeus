@@ -1,17 +1,17 @@
-export function forOwn(obj: object, iteratee) {
+export function forOwn (obj: object, iteratee) {
     for (const key in obj) {
-        if (!obj.hasOwnProperty(key)) { continue; }
+        if (!Object.prototype.hasOwnProperty.call(obj, key)) { continue }
 
-        iteratee(obj[key], key, obj);
+        iteratee(obj[key], key, obj)
     }
 }
 
-export function values(obj: object): any[] {
-    const result = [];
+export function values (obj: object): any[] {
+    const result = []
 
     forOwn(obj, (o) => {
-        result.push(o);
-    });
+        result.push(o)
+    })
 
-    return result;
+    return result
 }

@@ -8,9 +8,6 @@ before_install:
   - sudo rm /usr/bin/g++
   - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
   - npm install -g codecov
-install:
-  - npm i -g yarn
-  - yarn install
 after_success:
 - codecov
 after_failure:

@@ -1,10 +1,10 @@
-import {nonenumerable} from 'core-decorators';
-import {Maybe} from 'tsmonad';
-import {IHydraClient} from '../alcaeus';
-import {Core} from '../Constants';
-import {IAsObject, IIncomingLink} from '../internals';
-import ClientAccessor from './CoreMixins/ClientAccessor';
-import LinkAccessor from './CoreMixins/LinkAccessor';
+import { nonenumerable } from 'core-decorators'
+import { Maybe } from 'tsmonad'
+import { IHydraClient } from '../alcaeus'
+import { Core } from '../Constants'
+import { IAsObject, IIncomingLink } from '../internals'
+import ClientAccessor from './CoreMixins/ClientAccessor'
+import LinkAccessor from './CoreMixins/LinkAccessor'
 import {
     ApiDocumentation,
     Collection,
@@ -12,99 +12,99 @@ import {
     ManagesBlockPattern,
     SupportedOperation,
     SupportedProperty,
-} from './index';
-import {Operation} from './Operation';
-import Resource, {IResource} from './Resource';
+} from './index'
+import { Operation } from './Operation'
+import Resource, { IResource } from './Resource'
 
-const apiDocumentation = new WeakMap<IResource, ApiDocumentation>();
+const apiDocumentation = new WeakMap<IResource, ApiDocumentation>()
 
 class HydraResource extends Resource implements IHydraResource, IResource {
-    constructor(actualResource, apiDoc: ApiDocumentation) {
-        super(actualResource);
+    public constructor (actualResource, apiDoc: ApiDocumentation) {
+        super(actualResource)
 
-        apiDocumentation.set(this, apiDoc);
+        apiDocumentation.set(this, apiDoc)
     }
 
     @nonenumerable
-    get apiDocumentation(): Maybe<ApiDocumentation> {
-        return Maybe.maybe(apiDocumentation.get(this));
+    public get apiDocumentation (): Maybe<ApiDocumentation> {
+        return Maybe.maybe(apiDocumentation.get(this))
     }
 
     @nonenumerable
-    get operations() {
-        const alcaeus = (this as any)._alcaeus;
+    public get operations () {
+        const alcaeus = (this as any)._alcaeus
 
         const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]): Operation[] => {
-            const classOperations = this.types.map((type: string) => getOperations(type));
+            const classOperations = this.types.map((type: string) => getOperations(type))
 
             const mappedLinks = (this as any as IAsObject)._reverseLinks
-                .map((link) => link.subject.types.map((type) => ({type, predicate: link.predicate})));
-            const flattened = [].concat.apply([], mappedLinks);
+                .map((link) => link.subject.types.map((type) => ({ type, predicate: link.predicate })))
+            const flattened = [].concat.apply([], mappedLinks)
             const propertyOperations = flattened.map(
-                (link: any) => getOperations(link.type, link.predicate));
+                (link: any) => getOperations(link.type, link.predicate))
 
-            const operations = [].concat.apply([], [...classOperations, ...propertyOperations]);
+            const operations = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
             return operations.map((supportedOperation) => {
-                return new Operation(supportedOperation, alcaeus, this);
-            });
-        };
+                return new Operation(supportedOperation, alcaeus, this)
+            })
+        }
 
         return this.apiDocumentation
             .map((apiDoc) => apiDoc.getOperations ? apiDoc.getOperations.bind(apiDoc) : null)
             .map(getClassOperations)
-            .valueOr([]);
+            .valueOr([])
     }
 
     @nonenumerable
-    public getLinks(includeMissing: boolean = false) {
+    public getLinks (includeMissing: boolean = false) {
         return this.getProperties()
             .filter((tuple) => tuple.supportedProperty.property.isLink)
             .filter((tuple) => tuple.objects.length > 0 || includeMissing)
             .map((tuple) => ({
                 resources: tuple.objects,
                 supportedProperty: tuple.supportedProperty,
-            }));
+            }))
     }
 
     @nonenumerable
-    public getProperties(): Array<{ supportedProperty: SupportedProperty, objects: any[] }> {
+    public getProperties (): { supportedProperty: SupportedProperty; objects: any[] }[] {
         const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
             this.types.map(propertiesForType)
                 .reduce((current, supportedProperties) => {
                     const next = supportedProperties
                         .filter((sp) => {
-                            return !current.find((tuple) => tuple.supportedProperty.property.id === sp.property.id);
+                            return !current.find((tuple) => tuple.supportedProperty.property.id === sp.property.id)
                         })
                         .map((supportedProperty) => ({
                             objects: this._getArray(supportedProperty.property.id),
                             supportedProperty,
-                        }));
+                        }))
 
-                    return [...current, ...next];
-                }, [] as Array<{ supportedProperty: SupportedProperty, objects: any[] }>);
+                    return [...current, ...next]
+                }, [] as { supportedProperty: SupportedProperty; objects: any[] }[])
 
         return this.apiDocumentation
             .map((apiDoc) => apiDoc.getProperties ? apiDoc.getProperties.bind(apiDoc) : null)
             .map(getProperties)
-            .valueOr([]);
+            .valueOr([])
     }
 
     @nonenumerable
-    public getCollections(filter?: ManagesBlockPattern) {
-        let collections = this._getArray(Core.Vocab('collection')) as Collection[];
+    public getCollections (filter?: ManagesBlockPattern) {
+        let collections = this._getArray(Core.Vocab('collection')) as Collection[]
 
         if (filter) {
-            collections = collections.filter((c) => c.manages
-                && c.manages.find((managesBlock) => managesBlock.matches(filter)));
+            collections = collections.filter((c) => c.manages &&
+                c.manages.find((managesBlock) => managesBlock.matches(filter)))
         }
 
-        return collections;
+        return collections
     }
 }
 
-export default function generateClass(alcaeus: IHydraClient, getIncomingLinks: () => IIncomingLink[]) {
-    const clientAccessorMixin = ClientAccessor(alcaeus);
-    const linkAccessorMixin = LinkAccessor(getIncomingLinks);
+export default function generateClass (alcaeus: IHydraClient, getIncomingLinks: () => IIncomingLink[]) {
+    const clientAccessorMixin = ClientAccessor(alcaeus)
+    const linkAccessorMixin = LinkAccessor(getIncomingLinks)
 
-    return clientAccessorMixin(linkAccessorMixin(HydraResource));
+    return clientAccessorMixin(linkAccessorMixin(HydraResource))
 }

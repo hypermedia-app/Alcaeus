@@ -1,20 +1,20 @@
-import {Core} from '../Constants';
+import { Core } from '../Constants'
+import { IHydraResponse } from '../HydraResponse'
+import { IResourceGraph } from '../ResourceGraph'
+import { IResponseWrapper } from '../ResponseWrapper'
+import { IRootSelector } from './index'
 import Vocab = Core.Vocab;
-import {IHydraResponse} from '../HydraResponse';
-import {IResourceGraph} from '../ResourceGraph';
-import {IResponseWrapper} from '../ResponseWrapper';
-import {IRootSelector} from './index';
 
-export default function(selector: IRootSelector): IRootSelector {
+export default function (selector: IRootSelector): IRootSelector {
     return {
-        selectRoot(resources: IResourceGraph, response: IResponseWrapper & IHydraResponse) {
-            const maybeView = selector.selectRoot(resources, response) as any;
+        selectRoot (resources: IResourceGraph, response: IResponseWrapper & IHydraResponse) {
+            const maybeView = selector.selectRoot(resources, response) as any
 
             if (maybeView && maybeView.types.contains(Vocab('PartialCollectionView'))) {
-                return maybeView.collection;
+                return maybeView.collection
             }
 
-            return maybeView;
+            return maybeView
         },
-    };
+    }
 }

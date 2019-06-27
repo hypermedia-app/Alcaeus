@@ -20,7 +20,8 @@
     "build:default": "tsc --target esnext --module esnext --outDir lib/es",
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "lint": "eslint . --ext .ts --quiet",
-    "prepare": "rm -rf lib; yarn build"
+    "prepare": "rm -rf lib; yarn build",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",

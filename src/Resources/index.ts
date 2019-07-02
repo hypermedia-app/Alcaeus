@@ -131,7 +131,7 @@ export interface IOperation {
     expects: Class;
     returns: Class;
     requiresInput: boolean;
-    invoke(body: any, mediaType?: string);
+    invoke(body: any, mediaType?: string): Promise<IHydraResponse>;
     supportedOperation: SupportedOperation;
 }
 

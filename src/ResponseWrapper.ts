@@ -27,6 +27,15 @@ export interface IResponseWrapper {
      * Gets the actual XMLHttpResponse object which can be used to do custom processing
      */
     xhr: Response;
+
+    /**
+     * Returns a URL which is the product of applying it
+     * to the request base.
+     *
+     * If the parameter is already an absolute URI reference,
+     * it will be returned unchanged
+     */
+    resolveUri(uri: string): string;
 }
 
 export class ResponseWrapper implements IResponseWrapper {
@@ -53,7 +62,7 @@ export class ResponseWrapper implements IResponseWrapper {
             if (links[Constants.Core.Vocab('apiDocumentation')]) {
                 const linkUrl = links[Constants.Core.Vocab('apiDocumentation')].url
 
-                return new URL(linkUrl, this.redirectUrl || this.requestedUri).toString()
+                return this.resolveUri(linkUrl)
             }
         }
 
@@ -70,5 +79,9 @@ export class ResponseWrapper implements IResponseWrapper {
         }
 
         return null
+    }
+
+    public resolveUri (uri: string) {
+        return new URL(uri, this.redirectUrl || this.requestedUri).toString()
     }
 }

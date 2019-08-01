@@ -8,7 +8,7 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     class IriTemplateMapping extends Base implements IIriTemplateMapping {
         @nonenumerable
         public get variable () {
-            return this.getString[Core.Vocab('variable')]
+            return this.getString(Core.Vocab('variable'))
         }
 
         @nonenumerable

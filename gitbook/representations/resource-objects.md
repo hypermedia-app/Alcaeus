@@ -20,6 +20,8 @@ rep.root['http://schema.org/author']['http://schema.org/name'];
  an extensibility point and more semantic behaviour depending on the literal `@type`.
 {% endhint %}
 
+Read more about accessing property values on a [dedicated page](./resource-properties) 
+
 ### Resource identifier
 
 The resource identifier is accessible by the `@id` keyword just like any other JS property. For convenience

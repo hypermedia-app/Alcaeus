@@ -7,6 +7,7 @@
     * [Iterating resources](representations/iterating.md)
   * [Resource objects](representations/resource-objects.md)
     * [Collections](representations/collections.md)
+    * [Properties](representations/resource-properties.md)
     * [Extending resources](representations/mixins.md)
   * [Affordances](representations/resource-affordances.md)
     * [hydra:Link](representations/affordances/links.md)

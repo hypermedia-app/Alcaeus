@@ -107,6 +107,15 @@ describe('Resource', () => {
             // then
             expect(resource.getBoolean('foo')).toBeFalsy()
         })
+
+        it('return the value when it is set', () => {
+            const resource = new Resource({
+                'foo': true,
+            })
+
+            // then
+            expect(resource.getBoolean('foo')).toBeTruthy()
+        })
     })
 
     describe('getNumber', () => {

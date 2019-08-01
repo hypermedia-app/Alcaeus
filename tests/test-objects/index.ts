@@ -149,10 +149,18 @@ export namespace Bodies {
             '@id': 'http://example.com/resource?page=3',
             '@type': 'http://www.w3.org/ns/hydra/core#PartialCollectionView',
             'http://www.w3.org/ns/hydra/core#totalItems': 10,
-            'http://www.w3.org/ns/hydra/core#first': 'http://example.com/resource?page=1',
-            'http://www.w3.org/ns/hydra/core#previous': 'http://example.com/resource?page=2',
-            'http://www.w3.org/ns/hydra/core#next': 'http://example.com/resource?page=4',
-            'http://www.w3.org/ns/hydra/core#last': 'http://example.com/resource?page=58',
+            'http://www.w3.org/ns/hydra/core#first': {
+                id: 'http://example.com/resource?page=1',
+            },
+            'http://www.w3.org/ns/hydra/core#previous': {
+                id: 'http://example.com/resource?page=2',
+            },
+            'http://www.w3.org/ns/hydra/core#next': {
+                id: 'http://example.com/resource?page=4',
+            },
+            'http://www.w3.org/ns/hydra/core#last': {
+                id: 'http://example.com/resource?page=58',
+            },
         },
     }
 }

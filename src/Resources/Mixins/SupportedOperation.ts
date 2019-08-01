@@ -1,21 +1,21 @@
 import { Core } from '../../Constants'
 import { owl } from '../../Vocabs'
-import { ISupportedOperation } from '../index'
+import { Class, ISupportedOperation } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
 export function Mixin<TBase extends Constructor> (Base: TBase) {
     class SupportedOperation extends Base implements ISupportedOperation {
         public get method (): string {
-            return this[Core.Vocab('method')]
+            return this.getString(Core.Vocab('method'))
         }
 
         public get expects () {
-            return this._get(Core.Vocab('expects'))
+            return this.get<Class>(Core.Vocab('expects'))
         }
 
         public get returns () {
-            return this._get(Core.Vocab('returns'))
+            return this.get<Class>(Core.Vocab('returns'))
         }
 
         public get requiresInput (): boolean {

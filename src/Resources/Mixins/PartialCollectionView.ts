@@ -1,7 +1,7 @@
 import { nonenumerable } from 'core-decorators'
 import { Core } from '../../Constants'
 import { IAsObject, IIncomingLink } from '../../internals'
-import { IPartialCollectionView, IView } from '../index'
+import { HydraResource, IPartialCollectionView, IView } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
@@ -9,22 +9,22 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     class PartialCollectionView extends Base implements IPartialCollectionView, IView {
         @nonenumerable
         public get first () {
-            return this[Core.Vocab('first')] || null
+            return this.get<HydraResource>(Core.Vocab('first'))
         }
 
         @nonenumerable
         public get previous () {
-            return this[Core.Vocab('previous')] || null
+            return this.get<HydraResource>(Core.Vocab('previous'))
         }
 
         @nonenumerable
         public get next () {
-            return this[Core.Vocab('next')] || null
+            return this.get<HydraResource>(Core.Vocab('next'))
         }
 
         @nonenumerable
         public get last () {
-            return this[Core.Vocab('last')] || null
+            return this.get<HydraResource>(Core.Vocab('last'))
         }
 
         @nonenumerable

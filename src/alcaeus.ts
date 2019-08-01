@@ -63,10 +63,15 @@ export class Alcaeus implements IHydraClient {
             const response = await FetchUtil.fetchResource(uri)
             const representation = await getHydraResponse(this, response, uri, null)
             const resource = representation.root
+            const resourceType = resource['@type']
 
-            const resourceHasApiDocType =
-                resource['@type'] === Core.Vocab('ApiDocumentation') ||
-                (Array.isArray(resource['@type']) && resource['@type'].includes(Core.Vocab('ApiDocumentation')))
+            let resourceHasApiDocType
+
+            if (Array.isArray(resourceType)) {
+                resourceHasApiDocType = resourceType.includes(Core.Vocab('ApiDocumentation'))
+            } else {
+                resourceHasApiDocType = resourceType === Core.Vocab('ApiDocumentation')
+            }
 
             if (resourceHasApiDocType === false) {
                 console.warn(`The resource ${uri} does not appear to be an API Documentation`)

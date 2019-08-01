@@ -1,12 +1,12 @@
 import { Core } from '../../Constants'
-import { ISupportedProperty } from '../index'
+import { ISupportedProperty, RdfProperty } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
 export function Mixin<TBase extends Constructor> (Base: TBase) {
     return class SupportedProperty extends Base implements ISupportedProperty {
         public get readable () {
-            const readable = this._get(Core.Vocab('readable'))
+            const readable = this.get(Core.Vocab('readable'))
             if (typeof readable === 'boolean') {
                 return readable
             }
@@ -15,7 +15,7 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         }
 
         public get writable () {
-            const writable = this._get(Core.Vocab('writable'))
+            const writable = this.get(Core.Vocab('writable'))
             if (typeof writable === 'boolean') {
                 return writable
             }
@@ -24,7 +24,7 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         }
 
         public get required () {
-            const required = this._get(Core.Vocab('required'))
+            const required = this.get(Core.Vocab('required'))
             if (typeof required === 'boolean') {
                 return required
             }
@@ -33,7 +33,7 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         }
 
         public get property () {
-            return this._get(Core.Vocab('property'))
+            return this.get<RdfProperty>(Core.Vocab('property'))
         }
     }
 }

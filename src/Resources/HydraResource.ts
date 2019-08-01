@@ -8,7 +8,7 @@ import LinkAccessor from './CoreMixins/LinkAccessor'
 import {
     ApiDocumentation,
     Collection,
-    IHydraResource,
+    HydraResource as IHydraResource,
     ManagesBlockPattern,
     SupportedOperation,
     SupportedProperty,
@@ -18,7 +18,7 @@ import Resource, { IResource } from './Resource'
 
 const apiDocumentation = new WeakMap<IResource, ApiDocumentation>()
 
-class HydraResource extends Resource implements IHydraResource, IResource {
+class HydraResource extends Resource implements IHydraResource {
     public constructor (actualResource, apiDoc: ApiDocumentation) {
         super(actualResource)
 
@@ -76,7 +76,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
                             return !current.find((tuple) => tuple.supportedProperty.property.id === sp.property.id)
                         })
                         .map((supportedProperty) => ({
-                            objects: this._getArray(supportedProperty.property.id),
+                            objects: this.getArray(supportedProperty.property.id),
                             supportedProperty,
                         }))
 
@@ -91,7 +91,7 @@ class HydraResource extends Resource implements IHydraResource, IResource {
 
     @nonenumerable
     public getCollections (filter?: ManagesBlockPattern) {
-        let collections = this._getArray(Core.Vocab('collection')) as Collection[]
+        let collections = this.getArray(Core.Vocab('collection')) as Collection[]
 
         if (filter) {
             collections = collections.filter((c) => c.manages &&

@@ -71,5 +71,6 @@ export namespace MediaTypes {
 
 export namespace Headers {
     export let Link = 'Link'
+    export let Location = 'Location'
     export let ContentType = 'Content-Type'
 }

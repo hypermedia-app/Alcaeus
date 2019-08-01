@@ -20,6 +20,25 @@ There can be some cases when the above is not true, that within a representation
 not be identified by the requested URI. Alcaeus handles a few such cases by default, described in following
 sections and also allows to extend with custom behaviour.
 
+### `Location` header
+
+Sometimes `POST` requests will create a new resource and also return its representation
+in the response. When the API does that it will set a `Location` header and status `201`.
+
+For such responses the client will look for a resource identified by the value of that header.
+However, the `Location` header will be ignored if the status is anything else than `201`.
+
+```http-request
+POST /api/movies
+
+HTTP/1.1 201 Created
+Location: /api/movie/title
+
+{
+  "@id": "/api/movie/title"
+}
+```
+
 ### `Link: rel="canonical"`
 
 It is not uncommon, especially in the RDF world, that an API can distinguish between an information resource

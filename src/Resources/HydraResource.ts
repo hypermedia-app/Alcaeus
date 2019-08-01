@@ -100,6 +100,14 @@ class HydraResource extends Resource implements IHydraResource {
 
         return collections
     }
+
+    public load () {
+        if (this.isAnonymous) {
+            throw new Error('Cannot load an anonymous resource (blank node)')
+        }
+
+        return (this as any)._alcaeus.loadResource(this.id)
+    }
 }
 
 export default function generateClass (alcaeus: IHydraClient, getIncomingLinks: () => IIncomingLink[]) {

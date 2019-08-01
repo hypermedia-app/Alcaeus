@@ -239,4 +239,40 @@ describe('HydraResource', () => {
             expect(collections[0]['@id']).toBe('http://example.com/collection1')
         })
     })
+
+    describe('load', () => {
+        let alcaeus
+        let HydraResource
+
+        beforeEach(() => {
+            alcaeus = {
+                loadResource: sinon.spy(),
+            }
+            HydraResource = createClass(alcaeus as any, () => reverseLinks)
+        })
+
+        it('uses client to dereference self', () => {
+            // given
+            const resource = new HydraResource({
+                '@id': 'http://example.com/resource',
+            })
+
+            // when
+            resource.load()
+
+            // then
+            expect(alcaeus.loadResource.calledWithExactly('http://example.com/resource'))
+        })
+
+        it('throws when resource is a blank node', () => {
+            // given
+            const resource = new HydraResource({
+                '@id': '_:foo',
+            })
+
+            // then
+            expect(() => resource.load()).toThrow()
+            expect(alcaeus.loadResource.never)
+        })
+    })
 })

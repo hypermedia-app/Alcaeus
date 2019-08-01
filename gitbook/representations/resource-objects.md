@@ -111,3 +111,22 @@ await rep.root.compact({
 
 
 [compact]: https://www.w3.org/TR/json-ld-api/#compaction
+
+## Loading related resources
+
+It is possible to quickly dereference a linked resource using a handy `load` method
+of all resource objects.
+
+The example below shows how it's used to deference first member of a [collection](./collections).
+
+{% runkit %}
+const client = require("alcaeus@{{ book.version }}").Hydra;
+
+const rep = await client.loadResource('https://sources.test.wikibus.org/books');
+
+await rep.root.members[0].load()
+{% endrunkit %}
+
+{% hint style="tip" %}
+ The returned object is a [hydra response](./hydra) and not the resource itself.
+{% endhint %}

@@ -1,6 +1,6 @@
 import { nonenumerable } from 'core-decorators'
 import { Core } from '../../Constants'
-import { IIriTemplate } from '../index'
+import { IIriTemplate, IIriTemplateMapping, VariableRepresentation } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
@@ -8,17 +8,18 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     abstract class IriTemplate extends Base implements IIriTemplate {
         @nonenumerable
         public get template (): string {
-            return this[Core.Vocab('template')]
+            return this.getString(Core.Vocab('template'))
         }
 
         @nonenumerable
         public get mappings () {
-            return this._getArray(Core.Vocab('mapping'))
+            return this.getArray<IIriTemplateMapping>(Core.Vocab('mapping'))
         }
 
         @nonenumerable
         public get variableRepresentation () {
-            return this[Core.Vocab('variableRepresentation')] || Core.Vocab('BasicRepresentation')
+            return this.get<VariableRepresentation>(Core.Vocab('variableRepresentation')) ||
+                Core.Vocab('BasicRepresentation') as VariableRepresentation
         }
 
         public abstract expand(): string;

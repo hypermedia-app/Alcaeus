@@ -7,6 +7,16 @@ describe('Resource', () => {
             expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id').enumerable)
                 .toBe(false)
         })
+
+        it('throws when identifier is not string', () => {
+            // when
+            const resource = new Resource({
+                '@id': 666,
+            })
+
+            // then
+            expect(() => resource.id).toThrow()
+        })
     })
 
     describe('isAnonymous', () => {
@@ -61,13 +71,79 @@ describe('Resource', () => {
         it('should return all @types', () => {
             const resource = new Resource(Bodies.multipleTypesExpanded)
 
-            expect(resource['@type'].length).toBe(2)
+            expect(resource.types.length).toBe(2)
         })
 
         it('should return empty array when undefined', () => {
             const resource = new Resource({})
 
             expect(resource.types.length).toBe(0)
+        })
+    })
+
+    describe('getBoolean', () => {
+        it('throws when value is not boolean', () => {
+            const resource = new Resource({
+                'foo': 'https://example.com/res',
+            })
+
+            // then
+            expect(() => resource.getBoolean('foo')).toThrow()
+        })
+
+        it('return false when value is undefined', () => {
+            const resource = new Resource({
+            })
+
+            // then
+            expect(resource.getBoolean('foo')).toBeFalsy()
+        })
+
+        it('return false when value is null', () => {
+            const resource = new Resource({
+                'foo': null,
+            })
+
+            // then
+            expect(resource.getBoolean('foo')).toBeFalsy()
+        })
+    })
+
+    describe('getNumber', () => {
+        it('throws when value is not number', () => {
+            const resource = new Resource({
+                'foo': 'https://example.com/res',
+            })
+
+            // then
+            expect(() => resource.getNumber('foo')).toThrow()
+        })
+
+        it('return null when value is undefined', () => {
+            const resource = new Resource({
+            })
+
+            // then
+            expect(resource.getNumber('foo')).toBeNull()
+        })
+    })
+
+    describe('getString', () => {
+        it('throws when value is not string', () => {
+            const resource = new Resource({
+                'foo': 134,
+            })
+
+            // then
+            expect(() => resource.getString('foo')).toThrow()
+        })
+
+        it('return null when value is undefined', () => {
+            const resource = new Resource({
+            })
+
+            // then
+            expect(resource.getString('foo')).toBeNull()
         })
     })
 })

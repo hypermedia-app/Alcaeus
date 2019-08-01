@@ -37,10 +37,10 @@ describe('PartialCollectionView', () => {
     it('should contain links to other pages', () => {
         const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null)
 
-        expect(pcv.next).toBe('http://example.com/resource?page=4')
-        expect(pcv.previous).toBe('http://example.com/resource?page=2')
-        expect(pcv.first).toBe('http://example.com/resource?page=1')
-        expect(pcv.last).toBe('http://example.com/resource?page=58')
+        expect(pcv.next.id).toBe('http://example.com/resource?page=4')
+        expect(pcv.previous.id).toBe('http://example.com/resource?page=2')
+        expect(pcv.first.id).toBe('http://example.com/resource?page=1')
+        expect(pcv.last.id).toBe('http://example.com/resource?page=58')
     })
 
     it('first should be nonenumerable', () => {

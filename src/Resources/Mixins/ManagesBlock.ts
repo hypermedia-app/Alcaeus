@@ -2,21 +2,22 @@ import { Maybe } from 'tsmonad'
 import { Core } from '../../Constants'
 import { IAsObject } from '../../internals'
 import { rdf } from '../../Vocabs'
-import { Class, IManagesBlock, ManagesBlockPattern } from '../index'
+import { Class, IManagesBlock, ManagesBlockPattern, RdfProperty } from '../index'
 import { HydraConstructor } from '../Mixin'
+import { IResource } from '../Resource'
 
 export function Mixin<TBase extends HydraConstructor> (Base: TBase) {
     abstract class ManagesBlock extends Base implements IManagesBlock {
         public get subject () {
-            return this._get(Core.Vocab('subject'))
+            return this.get<IResource>(Core.Vocab('subject'))
         }
 
         public get property () {
-            return this._get(Core.Vocab('property'))
+            return this.get<RdfProperty>(Core.Vocab('property'))
         }
 
         public get object () {
-            const maybeObject = Maybe.maybe(this._get(Core.Vocab('object')))
+            const maybeObject = Maybe.maybe(this.get<Class>(Core.Vocab('object')))
 
             const seq = Maybe.sequence({
                 getClass: this.apiDocumentation.map((doc) => doc.getClass.bind(doc)),

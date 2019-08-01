@@ -1,16 +1,16 @@
 import { Core } from '../../Constants'
-import { IClass } from '../index'
+import { IClass, SupportedOperation, SupportedProperty } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
 export function Mixin<TBase extends Constructor> (Base: TBase) {
     abstract class Class extends Base implements IClass {
         public get supportedOperations () {
-            return this._getArray(Core.Vocab('supportedOperation'))
+            return this.getArray<SupportedOperation>(Core.Vocab('supportedOperation'))
         }
 
         public get supportedProperties () {
-            return this._getArray(Core.Vocab('supportedProperty'))
+            return this.getArray<SupportedProperty>(Core.Vocab('supportedProperty'))
         }
     }
 

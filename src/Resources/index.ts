@@ -131,7 +131,7 @@ export interface IOperation {
     expects: Class;
     returns: Class;
     requiresInput: boolean;
-    invoke(body: any, mediaType?: string): Promise<IHydraResponse>;
+    invoke(body: BodyInit, mediaType?: string): Promise<IHydraResponse>;
     supportedOperation: SupportedOperation;
 }
 
@@ -221,7 +221,12 @@ export interface IManagesBlock {
     matches(filter: ManagesBlockPattern): boolean;
 }
 
-export type HydraResource = IHydraResource & IResource;
+interface ResourceIndexer {
+    [ prop: string ]: unknown | unknown[];
+}
+type Resource = IHydraResource & IResource
+
+export type HydraResource = Resource & ResourceIndexer;
 export type DocumentedResource = IDocumentedResource & HydraResource;
 export type Class = IClass & DocumentedResource;
 export type SupportedOperation = ISupportedOperation & DocumentedResource;

@@ -93,7 +93,7 @@ describe('ManagesBlock', () => {
                 // given
                 const value = {
                     id: 'http://example.org/term',
-                }
+                } as any
                 const resource = {
                     [Core.Vocab('subject')]: value,
                 }
@@ -112,7 +112,7 @@ describe('ManagesBlock', () => {
                 // given
                 const value = {
                     id: 'http://example.org/predicate',
-                }
+                } as any
                 const resource = {
                     [Core.Vocab('property')]: value,
                 }

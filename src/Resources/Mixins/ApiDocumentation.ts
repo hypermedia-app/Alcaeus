@@ -1,6 +1,6 @@
 import { deprecated } from 'core-decorators'
 import { Core, JsonLd } from '../../Constants'
-import { IApiDocumentation, ISupportedProperty } from '../index'
+import { Class, IApiDocumentation, ISupportedProperty } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
@@ -9,7 +9,7 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         public abstract get _alcaeus();
 
         public get classes () {
-            return this._getArray(Core.Vocab('supportedClass'))
+            return this.getArray<Class>(Core.Vocab('supportedClass'))
         }
 
         public getOperations (classUri: string, predicateUri?: string) {

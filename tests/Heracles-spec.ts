@@ -137,7 +137,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
             const incomingLinks = res['http://example.com/vocab#other']._reverseLinks
 
             // then

@@ -6,11 +6,11 @@ import { IResource } from '../Resource'
 export function Mixin <TBase extends Constructor> (Base: TBase) {
     return class StatusCodeDescription extends Base implements IStatusCodeDescription {
         public get code (): number {
-            return this[Core.Vocab('code')]
+            return this.getNumber(Core.Vocab('code'))
         }
 
         public get description (): string {
-            return this[Core.Vocab('description')] || ''
+            return this.getString(Core.Vocab('description')) || ''
         }
     }
 }

@@ -17,7 +17,8 @@ describe('CanonicalLinkSelector', () => {
                 }),
                 url: 'redirected-to',
             },
-        } as IResponseWrapper
+            resolveUri: () => 'the-real-id',
+        } as any
 
         // when
         const root = CanonicalLinkSelector.selectRoot(resources, response)

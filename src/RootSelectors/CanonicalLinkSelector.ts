@@ -11,7 +11,8 @@ export default {
         const links = li(linkHeaders)
 
         if (links && links[CanonicalLinkRel]) {
-            return resources[links[CanonicalLinkRel].url]
+            const linkUrl = links[CanonicalLinkRel].url
+            return resources[response.resolveUri(linkUrl)]
         }
 
         return null

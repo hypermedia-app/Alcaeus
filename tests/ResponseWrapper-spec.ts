@@ -58,4 +58,50 @@ describe('ResponseWrapper', () => {
         // then
         expect(res.apiDocumentationLink).toBe('http://other.example.api/api-doc')
     })
+
+    describe('resolveUri', () => {
+        it('returns absolute URL unchanged', () => {
+            // given
+            // given
+            const xhrResponse = {
+            } as any
+            const wrapper = new ResponseWrapper('http://api.example.com/resource/', xhrResponse)
+
+            // when
+            const resolved = wrapper.resolveUri('http://localhost:9876/whatever')
+
+            // then
+            expect(resolved).toBe('http://localhost:9876/whatever')
+        })
+
+        it('returns absolute URL resolved to request base', () => {
+            // given
+            // given
+            const xhrResponse = {
+            } as any
+            const wrapper = new ResponseWrapper('http://localhost:9876/to-strip', xhrResponse)
+
+            // when
+            const resolved = wrapper.resolveUri('/whatever')
+
+            // then
+            expect(resolved).toBe('http://localhost:9876/whatever')
+        })
+
+        it('returns absolute URL resolved to redirected url', () => {
+            // given
+            // given
+            const xhrResponse = {
+                redirected: true,
+                url: 'http://localhost:1234/base/',
+            } as any
+            const wrapper = new ResponseWrapper('http://localhost:9876/resource', xhrResponse)
+
+            // when
+            const resolved = wrapper.resolveUri('whatever')
+
+            // then
+            expect(resolved).toBe('http://localhost:1234/base/whatever')
+        })
+    })
 })

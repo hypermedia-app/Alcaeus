@@ -67,4 +67,16 @@ describe('Collection', () => {
                 .toBe(false)
         })
     })
+
+    describe('totalItems', () => {
+        it('returns the value of the hydra property', () => {
+            // given
+            const collectionBody = {}
+            collectionBody[Core.Vocab('totalItems')] = 167
+            const collection = new Collection(collectionBody)
+
+            // then
+            expect(collection.totalItems).toBe(167)
+        })
+    })
 })

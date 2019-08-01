@@ -4,9 +4,43 @@ import { JsonLd } from '../Constants'
 import TypeCollection, { ITypeCollection } from '../TypeCollection'
 
 export interface IResource {
+    /**
+     * Gets the resource identifiers
+     */
     id: string;
+    /**
+     * Gets the resource types
+     */
     types: ITypeCollection;
+    /**
+     * Gets a value indicating whether the resource is a blank node
+     */
     isAnonymous: boolean;
+    /**
+     * Gets the value of a property
+     * @param property
+     */
+    get<T = unknown> (property: string): T;
+    /**
+     * Gets the value of a property and ensures that an array will be returned
+     * @param property
+     */
+    getArray<T = unknown> (property: string): T[];
+    /**
+     * Gets the property value if it's boolean. Throws if it's not
+     * @param property
+     */
+    getBoolean (property: string): boolean;
+    /**
+     * Gets the property value if it's a string. Throws if it's not
+     * @param property
+     */
+    getString (property: string): string;
+    /**
+     * Gets the property value if it's a number. Throws if it's not
+     * @param property
+     */
+    getNumber (property: string): number;
 }
 
 const isProcessed = new WeakMap<IResource, boolean>()

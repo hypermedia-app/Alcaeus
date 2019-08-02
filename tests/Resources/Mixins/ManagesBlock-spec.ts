@@ -173,7 +173,7 @@ describe('ManagesBlock', () => {
                             supportedOperations: [],
                             supportedProperties: [],
                             types: TypeCollection.create(),
-                        },
+                        } as any,
                     })
 
                     // then
@@ -200,7 +200,7 @@ describe('ManagesBlock', () => {
                             supportedOperations: [],
                             supportedProperties: [],
                             types: TypeCollection.create(),
-                        },
+                        } as any,
                         predicate: 'http://some.other/property',
                     })
 

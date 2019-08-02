@@ -74,12 +74,18 @@ function findIncomingLinks (object, resources: object): IIncomingLink[] {
     const instances = values(resources)
 
     return instances.reduceRight((acc: IncomingLink[], res, index) => {
-        forOwn(res, (value, predicate) => {
-            if (value && value[JsonLd.Id] && value[JsonLd.Id] === object[JsonLd.Id]) {
-                acc.push(new IncomingLink(
-                    instances[index][JsonLd.Id], predicate, resources
-                ))
+        forOwn(res, (values, predicate) => {
+            if (Array.isArray(values) === false) {
+                values = [values]
             }
+
+            values.forEach(value => {
+                if (value && value[JsonLd.Id] && value[JsonLd.Id] === object[JsonLd.Id]) {
+                    acc.push(new IncomingLink(
+                        instances[index][JsonLd.Id], predicate, resources
+                    ))
+                }
+            })
         })
 
         return acc

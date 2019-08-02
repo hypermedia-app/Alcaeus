@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/wikibus/alcaeus/compare/v0.6.3...v0.7.0) (2019-08-02)
+
+
+### Bug Fixes
+
+* canonical link selector should resolve relative links ([46f3fd2](https://github.com/wikibus/alcaeus/commit/46f3fd2))
+* reverse links not calculated for multiple triple objects ([7678378](https://github.com/wikibus/alcaeus/commit/7678378))
+* **typings:** missing return value of IOperation#invoke ([196e47f](https://github.com/wikibus/alcaeus/commit/196e47f))
+
+
+### Features
+
+* add a method to quickly load resources ([852f05c](https://github.com/wikibus/alcaeus/commit/852f05c)), closes [#55](https://github.com/wikibus/alcaeus/issues/55)
+* added indexer signature and bunch of type guards ([121cffe](https://github.com/wikibus/alcaeus/commit/121cffe)), closes [#116](https://github.com/wikibus/alcaeus/issues/116)
+* create a root selector for 201 response with location ([5f45323](https://github.com/wikibus/alcaeus/commit/5f45323))
+
+
+### Tests
+
+* missing tests to boost coverage ([c701b44](https://github.com/wikibus/alcaeus/commit/c701b44))
+* test IriTemplateMapping properties ([c8caac6](https://github.com/wikibus/alcaeus/commit/c8caac6))
+
+
+
 ### [0.6.3](https://github.com/wikibus/alcaeus/compare/v0.6.2...v0.6.3) (2019-06-27)
 
 

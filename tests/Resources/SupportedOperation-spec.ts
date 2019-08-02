@@ -40,7 +40,7 @@ describe('SupportedOperation', () => {
         const op = new SupportedOperation(compacted)
 
         // then
-        expect(op.expects['@id']).toBe(owl.Nothing)
+        expect(op.expects!['@id']).toBe(owl.Nothing)
     })
 
     it('should expose returned class id', async () => {
@@ -51,7 +51,7 @@ describe('SupportedOperation', () => {
         const op = new SupportedOperation(compacted)
 
         // then
-        expect(op.returns['@id']).toBe('http://example.com/Something')
+        expect(op.returns!['@id']).toBe('http://example.com/Something')
     })
 
     describe('requiresInput', () => {

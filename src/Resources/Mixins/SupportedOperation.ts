@@ -6,8 +6,8 @@ import { IResource } from '../Resource'
 
 export function Mixin<TBase extends Constructor> (Base: TBase) {
     class SupportedOperation extends Base implements ISupportedOperation {
-        public get method (): string {
-            return this.getString(Core.Vocab('method'))
+        public get method () {
+            return this.getString(Core.Vocab('method')) || ''
         }
 
         public get expects () {

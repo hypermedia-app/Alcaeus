@@ -33,7 +33,8 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         }
 
         public get property () {
-            return this.get<RdfProperty>(Core.Vocab('property'))
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.get<RdfProperty>(Core.Vocab('property'), { strict: true })!
         }
     }
 }

@@ -48,12 +48,20 @@ export class Operation implements IOperation {
     }
 
     @nonenumerable
-    protected get _resource (): IResource {
+    protected get _resource () {
         return resources.get(this)
     }
 
     public invoke (body: BodyInit, mediaType = MediaTypes.jsonLd) {
         const alcaeus = clients.get(this)
+        if (!alcaeus) {
+            throw new Error('Cannot invoke operation. Could not find a reference to the client')
+        }
+
+        if (!this._resource) {
+            throw new Error('Cannot invoke operation. The underlying resource was null')
+        }
+
         return alcaeus.invokeOperation(this, this._resource.id, body, mediaType)
     }
 }

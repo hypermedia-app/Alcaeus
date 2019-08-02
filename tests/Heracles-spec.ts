@@ -27,7 +27,7 @@ describe('Hydra', () => {
             const doc = await Hydra.loadDocumentation('http://api.example.com/doc/')
 
             // then
-            expect(doc.id).toBe('http://api.example.com/doc/')
+            expect(doc!.id).toBe('http://api.example.com/doc/')
         })
 
         afterEach(() => {
@@ -160,7 +160,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/root')
-            const res = hydraRes.get('http://example.com/root')
+            const res = hydraRes.get('http://example.com/root') as any
 
             // then
             const p = 'http://example.com/prop'
@@ -178,7 +178,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
 
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'])
@@ -209,7 +209,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
 
             // then
             const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top'])
@@ -236,7 +236,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
 
             // then
             expect(res.apiDocumentation.valueOr(null)).toBe(null)
@@ -260,7 +260,7 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/resource')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource')
+            expect(res.root!.id).toBe('http://example.com/resource')
         })
 
         xit('should select resource with redirected id if original is not present', async () => {
@@ -276,7 +276,7 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource')
+            expect(res.root!.id).toBe('http://example.com/resource')
         })
 
         it('should select resource with canonical id if original is not present', async () => {
@@ -292,7 +292,7 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource')
+            expect(res.root!.id).toBe('http://example.com/resource')
         })
 
         afterEach(() => {

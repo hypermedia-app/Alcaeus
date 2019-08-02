@@ -22,21 +22,21 @@ const getHydraResponse = async (
     const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
         .find((processor) => processor.canProcess(response.mediaType))
 
-    if (suitableProcessor) {
+    if (suitableProcessor && apiDocumentation) {
         const graph = await suitableProcessor.process(alcaeus, uri, response, apiDocumentation)
         return create(uri, response, graph, alcaeus.rootSelectors)
     }
 
-    return create(uri, response, null, null)
+    return create(uri, response)
 }
 
-function getApiDocumentation (this: Alcaeus, response: IResponseWrapper): Promise<ApiDocumentation> {
+function getApiDocumentation (this: Alcaeus, response: IResponseWrapper): Promise<ApiDocumentation | null> {
     if (response.apiDocumentationLink) {
         return this.loadDocumentation(response.apiDocumentationLink)
     } else {
         console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
 
-        return null
+        return Promise.resolve(null)
     }
 }
 
@@ -55,14 +55,22 @@ export class Alcaeus implements IHydraClient {
 
         const apiDocumentation = await getApiDocumentation.call(this, response)
 
-        return getHydraResponse(this, response, uri, apiDocumentation)
+        if (apiDocumentation) {
+            return getHydraResponse(this, response, uri, apiDocumentation)
+        }
+
+        return getHydraResponse(this, response, uri)
     }
 
     public async loadDocumentation (uri: string) {
         try {
             const response = await FetchUtil.fetchResource(uri)
-            const representation = await getHydraResponse(this, response, uri, null)
+            const representation = await getHydraResponse(this, response, uri)
             const resource = representation.root
+            if (!resource) {
+                console.warn('Could not determine root resource')
+                return null
+            }
             const resourceType = resource['@type']
 
             let resourceHasApiDocType
@@ -90,6 +98,10 @@ export class Alcaeus implements IHydraClient {
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mediaType)
         const apiDocumentation = await getApiDocumentation.call(this, response)
 
-        return getHydraResponse(this, response, uri, apiDocumentation)
+        if (apiDocumentation) {
+            return getHydraResponse(this, response, uri, apiDocumentation)
+        }
+
+        return getHydraResponse(this, response, uri)
     }
 }

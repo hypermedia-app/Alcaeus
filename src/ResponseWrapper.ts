@@ -16,12 +16,12 @@ export interface IResponseWrapper {
     /**
      * Gets the URI identifying the ApiDocumentation resource if present in the response Link header
      */
-    apiDocumentationLink: string;
+    apiDocumentationLink: string | null;
 
     /**
      * If the request was redirected, returns the target resource
      */
-    redirectUrl: string;
+    redirectUrl: string | null;
 
     /**
      * Gets the actual XMLHttpResponse object which can be used to do custom processing
@@ -54,7 +54,7 @@ export class ResponseWrapper implements IResponseWrapper {
         return this.xhr.status
     }
 
-    public get apiDocumentationLink (): string {
+    public get apiDocumentationLink () {
         if (this.xhr.headers.has(Constants.Headers.Link)) {
             const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
             const links = li(linkHeaders)
@@ -73,7 +73,7 @@ export class ResponseWrapper implements IResponseWrapper {
         return this.xhr.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd
     }
 
-    public get redirectUrl (): string {
+    public get redirectUrl () {
         if (this.xhr.redirected) {
             return this.xhr.url
         }

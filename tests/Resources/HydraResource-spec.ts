@@ -4,7 +4,7 @@ import createClass from '../../src/Resources/HydraResource'
 import { Bodies } from '../test-objects'
 
 let reverseLinks
-const HydraResource = createClass(null, () => reverseLinks)
+const HydraResource = createClass(null as any, () => reverseLinks)
 
 describe('HydraResource', () => {
     describe('apiDocumentation', () => {
@@ -224,7 +224,7 @@ describe('HydraResource', () => {
 
         it('returns collections matching manages block Class given by id', () => {
             // given
-            const resource = new HydraResource(Bodies.withHydraCollections, {} as any)
+            const resource = new HydraResource(Bodies.withHydraCollections, {} as any) as any
             resource[Core.Vocab('collection')][0].manages = [{
                 matches: () => true,
             }]

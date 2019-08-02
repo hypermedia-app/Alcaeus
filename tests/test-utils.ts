@@ -3,7 +3,7 @@ import { Core, JsonLd, MediaTypes } from '../src/Constants'
 import { IResponseWrapper } from '../src/ResponseWrapper'
 import 'isomorphic-fetch'
 
-function addPredicateGetter (prop: string, pred: string, wrapArray: boolean = true) {
+function addPredicateGetter (this: any, prop: string, pred: string, wrapArray: boolean = true) {
     Object.defineProperty(this, prop, {
         get: () => {
             const ret = this[pred]
@@ -18,7 +18,7 @@ function addPredicateGetter (prop: string, pred: string, wrapArray: boolean = tr
 
 export function fakeAlcaeusResources (obj: object) {
     if (!obj || typeof obj !== 'object') {
-        return
+        return {}
     }
 
     const addGetter = addPredicateGetter.bind(obj)
@@ -34,7 +34,7 @@ export function fakeAlcaeusResources (obj: object) {
     return obj
 }
 
-export function responseBuilder () {
+export function responseBuilder (): any {
     let statusCode = 200
     let responseBody = '{}'
     let responseUri
@@ -108,7 +108,7 @@ export function responseBuilder () {
     }
 }
 
-export async function mockedResponse ({ includeDocsLink = true, xhrBuilder = null }): Promise<IResponseWrapper> {
+export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): Promise<IResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
     const xhr = await xhrBuilder.build()
 

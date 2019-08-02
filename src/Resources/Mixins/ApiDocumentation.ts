@@ -1,6 +1,6 @@
 import { deprecated } from 'core-decorators'
 import { Core, JsonLd } from '../../Constants'
-import { Class, IApiDocumentation, ISupportedProperty } from '../index'
+import { Class, HydraResource, IApiDocumentation, ISupportedProperty } from '../index'
 import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
 
@@ -50,11 +50,12 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         }
 
         public loadEntrypoint () {
-            if (!this[Core.Vocab('entrypoint')]) {
+            const entrypoint = this.get<HydraResource>(Core.Vocab('entrypoint'))
+            if (!entrypoint) {
                 return Promise.reject(new Error('The ApiDocumentation doesn\'t have an entrypoint.'))
             }
 
-            return this._alcaeus.loadResource(this[Core.Vocab('entrypoint')][JsonLd.Id])
+            return this._alcaeus.loadResource(entrypoint.id)
         }
     }
 

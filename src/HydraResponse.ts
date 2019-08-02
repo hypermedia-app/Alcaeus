@@ -9,7 +9,7 @@ export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrappe
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
-    root: HydraResource;
+    root: HydraResource | null;
 
     /**
      * Gets the number of resource within this representation
@@ -32,14 +32,12 @@ export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrappe
 export function create (
     uri: string,
     response: IResponseWrapper,
-    resources: IResourceGraph,
-    rootSelectors: IRootSelector[]): IHydraResponse {
+    resources?: IResourceGraph,
+    rootSelectors?: IRootSelector[]): IHydraResponse {
     const safeResources = resources || new ResourceGraph()
     const safeSelectors = rootSelectors || []
 
     class HydraResponse extends ResponseWrapper implements IHydraResponse {
-        public readonly requestedUri: string;
-
         public constructor (requestedUri: string) {
             super(requestedUri, response.xhr)
         }
@@ -49,13 +47,13 @@ export function create (
         }
 
         public get root () {
-            return safeSelectors.reduce((resource, selector) => {
+            return safeSelectors.reduce((resource: HydraResource | null, selector) => {
                 if (!resource) {
                     resource = selector.selectRoot(safeResources, this)
                 }
-
+                console.log(resource)
                 return resource
-            }, null as HydraResource)
+            }, null)
         }
 
         public get length (): number {

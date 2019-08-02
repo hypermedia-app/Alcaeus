@@ -5,7 +5,7 @@ import { IResource } from '../Resource'
 
 export function Mixin <TBase extends Constructor> (Base: TBase) {
     return class StatusCodeDescription extends Base implements IStatusCodeDescription {
-        public get code (): number {
+        public get code () {
             return this.getNumber(Core.Vocab('code'))
         }
 

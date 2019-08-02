@@ -137,7 +137,8 @@ describe('RdfProcessor', () => {
                         const res = rep['http://example.com/resource']
 
                         // then
-                        const child = Object.values(res).find((r) => r['@id'] === 'http://example.com/child')
+                        const child = Object.values(res)
+                            .find((r: any) => r['@id'] === 'http://example.com/child') as any
 
                         expect(child['@type']).toBeDefined()
                         expect(child['@type']).toBe(type)

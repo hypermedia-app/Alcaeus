@@ -2,7 +2,7 @@ import { IHydraClient } from './alcaeus'
 import { JsonLd } from './Constants'
 import { IIncomingLink } from './internals'
 import { forOwn, values } from './LodashUtil'
-import { ApiDocumentation } from './Resources'
+import { ApiDocumentation, HydraResource } from './Resources'
 import createBase from './Resources/HydraResource'
 import { IResource } from './Resources/Resource'
 
@@ -49,12 +49,12 @@ export class ResourceFactory implements IResourceFactory {
 
         const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin(c), HydraResource)
 
-        return new AlcaeusGenerated(obj, apiDocumentation)
+        return new AlcaeusGenerated(obj, apiDocumentation) as IResource
     }
 }
 
 // tslint:disable:max-classes-per-file
-class IncomingLink {
+class IncomingLink implements IIncomingLink {
     public constructor (id, predicate, resources) {
         Object.defineProperty(this, 'subject', {
             get: () => resources[id],
@@ -68,10 +68,17 @@ class IncomingLink {
             get: () => predicate,
         })
     }
+
+    // @ts-ignore
+    public predicate: string;
+    // @ts-ignore
+    public subject: HydraResource;
+    // @ts-ignore
+    public subjectId: string;
 }
 
-function findIncomingLinks (object, resources: object): IIncomingLink[] {
-    const instances = values(resources)
+function findIncomingLinks (object, resources: object): IncomingLink[] {
+    const instances = values(resources) as HydraResource[]
 
     return instances.reduceRight((acc: IncomingLink[], res, index) => {
         forOwn(res, (values, predicate) => {

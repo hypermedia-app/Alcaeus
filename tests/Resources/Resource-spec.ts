@@ -4,7 +4,7 @@ import { Bodies } from '../test-objects'
 describe('Resource', () => {
     describe('id', () => {
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id').enumerable)
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id')!.enumerable)
                 .toBe(false)
         })
 
@@ -21,7 +21,7 @@ describe('Resource', () => {
 
     describe('isAnonymous', () => {
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'isAnonymous').enumerable)
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'isAnonymous')!.enumerable)
                 .toBe(false)
         })
 
@@ -58,7 +58,7 @@ describe('Resource', () => {
 
     describe('types', () => {
         it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'types').enumerable)
+            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'types')!.enumerable)
                 .toBe(false)
         })
 

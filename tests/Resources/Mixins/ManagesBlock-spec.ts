@@ -6,7 +6,7 @@ import { IResource } from '../../../src/Resources/Resource'
 import TypeCollection from '../../../src/TypeCollection'
 import { rdf } from '../../../src/Vocabs'
 
-class ManagesBlock extends Mixin(Resource(null, () => [])) {}
+class ManagesBlock extends Mixin(Resource(null as any, () => [])) {}
 
 describe('ManagesBlock', () => {
     describe('shouldApply', () => {
@@ -16,9 +16,9 @@ describe('ManagesBlock', () => {
                 _reverseLinks: [{
                     predicate: Core.Vocab('manages'),
                     subject: null,
-                    subjectId: null,
+                    subjectId: '',
                 }],
-            }
+            } as any
 
             // when
             const result = shouldApply(res)
@@ -32,7 +32,7 @@ describe('ManagesBlock', () => {
         describe('object', () => {
             it('returns class from ApiDocumentation', () => {
                 // given
-                const clas = {}
+                const clas = {} as any
                 const apiDoc = {
                     getClass: () => clas,
                 } as any as ApiDocumentation
@@ -54,7 +54,7 @@ describe('ManagesBlock', () => {
                 // given
                 const clas = {
                     id: 'http://vocab/class',
-                }
+                } as any
                 const apiDoc = {
                     getClass: () => null,
                 } as any as ApiDocumentation

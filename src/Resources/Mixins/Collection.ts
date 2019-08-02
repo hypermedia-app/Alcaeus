@@ -8,7 +8,7 @@ export function Mixin <TBase extends Constructor> (Base: TBase) {
     abstract class Collection extends Base implements ICollection {
         @nonenumerable
         public get totalItems () {
-            return this.getNumber(Core.Vocab('totalItems'))
+            return this.getNumber(Core.Vocab('totalItems')) || 0
         }
 
         @nonenumerable

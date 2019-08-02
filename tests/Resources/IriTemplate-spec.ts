@@ -3,8 +3,8 @@ import { Mixin } from '../../src/Resources/Mixins/IriTemplate'
 import Resource from '../../src/Resources/Resource'
 
 class IriTemplate extends Mixin(Resource) {
-    public expand (): string {
-        return undefined
+    public expand () {
+        return ''
     }
 }
 

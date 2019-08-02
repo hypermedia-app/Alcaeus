@@ -50,7 +50,7 @@ describe('SupportedProperty', () => {
                 },
             },
         }
-        const prop = new SupportedProperty(jsonLd)
+        const prop = new SupportedProperty(jsonLd) as any
 
         expect(prop.property['@id']).toBe('http://example.com/property')
         expect(prop.property['http://www.w3.org/2000/01/rdf-schema#range']['@id'])

@@ -41,7 +41,7 @@ describe('RdfProperty', () => {
         const property = new RdfProperty(compacted)
 
         // then
-        expect(property.domain['@id']).toBe(xsd.integer)
+        expect(property.domain!['@id']).toBe(xsd.integer)
     })
 
     it('should link to range', async () => {
@@ -52,7 +52,7 @@ describe('RdfProperty', () => {
         const property = new RdfProperty(compacted)
 
         // them
-        expect(property.range['@id']).toBe(xsd.string)
+        expect(property.range!['@id']).toBe(xsd.string)
     })
 
     describe('link', () => {

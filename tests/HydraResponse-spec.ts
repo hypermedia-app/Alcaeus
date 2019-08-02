@@ -33,7 +33,7 @@ describe('HydraResponse', () => {
             const theUri = 'http://what/I/requested'
 
             // when
-            const response = HydraResponse(theUri, {} as IResponseWrapper, null, [])
+            const response = HydraResponse(theUri, {} as IResponseWrapper)
 
             // then
             expect(response.requestedUri).toBe(theUri)
@@ -59,7 +59,7 @@ describe('HydraResponse', () => {
             const root = response.root
 
             // then
-            expect(root.id).toEqual('urn:other:resource')
+            expect(root!.id).toEqual('urn:other:resource')
             expect(selector.selectRoot.calledWith(resources)).toBeTruthy()
         })
     })
@@ -118,7 +118,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr, null, [])
+            const r12n = HydraResponse('urn:some:res', xhr)
 
             // then
             expect(r12n.length).toBe(0)
@@ -131,7 +131,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr, null, [])
+            const r12n = HydraResponse('urn:some:res', xhr)
 
             // then
             expect(r12n.ofType('whatever').length).toBe(0)
@@ -146,7 +146,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr, null, null)
+            const r12n = HydraResponse('urn:some:res', xhr)
 
             // then
             expect(r12n.root).toBeNull()

@@ -165,7 +165,7 @@ export default class RdfProcessor implements IMediaTypeProcessor {
     }
 
     public canProcess (mediaType): boolean {
-        return !!parserFactory.create(null).find(stripContentTypeParameters(mediaType))
+        return !!parserFactory.create().find(stripContentTypeParameters(mediaType))
     }
 
     public async process (

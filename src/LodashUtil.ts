@@ -6,8 +6,8 @@ export function forOwn (obj: object, iteratee) {
     }
 }
 
-export function values (obj: object): any[] {
-    const result = []
+export function values (obj: object): unknown[] {
+    const result: unknown[] = []
 
     forOwn(obj, (o) => {
         result.push(o)

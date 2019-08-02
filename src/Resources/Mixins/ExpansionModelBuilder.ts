@@ -22,15 +22,21 @@ export default function <TBase extends Constructor> (Base: TBase) {
 
         public buildExpansionModel (mappings: IIriTemplateMapping[], model: object) {
             return mappings.map((mapping: IIriTemplateMapping) => {
+                if (!mapping.property) {
+                    return {}
+                }
+
                 return {
                     value: model[mapping.property.id],
                     variable: mapping.variable,
                 }
             }).reduce((result, mapping) => {
-                if (typeof mapping.value === 'object') {
-                    result[mapping.variable] = this.mapExpandedValue(mapping.value)
-                } else {
-                    result[mapping.variable] = this.mapShorthandValue(mapping.value)
+                if (mapping.variable) {
+                    if (typeof mapping.value === 'object') {
+                        result[mapping.variable] = this.mapExpandedValue(mapping.value)
+                    } else {
+                        result[mapping.variable] = this.mapShorthandValue(mapping.value)
+                    }
                 }
 
                 return result

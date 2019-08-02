@@ -12,3 +12,12 @@ after_success:
 - codecov
 after_failure:
 - codecov
+deploy:
+  provider: npm
+  email: npm@t-code.pl
+  api_key:
+    secure: K98Vg6UNcZeXzhNgREA1tdRrpI9Jh07/rHR8TWqXjeOHzXVqJTqNrRBKrMKJoybi+8hfNg/TwikGMSkxlSoh+ESL1cBeXsMkxFDPRIR3eEsNdp7YcA3k4EdjcNeDLY+rG2f5eP5V3lXDexcXX7Pj0/xTIxvRl2SsCBfm5Q/XHtd82XjhEy+xtQcXXbv3WzHP3jscYsa4oXrKpHFd9sLcA+5kBfs/Pzs6XPeHzlG/LMorx6p/6PWDxwVuy5laMgsstLwRGhusyV3eULI0v8WChOebkRSern2ZwyECEGNlI9zb7sPvrqbJ63Ww+o9sTh415pB8WE+unUOpr74S2Uep9i7/85vSb0CXRTf1r9f73kHGXgBZVJ/S0XG7tnxWp/0ddpif4WhSBTtNV5cUw/0rce2gPfo5dzRwJaurhIyxzJxkQIpXP34j8MgloeVfERxAbaIvyAjrW6lkSBTmUOfYskZDXosq6ojPlHRyJTJSEp10BF4RFPjKThaeg7HeioRTL5djcl3KBQETJo3U/ugGPvaddoO68cWLs8qXmIlTRbQJ4Vkb5ufQk8bsIx2EvE3NQBDcEcO43bH81Zwuc2J+y7bJNHylZH1fuTYqv1+z85aiWHs3to1YX2E5kDBPQqjavE2LkvW4U3LIcOvnUEqAJHWEknthBxv0deWoIv7xQek=
+  on:
+    tags: true
+    repo: wikibus/Alcaeus
+  skip_cleanup: true

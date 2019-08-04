@@ -57,8 +57,11 @@ class HydraResource extends Resource implements IHydraResource {
         }
 
         return this.apiDocumentation
-            .map((apiDoc) => apiDoc.getOperations)
-            .map((getOperations) => getOperations.bind(this.apiDocumentation))
+            .map((apiDocumentation) => ({
+                apiDocumentation,
+                getOperations: apiDocumentation.getOperations,
+            }))
+            .map((arg) => arg.getOperations.bind(arg.apiDocumentation))
             .map(getClassOperations)
             .valueOr([])
     }
@@ -92,8 +95,11 @@ class HydraResource extends Resource implements IHydraResource {
                 }, [] as { supportedProperty: SupportedProperty; objects: any[] }[])
 
         return this.apiDocumentation
-            .map((apiDoc) => apiDoc.getProperties)
-            .map((getProperties) => getProperties.bind(this.apiDocumentation))
+            .map((apiDocumentation) => ({
+                apiDocumentation,
+                getProperties: apiDocumentation.getProperties,
+            }))
+            .map((arg) => arg.getProperties.bind(arg.apiDocumentation))
             .map(getProperties)
             .valueOr([])
     }

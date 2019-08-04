@@ -5,10 +5,10 @@ describe('Hydra (e2e)', () => {
 
     beforeAll(() => {
         originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+        jest.setTimeout(10000)
     })
 
-    xit('should directly expose all resource from graph', async () => {
+    it.skip('should directly expose all resource from graph', async () => {
         // given
         const slice = 'http://stat.stadt-zuerich.ch/api/dataset/GEB-RAUM-ZEIT/slice'
         const representation = await client.loadResource(slice)

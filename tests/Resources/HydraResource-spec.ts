@@ -278,7 +278,7 @@ describe('HydraResource', () => {
 
             // then
             expect(() => resource.load()).toThrow()
-            expect(alcaeus.loadResource.never).toBeTruthy()
+            expect(alcaeus.loadResource.notCalled).toBeTruthy()
         })
     })
 })

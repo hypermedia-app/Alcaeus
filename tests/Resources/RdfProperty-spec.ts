@@ -67,7 +67,7 @@ describe('RdfProperty', () => {
             expect(property.isLink).toBe(false)
         })
 
-        it('should not be a link by default', async () => {
+        it('should be a link when typed accordingly', async () => {
             // given
             testProperty['@type'] = Core.Vocab('Link')
             const compacted = await jsonld.compact(testProperty, {})

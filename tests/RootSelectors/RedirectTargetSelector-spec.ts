@@ -22,7 +22,7 @@ describe('RedirectTargetSelector', () => {
         expect(Object.is(root, expectedRoot)).toBeTruthy()
     })
 
-    it('when resource is in response should select the redirect target', () => {
+    it('when resource is not in response should not select the redirect target', () => {
         // given
         const resources = new ResourceGraph()
         resources['something-else'] = {} as HydraResource

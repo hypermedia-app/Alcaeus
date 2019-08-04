@@ -8,12 +8,14 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     class IriTemplateMapping extends Base implements IIriTemplateMapping {
         @nonenumerable
         public get variable () {
-            return this.getString(Core.Vocab('variable'))
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.getString(Core.Vocab('variable'), { strict: true })!
         }
 
         @nonenumerable
         public get property () {
-            return this.get<RdfProperty>(Core.Vocab('property'))
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.get<RdfProperty>(Core.Vocab('property'), { strict: true })!
         }
 
         @nonenumerable

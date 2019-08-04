@@ -22,10 +22,6 @@ export default function <TBase extends Constructor> (Base: TBase) {
 
         public buildExpansionModel (mappings: IIriTemplateMapping[], model: object) {
             return mappings.map((mapping: IIriTemplateMapping) => {
-                if (!mapping.property) {
-                    return {}
-                }
-
                 return {
                     value: model[mapping.property.id],
                     variable: mapping.variable,

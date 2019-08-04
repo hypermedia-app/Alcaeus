@@ -1,10 +1,12 @@
 import * as sinon from 'sinon'
+import { IHydraClient } from '../../src/alcaeus'
 import { Core } from '../../src/Constants'
 import createClass from '../../src/Resources/HydraResource'
 import { Bodies } from '../test-objects'
 
 let reverseLinks
-const HydraResource = createClass(null as any, () => reverseLinks)
+let client = {} as IHydraClient
+const HydraResource = createClass(client, () => reverseLinks)
 
 describe('HydraResource', () => {
     describe('apiDocumentation', () => {
@@ -71,7 +73,9 @@ describe('HydraResource', () => {
 
         it('returns empty array when api documentation does not implement the necessary method', () => {
             // given
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as any)
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, {
+                getOperations: () => [],
+            } as any)
 
             // when
             const ops = resource.operations
@@ -95,7 +99,9 @@ describe('HydraResource', () => {
 
         it('returns empty array when ApiDocumentation does not implement the interface', () => {
             // given
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, {} as any)
+            const resource = new HydraResource(Bodies.multipleTypesExpanded, {
+                getProperties: () => [],
+            } as any)
 
             // when
             const ops = resource.getProperties()
@@ -261,7 +267,7 @@ describe('HydraResource', () => {
             resource.load()
 
             // then
-            expect(alcaeus.loadResource.calledWithExactly('http://example.com/resource'))
+            expect(alcaeus.loadResource.calledWithExactly('http://example.com/resource')).toBeTruthy()
         })
 
         it('throws when resource is a blank node', () => {
@@ -272,7 +278,7 @@ describe('HydraResource', () => {
 
             // then
             expect(() => resource.load()).toThrow()
-            expect(alcaeus.loadResource.never)
+            expect(alcaeus.loadResource.never).toBeTruthy()
         })
     })
 })

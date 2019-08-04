@@ -197,8 +197,8 @@ export interface IIriTemplate {
 }
 
 export interface IIriTemplateMapping {
-    property: RdfProperty | null;
-    variable: string | null;
+    property: RdfProperty;
+    variable: string;
     required: boolean;
 }
 

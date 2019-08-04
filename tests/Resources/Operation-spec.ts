@@ -70,4 +70,18 @@ describe('Operation', () => {
                 .toBe('text/turtle')
         })
     })
+
+    describe('constructor', () => {
+        it('throws if supported operation is missing', () => {
+            expect(() => new Operation(null as unknown as SupportedOperation, {} as IHydraClient, {} as HydraResource)).toThrow()
+        })
+
+        it('throws if resource is missing', () => {
+            expect(() => new Operation({} as SupportedOperation, null as unknown as IHydraClient, {} as HydraResource)).toThrow()
+        })
+
+        it('throws if client is missing', () => {
+            expect(() => new Operation({} as SupportedOperation, {} as IHydraClient, null as unknown as HydraResource)).toThrow()
+        })
+    })
 })

@@ -13,6 +13,12 @@ export class Operation implements IOperation {
         if (!supportedOperation) {
             throw new Error('Missing supportedOperation parameter')
         }
+        if (!alcaeus) {
+            throw new Error('Missing alcaeus parameter')
+        }
+        if (!resource) {
+            throw new Error('Missing resource parameter')
+        }
 
         supportedOperations.set(this, supportedOperation)
         resources.set(this, resource)
@@ -59,15 +65,10 @@ export class Operation implements IOperation {
     }
 
     public invoke (body: BodyInit, mediaType = MediaTypes.jsonLd) {
-        const alcaeus = clients.get(this)
-        if (!alcaeus) {
-            throw new Error('Cannot invoke operation. Could not find a reference to the client')
-        }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const alcaeus = clients.get(this)!
 
-        if (!this._resource) {
-            throw new Error('Cannot invoke operation. The underlying resource was null')
-        }
-
-        return alcaeus.invokeOperation(this, this._resource.id, body, mediaType)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return alcaeus.invokeOperation(this, this._resource!.id, body, mediaType)
     }
 }

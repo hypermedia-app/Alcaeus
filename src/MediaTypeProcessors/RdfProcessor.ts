@@ -1,7 +1,7 @@
-import * as JsonLdSerializer from '@rdfjs/serializer-jsonld'
+import JsonLdSerializer from '@rdfjs/serializer-jsonld'
 import { promises as jsonld, FlattenOptions } from 'jsonld'
-import * as $rdf from 'rdf-ext'
-import * as stringToStream from 'string-to-stream'
+import $rdf from 'rdf-ext'
+import stringToStream from 'string-to-stream'
 import { IHydraClient } from '../alcaeus'
 import * as Constants from '../Constants'
 import { forOwn } from '../LodashUtil'
@@ -19,7 +19,7 @@ export interface IMediaTypeProcessor {
         alcaeus: IHydraClient,
         uri: string,
         response: IResponseWrapper,
-        apiDocumentation: ApiDocumentation): Promise<IResourceGraph>;
+        apiDocumentation?: ApiDocumentation): Promise<IResourceGraph>;
 }
 
 const propertyRangeMappings = [
@@ -153,7 +153,6 @@ function processResources (createResource: (obj, resources) => IResource, resour
     }, resourcified)
 
     forOwn(resourcified, (resource) => resourcify(createResource, resource, resourcified))
-
     return resourcified
 }
 
@@ -172,11 +171,11 @@ export default class RdfProcessor implements IMediaTypeProcessor {
         alcaeus: IHydraClient,
         uri: string,
         response: IResponseWrapper,
-        apiDocumentation: ApiDocumentation): Promise<IResourceGraph> {
+        apiDocumentation?: ApiDocumentation): Promise<IResourceGraph> {
         const processedGraph = await parseAndNormalizeGraph(await response.xhr.text(), uri, response.mediaType)
 
         const createResource = (obj, resources) => {
-            return this.resourceFactory.createResource(obj, apiDocumentation, resources, alcaeus)
+            return this.resourceFactory.createResource(obj, resources, apiDocumentation, alcaeus)
         }
 
         return processResources(createResource, processedGraph)

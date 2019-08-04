@@ -48,29 +48,29 @@ export type HydraTerm = 'apiDocumentation' |
 'object' |
 'search';
 
-export namespace Core {
-    export function Vocab (term?: HydraTerm) {
+export const Core = {
+    Vocab (term?: HydraTerm) {
         return 'http://www.w3.org/ns/hydra/core#' + (term || '')
-    }
+    },
 }
 
-export namespace JsonLd {
-    export let Graph = '@graph'
-    export const Context = '@context'
-    export let Id = '@id'
-    export let Value = '@value'
-    export let Type = '@type'
-    export let Language = '@language'
+export const JsonLd = {
+    Graph: '@graph',
+    Context: '@context',
+    Id: '@id',
+    Value: '@value',
+    Type: '@type',
+    Language: '@language',
 }
 
-export namespace MediaTypes {
-    export let jsonLd = 'application/ld+json'
-    export let ntriples = 'application/n-triples'
-    export let nquads = 'application/n-quads'
+export const MediaTypes = {
+    jsonLd: 'application/ld+json',
+    ntriples: 'application/n-triples',
+    nquads: 'application/n-quads',
 }
 
-export namespace Headers {
-    export let Link = 'Link'
-    export let Location = 'Location'
-    export let ContentType = 'Content-Type'
+export const Headers = {
+    Link: 'Link',
+    Location: 'Location',
+    ContentType: 'Content-Type',
 }

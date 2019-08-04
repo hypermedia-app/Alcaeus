@@ -9,8 +9,8 @@ import { IResource } from './Resources/Resource'
 export interface IResourceFactory {
     createResource(
         obj: object,
-        apiDocumentation: ApiDocumentation,
         resources,
+        apiDocumentation?: ApiDocumentation,
         clientAccessorMixin?): IResource;
 }
 
@@ -29,10 +29,11 @@ export class ResourceFactory implements IResourceFactory {
 
     public createResource (
         obj: object,
-        apiDocumentation: ApiDocumentation,
         resources: object,
+        apiDocumentation: ApiDocumentation,
         alcaeus: IHydraClient): IResource {
         const incomingLinks = () => findIncomingLinks(obj, resources)
+        // @ts-ignore
         const HydraResource = createBase(alcaeus, incomingLinks)
 
         const resource = new HydraResource(obj, apiDocumentation)
@@ -54,6 +55,7 @@ export class ResourceFactory implements IResourceFactory {
 }
 
 // tslint:disable:max-classes-per-file
+// @ts-ignore
 class IncomingLink implements IIncomingLink {
     public constructor (id, predicate, resources) {
         Object.defineProperty(this, 'subject', {
@@ -68,17 +70,10 @@ class IncomingLink implements IIncomingLink {
             get: () => predicate,
         })
     }
-
-    // @ts-ignore
-    public predicate: string;
-    // @ts-ignore
-    public subject: HydraResource;
-    // @ts-ignore
-    public subjectId: string;
 }
 
 function findIncomingLinks (object, resources: object): IncomingLink[] {
-    const instances = values(resources) as HydraResource[]
+    const instances = values<HydraResource>(resources)
 
     return instances.reduceRight((acc: IncomingLink[], res, index) => {
         forOwn(res, (values, predicate) => {

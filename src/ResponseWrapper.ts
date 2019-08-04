@@ -1,4 +1,4 @@
-import * as li from 'parse-link-header'
+import li from 'parse-link-header'
 import * as Constants from './Constants'
 import nonenumerable from './helpers/nonenumerable'
 

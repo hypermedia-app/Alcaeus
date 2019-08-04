@@ -51,7 +51,7 @@ export function create (
                 if (!resource) {
                     resource = selector.selectRoot(safeResources, this)
                 }
-                console.log(resource)
+
                 return resource
             }, null)
         }

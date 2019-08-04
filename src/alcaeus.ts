@@ -22,7 +22,7 @@ const getHydraResponse = async (
     const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
         .find((processor) => processor.canProcess(response.mediaType))
 
-    if (suitableProcessor && apiDocumentation) {
+    if (suitableProcessor) {
         const graph = await suitableProcessor.process(alcaeus, uri, response, apiDocumentation)
         return create(uri, response, graph, alcaeus.rootSelectors)
     }

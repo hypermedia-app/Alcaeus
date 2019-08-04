@@ -8,34 +8,33 @@ import { PartialCollectionView } from '../src/Resources'
 import { Bodies, Documentations } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
 
-describe('Hydra', () => {
-    describe('loadDocumentation', () => {
-        let fetchResource: SinonStub
+describe('Hydra loadDocumentation', () => {
+    let fetchResource: SinonStub
 
-        beforeEach(() => {
-            fetchResource = stub(FetchUtil, 'fetchResource')
-        })
+    beforeEach(() => {
+        fetchResource = stub(FetchUtil, 'fetchResource')
+    })
 
-        it('should return type ApiDocumentation', async () => {
-            // given
-            fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse({
-                    xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
-                }))
+    it('should return type ApiDocumentation', async () => {
+        // given
+        fetchResource.withArgs('http://api.example.com/doc/')
+            .returns(mockedResponse({
+                xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
+            }))
 
-            // when
-            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/')
+        // when
+        const doc = await Hydra.loadDocumentation('http://api.example.com/doc/')
 
-            // then
-            expect(doc!.id).toBe('http://api.example.com/doc/')
-        })
+        // then
+        expect(doc!.id).toBe('http://api.example.com/doc/')
+    })
 
-        afterEach(() => {
-            fetchResource.restore()
-        })
+    afterEach(() => {
+        fetchResource.restore()
     })
 })
 
+// eslint-disable-next-line jest/no-identical-title
 describe('Hydra', () => {
     let loadDocumentation: SinonStub
     let fetchResource: SinonStub
@@ -185,7 +184,7 @@ describe('Hydra', () => {
                 .toBe('http://wikibus-test.gear.host/book/1936/image')
         })
 
-        xit('should return typed numeric literals as their values', async () => {
+        it.skip('should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -263,7 +262,7 @@ describe('Hydra', () => {
             expect(res.root!.id).toBe('http://example.com/resource')
         })
 
-        xit('should select resource with redirected id if original is not present', async () => {
+        it.skip('should select resource with redirected id if original is not present', async () => {
             // given
             const requestedUri = 'http://example.com/not-there'
             const redirectUri = 'http://example.com/resource'

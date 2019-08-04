@@ -105,8 +105,8 @@ export interface ISupportedProperty {
 
 export interface ISupportedOperation {
     method: string;
-    expects: Class | null;
-    returns: Class | null;
+    expects: Class;
+    returns: Class;
     requiresInput: boolean;
 }
 

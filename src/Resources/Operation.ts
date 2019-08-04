@@ -4,9 +4,9 @@ import { MediaTypes } from '../Constants'
 import { HydraResource, IOperation, SupportedOperation } from './index'
 import { IResource } from './Resource'
 
-const supportedOperations = new WeakMap<IOperation, SupportedOperation>()
-const resources = new WeakMap<IOperation, IResource>()
-const clients = new WeakMap<IOperation, IHydraClient>()
+const supportedOperations = new WeakMap<Operation, SupportedOperation>()
+const resources = new WeakMap<Operation, IResource>()
+const clients = new WeakMap<Operation, IHydraClient>()
 
 export class Operation implements IOperation {
     public constructor (supportedOperation: SupportedOperation, alcaeus: IHydraClient, resource: HydraResource) {
@@ -44,7 +44,13 @@ export class Operation implements IOperation {
     }
 
     public get supportedOperation () {
-        return supportedOperations.get(this)
+        const supportedOperation = supportedOperations.get(this)
+
+        if (!supportedOperation) {
+            throw new Error('Supported operation was not found for operation')
+        }
+
+        return supportedOperation
     }
 
     @nonenumerable

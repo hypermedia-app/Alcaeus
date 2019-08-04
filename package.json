@@ -14,8 +14,7 @@
     "lib"
   ],
   "scripts": {
-    "pretest": "npm run lint",
-    "test": "karma start --single-run",
+    "test": "jest",
     "build": "npm run build:nodejs; npm run build:default",
     "build:nodejs": "tsc --target es2017 --module commonjs --outDir lib/node",
     "build:default": "tsc --target esnext --module esnext --outDir lib/es",
@@ -93,7 +92,11 @@
     "husky": "^1.0.0",
     "lint-staged": "^8.0.0",
     "cz-conventional-changelog": "^2.1.0",
-    "eslint-plugin-jasmine": "^2.10.1"
+    "eslint-plugin-jasmine": "^2.10.1",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "@types/jest": "^24.0.16",
+    "eslint-plugin-jest": "^22.14.1"
   },
   "lint-staged": {
     "*.{js,ts}": [

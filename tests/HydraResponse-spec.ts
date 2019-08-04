@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import * as sinon from 'sinon'
 import { create as HydraResponse } from '../src/HydraResponse'
 import { ResourceGraph } from '../src/ResourceGraph'

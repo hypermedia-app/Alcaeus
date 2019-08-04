@@ -1,6 +1,7 @@
 import { ResourceGraph } from '../../src/ResourceGraph'
 import { HydraResource } from '../../src/Resources'
 import LocationSelector from '../../src/RootSelectors/201LocationSelector'
+import 'isomorphic-fetch'
 
 describe('201LocationSelector', () => {
     it('should select the resource with id matching location header', () => {

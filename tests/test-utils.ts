@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import { Core, JsonLd, MediaTypes } from '../src/Constants'
 import { IResponseWrapper } from '../src/ResponseWrapper'
+import 'isomorphic-fetch'
 
 function addPredicateGetter (prop: string, pred: string, wrapArray: boolean = true) {
     Object.defineProperty(this, prop, {

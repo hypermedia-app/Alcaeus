@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import { ResponseWrapper } from '../src/ResponseWrapper'
 import { Bodies } from './test-objects'
 import { responseBuilder } from './test-utils'

@@ -50,22 +50,6 @@ describe('RdfProcessor', () => {
             expect(res['http://example.com/vocab#prop']).toBe('some textual value')
         })
 
-        it('should turn JSON-LD into linked objects', async () => {
-            // given
-            const response = await mockedResponse({
-                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
-            })
-
-            // when
-            const rep = await processor.process({}, 'http://example.com/resource', response, {})
-            const res = rep['http://example.com/resource']
-
-            // then
-            const sameObj = Object.is(res['http://example.com/vocab#other'], res['http://example.com/vocab#other_yet'])
-            expect(sameObj).toBe(true)
-            expect(res['http://example.com/vocab#other']['@id']).toBe('http://example.com/linked')
-        })
-
         it('should turn object with arrays into matching object graph', async () => {
             // given
             const response = await mockedResponse({

@@ -67,7 +67,7 @@ describe('Operation', () => {
             op.invoke('', 'text/turtle')
 
             expect(alcaeus.invokeOperation.firstCall.args[3])
-                .toBeTruthy('text/turtle')
+                .toBe('text/turtle')
         })
     })
 })

@@ -2,6 +2,7 @@ import { ResourceGraph } from '../../src/ResourceGraph'
 import { HydraResource } from '../../src/Resources'
 import { IResponseWrapper } from '../../src/ResponseWrapper'
 import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector'
+import 'isomorphic-fetch'
 
 describe('CanonicalLinkSelector', () => {
     it('should select the resource with id matching canonical link', () => {

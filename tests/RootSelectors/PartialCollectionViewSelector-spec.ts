@@ -1,11 +1,10 @@
-import { Core } from '../../src/Constants'
+import { Vocab } from '../../src'
 import { IHydraResponse } from '../../src/HydraResponse'
 import { IResourceGraph } from '../../src/ResourceGraph'
 import { IHydraResource } from '../../src/Resources'
 import { IResponseWrapper } from '../../src/ResponseWrapper'
 import PartialCollectionViewSelector from '../../src/RootSelectors/PartialCollectionViewSelector'
 import TypeCollection from '../../src/TypeCollection'
-import Vocab = Core.Vocab;
 
 describe('PartialCollectionViewSelector', () => {
     it('should return the collection if resource is collection view', () => {

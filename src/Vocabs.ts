@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace,import/export */
-// tslint:disable:no-namespace
 type SchemaTerm = 'description' | 'title';
 
 type RdfsTerm = 'comment' | 'label' | 'range' | 'domain';
@@ -12,23 +10,25 @@ export function rdfs (term?: RdfsTerm) {
     return 'http://www.w3.org/2000/01/rdf-schema#' + (term || '')
 }
 
-export namespace owl {
-    export const ns = 'http://www.w3.org/2002/07/owl#'
+const owlns = 'http://www.w3.org/2002/07/owl#'
+export const owl = {
+    ns: owlns,
 
-    export const Nothing = ns + 'Nothing'
+    Nothing: owlns + 'Nothing',
 }
 
-export namespace rdf {
-    export const ns = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+const rdfns = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+export const rdf = {
+    ns: rdfns,
 
-    export const Property = ns + 'Property'
-    export const type = ns + 'type'
+    Property: rdfns + 'Property',
+    type: rdfns + 'type',
 }
 
-export namespace xsd {
-    export const ns = 'http://www.w3.org/2001/XMLSchema#'
+const xsdns = 'http://www.w3.org/2001/XMLSchema#'
+export const xsd = {
+    ns: xsdns,
 
-    // tslint:disable:variable-name
-    export const string = ns + 'string'
-    export const integer = ns + 'integer'
+    string: xsdns + 'string',
+    integer: xsdns + 'integer',
 }

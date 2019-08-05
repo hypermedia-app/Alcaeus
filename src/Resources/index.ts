@@ -11,7 +11,7 @@ export interface ManagesBlockPattern {
 
 export interface IApiDocumentation {
     classes: Class[];
-    getClass(classId: string): Class;
+    getClass(classId: string): Class | null;
     getOperations(classUri: string, predicateUri?: string): SupportedOperation[];
     getProperties(classUri: string): SupportedProperty[];
 
@@ -69,7 +69,7 @@ export interface IHydraResource {
 }
 
 export interface IStatusCodeDescription {
-    code: number;
+    code: number | null;
     description: string;
 }
 
@@ -114,11 +114,11 @@ export interface IRdfProperty {
     /**
      * Gets the rdfs:range of a property
      */
-    range: Class;
+    range: Class | null;
     /**
      * Gets the rdfs:domain of a property
      */
-    domain: Class;
+    domain: Class | null;
     /**
      * Gets the property's supported operations
      */
@@ -165,26 +165,26 @@ export interface IView {
     /**
      * Gets the actual collection resource, of which this view is part
      */
-    readonly collection: HydraResource;
+    readonly collection: HydraResource | null;
 }
 
 export interface IPartialCollectionView {
     /**
      * Gets the first page resource of a collection
      */
-    readonly first: HydraResource;
+    readonly first: HydraResource | null;
     /**
      * Gets the previous page resource of a collection
      */
-    readonly previous: HydraResource;
+    readonly previous: HydraResource | null;
     /**
      * Gets the next page resource of a collection
      */
-    readonly next: HydraResource;
+    readonly next: HydraResource | null;
     /**
      * Gets the last page resource of a collection
      */
-    readonly last: HydraResource;
+    readonly last: HydraResource | null;
 }
 
 export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
@@ -209,15 +209,15 @@ export interface IManagesBlock {
     /**
      * Gets the subject resource from the manages block
      */
-    subject: IResource;
+    subject: IResource | null;
     /**
      * Gets the predicate from the manages block
      */
-    property: RdfProperty;
+    property: RdfProperty | null;
     /**
      * Gets the object class from the manages block
      */
-    object: Class;
+    object: Class | null;
 
     /**
      * Checks if the current manages block matches the given pattern

@@ -4,14 +4,20 @@ import { MediaTypes } from '../Constants'
 import { HydraResource, IOperation, SupportedOperation } from './index'
 import { IResource } from './Resource'
 
-const supportedOperations = new WeakMap<IOperation, SupportedOperation>()
-const resources = new WeakMap<IOperation, IResource>()
-const clients = new WeakMap<IOperation, IHydraClient>()
+const supportedOperations = new WeakMap<Operation, SupportedOperation>()
+const resources = new WeakMap<Operation, IResource>()
+const clients = new WeakMap<Operation, IHydraClient>()
 
 export class Operation implements IOperation {
     public constructor (supportedOperation: SupportedOperation, alcaeus: IHydraClient, resource: HydraResource) {
         if (!supportedOperation) {
             throw new Error('Missing supportedOperation parameter')
+        }
+        if (!alcaeus) {
+            throw new Error('Missing alcaeus parameter')
+        }
+        if (!resource) {
+            throw new Error('Missing resource parameter')
         }
 
         supportedOperations.set(this, supportedOperation)
@@ -44,16 +50,25 @@ export class Operation implements IOperation {
     }
 
     public get supportedOperation () {
-        return supportedOperations.get(this)
+        const supportedOperation = supportedOperations.get(this)
+
+        if (!supportedOperation) {
+            throw new Error('Supported operation was not found for operation')
+        }
+
+        return supportedOperation
     }
 
     @nonenumerable
-    protected get _resource (): IResource {
+    protected get _resource () {
         return resources.get(this)
     }
 
     public invoke (body: BodyInit, mediaType = MediaTypes.jsonLd) {
-        const alcaeus = clients.get(this)
-        return alcaeus.invokeOperation(this, this._resource.id, body, mediaType)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const alcaeus = clients.get(this)!
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return alcaeus.invokeOperation(this, this._resource!.id, body, mediaType)
     }
 }

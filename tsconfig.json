@@ -10,11 +10,13 @@
     "suppressImplicitAnyIndexErrors": false,
     "declaration": true,
     "declarationDir": "types",
+    "strict": true,
     "lib": [
       "es2017",
       "es2015",
       "dom"
-    ]
+    ],
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*"

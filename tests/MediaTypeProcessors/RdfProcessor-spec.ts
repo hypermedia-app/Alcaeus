@@ -1,5 +1,5 @@
-import * as n3parser from '@rdfjs/parser-n3'
-import * as _ from 'lodash'
+import n3parser from '@rdfjs/parser-n3'
+import _ from 'lodash'
 import { Core, JsonLd, MediaTypes } from '../../src/Constants'
 import RdfProcessor from '../../src/MediaTypeProcessors/RdfProcessor'
 import { rdf } from '../../src/Vocabs'
@@ -137,7 +137,8 @@ describe('RdfProcessor', () => {
                         const res = rep['http://example.com/resource']
 
                         // then
-                        const child = Object.values(res).find((r) => r['@id'] === 'http://example.com/child')
+                        const child = Object.values(res)
+                            .find((r: any) => r['@id'] === 'http://example.com/child') as any
 
                         expect(child['@type']).toBeDefined()
                         expect(child['@type']).toBe(type)

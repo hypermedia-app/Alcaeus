@@ -5,7 +5,7 @@ import { Mixin } from '../../src/Resources/Mixins/PartialCollectionView'
 import { Bodies } from '../test-objects'
 
 let links
-class PartialCollectionView extends Mixin(HydraResource(null, () => links)) {}
+class PartialCollectionView extends Mixin(HydraResource(null as any, () => links)) {}
 
 describe('PartialCollectionView', () => {
     beforeEach(() => { links = [] })
@@ -37,10 +37,10 @@ describe('PartialCollectionView', () => {
     it('should contain links to other pages', () => {
         const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null)
 
-        expect(pcv.next.id).toBe('http://example.com/resource?page=4')
-        expect(pcv.previous.id).toBe('http://example.com/resource?page=2')
-        expect(pcv.first.id).toBe('http://example.com/resource?page=1')
-        expect(pcv.last.id).toBe('http://example.com/resource?page=58')
+        expect(pcv.next!.id).toBe('http://example.com/resource?page=4')
+        expect(pcv.previous!.id).toBe('http://example.com/resource?page=2')
+        expect(pcv.first!.id).toBe('http://example.com/resource?page=1')
+        expect(pcv.last!.id).toBe('http://example.com/resource?page=58')
     })
 
     it('first should be nonenumerable', () => {

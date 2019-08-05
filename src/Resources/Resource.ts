@@ -20,7 +20,7 @@ export interface IResource {
      * Gets the value of a property
      * @param property
      */
-    get<T = unknown> (property: string): T;
+    get<T = unknown> (property: string): T | null;
     /**
      * Gets the value of a property and ensures that an array will be returned
      * @param property
@@ -35,12 +35,12 @@ export interface IResource {
      * Gets the property value if it's a string. Throws if it's not
      * @param property
      */
-    getString (property: string): string;
+    getString (property: string): string | null;
     /**
      * Gets the property value if it's a number. Throws if it's not
      * @param property
      */
-    getNumber (property: string): number;
+    getNumber (property: string): number | null;
 }
 
 const isProcessed = new WeakMap<IResource, boolean>()
@@ -76,7 +76,7 @@ export default class implements IResource {
 
     @nonenumerable
     public get _processed () {
-        return isProcessed.get(this)
+        return isProcessed.get(this) || false
     }
 
     public set _processed (val: boolean) {
@@ -91,14 +91,18 @@ export default class implements IResource {
      * @deprecated Use method without underscore
      */
     @deprecated('Use method without underscore')
-    public _get<T = unknown> (property: string): T {
+    public _get<T = unknown> (property: string): T | null {
         return this.get<T>(property)
     }
 
-    public get<T = unknown> (property: string): T {
+    public get<T = unknown> (property: string, { strict } = { strict: false }): T | null {
         if (typeof this[property] !== 'undefined') {
             // @ts-ignore
             return this[property]
+        }
+
+        if (strict) {
+            throw new Error(`Value for predicate <${property}> was missing`)
         }
 
         return null
@@ -112,8 +116,8 @@ export default class implements IResource {
         return this.getArray<T>(property)
     }
 
-    public getArray<T = unknown> (property: string): T[] {
-        const values = this[property]
+    public getArray<T = unknown> (property: string, options = { strict: false }): T[] {
+        const values = this.get(property, options)
 
         if (!values) {
             return []
@@ -126,8 +130,8 @@ export default class implements IResource {
         return [values as T]
     }
 
-    public getNumber (property: string): number | null {
-        const value = this.get(property)
+    public getNumber (property: string, options = { strict: false }): number | null {
+        const value = this.get(property, options)
 
         if (value === null || typeof value === 'undefined') {
             return null
@@ -140,8 +144,8 @@ export default class implements IResource {
         throw new Error(`Expected property '${property}' to be a number but found '${value}'`)
     }
 
-    public getString (property: string): string | null {
-        const value = this.get(property)
+    public getString (property: string, options = { strict: false }): string | null {
+        const value = this.get(property, options)
 
         if (value === null || typeof value === 'undefined') {
             return null
@@ -154,8 +158,8 @@ export default class implements IResource {
         throw new Error(`Expected property '${property}' to be a string but found '${value}'`)
     }
 
-    public getBoolean (property: string): boolean {
-        const value = this.get(property)
+    public getBoolean (property: string, options = { strict: false }): boolean {
+        const value = this.get(property, options)
 
         if (value === null || typeof value === 'undefined') {
             return false

@@ -32,7 +32,7 @@ describe('ApiDocumentation', () => {
             jsonld.compact(Documentations.classWithOperation, {}).then((expanded) => {
                 const docs = new ApiDocumentation(fakeAlcaeusResources(expanded))
 
-                const clas = docs.getClass('http://example.com/api#Class')
+                const clas = docs.getClass('http://example.com/api#Class')!
                 expect(clas['@id']).toBe('http://example.com/api#Class')
                 done()
             }).catch(done.fail)

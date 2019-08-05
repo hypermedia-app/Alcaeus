@@ -21,16 +21,16 @@ describe('IriTemplateMapping', () => {
         })
     })
 
-    describe('title', () => {
+    describe('variable', () => {
         it('returns the correct value of hydra term', () => {
             // given
             const body = {
-                [Core.Vocab('title')]: 'test',
+                [Core.Vocab('variable')]: 'test',
             }
             const iriTemplate = new IriTemplateMapping(body)
 
             // then
-            expect(iriTemplate.title).toBe('test')
+            expect(iriTemplate.variable).toBe('test')
         })
     })
 

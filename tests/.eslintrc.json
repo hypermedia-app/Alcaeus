@@ -2,6 +2,7 @@
   "rules": {
     "@typescript-eslint/no-object-literal-type-assertion": "off",
     "no-prototype-builtins": "off",
-    "@typescript-eslint/no-namespace": "off"
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   }
 }

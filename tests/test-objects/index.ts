@@ -2,8 +2,8 @@ import { Core } from '../../src/Constants'
 import { owl, rdf, xsd } from '../../src/Vocabs'
 import Context from '../test-objects/Context'
 
-export namespace Bodies {
-    export let someJsonLd = {
+export const Bodies = {
+    someJsonLd: {
         '@context': {
             '@vocab': 'http://example.com/vocab#',
         },
@@ -18,25 +18,25 @@ export namespace Bodies {
         'other_yet': {
             '@id': 'http://example.com/linked',
         },
-    }
+    },
 
-    export let unescapedDiacritics = {
+    unescapedDiacritics: {
         '@context': {
             '@vocab': 'http://example.com/vocab#',
         },
         '@id': 'http://example.com/biała gęś',
         '@type': 'Resource',
-    }
+    },
 
-    export let idWithTrailingSlash = {
+    idWithTrailingSlash: {
         '@context': {
             '@vocab': 'http://example.com/vocab#',
         },
         '@id': 'http://example.com/resource/',
         '@type': 'Resource',
-    }
+    },
 
-    export let someJsonLdExpanded = {
+    someJsonLdExpanded: {
         '@id': 'http://example.com/resource',
         '@type': 'http://example.com/vocab#Resource',
         'http://example.com/vocab#prop': {
@@ -48,18 +48,18 @@ export namespace Bodies {
         'http://example.com/vocab#other_yet': {
             '@id': 'http://example.com/linked',
         },
-    }
+    },
 
-    export let cycledResource = {
+    cycledResource: {
         '@id': 'http://example.com/resource',
         'http://example.com/vocab#prop': {
             'http://example.com/vocab#top': {
                 '@id': 'http://example.com/resource',
             },
         },
-    }
+    },
 
-    export let typedLiteral = {
+    typedLiteral: {
         '@id': 'http://example.com/resource',
         'http://schema.org/image': {
             'http://schema.org/contentUrl': {
@@ -67,25 +67,25 @@ export namespace Bodies {
                 '@value': 'http://wikibus-test.gear.host/book/1936/image',
             },
         },
-    }
+    },
 
-    export let typedNumericLiteral = {
+    typedNumericLiteral: {
         '@id': 'http://example.com/resource',
         'http://schema.org/age': {
             '@type': xsd.integer,
             '@value': 21,
         },
-    }
+    },
 
-    export let multipleTypesExpanded = {
+    multipleTypesExpanded: {
         '@id': 'http://example.com/resource',
         '@type': [
             'http://example.com/vocab#Resource',
             'http://example.com/vocab#AnotherType',
         ],
-    }
+    },
 
-    export let deepBlankNodes = {
+    deepBlankNodes: {
         '@id': 'http://example.com/root',
         'http://example.com/prop': {
             'http://example.com/prop': {
@@ -98,9 +98,9 @@ export namespace Bodies {
                 },
             },
         },
-    }
+    },
 
-    export let withHydraCollections = {
+    withHydraCollections: {
         [Core.Vocab('collection')]: [{
             '@id': 'http://example.com/collection1',
         }, {
@@ -110,14 +110,14 @@ export namespace Bodies {
         }, {
             '@id': 'http://example.com/collection4',
         }],
-    }
+    },
 
-    export let ntriples = `
+    ntriples: `
 <http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> .
 <http://example.com/resource> <http://example.com/vocab#prop> "some textual value" .
-`
+`,
 
-    export let hydraCollection = {
+    hydraCollection: {
         '@id': 'http://example.com/resource',
         '@context': Context,
         'hydra:member': [
@@ -130,9 +130,9 @@ export namespace Bodies {
             '@id': 'http://example.com/collection-curator',
             '@type': 'http://example.com/Person',
         },
-    }
+    },
 
-    export let hydraCollectionWithView = {
+    hydraCollectionWithView: {
         '@id': 'http://example.com/resource',
         '@context': Context,
         'member': [
@@ -162,11 +162,11 @@ export namespace Bodies {
                 id: 'http://example.com/resource?page=58',
             },
         },
-    }
+    },
 }
 
-export namespace Documentations {
-    export let classWithOperation = {
+export const Documentations = {
+    classWithOperation: {
         '@id': 'http://api.example.com/doc/',
         '@type': Core.Vocab('ApiDocumentation'),
         '@context': Context,
@@ -219,11 +219,11 @@ export namespace Documentations {
                 ],
             },
         ],
-    }
+    },
 
-    export let untyped = {
+    untyped: {
         '@context': Context,
         '@id': 'http://api.example.com/doc/',
         'entrypoint': 'http://example.com/home',
-    }
+    },
 }

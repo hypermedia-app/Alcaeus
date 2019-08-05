@@ -51,7 +51,7 @@ describe('DocumentedResource', () => {
         expect(op.title).toBe('The title with schema')
     })
 
-    it('should use rdfs:label for title property as fallback', () => {
+    it('should use rdfs:comment for description property as fallback', () => {
         const op = new DocumentedResource({
             'http://www.w3.org/2000/01/rdf-schema#comment': 'The title descr with rdfs',
         })

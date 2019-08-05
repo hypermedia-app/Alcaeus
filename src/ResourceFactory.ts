@@ -2,15 +2,15 @@ import { IHydraClient } from './alcaeus'
 import { JsonLd } from './Constants'
 import { IIncomingLink } from './internals'
 import { forOwn, values } from './LodashUtil'
-import { ApiDocumentation } from './Resources'
+import { ApiDocumentation, HydraResource } from './Resources'
 import createBase from './Resources/HydraResource'
 import { IResource } from './Resources/Resource'
 
 export interface IResourceFactory {
     createResource(
         obj: object,
-        apiDocumentation: ApiDocumentation,
         resources,
+        apiDocumentation?: ApiDocumentation,
         clientAccessorMixin?): IResource;
 }
 
@@ -29,10 +29,11 @@ export class ResourceFactory implements IResourceFactory {
 
     public createResource (
         obj: object,
-        apiDocumentation: ApiDocumentation,
         resources: object,
+        apiDocumentation: ApiDocumentation,
         alcaeus: IHydraClient): IResource {
         const incomingLinks = () => findIncomingLinks(obj, resources)
+        // @ts-ignore
         const HydraResource = createBase(alcaeus, incomingLinks)
 
         const resource = new HydraResource(obj, apiDocumentation)
@@ -49,12 +50,13 @@ export class ResourceFactory implements IResourceFactory {
 
         const AlcaeusGenerated = mixins.reduce((c, mixin: any) => mixin(c), HydraResource)
 
-        return new AlcaeusGenerated(obj, apiDocumentation)
+        return new AlcaeusGenerated(obj, apiDocumentation) as IResource
     }
 }
 
 // tslint:disable:max-classes-per-file
-class IncomingLink {
+// @ts-ignore
+class IncomingLink implements IIncomingLink {
     public constructor (id, predicate, resources) {
         Object.defineProperty(this, 'subject', {
             get: () => resources[id],
@@ -70,8 +72,8 @@ class IncomingLink {
     }
 }
 
-function findIncomingLinks (object, resources: object): IIncomingLink[] {
-    const instances = values(resources)
+function findIncomingLinks (object, resources: object): IncomingLink[] {
+    const instances = values<HydraResource>(resources)
 
     return instances.reduceRight((acc: IncomingLink[], res, index) => {
         forOwn(res, (values, predicate) => {

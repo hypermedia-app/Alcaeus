@@ -18,11 +18,18 @@ import Resource, { IResource } from './Resource'
 
 const apiDocumentation = new WeakMap<IResource, ApiDocumentation>()
 
+interface MappedLink {
+    type: string;
+    predicate: string;
+}
+
 class HydraResource extends Resource implements IHydraResource {
-    public constructor (actualResource, apiDoc: ApiDocumentation) {
+    public constructor (actualResource, apiDoc?: ApiDocumentation | null) {
         super(actualResource)
 
-        apiDocumentation.set(this, apiDoc)
+        if (apiDoc) {
+            apiDocumentation.set(this, apiDoc)
+        }
     }
 
     @nonenumerable
@@ -39,7 +46,7 @@ class HydraResource extends Resource implements IHydraResource {
 
             const mappedLinks = (this as any as IAsObject)._reverseLinks
                 .map((link) => link.subject.types.map((type) => ({ type, predicate: link.predicate })))
-            const flattened = [].concat.apply([], mappedLinks)
+            const flattened = ([] as MappedLink[]).concat.apply([], mappedLinks)
             const propertyOperations = flattened.map(
                 (link: any) => getOperations(link.type, link.predicate))
 
@@ -50,7 +57,11 @@ class HydraResource extends Resource implements IHydraResource {
         }
 
         return this.apiDocumentation
-            .map((apiDoc) => apiDoc.getOperations ? apiDoc.getOperations.bind(apiDoc) : null)
+            .map((apiDocumentation) => ({
+                apiDocumentation,
+                getOperations: apiDocumentation.getOperations,
+            }))
+            .map((arg) => arg.getOperations.bind(arg.apiDocumentation))
             .map(getClassOperations)
             .valueOr([])
     }
@@ -84,7 +95,11 @@ class HydraResource extends Resource implements IHydraResource {
                 }, [] as { supportedProperty: SupportedProperty; objects: any[] }[])
 
         return this.apiDocumentation
-            .map((apiDoc) => apiDoc.getProperties ? apiDoc.getProperties.bind(apiDoc) : null)
+            .map((apiDocumentation) => ({
+                apiDocumentation,
+                getProperties: apiDocumentation.getProperties,
+            }))
+            .map((arg) => arg.getProperties.bind(arg.apiDocumentation))
             .map(getProperties)
             .valueOr([])
     }

@@ -17,18 +17,16 @@ export function Mixin<TBase extends HydraConstructor> (Base: TBase) {
         }
 
         public get object () {
-            const maybeObject = Maybe.maybe(this.get<Class>(Core.Vocab('object')))
+            const maybeClass = Maybe.maybe(this.get<Class>(Core.Vocab('object')))
+            const classId = maybeClass.bind(c => Maybe.maybe(c.id))
 
-            const seq = Maybe.sequence({
-                getClass: this.apiDocumentation.map((doc) => doc.getClass.bind(doc)),
-                object: maybeObject,
-            })
+            const getClass = this.apiDocumentation.map((doc) => doc.getClass.bind(doc))
 
-            return seq
-                .map((t) => t.getClass(t.object.id) as Class)
+            return classId
+                .chain(id => getClass.bind(fun => Maybe.maybe(fun(id))))
                 .caseOf({
-                    just: (t) => t,
-                    nothing: () => maybeObject.valueOr(null),
+                    just: c => c,
+                    nothing: () => maybeClass.valueOr(null as any),
                 })
         }
 

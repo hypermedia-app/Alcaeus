@@ -8,34 +8,33 @@ import { PartialCollectionView } from '../src/Resources'
 import { Bodies, Documentations } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
 
-describe('Hydra', () => {
-    describe('loadDocumentation', () => {
-        let fetchResource: SinonStub
+describe('Hydra loadDocumentation', () => {
+    let fetchResource: SinonStub
 
-        beforeEach(() => {
-            fetchResource = stub(FetchUtil, 'fetchResource')
-        })
+    beforeEach(() => {
+        fetchResource = stub(FetchUtil, 'fetchResource')
+    })
 
-        it('should return type ApiDocumentation', async () => {
-            // given
-            fetchResource.withArgs('http://api.example.com/doc/')
-                .returns(mockedResponse({
-                    xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
-                }))
+    it('should return type ApiDocumentation', async () => {
+        // given
+        fetchResource.withArgs('http://api.example.com/doc/')
+            .returns(mockedResponse({
+                xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
+            }))
 
-            // when
-            const doc = await Hydra.loadDocumentation('http://api.example.com/doc/')
+        // when
+        const doc = await Hydra.loadDocumentation('http://api.example.com/doc/')
 
-            // then
-            expect(doc.id).toBe('http://api.example.com/doc/')
-        })
+        // then
+        expect(doc!.id).toBe('http://api.example.com/doc/')
+    })
 
-        afterEach(() => {
-            fetchResource.restore()
-        })
+    afterEach(() => {
+        fetchResource.restore()
     })
 })
 
+// eslint-disable-next-line jest/no-identical-title
 describe('Hydra', () => {
     let loadDocumentation: SinonStub
     let fetchResource: SinonStub
@@ -160,7 +159,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/root')
-            const res = hydraRes.get('http://example.com/root')
+            const res = hydraRes.get('http://example.com/root') as any
 
             // then
             const p = 'http://example.com/prop'
@@ -178,14 +177,14 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
 
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'])
                 .toBe('http://wikibus-test.gear.host/book/1936/image')
         })
 
-        xit('should return typed numeric literals as their values', async () => {
+        it.skip('should return typed numeric literals as their values', async () => {
             // given
             fetchResource.withArgs('http://example.com/resource')
                 .returns(mockedResponse({
@@ -209,7 +208,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
 
             // then
             const objectsAreSame = Object.is(res, res['http://example.com/vocab#prop']['http://example.com/vocab#top'])
@@ -236,7 +235,7 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await Hydra.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.get('http://example.com/resource') as any
 
             // then
             expect(res.apiDocumentation.valueOr(null)).toBe(null)
@@ -260,10 +259,10 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/resource')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource')
+            expect(res.root!.id).toBe('http://example.com/resource')
         })
 
-        xit('should select resource with redirected id if original is not present', async () => {
+        it.skip('should select resource with redirected id if original is not present', async () => {
             // given
             const requestedUri = 'http://example.com/not-there'
             const redirectUri = 'http://example.com/resource'
@@ -276,7 +275,7 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource')
+            expect(res.root!.id).toBe('http://example.com/resource')
         })
 
         it('should select resource with canonical id if original is not present', async () => {
@@ -292,7 +291,7 @@ describe('Hydra', () => {
             const res = await Hydra.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root.id).toBe('http://example.com/resource')
+            expect(res.root!.id).toBe('http://example.com/resource')
         })
 
         afterEach(() => {

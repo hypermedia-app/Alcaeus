@@ -8,7 +8,8 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     abstract class IriTemplate extends Base implements IIriTemplate {
         @nonenumerable
         public get template (): string {
-            return this.getString(Core.Vocab('template'))
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.getString(Core.Vocab('template'), { strict: true })!
         }
 
         @nonenumerable

@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/wikibus/alcaeus/compare/v0.7.0...v0.7.1) (2019-08-05)
+
+
+### Bug Fixes
+
+* problem building upstream project with strict compilation ([189a47a](https://github.com/wikibus/alcaeus/commit/189a47a))
+
+
+### Build System
+
+* **deps:** [security] bump brace-expansion from 1.1.6 to 1.1.11 ([1f1b982](https://github.com/wikibus/alcaeus/commit/1f1b982))
+* **deps:** [security] bump http-proxy-agent from 2.0.0 to 2.1.0 ([301999c](https://github.com/wikibus/alcaeus/commit/301999c))
+* **deps:** [security] bump sshpk from 1.9.2 to 1.16.1 ([fc94742](https://github.com/wikibus/alcaeus/commit/fc94742))
+* **deps:** [security] bump tar-fs from 1.15.3 to 1.16.3 ([f32dc2b](https://github.com/wikibus/alcaeus/commit/f32dc2b))
+
+
+
 ## [0.7.0](https://github.com/wikibus/alcaeus/compare/v0.6.3...v0.7.0) (2019-08-02)
 
 

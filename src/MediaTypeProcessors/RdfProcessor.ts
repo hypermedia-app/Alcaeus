@@ -13,6 +13,10 @@ import { IResource } from '../Resources/Resource'
 import { IResponseWrapper } from '../ResponseWrapper'
 import { rdf } from '../Vocabs'
 
+interface ConverterMap {
+    [type: string]: (value: string, type: string) => unknown;
+}
+
 export interface IMediaTypeProcessor {
     canProcess(mediaType: string);
     process(
@@ -103,13 +107,26 @@ async function flatten (json, url): Promise<object> {
 function resourcify (
     createResource: (obj, resources) => IResource,
     obj,
-    resourcified: IResourceGraph) {
+    resourcified: IResourceGraph,
+    literalConverters: ConverterMap) {
     if ((typeof obj === 'object') === false) {
         return obj
     }
 
-    if (obj[Constants.JsonLd.Value]) {
-        return obj[Constants.JsonLd.Value]
+    let value = obj[Constants.JsonLd.Value]
+    if (obj[Constants.JsonLd.Value] && typeof value === 'string') {
+        const type = obj[Constants.JsonLd.Type]
+
+        const converter = literalConverters[type]
+        if (converter) {
+            try {
+                value = converter(value, type)
+            } catch (err) {
+                console.warn(`Failed to convert value "${value}"^^<${type}>: ${err.message}`)
+            }
+        }
+
+        return value
     }
 
     const selfId = obj[Constants.JsonLd.Id]
@@ -131,17 +148,17 @@ function resourcify (
     resource._processed = true
     forOwn(resource, (value, key) => {
         if (Array.isArray(value)) {
-            resource[key] = value.map((el) => resourcify(createResource, el, resourcified))
+            resource[key] = value.map((el) => resourcify(createResource, el, resourcified, literalConverters))
             return
         }
 
-        resource[key] = resourcify(createResource, value, resourcified)
+        resource[key] = resourcify(createResource, value, resourcified, literalConverters)
     })
 
     return resource
 }
 
-function processResources (createResource: (obj, resources) => IResource, resources): IResourceGraph {
+function processResources (createResource: (obj, resources) => IResource, resources, literalConverters: ConverterMap): IResourceGraph {
     const resourcified = new ResourceGraph()
     resources.forEach((res) => {
         resourcified[res[Constants.JsonLd.Id]] = res
@@ -152,15 +169,17 @@ function processResources (createResource: (obj, resources) => IResource, resour
         return acc
     }, resourcified)
 
-    forOwn(resourcified, (resource) => resourcify(createResource, resource, resourcified))
+    forOwn(resourcified, (resource) => resourcify(createResource, resource, resourcified, literalConverters))
     return resourcified
 }
 
 export default class RdfProcessor implements IMediaTypeProcessor {
     public resourceFactory: IResourceFactory;
+    public readonly literalConverters: ConverterMap = {};
 
-    public constructor (resourceFactory: IResourceFactory) {
+    public constructor (resourceFactory: IResourceFactory, literalConverters: ConverterMap = {}) {
         this.resourceFactory = resourceFactory
+        this.literalConverters = literalConverters
     }
 
     public canProcess (mediaType): boolean {
@@ -178,7 +197,7 @@ export default class RdfProcessor implements IMediaTypeProcessor {
             return this.resourceFactory.createResource(obj, resources, apiDocumentation, alcaeus)
         }
 
-        return processResources(createResource, processedGraph)
+        return processResources(createResource, processedGraph, this.literalConverters)
     }
 
     public addParsers (newParsers) {

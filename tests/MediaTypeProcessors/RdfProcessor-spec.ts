@@ -7,7 +7,7 @@ import { Bodies, Documentations } from '../test-objects'
 import { mockedResponse, responseBuilder } from '../test-utils'
 
 describe('RdfProcessor', () => {
-    let processor
+    let processor: RdfProcessor
 
     beforeEach(() => {
         const resourceFactory = {
@@ -17,6 +17,80 @@ describe('RdfProcessor', () => {
             },
         }
         processor = new RdfProcessor(resourceFactory)
+    })
+
+    describe('converting literals', () => {
+        it('calls converter when one exists for given type', async () => {
+            // given
+            const convertFunc = jest.fn().mockReturnValue('BAR')
+            processor.literalConverters['http://example.com/type'] = convertFunc
+
+            const response = await mockedResponse({
+                xhrBuilder: responseBuilder().body({
+                    '@context': { '@vocab': 'http://example.com/' },
+                    '@id': 'resource',
+                    'foo': {
+                        '@value': 'bar',
+                        '@type': 'type',
+                    },
+                }),
+            })
+
+            // when
+            const hydraResponse = await processor.process({}, 'http://example.com/resource', response, {})
+            const res = hydraResponse['http://example.com/resource']
+
+            // then
+            expect(convertFunc).toHaveBeenCalledTimes(1)
+            expect(convertFunc).toHaveBeenCalledWith('bar', 'http://example.com/type')
+            expect(res['http://example.com/foo']).toEqual('BAR')
+        })
+
+        it('returns raw value if convert function throws', async () => {
+            const convertFunc = jest.fn().mockImplementation(() => {
+                throw new Error('converter threw')
+            })
+            processor.literalConverters['http://example.com/type'] = convertFunc
+
+            const response = await mockedResponse({
+                xhrBuilder: responseBuilder().body({
+                    '@context': { '@vocab': 'http://example.com/' },
+                    '@id': 'resource',
+                    'foo': {
+                        '@value': 'bar',
+                        '@type': 'type',
+                    },
+                }),
+            })
+
+            // when
+            const hydraResponse = await processor.process({}, 'http://example.com/resource', response, {})
+            const res = hydraResponse['http://example.com/resource']
+
+            // then
+            expect(convertFunc).toHaveBeenCalledTimes(1)
+            expect(convertFunc).toHaveBeenCalledWith('bar', 'http://example.com/type')
+            expect(res['http://example.com/foo']).toEqual('bar')
+        })
+
+        it('returns raw value and does not call converters when it is @type is not specified', async () => {
+            const response = await mockedResponse({
+                xhrBuilder: responseBuilder().body({
+                    '@context': { '@vocab': 'http://example.com/' },
+                    '@id': 'resource',
+                    'foo': {
+                        '@value': 'bar',
+                    },
+                }),
+            })
+
+            // when
+            const hydraResponse = await processor.process({}, 'http://example.com/resource', response, {})
+            const res = hydraResponse['http://example.com/resource']
+
+            // then
+            expect(res['http://example.com/foo']).toEqual('bar')
+        })
     })
 
     describe('process', () => {

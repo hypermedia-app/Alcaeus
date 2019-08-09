@@ -1,5 +1,6 @@
 import { Alcaeus as Client } from './alcaeus'
 import { Core } from './Constants'
+import LiteralConverters from './MediaTypeProcessors/LiteralConverters'
 import RdfProcessor from './MediaTypeProcessors/RdfProcessor'
 import { ResourceFactory as ResourceFactoryCtor } from './ResourceFactory'
 import DefaultMixins from './ResourceFactoryDefaults'
@@ -13,5 +14,5 @@ export let ResourceFactory = ResourceFactoryCtor
 export let Resource = HydraResource
 export let Alcaeus = Client
 export let Hydra = new Client(defaultRootSelectors, {
-    RDF: new RdfProcessor(new ResourceFactory(DefaultMixins)),
+    RDF: new RdfProcessor(new ResourceFactory(DefaultMixins), LiteralConverters),
 })

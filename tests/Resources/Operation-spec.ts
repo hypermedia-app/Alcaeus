@@ -84,4 +84,24 @@ describe('Operation', () => {
             expect(() => new Operation({} as SupportedOperation, {} as IHydraClient, null as unknown as HydraResource)).toThrow()
         })
     })
+
+    describe('target', () => {
+        it('returns the underlying resource', () => {
+            // given
+            const resource = {} as HydraResource
+            const operation = new Operation({
+                description: 'the description',
+                expects: {} as Class,
+                method: 'POST',
+                returns: {} as Class,
+                title: 'the title',
+            } as SupportedOperation, {} as IHydraClient, resource)
+
+            // when
+            const target = operation.target
+
+            // then
+            expect(target).toBe(resource)
+        })
+    })
 })

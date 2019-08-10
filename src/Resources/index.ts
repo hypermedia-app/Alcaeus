@@ -130,6 +130,9 @@ export interface IRdfProperty {
 }
 
 export interface IOperation {
+    /**
+     * Gets the title of the operation
+     */
     title: string;
     description: string;
     method: string;
@@ -138,6 +141,11 @@ export interface IOperation {
     requiresInput: boolean;
     invoke(body: BodyInit, mediaType?: string): Promise<IHydraResponse>;
     supportedOperation: SupportedOperation;
+
+    /**
+     * Gets the resoruce on which the operation will be invoked
+     */
+    target: IResource;
 }
 
 export interface ICollection {

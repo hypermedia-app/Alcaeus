@@ -1,4 +1,3 @@
-import { nonenumerable } from 'core-decorators'
 import { IHydraClient } from '../alcaeus'
 import { MediaTypes } from '../Constants'
 import { HydraResource, IOperation, SupportedOperation } from './index'
@@ -59,9 +58,14 @@ export class Operation implements IOperation {
         return supportedOperation
     }
 
-    @nonenumerable
-    protected get _resource () {
-        return resources.get(this)
+    public get target () {
+        const resource = resources.get(this)
+
+        if (resource) {
+            return resource
+        }
+
+        throw new Error('Could not determine the target of the operation')
     }
 
     public invoke (body: BodyInit, mediaType = MediaTypes.jsonLd) {
@@ -69,6 +73,6 @@ export class Operation implements IOperation {
         const alcaeus = clients.get(this)!
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return alcaeus.invokeOperation(this, this._resource!.id, body, mediaType)
+        return alcaeus.invokeOperation(this, this.target.id, body, mediaType)
     }
 }

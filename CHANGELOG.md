@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/wikibus/alcaeus/compare/v0.7.1...v0.8.0) (2019-08-11)
+
+
+### Bug Fixes
+
+* literals should be converted to native values ([52877f0](https://github.com/wikibus/alcaeus/commit/52877f0))
+
+
+### Build System
+
+* **deps:** [security] bump extend from 3.0.0 to 3.0.2 ([de18658](https://github.com/wikibus/alcaeus/commit/de18658))
+* **deps:** [security] bump fstream from 1.0.10 to 1.0.12 ([e5fbfd7](https://github.com/wikibus/alcaeus/commit/e5fbfd7))
+* **deps:** [security] bump https-proxy-agent from 2.0.0 to 2.2.2 ([15c696c](https://github.com/wikibus/alcaeus/commit/15c696c))
+* **deps:** [security] bump is-my-json-valid from 2.13.1 to 2.20.0 ([cf45e33](https://github.com/wikibus/alcaeus/commit/cf45e33))
+* **deps:** [security] bump stringstream from 0.0.5 to 0.0.6 ([e2d65b4](https://github.com/wikibus/alcaeus/commit/e2d65b4))
+* **deps:** [security] bump tough-cookie from 2.3.1 to 2.3.4 ([77e6662](https://github.com/wikibus/alcaeus/commit/77e6662))
+
+
+### Features
+
+* expose a target property on IOperation ([0cf8e56](https://github.com/wikibus/alcaeus/commit/0cf8e56))
+
+
+
 ### [0.7.1](https://github.com/wikibus/alcaeus/compare/v0.7.0...v0.7.1) (2019-08-05)
 
 

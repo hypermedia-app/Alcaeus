@@ -143,9 +143,9 @@ export interface IOperation {
     supportedOperation: SupportedOperation;
 
     /**
-     * Gets the resoruce on which the operation will be invoked
+     * Gets the resource on which the operation will be invoked
      */
-    target: IResource;
+    target: HydraResource;
 }
 
 export interface ICollection {

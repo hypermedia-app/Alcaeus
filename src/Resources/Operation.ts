@@ -1,10 +1,9 @@
 import { IHydraClient } from '../alcaeus'
 import { MediaTypes } from '../Constants'
 import { HydraResource, IOperation, SupportedOperation } from './index'
-import { IResource } from './Resource'
 
 const supportedOperations = new WeakMap<Operation, SupportedOperation>()
-const resources = new WeakMap<Operation, IResource>()
+const resources = new WeakMap<Operation, HydraResource>()
 const clients = new WeakMap<Operation, IHydraClient>()
 
 export class Operation implements IOperation {

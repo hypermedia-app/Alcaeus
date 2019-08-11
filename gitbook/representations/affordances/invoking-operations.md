@@ -13,7 +13,7 @@ const { Hydra } = require("alcaeus@{{ book.version }}");
 
 // get the issues collection & fetch the first member
 const rep = await Hydra.loadResource('http://www.markus-lanthaler.com/hydra/api-demo/issues/');
-const issue = (await Hydra.loadResource(rep.root.members[0].id)).root
+const issue = (await rep.root.members[0].load()).root
 
 // find POST operation on the `#Issue/comments` property
 const comments = issue['http://www.markus-lanthaler.com/hydra/api-demo/vocab#Issue/comments']
@@ -48,7 +48,7 @@ const { Hydra } = require("alcaeus@{{ book.version }}");
 
 // get the issues collection & fetch the first member
 const rep = await Hydra.loadResource('http://www.markus-lanthaler.com/hydra/api-demo/issues/');
-const issue = (await Hydra.loadResource(rep.root.members[0].id)).root
+const issue = (await rep.root.members[0].load()).root
 
 // find POST operation on the `#Issue/comments` property
 const comments = issue['http://www.markus-lanthaler.com/hydra/api-demo/vocab#Issue/comments']

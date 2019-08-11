@@ -12,7 +12,7 @@
   * [Affordances](representations/resource-affordances.md)
     * [hydra:Link](representations/affordances/links.md)
     * [hydra:collection](representations/affordances/collection-property.md)
-    * [Invoking operations](representations/affordances/invoking-operations.md)
+    * [Operations](representations/affordances/invoking-operations.md)
 * [API Documentation](api-documentation/readme.md)
   * [Entrypoint](api-documentation/entrypoint.md)
   * [Supported classes](api-documentation/class.md)

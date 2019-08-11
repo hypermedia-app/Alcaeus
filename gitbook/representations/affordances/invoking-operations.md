@@ -1,4 +1,6 @@
-# Invoking operations
+## Operations
+
+## Invoking
 
 When the client gets hold of an `Operation` object, they can _invoke_, which
 performs an actual web request according to the operation's description.
@@ -65,3 +67,21 @@ await operation.invoke(newCommentTurtle, 'text/turtle')
 {% endrunkit %}
 
 [f]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters 
+
+## Target
+
+Currently the operation is always invoked on the resource it is attached to as this is
+the design of Hydra at the moment. The original resource which declared the operation can
+be accessed using a property of an `Operation` object.
+
+{% runkit %}
+const { Hydra } = require("alcaeus@{{ book.version }}");
+
+// get the operation
+const root = (await Hydra.loadResource('https://hydra-movies.herokuapp.com/')).root;
+const collection = root.getCollections()[0]
+const operation = collection.operations[0]
+
+// proof
+operation.target.id === collection.id
+{% endrunkit %}

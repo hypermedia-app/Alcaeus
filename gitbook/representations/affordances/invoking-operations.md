@@ -7,7 +7,7 @@ The `invoke` method has a single required parameter: the body. It it expected to
 be any of the body types accepted by [`fetch`][f] body parameter.
 
 {% runkit %}
-const { Hydra } = require("alcaeus{{ book.version }}");
+const { Hydra } = require("alcaeus@{{ book.version }}");
 
 // get the issues collection & fetch the first member
 const rep = await Hydra.loadResource('http://www.markus-lanthaler.com/hydra/api-demo/issues/');
@@ -42,7 +42,7 @@ wishes to send the payload in another format, the second parameter can be used t
 header value.
 
 {% runkit %}
-const { Hydra } = require("alcaeus{{ book.version }}");
+const { Hydra } = require("alcaeus@{{ book.version }}");
 
 // get the issues collection & fetch the first member
 const rep = await Hydra.loadResource('http://www.markus-lanthaler.com/hydra/api-demo/issues/');

@@ -8,6 +8,54 @@ Alcaeus' base `Resource` class comes with a few handy helper methods which can b
 to retain some type checking at run time as well as during development time in the
 case of TypeScript.
 
+## Literal properties
+
+Alcaeus will convert the RDF literals, which are strings, to their respective JS
+representation based on the datatype. By default numeric xsd types and `xsd:boolean`
+are converted.
+
+{% runkit %}
+const { Hydra } = require("alcaeus@{{ book.version }}");
+
+const collection = (await Hydra.loadResource('https://sources.test.wikibus.org/brochures')).root;
+
+// hydra:totalItems is a "real" number
+Number.isInteger(collection.totalItems)
+{% endrunkit %} 
+ 
+It is also possible to add a custom converter:
+
+{% runkit %}
+const { Hydra } = require("alcaeus@{{ book.version }}")
+const { Duration } = require('luxon')
+
+// hook up a converter
+Hydra.mediaTypeProcessors.RDF.literalConverters['http://schema.org/Duration'] = 
+    (value, type) => {
+        // type can be used if a converter
+        // handles multiple datatypes
+    
+        return Duration.fromISO(value)
+    }
+
+// get the operation
+const root = (await Hydra.loadResource('https://hydra-movies.herokuapp.com/')).root;
+const collection = root.getCollections()[0]
+const operation = collection.operations[0]
+
+// invoke (it will echo a Movie with its duration)
+const newMovie = {
+   '@context': 'http://schema.org/',
+   'schema:duration': 'PT115M'
+ }
+
+// invoke the operation
+const movie = (await operation.invoke(JSON.stringify(newMovie))).root
+
+// check that the movie's duration property gets converted
+movie.duration.minutes === 115
+{% endrunkit %} 
+
 ## `get` and `getArray`
 
 A most generic type of property accessors are two methods which take a property name

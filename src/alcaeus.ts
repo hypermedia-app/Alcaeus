@@ -43,7 +43,7 @@ function getApiDocumentation (this: Alcaeus, response: IResponseWrapper): Promis
 export class Alcaeus implements IHydraClient {
     public rootSelectors: IRootSelector[];
 
-    public mediaTypeProcessors: { [name: string]: any };
+    public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
 
     public constructor (rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
         this.rootSelectors = rootSelectors

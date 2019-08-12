@@ -15,7 +15,7 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
         }
 
         public get writable () {
-            const writable = this.get(Core.Vocab('writable'))
+            const writable = this.get(Core.Vocab('writeable'))
             if (typeof writable === 'boolean') {
                 return writable
             }

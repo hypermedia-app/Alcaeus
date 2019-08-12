@@ -24,7 +24,7 @@ export type HydraTerm = 'apiDocumentation' |
 'expects' |
 'returns' |
 'readable' |
-'writable' |
+'writeable' |
 'required' |
 'property' |
 'statusCodes' |

@@ -24,7 +24,7 @@ describe('SupportedProperty', () => {
     })
 
     it('can be made non writable', () => {
-        const prop = new SupportedProperty({ 'http://www.w3.org/ns/hydra/core#writable': false })
+        const prop = new SupportedProperty({ 'http://www.w3.org/ns/hydra/core#writeable': false })
 
         expect(prop.writable).toBe(false)
     })

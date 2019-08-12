@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/wikibus/alcaeus/compare/v0.8.0...v0.8.1) (2019-08-12)
+
+
+### Bug Fixes
+
+* extend the return type of operation.target ([724fcf2](https://github.com/wikibus/alcaeus/commit/724fcf2))
+* proper typing for implementation of mediaTypeProcessors ([e465bc1](https://github.com/wikibus/alcaeus/commit/e465bc1))
+* wrong predicate used for SupportedProperty#writable ([d293503](https://github.com/wikibus/alcaeus/commit/d293503))
+
+
+### Build System
+
+* **deps:** [security] bump tar from 2.2.1 to 2.2.2 ([6f0e265](https://github.com/wikibus/alcaeus/commit/6f0e265))
+
+
+
 ## [0.8.0](https://github.com/wikibus/alcaeus/compare/v0.7.1...v0.8.0) (2019-08-11)
 
 

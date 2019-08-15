@@ -49,19 +49,6 @@ describe('Operation', () => {
             }
         })
 
-        it('should execute through alcaeus with JSON-LD media type', () => {
-            const op = new Operation(supportedOperation, alcaeus, resource)
-
-            op.invoke('')
-
-            expect(alcaeus.invokeOperation.calledWithExactly(
-                op,
-                'http://target/resource',
-                sinon.match.string,
-                sinon.match.has('content-type', 'application/ld+json'),
-            )).toBeTruthy()
-        })
-
         it('should execute through alcaeus with provided headers', () => {
             const op = new Operation(supportedOperation, alcaeus, resource)
 

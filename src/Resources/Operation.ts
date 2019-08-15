@@ -1,5 +1,4 @@
 import { IHydraClient } from '../alcaeus'
-import { MediaTypes } from '../Constants'
 import { HydraResource, IOperation, SupportedOperation } from './index'
 
 const supportedOperations = new WeakMap<Operation, SupportedOperation>()
@@ -67,7 +66,7 @@ export class Operation implements IOperation {
         throw new Error('Could not determine the target of the operation')
     }
 
-    public invoke (body?: BodyInit, headers: HeadersInit = { 'content-type': MediaTypes.jsonLd }) {
+    public invoke (body?: BodyInit, headers: string | HeadersInit = { }) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const alcaeus = clients.get(this)!
 

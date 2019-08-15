@@ -12,6 +12,7 @@ export interface IHydraClient {
     mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
     loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
     invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: HeadersInit): Promise<IHydraResponse>;
+    defaultHeaders: HeadersInit | (() => HeadersInit);
 }
 
 const getHydraResponse = async (
@@ -45,13 +46,15 @@ export class Alcaeus implements IHydraClient {
 
     public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
 
+    public defaultHeaders = {}
+
     public constructor (rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
         this.rootSelectors = rootSelectors
         this.mediaTypeProcessors = mediaTypeProcessors
     }
 
     public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
-        const response = await FetchUtil.fetchResource(uri, headers)
+        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(headers))
 
         const apiDocumentation = await getApiDocumentation.call(this, response, headers)
 
@@ -64,7 +67,7 @@ export class Alcaeus implements IHydraClient {
 
     public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
         try {
-            const response = await FetchUtil.fetchResource(uri, headers)
+            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(headers))
             const representation = await getHydraResponse(this, response, uri)
             const resource = representation.root
             if (!resource) {
@@ -95,13 +98,24 @@ export class Alcaeus implements IHydraClient {
     }
 
     public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: HeadersInit = {}): Promise<IHydraResponse> {
-        const response = await FetchUtil.invokeOperation(operation.method, uri, body, headers)
-        const apiDocumentation = await getApiDocumentation.call(this, response, headers)
+        const mergedHeaders = this.__mergeHeaders(headers)
+
+        const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)
+        const apiDocumentation = await getApiDocumentation.call(this, response, mergedHeaders)
 
         if (apiDocumentation) {
             return getHydraResponse(this, response, uri, apiDocumentation)
         }
 
         return getHydraResponse(this, response, uri)
+    }
+
+    private __mergeHeaders (headers: HeadersInit): HeadersInit {
+        const defaultHeaders = typeof this.defaultHeaders === 'function' ? this.defaultHeaders() : this.defaultHeaders
+
+        return {
+            ...(defaultHeaders || {}),
+            ...headers,
+        }
     }
 }

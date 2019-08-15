@@ -139,7 +139,7 @@ export interface IOperation {
     expects: Class;
     returns: Class;
     requiresInput: boolean;
-    invoke(body: BodyInit, mediaType?: string): Promise<IHydraResponse>;
+    invoke(body: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
     supportedOperation: SupportedOperation;
 
     /**

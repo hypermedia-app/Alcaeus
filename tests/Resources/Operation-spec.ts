@@ -58,16 +58,23 @@ describe('Operation', () => {
                 op,
                 'http://target/resource',
                 sinon.match.string,
-                'application/ld+json')).toBeTruthy()
+                sinon.match.has('content-type', 'application/ld+json'),
+            )).toBeTruthy()
         })
 
-        it('should execute through alcaeus with changed media type', () => {
+        it('should execute through alcaeus with provided headers', () => {
             const op = new Operation(supportedOperation, alcaeus, resource)
 
-            op.invoke('', 'text/turtle')
+            op.invoke('', {
+                'content-type': 'text/turtle',
+                'x-foo': 'bar',
+            })
 
             expect(alcaeus.invokeOperation.firstCall.args[3])
-                .toBe('text/turtle')
+                .toStrictEqual({
+                    'content-type': 'text/turtle',
+                    'x-foo': 'bar',
+                })
         })
     })
 

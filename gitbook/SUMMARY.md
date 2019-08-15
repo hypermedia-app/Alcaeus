@@ -19,4 +19,5 @@
   * [Supported properties](api-documentation/supported-property.md)
   * [Supported operations](api-documentation/operation.md)
 * Other
+  * [Request headers](./js-api/request-headers.md)
   * [Hydra vocabulary](./hydra-vocab.md)

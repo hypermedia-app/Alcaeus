@@ -5,29 +5,39 @@ import { ResponseWrapper } from './ResponseWrapper'
 // tslint:disable:max-line-length
 const requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads
 
-export async function fetchResource (uri: string): Promise<ResponseWrapper> {
-    const res = await fetch(uri, {
-        headers: new Headers({
-            accept: requestAcceptHeaders,
-        }),
+async function getResponse (uri: string, method: string, headers: HeadersInit = {}, body?: BodyInit) {
+    const defaultHeaders: HeadersInit = {
+        accept: requestAcceptHeaders,
+    }
+
+    const requestInit: RequestInit = {
+        method,
+    }
+
+    if (method.toLowerCase() !== 'get') {
+        defaultHeaders['content-type'] = Constants.MediaTypes.jsonLd
+
+        requestInit.body = body
+    }
+
+    requestInit.headers = new Headers({
+        ...defaultHeaders,
+        ...headers,
     })
+
+    const res = await fetch(uri, requestInit)
 
     return new ResponseWrapper(uri, res)
 }
 
-export async function invokeOperation (
+export function fetchResource (uri: string, headers: HeadersInit): Promise<ResponseWrapper> {
+    return getResponse(uri, 'get', headers)
+}
+
+export function invokeOperation (
     method: string,
     uri: string,
     body?: BodyInit,
-    mediaType = Constants.MediaTypes.jsonLd): Promise<ResponseWrapper> {
-    const res = await fetch(uri, {
-        body,
-        headers: new Headers({
-            'Accept': requestAcceptHeaders,
-            'Content-Type': mediaType,
-        }),
-        method,
-    })
-
-    return new ResponseWrapper(uri, res)
+    headers?: HeadersInit): Promise<ResponseWrapper> {
+    return getResponse(uri, method, headers, body)
 }

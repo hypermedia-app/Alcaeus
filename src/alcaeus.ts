@@ -10,8 +10,8 @@ import { IRootSelector } from './RootSelectors'
 export interface IHydraClient {
     rootSelectors: IRootSelector[];
     mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
-    loadResource(uri: string): Promise<IHydraResponse>;
-    invokeOperation(operation: IOperation, uri: string, body: any, mediaType?: string): Promise<IHydraResponse>;
+    loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
+    invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: HeadersInit): Promise<IHydraResponse>;
 }
 
 const getHydraResponse = async (
@@ -30,9 +30,9 @@ const getHydraResponse = async (
     return create(uri, response)
 }
 
-function getApiDocumentation (this: Alcaeus, response: IResponseWrapper): Promise<ApiDocumentation | null> {
+function getApiDocumentation (this: Alcaeus, response: IResponseWrapper, headers): Promise<ApiDocumentation | null> {
     if (response.apiDocumentationLink) {
-        return this.loadDocumentation(response.apiDocumentationLink)
+        return this.loadDocumentation(response.apiDocumentationLink, headers)
     } else {
         console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
 
@@ -50,10 +50,10 @@ export class Alcaeus implements IHydraClient {
         this.mediaTypeProcessors = mediaTypeProcessors
     }
 
-    public async loadResource (uri: string): Promise<IHydraResponse> {
-        const response = await FetchUtil.fetchResource(uri)
+    public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
+        const response = await FetchUtil.fetchResource(uri, headers)
 
-        const apiDocumentation = await getApiDocumentation.call(this, response)
+        const apiDocumentation = await getApiDocumentation.call(this, response, headers)
 
         if (apiDocumentation) {
             return getHydraResponse(this, response, uri, apiDocumentation)
@@ -62,9 +62,9 @@ export class Alcaeus implements IHydraClient {
         return getHydraResponse(this, response, uri)
     }
 
-    public async loadDocumentation (uri: string) {
+    public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
         try {
-            const response = await FetchUtil.fetchResource(uri)
+            const response = await FetchUtil.fetchResource(uri, headers)
             const representation = await getHydraResponse(this, response, uri)
             const resource = representation.root
             if (!resource) {
@@ -94,9 +94,9 @@ export class Alcaeus implements IHydraClient {
         }
     }
 
-    public async invokeOperation (operation: IOperation, uri: string, body: BodyInit, mediaType?: string): Promise<any> {
-        const response = await FetchUtil.invokeOperation(operation.method, uri, body, mediaType)
-        const apiDocumentation = await getApiDocumentation.call(this, response)
+    public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: HeadersInit = {}): Promise<IHydraResponse> {
+        const response = await FetchUtil.invokeOperation(operation.method, uri, body, headers)
+        const apiDocumentation = await getApiDocumentation.call(this, response, headers)
 
         if (apiDocumentation) {
             return getHydraResponse(this, response, uri, apiDocumentation)

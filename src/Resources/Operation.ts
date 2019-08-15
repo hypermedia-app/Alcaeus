@@ -67,11 +67,11 @@ export class Operation implements IOperation {
         throw new Error('Could not determine the target of the operation')
     }
 
-    public invoke (body: BodyInit, mediaType = MediaTypes.jsonLd) {
+    public invoke (body?: BodyInit, headers: HeadersInit = { 'content-type': MediaTypes.jsonLd }) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const alcaeus = clients.get(this)!
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return alcaeus.invokeOperation(this, this.target.id, body, mediaType)
+        return alcaeus.invokeOperation(this, this.target.id, body, headers)
     }
 }

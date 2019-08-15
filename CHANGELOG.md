@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/wikibus/alcaeus/compare/v0.8.1...v0.9.0) (2019-08-15)
+
+
+### Features
+
+* set default headers for all api requests ([e150767](https://github.com/wikibus/alcaeus/commit/e150767))
+* **fetch:** setting request headers on individual calls ([9343d55](https://github.com/wikibus/alcaeus/commit/9343d55))
+
+
+
 ### [0.8.1](https://github.com/wikibus/alcaeus/compare/v0.8.0...v0.8.1) (2019-08-12)
 
 

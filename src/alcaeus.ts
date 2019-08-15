@@ -11,7 +11,7 @@ export interface IHydraClient {
     rootSelectors: IRootSelector[];
     mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
     loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
-    invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: HeadersInit): Promise<IHydraResponse>;
+    invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
 }
 
@@ -97,7 +97,16 @@ export class Alcaeus implements IHydraClient {
         }
     }
 
-    public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: HeadersInit = {}): Promise<IHydraResponse> {
+    public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<IHydraResponse> {
+        if (typeof headers === 'string') {
+            headers = {
+                'content-type': headers,
+            }
+
+            // TODO: remove in 1.0
+            console.warn('DEPRECATION NOTICE: passing content type as string will be removed in version 1.0')
+        }
+
         const mergedHeaders = this.__mergeHeaders(headers)
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)

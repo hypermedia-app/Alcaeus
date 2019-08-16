@@ -1,6 +1,7 @@
 import 'isomorphic-fetch'
 import * as Constants from './Constants'
 import { ResponseWrapper } from './ResponseWrapper'
+import { merge } from './helpers/MergeHeaders'
 
 // tslint:disable:max-line-length
 const requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads
@@ -20,10 +21,7 @@ async function getResponse (uri: string, method: string, headers: HeadersInit = 
         requestInit.body = body
     }
 
-    requestInit.headers = new Headers({
-        ...defaultHeaders,
-        ...headers,
-    })
+    requestInit.headers = new Headers(merge(defaultHeaders, headers))
 
     const res = await fetch(uri, requestInit)
 

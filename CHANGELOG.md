@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.1](https://github.com/wikibus/alcaeus/compare/v0.9.0...v0.9.1) (2019-08-16)
+
+
+### Bug Fixes
+
+* headers do not get properly overridden when casing differs ([7f3a62e](https://github.com/wikibus/alcaeus/commit/7f3a62e))
+* warn about unsupported media type ([661c966](https://github.com/wikibus/alcaeus/commit/661c966)), closes [#47](https://github.com/wikibus/alcaeus/issues/47)
+
+
+### Tests
+
+* make sure header merging accepts arrays ([93723f8](https://github.com/wikibus/alcaeus/commit/93723f8))
+
+
+
 ## [0.9.0](https://github.com/wikibus/alcaeus/compare/v0.8.1...v0.9.0) (2019-08-15)
 
 

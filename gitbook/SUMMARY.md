@@ -20,4 +20,5 @@
   * [Supported operations](api-documentation/operation.md)
 * Other
   * [Request headers](./js-api/request-headers.md)
+  * [Media types](./js-api/media-type-processor.md)
   * [Hydra vocabulary](./hydra-vocab.md)

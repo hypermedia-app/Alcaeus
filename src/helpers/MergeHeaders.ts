@@ -1,5 +1,12 @@
-function mergeNormalize (left, right) {
-    return Object.entries(right)
+function mergeNormalize (left: string[][], right: HeadersInit) {
+    let rightAsArr: string[][]
+    if (Array.isArray(right)) {
+        rightAsArr = right
+    } else {
+        rightAsArr = Object.entries(right)
+    }
+
+    return rightAsArr
         .reduce((obj, [key, value]) => ({
             ...obj,
             [key.toLowerCase()]: value,
@@ -8,7 +15,7 @@ function mergeNormalize (left, right) {
 }
 
 export function merge (headers: HeadersInit, overrides: HeadersInit): HeadersInit {
-    const normalized = mergeNormalize({}, headers)
+    const normalized = mergeNormalize([], headers)
 
     return mergeNormalize(normalized, overrides)
 }

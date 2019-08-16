@@ -300,7 +300,7 @@ describe('Hydra', () => {
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
                     'uri', {
-                        'Authorization': 'Bearer foobar',
+                        'authorization': 'Bearer foobar',
                     })
             })
 
@@ -323,7 +323,7 @@ describe('Hydra', () => {
                         'uri',
                         undefined,
                         {
-                            'Authorization': 'Bearer foobar',
+                            'authorization': 'Bearer foobar',
                         })
             })
 
@@ -339,7 +339,7 @@ describe('Hydra', () => {
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', {
-                        'Authorization': 'Bearer foobar',
+                        'authorization': 'Bearer foobar',
                     })
             })
         })
@@ -357,7 +357,7 @@ describe('Hydra', () => {
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
                     'uri', {
-                        'Authorization': 'Token xyz',
+                        'authorization': 'Token xyz',
                     })
             })
 
@@ -373,7 +373,7 @@ describe('Hydra', () => {
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', {
-                        'Authorization': 'Token xyz',
+                        'authorization': 'Token xyz',
                     })
             })
 
@@ -396,7 +396,7 @@ describe('Hydra', () => {
                         'uri',
                         undefined,
                         {
-                            'Authorization': 'Token xyz',
+                            'authorization': 'Token xyz',
                         })
             })
         })

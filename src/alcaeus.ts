@@ -1,6 +1,7 @@
 // tslint:disable no-console
 import { Core } from './Constants'
 import * as FetchUtil from './FetchUtil'
+import { merge } from './helpers/MergeHeaders'
 import { IHydraResponse, create } from './HydraResponse'
 import { IMediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
 import { ApiDocumentation, IOperation } from './Resources'
@@ -122,9 +123,6 @@ export class Alcaeus implements IHydraClient {
     private __mergeHeaders (headers: HeadersInit): HeadersInit {
         const defaultHeaders = typeof this.defaultHeaders === 'function' ? this.defaultHeaders() : this.defaultHeaders
 
-        return {
-            ...(defaultHeaders || {}),
-            ...headers,
-        }
+        return merge(defaultHeaders, headers)
     }
 }

@@ -29,6 +29,8 @@ const getHydraResponse = async (
         return create(uri, response, graph, alcaeus.rootSelectors)
     }
 
+    console.warn(`No processor found for media type ${response.mediaType}`)
+
     return create(uri, response)
 }
 

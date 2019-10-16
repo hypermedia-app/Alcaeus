@@ -163,6 +163,22 @@ export const Bodies = {
             },
         },
     },
+
+    rdfList () {
+        return {
+            '@context': {
+                'http://example.com/arr': {
+                    '@type': '@id',
+                    '@container': '@list',
+                },
+            },
+            '@id': 'http://example.com/resource',
+            'http://example.com/arr': [
+                'http://example.com/item1',
+                'http://example.com/item2',
+            ],
+        }
+    },
 }
 
 export const Documentations = {

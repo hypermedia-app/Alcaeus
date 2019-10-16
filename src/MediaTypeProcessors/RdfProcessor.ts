@@ -12,6 +12,7 @@ import { ApiDocumentation } from '../Resources'
 import { IResource } from '../Resources/Resource'
 import { IResponseWrapper } from '../ResponseWrapper'
 import { rdf } from '../Vocabs'
+import { RdfList } from '../RdfList'
 
 interface ConverterMap {
     [type: string]: (value: string, type: string) => unknown;
@@ -41,6 +42,17 @@ const propertyRangeMappings = [
 const jsonldSerializer = new JsonLdSerializer()
 
 const parserFactory = new ParserFactory()
+
+function isRdfList (resource) {
+    let isObject = typeof resource === 'object'
+    if (isObject) {
+        const isEmpty = resource[Constants.JsonLd.Id] === rdf.nil
+        const isListNode = rdf.first in resource && rdf.rest in resource
+        return isEmpty || isListNode
+    }
+
+    return false
+}
 
 async function parseAndNormalizeGraph (responseText: string, uri: string, mediaType: string): Promise<object> {
     const parsers = parserFactory.create(uri)
@@ -136,10 +148,13 @@ function resourcify (
     }
 
     let resource = resourcified[selfId]
-    if (!resource || typeof resource._processed === 'undefined') {
+    if (!resource) {
         resource = createResource(obj, resourcified)
         resourcified[selfId] = resource
+    } else if (typeof resource._processed === 'undefined') {
+        resource = createResource(resource, resourcified)
     }
+    resourcified[selfId] = resource
 
     if (resource._processed === true) {
         return resource
@@ -152,7 +167,12 @@ function resourcify (
             return
         }
 
-        resource[key] = resourcify(createResource, value, resourcified, literalConverters)
+        const resourceObject = resourcify(createResource, value, resourcified, literalConverters)
+        if (isRdfList(resourceObject)) {
+            resource[key] = new RdfList(resourceObject)
+        } else {
+            resource[key] = resourceObject
+        }
     })
 
     return resource

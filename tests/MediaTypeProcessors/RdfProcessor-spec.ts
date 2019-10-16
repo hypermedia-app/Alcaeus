@@ -183,6 +183,55 @@ describe('RdfProcessor', () => {
             expect(res['http://example.com/vocab#prop']).toBe('some textual value')
         })
 
+        it('should turn rdf:List into a plain array', async () => {
+            // given
+            const response = await mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.rdfList()),
+            })
+
+            // when
+            const rep = await processor.process({}, 'http://example.com/resource', response, {})
+            const res = rep['http://example.com/resource']
+
+            // then
+            expect(res['http://example.com/arr']).toHaveLength(2)
+            expect(res['http://example.com/arr'].map(item => item.id))
+                .toEqual(['http://example.com/item1', 'http://example.com/item2'])
+        })
+
+        it('should turn empty rdf:List into an empty array', async () => {
+            // given
+            const jsonld = Bodies.rdfList()
+            jsonld['http://example.com/arr'] = []
+            const response = await mockedResponse({
+                xhrBuilder: responseBuilder().body(jsonld),
+            })
+
+            // when
+            const rep = await processor.process({}, 'http://example.com/resource', response, {})
+            const res = rep['http://example.com/resource']
+
+            // then
+            expect(res['http://example.com/arr']).toHaveLength(0)
+        })
+
+        it('should turn rdf:List with one element into an array', async () => {
+            // given
+            const jsonld = Bodies.rdfList()
+            jsonld['http://example.com/arr'].splice(0, 1)
+            const response = await mockedResponse({
+                xhrBuilder: responseBuilder().body(jsonld),
+            })
+
+            // when
+            const rep = await processor.process({}, 'http://example.com/resource', response, {})
+            const res = rep['http://example.com/resource']
+
+            // then
+            expect(res['http://example.com/arr']).toHaveLength(1)
+            expect(res['http://example.com/arr'][0].id).toEqual('http://example.com/item2')
+        })
+
         describe('processing api documentation', () => {
             const inferredTypes = [
                 [Core.Vocab('supportedClass'), Core.Vocab('Class')],

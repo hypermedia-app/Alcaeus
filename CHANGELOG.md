@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.2](https://github.com/wikibus/alcaeus/compare/v0.9.1...v0.9.2) (2019-10-17)
+
+
+### Bug Fixes
+
+* wrap rdf:List resources in an Array object ([d2e1b09](https://github.com/wikibus/alcaeus/commit/d2e1b09))
+
+
+### Build System
+
+* **deps:** [security] bump eslint-utils from 1.3.1 to 1.4.2 ([b53d877](https://github.com/wikibus/alcaeus/commit/b53d877))
+
+
+
 ### [0.9.1](https://github.com/wikibus/alcaeus/compare/v0.9.0...v0.9.1) (2019-08-16)
 
 

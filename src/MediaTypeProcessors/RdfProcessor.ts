@@ -13,6 +13,7 @@ import { IResource } from '../Resources/Resource'
 import { IResponseWrapper } from '../ResponseWrapper'
 import { rdf } from '../Vocabs'
 import { RdfList } from '../RdfList'
+import * as inferences from './inferences'
 
 interface ConverterMap {
     [type: string]: (value: string, type: string) => unknown;
@@ -26,18 +27,6 @@ export interface IMediaTypeProcessor {
         response: IResponseWrapper,
         apiDocumentation?: ApiDocumentation): Promise<IResourceGraph>;
 }
-
-const propertyRangeMappings = [
-    [Constants.Core.Vocab('supportedClass'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('expects'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('returns'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('supportedOperation'), Constants.Core.Vocab('Operation')],
-    [Constants.Core.Vocab('operation'), Constants.Core.Vocab('Operation')],
-    [Constants.Core.Vocab('supportedProperty'), Constants.Core.Vocab('SupportedProperty')],
-    [Constants.Core.Vocab('statusCodes'), Constants.Core.Vocab('StatusCodeDescription')],
-    [Constants.Core.Vocab('property'), rdf.Property],
-    [Constants.Core.Vocab('mapping'), Constants.Core.Vocab('IriTemplateMapping')],
-]
 
 const jsonldSerializer = new JsonLdSerializer()
 
@@ -58,7 +47,7 @@ async function parseAndNormalizeGraph (responseText: string, uri: string, mediaT
     const parsers = parserFactory.create(uri)
 
     const dataset = await parseResourceRepresentation(responseText, mediaType, parsers)
-    runInference(dataset)
+    runInferences(dataset)
     const json = await serializeDataset(dataset)
 
     return flatten(json, uri)
@@ -77,18 +66,8 @@ function stripContentTypeParameters (mediaType: string) {
     return mediaType.split(';').shift()
 }
 
-function runInference (dataset) {
-    propertyRangeMappings.map((mapping) => {
-        const matches = dataset.match(null, $rdf.namedNode(mapping[0]), null, null)
-
-        matches.forEach((triple) => {
-            dataset.add($rdf.triple(
-                triple.object,
-                $rdf.namedNode(rdf.type),
-                $rdf.namedNode(mapping[1])
-            ))
-        })
-    })
+function runInferences (dataset) {
+    Object.values(inferences).forEach(inference => inference(dataset))
 }
 
 function serializeDataset (dataset) {

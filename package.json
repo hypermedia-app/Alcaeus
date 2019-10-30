@@ -69,6 +69,7 @@
     "@types/sinon": "^7.0.13",
     "@typescript-eslint/eslint-plugin": "^1.11.0",
     "@typescript-eslint/parser": "^1.11.0",
+    "@zazuko/rdf-vocabularies": "^2019.10.22",
     "core-js": "^2.5.0",
     "cz-conventional-changelog": "^2.1.0",
     "eslint": "^6.0.1",

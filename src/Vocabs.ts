@@ -1,6 +1,6 @@
 type SchemaTerm = 'description' | 'title';
 
-type RdfsTerm = 'comment' | 'label' | 'range' | 'domain';
+type RdfsTerm = 'comment' | 'label' | 'range' | 'domain' | 'subClassOf';
 
 interface NamespaceBuilder {
     [key: string]: string;

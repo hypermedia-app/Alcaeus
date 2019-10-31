@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/wikibus/alcaeus/compare/v0.9.2...v0.10.0) (2019-10-31)
+
+
+### Bug Fixes
+
+* **deps:** make gitbook stuff dev dependencies ([61a7840](https://github.com/wikibus/alcaeus/commit/61a7840))
+
+
+### Build System
+
+* bump version to use on gitbook ([5dd85f7](https://github.com/wikibus/alcaeus/commit/5dd85f7))
+* ensure that import casing matches file names ([f1006f8](https://github.com/wikibus/alcaeus/commit/f1006f8))
+
+
+### Features
+
+* explicitly add triples inferred from the manages block ([7fc3178](https://github.com/wikibus/alcaeus/commit/7fc3178)), closes [#147](https://github.com/wikibus/alcaeus/issues/147)
+* explicitly assert props and operations from subClassOf relation ([8ab6cf5](https://github.com/wikibus/alcaeus/commit/8ab6cf5)), closes [#145](https://github.com/wikibus/alcaeus/issues/145)
+
+
+
 ### [0.9.2](https://github.com/wikibus/alcaeus/compare/v0.9.1...v0.9.2) (2019-10-17)
 
 

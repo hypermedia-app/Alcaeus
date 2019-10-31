@@ -2,6 +2,12 @@ import * as _ from 'lodash'
 import { Core, JsonLd, MediaTypes } from '../src/Constants'
 import { IResponseWrapper } from '../src/ResponseWrapper'
 import 'isomorphic-fetch'
+import stringToStream from 'string-to-stream'
+import rdf from 'rdf-ext'
+import Parser from '@rdfjs/parser-n3'
+import { prefixes } from '@zazuko/rdf-vocabularies'
+
+const parser = new Parser()
 
 function addPredicateGetter (this: any, prop: string, pred: string, wrapArray: boolean = true) {
     Object.defineProperty(this, prop, {
@@ -123,4 +129,19 @@ export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): P
     })
 
     return response as IResponseWrapper
+}
+
+export function createGraph (ntriples: string) {
+    return async () => {
+        const dataset = rdf.dataset()
+        const stream = stringToStream(`
+    BASE <http://example.com/>
+    PREFIX rdf: <${prefixes.rdf}>
+    PREFIX rdfs: <${prefixes.rdfs}>
+    PREFIX foaf: <${prefixes.foaf}>
+    PREFIX hydra: <${prefixes.hydra}>
+
+    ${ntriples}`)
+        return dataset.import(await parser.import(stream))
+    }
 }

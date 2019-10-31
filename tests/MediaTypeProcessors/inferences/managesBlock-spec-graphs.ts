@@ -1,9 +1,4 @@
-import stringToStream from 'string-to-stream'
-import rdf from 'rdf-ext'
-import Parser from '@rdfjs/parser-n3'
-import { prefixes } from '@zazuko/rdf-vocabularies'
-
-const parser = new Parser()
+import { createGraph } from '../../test-utils'
 
 const managesWithTypeGraph = `
     <collection> 
@@ -43,20 +38,6 @@ const malformedManagesBlocksGraph = `
         hydra:subject <member3> # manages block must only have two objects
       ] ;
       hydra:member <member1>, <member2> .`
-
-function createGraph (ntriples: string) {
-    return async () => {
-        const dataset = rdf.dataset()
-        const stream = stringToStream(`
-    BASE <http://example.com/>
-    PREFIX rdf: <${prefixes.rdf}>
-    PREFIX foaf: <${prefixes.foaf}>
-    PREFIX hydra: <${prefixes.hydra}>
-
-    ${ntriples}`)
-        return dataset.import(await parser.import(stream))
-    }
-}
 
 export const managesWithType = createGraph(managesWithTypeGraph)
 export const multipleManagesBlocks = createGraph(multipleManagesBlocksGraph)

@@ -78,6 +78,11 @@ The second case is to declare that all members will be of a certain type:
 }
 ```
 
+{% hint style="tip" %}
+Alcaeus will explicitly add all triples which are implicitly stated about
+collection members.
+{% endhint %}
+
 Here's an example showing how the manages block is retrieved from a collection to find the `rdf:type`
 of collection members. Nothing more than a simple array filter.
 

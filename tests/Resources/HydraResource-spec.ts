@@ -83,6 +83,32 @@ describe('HydraResource', () => {
             // then
             expect(ops.length).toBe(0)
         })
+
+        it('should return operations with unique supported operation ids', () => {
+            // given
+            const getOperations = sinon.stub()
+            const apiDoc = {
+                getOperations,
+            } as any
+            getOperations.returns([
+                {
+                    '@id': '_:op1',
+                },
+            ])
+            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
+            reverseLinks = [
+                {
+                    predicate: 'http://example.com/vocab#other',
+                    subject: { types: ['http://example.com/vocab#Resource2', 'http://example.com/vocab#Resource3'] },
+                },
+            ]
+
+            // when
+            const ops = resource.operations
+
+            // then
+            expect(ops).toHaveLength(1)
+        })
     })
 
     describe('getProperties', () => {

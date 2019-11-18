@@ -41,7 +41,7 @@ class HydraResource extends Resource implements IHydraResource {
     public get operations () {
         const alcaeus = (this as any)._alcaeus
 
-        const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]): Operation[] => {
+        const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]) => {
             const classOperations = this.types.map((type: string) => getOperations(type))
 
             const mappedLinks = (this as any as IAsObject)._reverseLinks
@@ -50,10 +50,16 @@ class HydraResource extends Resource implements IHydraResource {
             const propertyOperations = flattened.map(
                 (link: any) => getOperations(link.type, link.predicate))
 
-            const operations = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
-            return operations.map((supportedOperation) => {
-                return new Operation(supportedOperation, alcaeus, this)
-            })
+            const supportedOperations: SupportedOperation[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
+            const operations = supportedOperations.reduce((map, supportedOperation) => {
+                if (!map.has(supportedOperation.id)) {
+                    map.set(supportedOperation.id, new Operation(supportedOperation, alcaeus, this))
+                }
+
+                return map
+            }, new Map<string, Operation>())
+
+            return [...operations.values()]
         }
 
         return this.apiDocumentation

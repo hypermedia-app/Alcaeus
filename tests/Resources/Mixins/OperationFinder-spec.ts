@@ -347,11 +347,12 @@ describe('OperationFinder', () => {
     })
 
     describe('findOperationsDeep', () => {
-        it('called without parameters finds operations from children', () => {
+        it('called without parameters finds non-get operations from children', () => {
             // given
-            const topLevel = new TestOperationFinder([ {} ], {
-                child: new TestOperationFinder([ {} ], {
-                    child: new TestOperationFinder([ {} ]),
+            const getOperation = { method: 'get' }
+            const topLevel = new TestOperationFinder([ getOperation ], {
+                child: new TestOperationFinder([ { method: 'post' } ], {
+                    child: new TestOperationFinder([ { method: 'put' } ]),
                 }),
             }) as IOperationFinder
 
@@ -359,7 +360,8 @@ describe('OperationFinder', () => {
             const operations = topLevel.findOperationsDeep()
 
             // then
-            expect(operations).toHaveLength(3)
+            expect(operations).toHaveLength(2)
+            expect(operations).not.toContain(getOperation)
         })
 
         it('uses first parameter to stop optionally drilling down', () => {

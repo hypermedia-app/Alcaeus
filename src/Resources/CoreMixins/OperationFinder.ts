@@ -161,7 +161,7 @@ export function OperationFinder<TBase extends Constructor<IHydraResource>> (Base
 
         public findOperationsDeep (stopConditionOrCriteria?: Criteria | RecursiveStopConditions, ...moreCriteria: Criteria[]) {
             if (!stopConditionOrCriteria) {
-                return this.getOperationsDeep()
+                return this.__filterOperations(this.getOperationsDeep())
             }
 
             if ('excludedProperties' in stopConditionOrCriteria) {
@@ -171,7 +171,7 @@ export function OperationFinder<TBase extends Constructor<IHydraResource>> (Base
             return this.__filterOperations(this.getOperationsDeep(), [ stopConditionOrCriteria, ...moreCriteria ])
         }
 
-        public __filterOperations (operations: IOperation[], criteria: Criteria[]) {
+        public __filterOperations (operations: IOperation[], criteria: Criteria[] = []) {
             let actualCriteria = [...criteria]
             if (actualCriteria.length === 0) {
                 actualCriteria.push({})

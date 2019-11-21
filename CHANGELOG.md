@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.2](https://github.com/wikibus/alcaeus/compare/v0.10.0...v0.10.2) (2019-11-21)
+
+
+### Features
+
+* added methods to find operations on resources, also recursively ([fac47cc](https://github.com/wikibus/alcaeus/commit/fac47ccd8e2d904eb4f896b3ff5273f3c094dfda))
+
+
+### Bug Fixes
+
+* change return type annotation for `getCollections` ([bded51e](https://github.com/wikibus/alcaeus/commit/bded51e725e86cc24087b433cd3a7da1a3bac0eb))
+* duplicate operation returned when supported by two resource types ([#150](https://github.com/wikibus/alcaeus/issues/150)) ([20878f6](https://github.com/wikibus/alcaeus/commit/20878f65005fcce57a3d695e9b5d193bccd37c7b))
+* findOperationsDeep did not apply default filter ([88c5dbb](https://github.com/wikibus/alcaeus/commit/88c5dbb953737bd8739ffb583beb5a43a45f8d4c))
+
 ## [0.10.0](https://github.com/wikibus/alcaeus/compare/v0.9.2...v0.10.0) (2019-10-31)
 
 

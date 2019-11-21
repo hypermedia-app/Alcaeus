@@ -307,4 +307,16 @@ describe('HydraResource', () => {
             expect(alcaeus.loadResource.notCalled).toBeTruthy()
         })
     })
+
+    describe('OperationFinder', () => {
+        it('is implemented', () => {
+            // given
+            const resource = new HydraResource({})
+
+            // then
+            expect(resource).toHaveProperty('getOperationsDeep')
+            expect(resource).toHaveProperty('findOperations')
+            expect(resource).toHaveProperty('findOperationsDeep')
+        })
+    })
 })

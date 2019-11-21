@@ -13,6 +13,7 @@
     * [hydra:Link](representations/affordances/links.md)
     * [hydra:collection](representations/affordances/collection-property.md)
     * [Operations](representations/affordances/invoking-operations.md)
+    * [Finding operations](representations/affordances/finding-operations.md)
 * [API Documentation](api-documentation/readme.md)
   * [Entrypoint](api-documentation/entrypoint.md)
   * [Supported classes](api-documentation/class.md)

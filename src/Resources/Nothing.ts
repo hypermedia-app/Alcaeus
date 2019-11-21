@@ -46,4 +46,8 @@ export default class extends Mixin(Resource) implements Class {
     public load () {
         return Promise.reject<IHydraResponse>(new Error('Method not implemented.'))
     }
+
+    public findOperations () { return [] }
+    public findOperationsDeep () { return [] }
+    public getOperationsDeep () { return [] }
 }

@@ -5,10 +5,12 @@ import { Core } from '../Constants'
 import { IAsObject, IIncomingLink } from '../internals'
 import ClientAccessor from './CoreMixins/ClientAccessor'
 import LinkAccessor from './CoreMixins/LinkAccessor'
+import { OperationFinder } from './CoreMixins/OperationFinder'
 import {
     ApiDocumentation,
     Collection,
     HydraResource as IHydraResource,
+    IOperation,
     ManagesBlockPattern,
     SupportedOperation,
     SupportedProperty,
@@ -129,11 +131,15 @@ class HydraResource extends Resource implements IHydraResource {
 
         return (this as any)._alcaeus.loadResource(this.id)
     }
+
+    public findOperations (): IOperation[] { throw new Error('Not implemented') }
+    public findOperationsDeep (): IOperation[] { throw new Error('Not implemented') }
+    public getOperationsDeep (): IOperation[] { throw new Error('Not implemented') }
 }
 
 export default function generateClass (alcaeus: IHydraClient, getIncomingLinks: () => IIncomingLink[]) {
     const clientAccessorMixin = ClientAccessor(alcaeus)
     const linkAccessorMixin = LinkAccessor(getIncomingLinks)
 
-    return clientAccessorMixin(linkAccessorMixin(HydraResource))
+    return OperationFinder(clientAccessorMixin(linkAccessorMixin(HydraResource)))
 }

@@ -1,6 +1,7 @@
 /* tslint:disable:interface-over-type-literal */
 import { Maybe } from 'tsmonad'
 import { IHydraResponse } from '../HydraResponse'
+import { IOperationFinder } from './CoreMixins/OperationFinder'
 import { IResource } from './Resource'
 
 export interface ManagesBlockPattern {
@@ -239,7 +240,7 @@ interface ResourceIndexer {
 }
 type Resource = IHydraResource & IResource
 
-export type HydraResource = Resource & ResourceIndexer;
+export type HydraResource = Resource & ResourceIndexer & IOperationFinder;
 export type DocumentedResource = IDocumentedResource & HydraResource;
 export type Class = IClass & DocumentedResource;
 export type SupportedOperation = ISupportedOperation & DocumentedResource;

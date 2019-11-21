@@ -61,7 +61,7 @@ export interface IHydraResource {
     /**
      * Gets objects of hydra:collection property
      */
-    getCollections(filter?: ManagesBlockPattern): IResource[];
+    getCollections(filter?: ManagesBlockPattern): HydraResource[];
 
     /**
      * Dereferences the resource

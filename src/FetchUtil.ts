@@ -16,7 +16,9 @@ async function getResponse (uri: string, method: string, headers: HeadersInit = 
     }
 
     if (method.toLowerCase() !== 'get') {
-        defaultHeaders['content-type'] = Constants.MediaTypes.jsonLd
+        if (!(body instanceof FormData)) {
+            defaultHeaders['content-type'] = Constants.MediaTypes.jsonLd
+        }
 
         requestInit.body = body
     }

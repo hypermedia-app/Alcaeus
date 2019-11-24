@@ -43,6 +43,12 @@ By default the operation request will be sent with `application/ld+json` content
 wishes to send the payload in another format, the second parameter can be used to set the correct
 header value.
 
+{% hint style="info" %}
+ Sending `FormData` object, such as when uploading files with multipart request,
+ will not set the content-type to let the `fetch` implementation set it with correct
+ boundary.
+{% endhint %}
+
 {% runkit %}
 const { Hydra } = require("alcaeus@{{ book.version }}");
 

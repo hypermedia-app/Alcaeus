@@ -155,6 +155,19 @@ describe('FetchUtil', () => {
             expect(request.body).toBe('foo')
         })
 
+        it('should set not set content-type header for FormData bodies', async () => {
+            // given
+            windowFetch.withArgs('http://example.com/resource')
+                .returns(responseBuilder().body(Bodies.someJsonLd).build())
+
+            // when
+            await fetchUtil.invokeOperation('post', 'http://example.com/resource', new FormData(), {})
+
+            // then
+            const request = windowFetch.firstCall.args[1]
+            expect(request.headers.get('content-type')).toBeNull()
+        })
+
         afterEach(() => {
             windowFetch.restore()
         })

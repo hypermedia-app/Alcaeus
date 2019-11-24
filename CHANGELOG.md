@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.3](https://github.com/wikibus/alcaeus/compare/v0.10.2...v0.10.3) (2019-11-24)
+
+
+### Bug Fixes
+
+* form data should automatically set multipart content type ([965bcc2](https://github.com/wikibus/alcaeus/commit/965bcc2982ca3d4ee01a844b49b21acd5145ba55))
+
 ### [0.10.2](https://github.com/wikibus/alcaeus/compare/v0.10.0...v0.10.2) (2019-11-21)
 
 

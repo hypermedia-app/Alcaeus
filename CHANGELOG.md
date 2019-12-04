@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.4](https://github.com/wikibus/alcaeus/compare/v0.10.3...v0.10.4) (2019-12-04)
+
+
+### Bug Fixes
+
+* missing import of FormData in node environment ([4a5b378](https://github.com/wikibus/alcaeus/commit/4a5b378c06ec1e49299b36f97b2f4deaa752f1f7))
+
 ### [0.10.3](https://github.com/wikibus/alcaeus/compare/v0.10.2...v0.10.3) (2019-11-24)
 
 

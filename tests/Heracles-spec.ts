@@ -273,9 +273,9 @@ describe('Hydra', () => {
                     'post',
                     'uri',
                     'XYZ',
-                    {
+                    new Headers({
                         'content-type': 'application/rdf+xml',
-                    })
+                    }))
         })
     })
 
@@ -299,9 +299,9 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', {
+                    'uri', new Headers({
                         'authorization': 'Bearer foobar',
-                    })
+                    }))
             })
 
             it('passes them to invokeOperation', () => {
@@ -322,9 +322,9 @@ describe('Hydra', () => {
                         'post',
                         'uri',
                         undefined,
-                        {
+                        new Headers({
                             'authorization': 'Bearer foobar',
-                        })
+                        }))
             })
 
             it('passes them to loadDocumentation', () => {
@@ -338,9 +338,9 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'doc', {
+                    'doc', new Headers({
                         'authorization': 'Bearer foobar',
-                    })
+                    }))
             })
         })
 
@@ -356,9 +356,9 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', {
+                    'uri', new Headers({
                         'authorization': 'Token xyz',
-                    })
+                    }))
             })
 
             it('passes them to loadDocumentation', () => {
@@ -372,9 +372,9 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'doc', {
+                    'doc', new Headers({
                         'authorization': 'Token xyz',
-                    })
+                    }))
             })
 
             it('passes them to invokeOperation', () => {
@@ -395,9 +395,9 @@ describe('Hydra', () => {
                         'post',
                         'uri',
                         undefined,
-                        {
+                        new Headers({
                             'authorization': 'Token xyz',
-                        })
+                        }))
             })
         })
     })

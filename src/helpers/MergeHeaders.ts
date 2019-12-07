@@ -1,21 +1,10 @@
-function mergeNormalize (left: string[][], right: HeadersInit) {
-    let rightAsArr: string[][]
-    if (Array.isArray(right)) {
-        rightAsArr = right
-    } else {
-        rightAsArr = Object.entries(right)
-    }
+export function merge (headers: Headers, overrides: Headers): Headers {
+    const merged = new Headers(headers)
 
-    return rightAsArr
-        .reduce((obj, [key, value]) => ({
-            ...obj,
-            [key.toLowerCase()]: value,
-        }),
-        left)
-}
+    overrides.forEach((value, key) => {
+        merged.delete(key)
+        merged.append(key, value)
+    })
 
-export function merge (headers: HeadersInit, overrides: HeadersInit): HeadersInit {
-    const normalized = mergeNormalize([], headers)
-
-    return mergeNormalize(normalized, overrides)
+    return merged
 }

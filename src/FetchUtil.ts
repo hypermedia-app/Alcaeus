@@ -22,7 +22,7 @@ async function getResponse (uri: string, method: string, headers: HeadersInit = 
         requestInit.body = body
     }
 
-    requestInit.headers = new Headers(merge(defaultHeaders, headers))
+    requestInit.headers = merge(new Headers(defaultHeaders), new Headers(headers))
 
     const res = await fetch(uri, requestInit)
 

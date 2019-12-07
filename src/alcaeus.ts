@@ -49,7 +49,7 @@ export class Alcaeus implements IHydraClient {
 
     public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
 
-    public defaultHeaders = {}
+    public defaultHeaders: HeadersInit | (() => HeadersInit) = {}
 
     public constructor (rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
         this.rootSelectors = rootSelectors
@@ -57,7 +57,7 @@ export class Alcaeus implements IHydraClient {
     }
 
     public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
-        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(headers))
+        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
 
         const apiDocumentation = await getApiDocumentation.call(this, response, headers)
 
@@ -70,7 +70,7 @@ export class Alcaeus implements IHydraClient {
 
     public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
         try {
-            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(headers))
+            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
             const representation = await getHydraResponse(this, response, uri)
             const resource = representation.root
             if (!resource) {
@@ -110,7 +110,7 @@ export class Alcaeus implements IHydraClient {
             console.warn('DEPRECATION NOTICE: passing content type as string will be removed in version 1.0')
         }
 
-        const mergedHeaders = this.__mergeHeaders(headers)
+        const mergedHeaders = this.__mergeHeaders(new Headers(headers))
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)
         const apiDocumentation = await getApiDocumentation.call(this, response, mergedHeaders)
@@ -122,9 +122,9 @@ export class Alcaeus implements IHydraClient {
         return getHydraResponse(this, response, uri)
     }
 
-    private __mergeHeaders (headers: HeadersInit): HeadersInit {
+    private __mergeHeaders (headers: Headers): Headers {
         const defaultHeaders = typeof this.defaultHeaders === 'function' ? this.defaultHeaders() : this.defaultHeaders
 
-        return merge(defaultHeaders, headers)
+        return merge(new Headers(defaultHeaders), headers)
     }
 }

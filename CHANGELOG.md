@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.5](https://github.com/wikibus/alcaeus/compare/v0.10.4...v0.10.5) (2019-12-07)
+
+
+### Bug Fixes
+
+* headers are not getting correctly applied ([77f8fbb](https://github.com/wikibus/alcaeus/commit/77f8fbb34491dcd69dc9851c1dcdb69b3bd757f6))
+
 ### [0.10.4](https://github.com/wikibus/alcaeus/compare/v0.10.3...v0.10.4) (2019-12-04)
 
 

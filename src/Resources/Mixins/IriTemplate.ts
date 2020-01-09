@@ -1,32 +1,33 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
-import { IIriTemplate, IIriTemplateMapping, VariableRepresentation } from '../index'
-import { Constructor } from '../Mixin'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { hydra } from '../../Vocabs'
+import { HydraResource, IIriTemplate, IIriTemplateMapping } from '../index'
 import { IResource } from '../Resource'
+import { IriTemplateMappingMixin } from './IriTemplateMapping'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    abstract class IriTemplate extends Base implements IIriTemplate {
-        @nonenumerable
-        public get template (): string {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.getString(Core.Vocab('template'), { strict: true })!
+export function IriTemplateMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
+    class IriTemplate extends Base implements IIriTemplate {
+        @property.literal()
+        public template!: string
+
+        @property.resource({
+            path: hydra.mapping,
+            array: true,
+            as: [IriTemplateMappingMixin],
+        })
+        public mappings!: IIriTemplateMapping[]
+
+        @property({
+            initial: hydra.BasicRepresentation,
+        })
+        public variableRepresentation!: HydraResource
+
+        public expand (): string {
+            throw new Error('Implement in derived class')
         }
-
-        @nonenumerable
-        public get mappings () {
-            return this.getArray<IIriTemplateMapping>(Core.Vocab('mapping'))
-        }
-
-        @nonenumerable
-        public get variableRepresentation () {
-            return this.get<VariableRepresentation>(Core.Vocab('variableRepresentation')) ||
-                Core.Vocab('BasicRepresentation') as VariableRepresentation
-        }
-
-        public abstract expand(): string;
     }
 
     return IriTemplate
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('IriTemplate'))
+IriTemplateMixin.shouldApply = (res: IResource) => res.hasType(hydra.IriTemplate)

@@ -1,12 +1,17 @@
+import { RdfResource } from '@tpluscode/rdfine'
 import { IHydraClient } from '../alcaeus'
-import { HydraResource, IOperation, SupportedOperation } from './index'
-
-const supportedOperations = new WeakMap<Operation, SupportedOperation>()
-const resources = new WeakMap<Operation, HydraResource>()
-const clients = new WeakMap<Operation, IHydraClient>()
+import nonenumerable from '../helpers/nonenumerable'
+import { HydraResource, IDocumentedResource, IOperation, ISupportedOperation } from './index'
 
 export class Operation implements IOperation {
-    public constructor (supportedOperation: SupportedOperation, alcaeus: IHydraClient, resource: HydraResource) {
+    public readonly supportedOperation: RdfResource & ISupportedOperation & IDocumentedResource
+
+    public readonly target: HydraResource
+
+    @nonenumerable
+    private readonly __client: IHydraClient
+
+    public constructor (supportedOperation: RdfResource & ISupportedOperation & IDocumentedResource, alcaeus: IHydraClient, resource: HydraResource) {
         if (!supportedOperation) {
             throw new Error('Missing supportedOperation parameter')
         }
@@ -17,9 +22,9 @@ export class Operation implements IOperation {
             throw new Error('Missing resource parameter')
         }
 
-        supportedOperations.set(this, supportedOperation)
-        resources.set(this, resource)
-        clients.set(this, alcaeus)
+        this.supportedOperation = supportedOperation
+        this.__client = alcaeus
+        this.target = resource
     }
 
     public get method (): string {
@@ -46,31 +51,7 @@ export class Operation implements IOperation {
         return this.supportedOperation.description
     }
 
-    public get supportedOperation () {
-        const supportedOperation = supportedOperations.get(this)
-
-        if (!supportedOperation) {
-            throw new Error('Supported operation was not found for operation')
-        }
-
-        return supportedOperation
-    }
-
-    public get target () {
-        const resource = resources.get(this)
-
-        if (resource) {
-            return resource
-        }
-
-        throw new Error('Could not determine the target of the operation')
-    }
-
     public invoke (body?: BodyInit, headers: string | HeadersInit = { }) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const alcaeus = clients.get(this)!
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return alcaeus.invokeOperation(this, this.target.id, body, headers)
+        return this.__client.invokeOperation(this, this.target.id.value, body, headers)
     }
 }

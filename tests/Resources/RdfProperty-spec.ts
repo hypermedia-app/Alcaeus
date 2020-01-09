@@ -1,79 +1,52 @@
-import { promises as jsonld } from 'jsonld'
-import { Core } from '../../src/Constants'
-import { Mixin } from '../../src/Resources/Mixins/RdfProperty'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { RdfPropertyMixin } from '../../src/Resources/Mixins/RdfProperty'
 import Resource from '../../src/Resources/Resource'
-import { owl, rdf, rdfs, xsd } from '../../src/Vocabs'
-import Context from '../test-objects/Context'
+import { hydra, owl, rdf, rdfs, xsd } from '../../src/Vocabs'
 
-class RdfProperty extends Mixin(Resource) {}
+class RdfProperty extends RdfPropertyMixin(Resource) {}
 
 describe('RdfProperty', () => {
-    let testProperty
+    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let property: RdfProperty
 
     beforeEach(() => {
-        testProperty = {
-            '@context': [
-                Context,
-                {
-                    rdfs: rdfs(),
-                },
-            ],
-            '@id': 'http://purl.org/dc/elements/1.1/partOf',
-            '@type': [ rdf.Property ],
-            'rdfs:domain': { '@id': xsd.integer },
-            'rdfs:range': { '@id': xsd.string },
-            'supportedOperation': [
-                {
-                    description: 'Update this property',
-                    expects: xsd.string,
-                    method: 'POST',
-                    returns: owl.Nothing,
-                },
-            ],
-        }
+        node = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://purl.org/dc/elements/1.1/partOf')
+
+        node.addOut(rdf.type, rdf.Property)
+            .addOut(rdfs.domain, xsd.integer)
+            .addOut(rdfs.range, xsd.string)
+            .addOut(hydra.supportedOperation, op => {
+                op.addOut(hydra.description, 'Update this property')
+                op.addOut(hydra.expects, xsd.string)
+                op.addOut(hydra.method, 'POST')
+                op.addOut(hydra.returns, owl.Nothing)
+            })
+
+        property = new RdfProperty(node)
     })
 
     it('should link to domain', async () => {
-        // given
-        const compacted = await jsonld.compact(testProperty, {})
-
-        // when
-        const property = new RdfProperty(compacted)
-
         // then
-        expect(property.domain!['@id']).toBe(xsd.integer)
+        expect(property.domain!.id).toEqual(xsd.integer)
     })
 
     it('should link to range', async () => {
-        // given
-        const compacted = await jsonld.compact(testProperty, {})
-
-        // when
-        const property = new RdfProperty(compacted)
-
         // them
-        expect(property.range!['@id']).toBe(xsd.string)
+        expect(property.range!.id).toEqual(xsd.string)
     })
 
     describe('link', () => {
         it('should not be a link by default', async () => {
-            // given
-            const compacted = await jsonld.compact(testProperty, {})
-
-            // when
-            const property = new RdfProperty(compacted)
-
             // then
             expect(property.isLink).toBe(false)
         })
 
         it('should be a link when typed accordingly', async () => {
             // given
-            testProperty['@type'] = Core.Vocab('Link')
-            const compacted = await jsonld.compact(testProperty, {})
-
-            // when
-            const property = new RdfProperty(compacted)
+            node.addOut(rdf.type, hydra.Link)
 
             // then
             expect(property.isLink).toBe(true)
@@ -82,19 +55,15 @@ describe('RdfProperty', () => {
 
     describe('supportedOperations', () => {
         it('should return single operation as array', async () => {
-            // given
-            const compacted = await jsonld.compact(testProperty, {})
-
-            // when
-            const property = new RdfProperty(compacted)
-
             // then
             expect(property.supportedOperations.length).toBe(1)
         })
 
         it('should return empty array when property is missing', () => {
-            const property = new RdfProperty({})
+            // given
+            node.deleteOut(hydra.supportedOperation)
 
+            // thne
             expect(Array.isArray(property.supportedOperations)).toBeTruthy()
             expect(property.supportedOperations.length).toBe(0)
         })

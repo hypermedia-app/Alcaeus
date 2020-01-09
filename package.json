@@ -21,7 +21,7 @@
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "gitbook": "gitbook serve",
     "lint": "eslint . --ext .ts --quiet",
-    "prepare": "rm -rf lib; npm run build",
+    "prepack": "rm -rf lib; npm run build",
     "release": "standard-version"
   },
   "repository": {
@@ -43,17 +43,14 @@
   },
   "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
-    "@rdfjs/parser-jsonld": "^1.1.1",
     "@rdfjs/serializer-jsonld": "^1.2.0",
+    "@tpluscode/rdfine": "^0.1.4",
     "core-decorators": "^0.20.0",
     "es6-url-template": "^1.0.3",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-form-data": "^2.0.0",
-    "jsonld": "^1.4.0",
     "parse-link-header": "^1.0.1",
-    "rdf-ext": "^1.0.0",
-    "string-to-stream": "^1.1.0",
-    "tsmonad": "^0.8.0"
+    "rdf-ext": "^1.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
@@ -63,10 +60,16 @@
     "@babel/preset-typescript": "^7.3.3",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
+    "@rdfjs/parser-jsonld": "^1.2.0",
     "@rdfjs/parser-n3": "^1.1.2",
+    "@types/clownface": "^0.12.2",
     "@types/core-decorators": "^0.10.32",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/jest": "^24.0.17",
+    "@types/rdf-js": "^2.0.7",
+    "@types/rdfjs__namespace": "^1.1.1",
+    "@types/rdfjs__parser-jsonld": "^1.2.1",
+    "@types/rdfjs__parser-n3": "^1.1.1",
     "@types/sinon": "^7.0.13",
     "@typescript-eslint/eslint-plugin": "^1.11.0",
     "@typescript-eslint/parser": "^1.11.0",
@@ -85,16 +88,18 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jest": "^24.8.0",
     "json-server": "^0.12.1",
+    "jsonld": "^1.4.0",
     "lint-staged": "^8.0.0",
     "sinon": "^7.3.2",
     "standard": "^12.0.1",
     "standard-version": "^7.0.1",
-    "typescript": "^3.5.3",
+    "string-to-stream": "^3.0.1",
+    "typescript": "^3.7.4",
     "whatwg-fetch": "^3.0.0"
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --fix",
+      "eslint --fix --ignore-path .eslintignore",
       "git add"
     ]
   },

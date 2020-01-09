@@ -12,9 +12,9 @@ export default {
 
         if (links && links[CanonicalLinkRel]) {
             const linkUrl = links[CanonicalLinkRel].url
-            return resources[response.resolveUri(linkUrl)]
+            return resources.get(response.resolveUri(linkUrl))
         }
 
-        return null
+        return undefined
     },
 }

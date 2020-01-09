@@ -1,24 +1,36 @@
-import { Mixin } from '../../src/Resources/Mixins/StatusCodeDescription'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { StatusCodeDescriptionMixin } from '../../src/Resources/Mixins/StatusCodeDescription'
 import Resource from '../../src/Resources/Resource'
+import { hydra } from '../../src/Vocabs'
 
-class StatusCodeDescription extends Mixin(Resource) {}
+class StatusCodeDescription extends StatusCodeDescriptionMixin(Resource) {}
 
 describe('StatusCodeDescription', () => {
-    it('should have code', () => {
-        const prop = new StatusCodeDescription({ 'http://www.w3.org/ns/hydra/core#code': 200 })
+    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let statusCodeDescription: StatusCodeDescription
 
-        expect(prop.code).toBe(200)
+    beforeEach(() => {
+        node = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#StatusCodeDescription')
+
+        statusCodeDescription = new StatusCodeDescription(node)
+    })
+
+    it('should have code', () => {
+        node.addOut(hydra.code, 200)
+
+        expect(statusCodeDescription.code).toBe(200)
     })
 
     it('should have description', () => {
-        const prop = new StatusCodeDescription({ 'http://www.w3.org/ns/hydra/core#description': 'the test' })
+        node.deleteOut(hydra.description).addOut(hydra.description, 'the test')
 
-        expect(prop.description).toBe('the test')
+        expect(statusCodeDescription.description).toBe('the test')
     })
 
     it('should have empty description if missing', () => {
-        const prop = new StatusCodeDescription({})
-
-        expect(prop.description).toBe('')
+        expect(statusCodeDescription.description).toBe('')
     })
 })

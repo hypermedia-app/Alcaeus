@@ -1,42 +1,39 @@
-import { Core } from '../../Constants'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { hydra } from '../../Vocabs'
 import { ISupportedProperty, RdfProperty } from '../index'
-import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
+import { RdfPropertyMixin } from './RdfProperty'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    return class SupportedProperty extends Base implements ISupportedProperty {
-        public get readable () {
-            const readable = this.get(Core.Vocab('readable'))
-            if (typeof readable === 'boolean') {
-                return readable
-            }
+export function SupportedPropertyMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
+    class SupportedProperty extends Base implements ISupportedProperty {
+        @property.literal({
+            type: Boolean,
+            initial: true,
+        })
+        public readable!: boolean
 
-            return true
-        }
+        @property.literal({
+            type: Boolean,
+            path: hydra.writeable,
+            initial: true,
+        })
+        public writable!: boolean
 
-        public get writable () {
-            const writable = this.get(Core.Vocab('writeable'))
-            if (typeof writable === 'boolean') {
-                return writable
-            }
+        @property.literal({
+            type: Boolean,
+            initial: false,
+        })
+        public required!: boolean
 
-            return true
-        }
-
-        public get required () {
-            const required = this.get(Core.Vocab('required'))
-            if (typeof required === 'boolean') {
-                return required
-            }
-
-            return false
-        }
-
-        public get property () {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.get<RdfProperty>(Core.Vocab('property'), { strict: true })!
-        }
+        @property.resource({
+            strict: true,
+            as: [RdfPropertyMixin],
+        })
+        public property!: RdfProperty
     }
+
+    return SupportedProperty
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('SupportedProperty'))
+SupportedPropertyMixin.shouldApply = (res: IResource) => res.hasType(hydra.SupportedProperty)

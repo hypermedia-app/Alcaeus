@@ -1,73 +1,55 @@
-import { promises as jsonld } from 'jsonld'
-import { Mixin } from '../../src/Resources/Mixins/Class'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { ClassMixin } from '../../src/Resources/Mixins/Class'
 import Resource from '../../src/Resources/Resource'
-import Context from '../test-objects/Context'
+import { hydra } from '../../src/Vocabs'
 
-class Class extends Mixin(Resource) {}
+class Class extends ClassMixin(Resource) {}
 
 describe('Class', () => {
-    const hydraClass = {
-        '@context': Context,
-        '@id': 'http://example.com/vocab#SomeClass',
-        'supportedOperation': [{}],
-        'supportedProperty': [{}],
-    }
+    let hydraClassNode: SingleContextClownface<DatasetCore, NamedNode>
+
+    beforeEach(() => {
+        hydraClassNode = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#SomeClass')
+    })
 
     describe('getting operations', () => {
         it('should return operations', async () => {
             // then
-            const compacted = await jsonld.compact(hydraClass, {})
+            hydraClassNode.addOut(hydra.supportedOperation, hydraClassNode.blankNode())
 
             // when
-            const clas = new Class(compacted)
+            const clas = new Class(hydraClassNode)
 
             // then
             expect(clas.supportedOperations.length).toBe(1)
         })
 
         it('should return empty array if property is missing', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-            })
+            // when
+            const clas = new Class(hydraClassNode)
 
-            expect(clas.supportedOperations.length).toBe(0)
-        })
-
-        it('should return empty array if property is null', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-                'http://www.w3.org/ns/hydra/core#supportedOperation': null,
-            })
-
+            // then
             expect(clas.supportedOperations.length).toBe(0)
         })
     })
 
     describe('getting properties', () => {
-        it('should return properties', async () => {
+        it('should return properties', () => {
             // given
-            const compacted = await jsonld.compact(hydraClass, {})
+            hydraClassNode.addOut(hydra.supportedProperty, hydraClassNode.blankNode())
 
             // when
-            const clas = new Class(compacted)
+            const clas = new Class(hydraClassNode)
 
             // then
             expect(clas.supportedProperties.length).toBe(1)
         })
 
         it('should return empty array if property is missing', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-            })
-
-            expect(clas.supportedProperties.length).toBe(0)
-        })
-
-        it('should return empty array if property is null', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-                'http://www.w3.org/ns/hydra/core#supportedProperty': null,
-            })
+            const clas = new Class(hydraClassNode)
 
             expect(clas.supportedProperties.length).toBe(0)
         })

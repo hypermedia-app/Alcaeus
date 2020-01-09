@@ -1,53 +1,44 @@
-import { Maybe } from 'tsmonad'
-import { JsonLd } from '../Constants'
-import { owl } from '../Vocabs'
+import { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { IHydraResponse } from '../HydraResponse'
-import { ApiDocumentation, Class, IOperation } from './index'
-import Resource from './Resource'
-import { Mixin } from './Mixins/Class'
+import { owl } from '../Vocabs'
+import { IOperation } from './index'
+import { ClassMixin } from './Mixins/Class'
 
-export default class extends Mixin(Resource) implements Class {
-    private readonly __apiDocs: Maybe<ApiDocumentation>
+export function NothingMixin<Base extends Constructor> (base: Base) {
+    class Nothing extends base {
+        public get title () {
+            return 'Nothing'
+        }
 
-    public constructor (apiDocs: Maybe<ApiDocumentation>) {
-        super({
-            [JsonLd.Id]: owl.Nothing,
-        })
-        this.__apiDocs = apiDocs
+        public get description () {
+            return 'Nothing'
+        }
+        public get operations (): IOperation[] {
+            return []
+        }
+
+        public getCollections () {
+            return []
+        }
+
+        public getLinks () {
+            return []
+        }
+
+        public getProperties () {
+            return []
+        }
+
+        public load () {
+            return Promise.reject<IHydraResponse>(new Error('Method not implemented.'))
+        }
+
+        public findOperations () { return [] }
+        public findOperationsDeep () { return [] }
+        public getOperationsDeep () { return [] }
     }
 
-    public get title () {
-        return 'Nothing'
-    }
-
-    public get description () {
-        return 'Nothing'
-    }
-    public get operations (): IOperation[] {
-        return []
-    }
-
-    public get apiDocumentation () {
-        return this.__apiDocs
-    }
-
-    public getCollections () {
-        return []
-    }
-
-    public getLinks () {
-        return []
-    }
-
-    public getProperties () {
-        return []
-    }
-
-    public load () {
-        return Promise.reject<IHydraResponse>(new Error('Method not implemented.'))
-    }
-
-    public findOperations () { return [] }
-    public findOperationsDeep () { return [] }
-    public getOperationsDeep () { return [] }
+    return ClassMixin(Nothing)
 }
+
+NothingMixin.shouldApply = (res: RdfResource) => owl.Nothing.equals(res.id)

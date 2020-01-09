@@ -1,145 +1,111 @@
-import { nonenumerable } from 'core-decorators'
-import { Maybe } from 'tsmonad'
+import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { IHydraClient } from '../alcaeus'
-import { Core } from '../Constants'
-import { IAsObject, IIncomingLink } from '../internals'
-import ClientAccessor from './CoreMixins/ClientAccessor'
-import LinkAccessor from './CoreMixins/LinkAccessor'
-import { OperationFinder } from './CoreMixins/OperationFinder'
+import { hydra } from '../Vocabs'
 import {
-    ApiDocumentation,
     Collection,
-    HydraResource as IHydraResource,
-    IOperation,
     ManagesBlockPattern,
     SupportedOperation,
     SupportedProperty,
+    Class,
+    ISupportedProperty,
+    HydraResource,
 } from './index'
+import { CollectionMixin } from './Mixins/Collection'
 import { Operation } from './Operation'
-import Resource, { IResource } from './Resource'
+import { IResource } from './Resource'
 
-const apiDocumentation = new WeakMap<IResource, ApiDocumentation>()
+export function createHydraResourceMixin (alcaeus: IHydraClient) {
+    return function HydraResourceMixin<Base extends Constructor<RdfResource & IResource>> (base: Base) {
+        class HR extends base {
+            public get operations () {
+                const classOperations = [...this.types.values()].reduce((operations, clas: RdfResource | Class) => {
+                    if ('supportedOperations' in clas) {
+                        return [...operations, ...clas.supportedOperations]
+                    }
 
-interface MappedLink {
-    type: string;
-    predicate: string;
-}
+                    return operations
+                }, [] as SupportedOperation[])
 
-class HydraResource extends Resource implements IHydraResource {
-    public constructor (actualResource, apiDoc?: ApiDocumentation | null) {
-        super(actualResource)
+                const propertyOperations = [...this._node.dataset.match(null, null, this._node.term)]
+                    .reduce((operations, quad) => {
+                        if (quad.subject.termType !== 'NamedNode') {
+                            return operations
+                        }
 
-        if (apiDoc) {
-            apiDocumentation.set(this, apiDoc)
-        }
-    }
+                        const subject = this._create(this._node.namedNode(quad.subject))
+                        return [...subject.types.values()].reduce((operations, clas: RdfResource | Class) => {
+                            if ('supportedProperties' in clas) {
+                                const supportedProperty = clas.supportedProperties.find((prop: ISupportedProperty) => {
+                                    return prop.property && quad.predicate.equals(prop.property.id)
+                                })
 
-    @nonenumerable
-    public get apiDocumentation (): Maybe<ApiDocumentation> {
-        return Maybe.maybe(apiDocumentation.get(this))
-    }
+                                if (supportedProperty) {
+                                    return [...operations, ...supportedProperty.property.supportedOperations]
+                                }
+                            }
 
-    @nonenumerable
-    public get operations () {
-        const alcaeus = (this as any)._alcaeus
+                            return operations
+                        }, operations)
+                    }, [] as SupportedOperation[])
 
-        const getClassOperations = (getOperations: (c: string, p?: string) => SupportedOperation[]) => {
-            const classOperations = this.types.map((type: string) => getOperations(type))
+                const supportedOperations: SupportedOperation[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
+                const operations = supportedOperations.reduce((map, supportedOperation) => {
+                    if (!map.has(supportedOperation.id.value)) {
+                        map.set(supportedOperation.id.value, new Operation(supportedOperation, alcaeus, this as any as HydraResource))
+                    }
 
-            const mappedLinks = (this as any as IAsObject)._reverseLinks
-                .map((link) => link.subject.types.map((type) => ({ type, predicate: link.predicate })))
-            const flattened = ([] as MappedLink[]).concat.apply([], mappedLinks)
-            const propertyOperations = flattened.map(
-                (link: any) => getOperations(link.type, link.predicate))
+                    return map
+                }, new Map<string, Operation>())
 
-            const supportedOperations: SupportedOperation[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
-            const operations = supportedOperations.reduce((map, supportedOperation) => {
-                if (!map.has(supportedOperation.id)) {
-                    map.set(supportedOperation.id, new Operation(supportedOperation, alcaeus, this))
-                }
+                return [...operations.values()]
+            }
 
-                return map
-            }, new Map<string, Operation>())
+            public getLinks (includeMissing: boolean = false) {
+                return this.getProperties()
+                    .filter((tuple) => tuple.supportedProperty.property.isLink)
+                    .filter((tuple) => tuple.objects.length > 0 || includeMissing)
+                    .map((tuple) => ({
+                        resources: tuple.objects,
+                        supportedProperty: tuple.supportedProperty,
+                    }))
+            }
 
-            return [...operations.values()]
-        }
+            public getProperties (): { supportedProperty: SupportedProperty; objects: any[] }[] {
+                const classProperties = [...this.types.values()].reduce((properties, clas: RdfResource | Class) => {
+                    if ('supportedProperties' in clas) {
+                        return [...properties, clas.supportedProperties]
+                    }
 
-        return this.apiDocumentation
-            .map((apiDocumentation) => ({
-                apiDocumentation,
-                getOperations: apiDocumentation.getOperations,
-            }))
-            .map((arg) => arg.getOperations.bind(arg.apiDocumentation))
-            .map(getClassOperations)
-            .valueOr([])
-    }
+                    return properties
+                }, [] as SupportedProperty[][])
 
-    @nonenumerable
-    public getLinks (includeMissing: boolean = false) {
-        return this.getProperties()
-            .filter((tuple) => tuple.supportedProperty.property.isLink)
-            .filter((tuple) => tuple.objects.length > 0 || includeMissing)
-            .map((tuple) => ({
-                resources: tuple.objects,
-                supportedProperty: tuple.supportedProperty,
-            }))
-    }
-
-    @nonenumerable
-    public getProperties (): { supportedProperty: SupportedProperty; objects: any[] }[] {
-        const getProperties = (propertiesForType: (classUri: string) => SupportedProperty[]) =>
-            this.types.map(propertiesForType)
-                .reduce((current, supportedProperties) => {
+                return classProperties.reduce((current, supportedProperties) => {
                     const next = supportedProperties
                         .filter((sp) => {
-                            return !current.find((tuple) => tuple.supportedProperty.property.id === sp.property.id)
+                            return !current.find((tuple) => tuple.supportedProperty.property.id.equals(sp.property.id))
                         })
                         .map((supportedProperty) => ({
-                            objects: this.getArray(supportedProperty.property.id),
+                            objects: this.getArray(supportedProperty.property.id.value),
                             supportedProperty,
                         }))
 
                     return [...current, ...next]
                 }, [] as { supportedProperty: SupportedProperty; objects: any[] }[])
+            }
 
-        return this.apiDocumentation
-            .map((apiDocumentation) => ({
-                apiDocumentation,
-                getProperties: apiDocumentation.getProperties,
-            }))
-            .map((arg) => arg.getProperties.bind(arg.apiDocumentation))
-            .map(getProperties)
-            .valueOr([])
-    }
+            @property.resource({ path: hydra.collection, array: true, as: [CollectionMixin] })
+            public collections!: Collection[]
 
-    @nonenumerable
-    public getCollections (filter?: ManagesBlockPattern) {
-        let collections = this.getArray(Core.Vocab('collection')) as Collection[]
+            public getCollections (filter?: ManagesBlockPattern) {
+                if (filter) {
+                    return this.collections.filter((c) => c.manages &&
+                        c.manages.find((managesBlock) => managesBlock.matches(filter)))
+                }
 
-        if (filter) {
-            collections = collections.filter((c) => c.manages &&
-                c.manages.find((managesBlock) => managesBlock.matches(filter)))
+                return this.collections
+            }
         }
 
-        return collections
+        return HR
     }
-
-    public load () {
-        if (this.isAnonymous) {
-            throw new Error('Cannot load an anonymous resource (blank node)')
-        }
-
-        return (this as any)._alcaeus.loadResource(this.id)
-    }
-
-    public findOperations (): IOperation[] { throw new Error('Not implemented') }
-    public findOperationsDeep (): IOperation[] { throw new Error('Not implemented') }
-    public getOperationsDeep (): IOperation[] { throw new Error('Not implemented') }
-}
-
-export default function generateClass (alcaeus: IHydraClient, getIncomingLinks: () => IIncomingLink[]) {
-    const clientAccessorMixin = ClientAccessor(alcaeus)
-    const linkAccessorMixin = LinkAccessor(getIncomingLinks)
-
-    return OperationFinder(clientAccessorMixin(linkAccessorMixin(HydraResource)))
 }

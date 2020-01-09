@@ -1,48 +1,47 @@
-import { Maybe } from 'tsmonad'
-import { Core } from '../../Constants'
-import { IAsObject } from '../../internals'
-import { rdf } from '../../Vocabs'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { SafeClownface } from 'clownface'
+import { BlankNode, NamedNode } from 'rdf-js'
+import { hydra, rdf } from '../../Vocabs'
 import { Class, IManagesBlock, ManagesBlockPattern, RdfProperty } from '../index'
-import { HydraConstructor } from '../Mixin'
 import { IResource } from '../Resource'
 
-export function Mixin<TBase extends HydraConstructor> (Base: TBase) {
-    abstract class ManagesBlock extends Base implements IManagesBlock {
-        public get subject () {
-            return this.get<IResource>(Core.Vocab('subject'))
-        }
+function getUri (factory: SafeClownface, resource: string | IResource | NamedNode): NamedNode | BlankNode {
+    if (typeof resource === 'string') {
+        return factory.namedNode(resource).term
+    }
 
-        public get property () {
-            return this.get<RdfProperty>(Core.Vocab('property'))
-        }
+    if ('id' in resource) {
+        return resource.id
+    }
 
-        public get object () {
-            const maybeClass = Maybe.maybe(this.get<Class>(Core.Vocab('object')))
-            const classId = maybeClass.bind(c => Maybe.maybe(c.id))
+    return resource
+}
 
-            const getClass = this.apiDocumentation.map((doc) => doc.getClass.bind(doc))
+export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
+    class ManagesBlock extends Base implements IManagesBlock {
+        @property.resource()
+        public subject!: IResource
 
-            return classId
-                .chain(id => getClass.bind(fun => Maybe.maybe(fun(id))))
-                .caseOf({
-                    just: c => c,
-                    nothing: () => maybeClass.valueOr(null as any),
-                })
-        }
+        @property.resource()
+        public property!: RdfProperty
+
+        @property.resource()
+        public object!: Class
 
         public matches ({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
-            const predicateId = typeof predicate === 'string' ? predicate : predicate.id
-            const objectId = typeof object === 'string' ? object : object.id
-            const subjectId = typeof subject === 'string' ? subject : subject.id
+            const predicateId = getUri(this._node, predicate)
+            const objectId = getUri(this._node, object)
+            const subjectId = getUri(this._node, subject)
 
             if (object && this.object && this.property) {
-                const predicateIsRdfType = predicateId === rdf.type
+                const predicateIsRdfType = rdf.type.equals(predicateId)
 
-                return predicateIsRdfType && this.object.id === objectId && this.property.id === predicateId
+                return predicateIsRdfType && objectId.equals(this.object.id) && predicateId.equals(this.property.id)
             }
 
             if (subject && predicate && this.subject && this.property) {
-                return this.subject.id === subjectId && this.property.id === predicateId
+                return subjectId.equals(this.subject.id) && predicateId.equals(this.property.id)
             }
 
             return false
@@ -52,6 +51,6 @@ export function Mixin<TBase extends HydraConstructor> (Base: TBase) {
     return ManagesBlock
 }
 
-export const shouldApply = (res: IAsObject) => {
-    return res._reverseLinks.filter((link) => link.predicate === Core.Vocab('manages')).length > 0
+ManagesBlockMixin.shouldApply = (res: RdfResource) => {
+    return res._node.in(hydra.manages).terms.length > 0
 }

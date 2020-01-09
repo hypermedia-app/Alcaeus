@@ -1,29 +1,32 @@
 import $rdf from 'rdf-ext'
-import * as Constants from '../../Constants'
-import { rdf } from '../../Vocabs'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { hydra, rdf } from '../../Vocabs'
 
 const propertyRangeMappings = [
-    [Constants.Core.Vocab('supportedClass'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('expects'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('returns'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('supportedOperation'), Constants.Core.Vocab('Operation')],
-    [Constants.Core.Vocab('operation'), Constants.Core.Vocab('Operation')],
-    [Constants.Core.Vocab('supportedProperty'), Constants.Core.Vocab('SupportedProperty')],
-    [Constants.Core.Vocab('statusCodes'), Constants.Core.Vocab('StatusCodeDescription')],
-    [Constants.Core.Vocab('property'), rdf.Property],
-    [Constants.Core.Vocab('mapping'), Constants.Core.Vocab('IriTemplateMapping')],
+    [hydra.supportedClass, hydra.Class],
+    [hydra.expects, hydra.Class],
+    [hydra.returns, hydra.Class],
+    [hydra.supportedOperation, hydra.Operation],
+    [hydra.operation, hydra.Operation],
+    [hydra.supportedProperty, hydra.SupportedProperty],
+    [hydra.statusCodes, hydra.StatusCodeDescription],
+    [hydra.property, rdf.Property],
+    [hydra.mapping, hydra.IriTemplateMapping],
 ]
 
-export function inferTypesFromPropertyRanges (dataset) {
+// todo: use clownface
+export function inferTypesFromPropertyRanges (dataset: DatasetExt) {
     propertyRangeMappings.map((mapping) => {
-        const matches = dataset.match(null, $rdf.namedNode(mapping[0]), null, null)
+        const matches = dataset.match(null, mapping[0], null, null)
 
         matches.forEach((triple) => {
-            dataset.add($rdf.triple(
-                triple.object,
-                $rdf.namedNode(rdf.type),
-                $rdf.namedNode(mapping[1])
-            ))
+            if (triple.object.termType === 'BlankNode' || triple.object.termType === 'NamedNode') {
+                dataset.add($rdf.triple(
+                    triple.object,
+                    rdf.type,
+                    mapping[1],
+                ))
+            }
         })
     })
 }

@@ -1,5 +1,6 @@
 import $rdf from 'rdf-ext'
-import { Core } from '../../Constants'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { hydra } from '../../Vocabs'
 
 function countNotNull (...args: (object | null)[]) {
     return args.reduce((previousValue, currentValue) => {
@@ -11,13 +12,14 @@ function countNotNull (...args: (object | null)[]) {
     }, 0)
 }
 
-export function addExplicitStatementsInferredFromManagesBlock (dataset) {
-    const managesBlocks = dataset.match(null, $rdf.namedNode(Core.Vocab('manages')), null, null).toArray()
+// todo: can this be replaced with rdfine features? or use clownface
+export function addExplicitStatementsInferredFromManagesBlock (dataset: DatasetExt) {
+    const managesBlocks = dataset.match(null, hydra.manages, null, null).toArray()
         .map(manages => {
             const collection = manages.subject
-            const objectMatches = dataset.match(manages.object, $rdf.namedNode(Core.Vocab('object'), null, null))
-            const subjectMatches = dataset.match(manages.object, $rdf.namedNode(Core.Vocab('subject'), null, null))
-            const propertyMatches = dataset.match(manages.object, $rdf.namedNode(Core.Vocab('property'), null, null))
+            const objectMatches = dataset.match(manages.object, hydra.object, null, null)
+            const subjectMatches = dataset.match(manages.object, hydra.subject, null, null)
+            const propertyMatches = dataset.match(manages.object, hydra.property, null, null)
 
             return {
                 collection,
@@ -32,10 +34,10 @@ export function addExplicitStatementsInferredFromManagesBlock (dataset) {
             return
         }
 
-        const members = dataset.match(collection, $rdf.namedNode(Core.Vocab('member'), null, null))
+        const members = dataset.match(collection, hydra.member, null, null)
 
         members.forEach(memberQuad => {
-            const member = memberQuad.object
+            const member = memberQuad.object as any
             dataset.add($rdf.triple(
                 subject || member,
                 property || member,

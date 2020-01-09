@@ -1,6 +1,6 @@
+import { Constructor, RdfResource } from '@tpluscode/rdfine'
 import URITemplate from 'es6-url-template'
 import { IIriTemplate, IIriTemplateMapping } from '../index'
-import { Constructor } from '../Mixin'
 
 export interface IExpandedValue {
     ['@value']: string;
@@ -9,13 +9,12 @@ export interface IExpandedValue {
     ['@type']: string;
 }
 
-export default function <TBase extends Constructor> (Base: TBase) {
+export default function <TBase extends Constructor<RdfResource & IIriTemplate>> (Base: TBase) {
     abstract class Builder extends Base {
         public expand (model): string {
-            const thisTemplate = this as any as IIriTemplate
-            const uriTemplate = new URITemplate(thisTemplate.template)
+            const uriTemplate = new URITemplate(this.template)
 
-            const variables = this.buildExpansionModel(thisTemplate.mappings, model)
+            const variables = this.buildExpansionModel(this.mappings, model)
 
             return uriTemplate.expand(variables)
         }
@@ -23,7 +22,7 @@ export default function <TBase extends Constructor> (Base: TBase) {
         public buildExpansionModel (mappings: IIriTemplateMapping[], model: object) {
             return mappings.map((mapping: IIriTemplateMapping) => {
                 return {
-                    value: model[mapping.property.id],
+                    value: model[mapping.property.id.value],
                     variable: mapping.variable,
                 }
             }).reduce((result, mapping) => {

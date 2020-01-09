@@ -1,11 +1,7 @@
 import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode, Quad, Term } from 'rdf-js'
-import { Core } from '../../Constants'
-import { rdf, rdfs } from '../../Vocabs'
-
-const rdfType = $rdf.namedNode(rdf.type)
-const subClassOf = $rdf.namedNode(rdfs('subClassOf'))
-const hydraClass = $rdf.namedNode(Core.Vocab('Class'))
+import { rdf, rdfs, hydra } from '../../Vocabs'
 
 function reAssert (superClass: Term, subClass: Term, dataset: any, prop: NamedNode) {
     const triplesToReassert = dataset.match(superClass, prop, null, null).toArray() as Quad[]
@@ -19,10 +15,10 @@ function reAssert (superClass: Term, subClass: Term, dataset: any, prop: NamedNo
     })
 }
 
-export function inheritFromSuperclasses (dataset: any) {
-    const rootClasses = dataset.match(null, rdfType, hydraClass, null)
+export function inheritFromSuperclasses (dataset: DatasetExt) {
+    const rootClasses = dataset.match(null, rdf.type, hydra.Class, null)
         .filter((quad: Quad) => {
-            return dataset.match(quad.subject, subClassOf, null, null).length === 0
+            return dataset.match(quad.subject, rdfs.subClassOf, null, null).length === 0
         })
         .toArray() as Quad[]
 
@@ -35,17 +31,17 @@ export function inheritFromSuperclasses (dataset: any) {
             continue
         }
         doneClass.push(superClass.value)
-        const subclasses = (dataset.match(null, subClassOf, superClass, null).toArray() as Quad[]).map(q => q.subject)
+        const subclasses = (dataset.match(null, rdfs.subClassOf, superClass, null).toArray() as Quad[]).map(q => q.subject)
         classQueue = [...classQueue, ...subclasses]
 
         subclasses.forEach(subclass => {
             dataset.add($rdf.triple(
                 subclass,
-                rdfType,
-                hydraClass
+                rdf.type,
+                hydra.Class
             ))
-            reAssert(superClass, subclass, dataset, $rdf.namedNode(Core.Vocab('supportedProperty')))
-            reAssert(superClass, subclass, dataset, $rdf.namedNode(Core.Vocab('supportedOperation')))
+            reAssert(superClass, subclass, dataset, hydra.supportedProperty)
+            reAssert(superClass, subclass, dataset, hydra.supportedOperation)
         })
     }
 }

@@ -1,9 +1,9 @@
-import { Core, JsonLd } from '../../Constants'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, RdfResource } from '@tpluscode/rdfine'
+import { hydra } from '../../Vocabs'
+import { IIriTemplate } from '../index'
 import ExpansionModelBuilder, { IExpandedValue } from './ExpansionModelBuilder'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
+export function BasicRepresentationExpansionMixin<TBase extends Constructor<RdfResource & IIriTemplate>> (Base: TBase) {
     class BasicRepresentationExpansion extends Base {
         public mapShorthandValue (value: any) {
             return value
@@ -17,14 +17,13 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     return ExpansionModelBuilder(BasicRepresentationExpansion)
 }
 
-export function shouldApply (resource: IResource) {
-    const isTemplate = resource.types.contains(Core.Vocab('IriTemplate'))
+BasicRepresentationExpansionMixin.shouldApply = function (resource: RdfResource) {
+    const isTemplate = resource.hasType(hydra.IriTemplate)
 
-    const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined' ||
-        resource[Core.Vocab('variableRepresentation')] === null
+    const variableRepresentation = resource._node.out(hydra.variableRepresentation)
+    const isUndefined = variableRepresentation.terms.length === 0
 
-    const isExactMatch = resource[Core.Vocab('variableRepresentation')] &&
-        resource[Core.Vocab('variableRepresentation')][JsonLd.Id] === Core.Vocab('BasicRepresentation')
+    const isExactMatch = variableRepresentation.values.includes(hydra.BasicRepresentation.value)
 
     return isTemplate && (isUndefined || isExactMatch)
 }

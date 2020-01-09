@@ -7,9 +7,9 @@ export default {
         const location = response.xhr.headers.get(Constants.Headers.Location)
 
         if (response.xhr.status === 201 && location !== null) {
-            return resources[response.resolveUri(location)] || null
+            return resources.get(response.resolveUri(location))
         }
 
-        return null
+        return undefined
     },
 }

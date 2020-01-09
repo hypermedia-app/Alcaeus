@@ -25,6 +25,7 @@ export class ParserFactory {
                 return result
             }, {})
 
+        // @ts-ignore
         return new $rdf.Parsers(parsersInit)
     }
 }

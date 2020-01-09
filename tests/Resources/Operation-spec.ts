@@ -1,22 +1,32 @@
+import { RdfResource } from '@tpluscode/rdfine'
+import $rdf from 'rdf-ext'
+import cf from 'clownface'
 import * as sinon from 'sinon'
+import namespace from '@rdfjs/namespace'
 import { IHydraClient } from '../../src/alcaeus'
-import { Class, HydraResource, IOperation, SupportedOperation } from '../../src/Resources'
+import { HydraResource, IOperation } from '../../src/Resources'
+import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
 import { Operation } from '../../src/Resources/Operation'
+import Resource from '../../src/Resources/Resource'
+import { hydra } from '../../src/Vocabs'
+
+const ex = namespace('http://example.com/')
+class SupportedOperation extends SupportedOperationMixin(Resource) {}
 
 describe('Operation', () => {
     describe('property', () => {
         let operation: IOperation
-        const expects: Class = {} as Class
-        const returns: Class = {} as Class
 
         beforeEach(() => {
-            operation = new Operation({
-                description: 'the description',
-                expects,
-                method: 'POST',
-                returns,
-                title: 'the title',
-            } as SupportedOperation, {} as IHydraClient, {} as HydraResource)
+            const node = cf({ dataset: $rdf.dataset() })
+                .namedNode(ex.SupportedOperation)
+            node.addOut(hydra.description, 'the description')
+                .addOut(hydra.title, 'the title')
+                .addOut(hydra.method, 'POST')
+                .addOut(hydra.expects, ex.Expected)
+                .addOut(hydra.returns, ex.Returned)
+
+            operation = new Operation(new SupportedOperation(node), {} as IHydraClient, {} as HydraResource)
         })
 
         it('method should delegate to operation', () => {
@@ -24,11 +34,11 @@ describe('Operation', () => {
         })
 
         it('expects should delegate to operation', () => {
-            expect(operation.expects).toBe(expects)
+            expect(operation.expects.id.value).toBe(ex.Expected.value)
         })
 
         it('returns should delegate to operation', () => {
-            expect(operation.returns).toBe(returns)
+            expect(operation.returns.id.value).toBe(ex.Returned.value)
         })
 
         it('description should delegate to operation', () => {
@@ -40,8 +50,8 @@ describe('Operation', () => {
         let alcaeus
         const supportedOperation = {} as SupportedOperation
         const resource = {
-            id: 'http://target/resource',
-        } as any
+            id: $rdf.namedNode('http://target/resource'),
+        } as Partial<RdfResource>
 
         beforeEach(() => {
             alcaeus = {
@@ -50,7 +60,7 @@ describe('Operation', () => {
         })
 
         it('should execute through alcaeus with provided headers', () => {
-            const op = new Operation(supportedOperation, alcaeus, resource)
+            const op = new Operation(supportedOperation, alcaeus, resource as any)
 
             op.invoke('', {
                 'content-type': 'text/turtle',
@@ -83,13 +93,7 @@ describe('Operation', () => {
         it('returns the underlying resource', () => {
             // given
             const resource = {} as HydraResource
-            const operation = new Operation({
-                description: 'the description',
-                expects: {} as Class,
-                method: 'POST',
-                returns: {} as Class,
-                title: 'the title',
-            } as SupportedOperation, {} as IHydraClient, resource)
+            const operation = new Operation({} as SupportedOperation, {} as IHydraClient, resource)
 
             // when
             const target = operation.target

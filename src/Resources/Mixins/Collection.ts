@@ -1,32 +1,34 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
-import { HydraResource, ICollection, View, IManagesBlock } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { ICollection, View, IManagesBlock, HydraResource } from '../index'
+import { hydra } from '../../Vocabs'
+import { ManagesBlockMixin } from './ManagesBlock'
 
-export function Mixin <TBase extends Constructor> (Base: TBase) {
-    abstract class Collection extends Base implements ICollection {
-        @nonenumerable
-        public get totalItems () {
-            return this.getNumber(Core.Vocab('totalItems')) || 0
-        }
+export function CollectionMixin <TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
+    class Collection extends Base implements ICollection {
+        @property.literal({ type: Number, initial: 0 })
+        public totalItems!: number
 
-        @nonenumerable
-        public get members () {
-            return this.getArray<HydraResource>(Core.Vocab('member'))
-        }
+        @property.resource({
+            path: 'member',
+            array: true,
+        })
+        public members!: HydraResource[]
 
-        @nonenumerable
-        public get views () {
-            return this.getArray<View>(Core.Vocab('view'))
-        }
+        @property.resource({
+            path: 'view',
+            array: true,
+        })
+        public views!: View[]
 
-        public get manages () {
-            return this.getArray<IManagesBlock>(Core.Vocab('manages'))
-        }
+        @property.resource({
+            array: true,
+            as: [ManagesBlockMixin],
+        })
+        public manages!: IManagesBlock[]
     }
 
     return Collection
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('Collection'))
+export const shouldApply = (res: RdfResource) => res.hasType(hydra.Collection)

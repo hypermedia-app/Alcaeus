@@ -1,17 +1,9 @@
-import { deprecated, nonenumerable } from 'core-decorators'
-import { promises as jsonld } from 'jsonld'
-import { JsonLd } from '../Constants'
-import TypeCollection, { ITypeCollection } from '../TypeCollection'
+import { RdfResource, RdfResourceImpl, Constructor } from '@tpluscode/rdfine'
+import nonenumerable from '../helpers/nonenumerable'
+import { NamedNode, Term } from 'rdf-js'
+import { xsd } from '../Vocabs'
 
-export interface IResource {
-    /**
-     * Gets the resource identifiers
-     */
-    id: string;
-    /**
-     * Gets the resource types
-     */
-    types: ITypeCollection;
+export interface IResource extends RdfResource {
     /**
      * Gets a value indicating whether the resource is a blank node
      */
@@ -20,85 +12,45 @@ export interface IResource {
      * Gets the value of a property
      * @param property
      */
-    get<T = unknown> (property: string): T | null;
+    get<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode): T | null;
     /**
      * Gets the value of a property and ensures that an array will be returned
      * @param property
      */
-    getArray<T = unknown> (property: string): T[];
+    getArray<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode): T[];
     /**
      * Gets the property value if it's boolean. Throws if it's not
      * @param property
      */
-    getBoolean (property: string): boolean;
+    getBoolean (property: string | NamedNode): boolean;
     /**
      * Gets the property value if it's a string. Throws if it's not
      * @param property
      */
-    getString (property: string): string | null;
+    getString (property: string | NamedNode): string | null;
     /**
      * Gets the property value if it's a number. Throws if it's not
      * @param property
      */
-    getNumber (property: string): number | null;
+    getNumber (property: string | NamedNode): number | null;
 }
 
-const isProcessed = new WeakMap<IResource, boolean>()
-
-export default class implements IResource {
-    [prop: string]: unknown;
-
-    public constructor (actualResource: object) {
-        Object.assign(this, actualResource)
-
-        isProcessed.set(this, false)
-    }
-
-    @nonenumerable
-    public get id (): string {
-        const id = this[JsonLd.Id]
-        if (typeof id !== 'string') {
-            throw new Error('Resource identifier must be a string')
-        }
-
-        return id
-    }
-
-    @nonenumerable
-    public get types () {
-        return TypeCollection.create(this[JsonLd.Type])
-    }
-
+export default class Resource extends RdfResourceImpl implements IResource {
     @nonenumerable
     public get isAnonymous () {
-        return this.id.startsWith('_')
+        return this.id.termType === 'BlankNode'
     }
 
-    @nonenumerable
-    public get _processed () {
-        return isProcessed.get(this) || false
-    }
+    public get<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode, { strict } = { strict: false }): T | null {
+        let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
 
-    public set _processed (val: boolean) {
-        isProcessed.set(this, val)
-    }
+        const objects = this._node.out(propertyNode)
+            .map(obj => {
+                return (this.constructor as Constructor).factory.createEntity<T>(obj)
+            })
 
-    public compact (context: unknown = 'https://www.w3.org/ns/hydra/core') {
-        return jsonld.compact(this, context)
-    }
-
-    /**
-     * @deprecated Use method without underscore
-     */
-    @deprecated('Use method without underscore')
-    public _get<T = unknown> (property: string): T | null {
-        return this.get<T>(property)
-    }
-
-    public get<T = unknown> (property: string, { strict } = { strict: false }): T | null {
-        if (typeof this[property] !== 'undefined') {
-            // @ts-ignore
-            return this[property]
+        if (objects.length > 0) {
+            return objects[0]
         }
 
         if (strict) {
@@ -108,16 +60,12 @@ export default class implements IResource {
         return null
     }
 
-    /**
-     * @deprecated Use method without underscore
-     */
-    @deprecated('Use method without underscore')
-    public _getArray<T = unknown> (property: string): T[] {
-        return this.getArray<T>(property)
-    }
-
-    public getArray<T = unknown> (property: string, options = { strict: false }): T[] {
-        const values = this.get(property, options)
+    public getArray<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode, options = { strict: false }): T[] {
+        let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
+        const values = this._node.out(propertyNode)
+            .map(obj => {
+                return (this.constructor as Constructor).factory.createEntity<T>(obj)
+            })
 
         if (!values) {
             return []
@@ -130,45 +78,61 @@ export default class implements IResource {
         return [values as T]
     }
 
-    public getNumber (property: string, options = { strict: false }): number | null {
-        const value = this.get(property, options)
+    public getNumber (property: string | NamedNode, options = { strict: false }): number | null {
+        const value = this.__getNodes(property, options)[0]
 
-        if (value === null || typeof value === 'undefined') {
+        if (typeof value === 'undefined') {
             return null
         }
 
-        if (typeof value === 'number') {
-            return value
+        if (value.termType === 'Literal') {
+            return parseFloat(value.value)
         }
 
         throw new Error(`Expected property '${property}' to be a number but found '${value}'`)
     }
 
-    public getString (property: string, options = { strict: false }): string | null {
-        const value = this.get(property, options)
+    public getString (property: string | NamedNode, options = { strict: false }): string | null {
+        const value = this.__getNodes(property, options)[0]
 
-        if (value === null || typeof value === 'undefined') {
+        if (typeof value === 'undefined') {
             return null
         }
 
-        if (typeof value === 'string') {
-            return value
+        if (value.termType === 'Literal') {
+            return value.value
         }
 
         throw new Error(`Expected property '${property}' to be a string but found '${value}'`)
     }
 
-    public getBoolean (property: string, options = { strict: false }): boolean {
-        const value = this.get(property, options)
+    public getBoolean (property: string | NamedNode, options = { strict: false }): boolean {
+        const value = this.__getNodes(property, options)[0]
 
-        if (value === null || typeof value === 'undefined') {
+        if (typeof value === 'undefined') {
             return false
         }
 
-        if (typeof value === 'boolean') {
-            return value
+        if (value.termType === 'Literal' && xsd.boolean.equals(value.datatype)) {
+            return value.equals(this._node.literal(true).term)
         }
 
         throw new Error(`Expected property '${property}' to be a boolean but found '${value}'`)
+    }
+
+    private __getNodes (property: string | NamedNode, { strict } = { strict: false }): Term[] {
+        let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
+
+        const objects = this._node.out(propertyNode).terms
+
+        if (objects.length > 0) {
+            return objects
+        }
+
+        if (strict) {
+            throw new Error(`Value for predicate <${property}> was missing`)
+        }
+
+        return []
     }
 }

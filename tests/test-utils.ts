@@ -110,6 +110,6 @@ export function createGraph (ntriples: string) {
     PREFIX hydra: <${prefixes.hydra}>
 
     ${ntriples}`)
-        return dataset.import(await parser.import(stream as any))
+        return dataset.import(parser.import(stream as any))
     }
 }

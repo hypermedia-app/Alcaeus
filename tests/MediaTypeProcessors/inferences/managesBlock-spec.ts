@@ -26,7 +26,7 @@ describe('manages block inference', () => {
 
     it('ignores malformed manages blocks', async () => {
         // given
-        const dataset = await specGraphs.malformedManagesBlocks()
+        const dataset = await specGraphs.incompleteManagesBlocks()
 
         // when
         addExplicitStatementsInferredFromManagesBlock(dataset)

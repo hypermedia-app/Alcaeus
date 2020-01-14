@@ -49,7 +49,7 @@ describe('RdfProcessor', () => {
                 [hydra.supportedClass, hydra.Class],
                 [hydra.expects, hydra.Class],
                 [hydra.returns, hydra.Class],
-                [hydra.supportedOperation, hydra.Operation],
+                [hydra.supportedOperation, hydra.SupportedOperation],
                 [hydra.operation, hydra.Operation],
                 [hydra.supportedProperty, hydra.SupportedProperty],
                 [hydra.statusCodes, hydra.StatusCodeDescription],

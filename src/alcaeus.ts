@@ -13,10 +13,12 @@ export interface IHydraClient {
     rootSelectors: IRootSelector[];
     mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
     loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
+    loadDocumentation (uri: string, headers: HeadersInit): void;
     invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
+    documentationLoaded: Promise<IHydraResponse[]>;
 }
 
 const addOrReplaceGraph = async (
@@ -45,15 +47,6 @@ const addOrReplaceGraph = async (
         }).toStream())
 }
 
-async function getApiDocumentation (this: Alcaeus, response: IResponseWrapper, headers): Promise<void> {
-    if (!response.apiDocumentationLink) {
-        console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
-        return
-    }
-
-    await this.loadDocumentation(response.apiDocumentationLink, headers)
-}
-
 export class Alcaeus implements IHydraClient {
     public rootSelectors: IRootSelector[];
 
@@ -65,6 +58,8 @@ export class Alcaeus implements IHydraClient {
 
     public readonly factory: ResourceFactory
 
+    private readonly __documentationPromises: Map<string, Promise<IHydraResponse>> = new Map()
+
     public constructor (
         rootSelectors: IRootSelector[],
         mediaTypeProcessors: { [name: string]: IMediaTypeProcessor },
@@ -75,17 +70,27 @@ export class Alcaeus implements IHydraClient {
         this.factory = factory
     }
 
+    public get documentationLoaded () {
+        return Promise.all(this.__documentationPromises.values())
+    }
+
     public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
         const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
         await addOrReplaceGraph(this, response, uri)
-        getApiDocumentation.call(this, response, headers)
+        this.__getApiDocumentation(response, headers)
 
         return create(uri, response, this)
     }
 
-    public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
-        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
-        await addOrReplaceGraph(this, response, uri)
+    public loadDocumentation (uri: string, headers: HeadersInit = {}) {
+        const request = FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
+            .then(async response => {
+                await addOrReplaceGraph(this, response, uri)
+                return response
+            })
+            .then(response => create(uri, response, this))
+
+        this.__documentationPromises.set(uri, request)
     }
 
     public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<IHydraResponse> {
@@ -101,9 +106,18 @@ export class Alcaeus implements IHydraClient {
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)
-        getApiDocumentation.call(this, response, headers)
+        this.__getApiDocumentation(response, headers)
 
         return create(uri, response, this)
+    }
+
+    private __getApiDocumentation (response: IResponseWrapper, headers: HeadersInit) {
+        if (!response.apiDocumentationLink) {
+            console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
+            return
+        }
+
+        this.loadDocumentation(response.apiDocumentationLink, headers)
     }
 
     private __mergeHeaders (headers: Headers): Headers {

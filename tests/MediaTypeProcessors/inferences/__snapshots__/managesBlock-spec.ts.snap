@@ -33,15 +33,11 @@ exports[`manages block inference ignores malformed manages blocks 1`] = `
 "<http://example.com/collection> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Collection> .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n0 .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n1 .
-<http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n2 .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member1> .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member2> .
-_:c14n0 <http://www.w3.org/ns/hydra/core#object> <http://example.com/vocab#Member> .
-_:c14n0 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#foo> .
-_:c14n0 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
-_:c14n1 <http://www.w3.org/ns/hydra/core#subject> <http://example.com/member3> .
-_:c14n2 <http://www.w3.org/ns/hydra/core#object> <http://example.com/vocab#Member> .
-_:c14n2 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
-_:c14n2 <http://www.w3.org/ns/hydra/core#subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#bar> .
+_:c14n0 <http://www.w3.org/ns/hydra/core#subject> <http://example.com/member3> .
+_:c14n1 <http://www.w3.org/ns/hydra/core#object> <http://example.com/vocab#Member> .
+_:c14n1 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
+_:c14n1 <http://www.w3.org/ns/hydra/core#subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#bar> .
 "
 `;

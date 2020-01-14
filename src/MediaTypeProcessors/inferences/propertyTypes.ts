@@ -1,12 +1,12 @@
-import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import cf from 'clownface'
+import { DatasetCore } from 'rdf-js'
 import { hydra, rdf } from '../../Vocabs'
 
 const propertyRangeMappings = [
     [hydra.supportedClass, hydra.Class],
     [hydra.expects, hydra.Class],
     [hydra.returns, hydra.Class],
-    [hydra.supportedOperation, hydra.Operation],
+    [hydra.supportedOperation, hydra.SupportedOperation],
     [hydra.operation, hydra.Operation],
     [hydra.supportedProperty, hydra.SupportedProperty],
     [hydra.statusCodes, hydra.StatusCodeDescription],
@@ -14,19 +14,10 @@ const propertyRangeMappings = [
     [hydra.mapping, hydra.IriTemplateMapping],
 ]
 
-// todo: use clownface
-export function inferTypesFromPropertyRanges (dataset: DatasetExt) {
-    propertyRangeMappings.map((mapping) => {
-        const matches = dataset.match(null, mapping[0], null, null)
+export function inferTypesFromPropertyRanges (dataset: DatasetCore) {
+    const node = cf({ dataset })
 
-        matches.forEach((triple) => {
-            if (triple.object.termType === 'BlankNode' || triple.object.termType === 'NamedNode') {
-                dataset.add($rdf.triple(
-                    triple.object,
-                    rdf.type,
-                    mapping[1],
-                ))
-            }
-        })
+    propertyRangeMappings.map(([ property, type ]) => {
+        node.out(property).addOut(rdf.type, type)
     })
 }

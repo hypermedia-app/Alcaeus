@@ -2,6 +2,7 @@ import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { hydra } from '../../Vocabs'
 import { ISupportedProperty, RdfProperty } from '../index'
 import { IResource } from '../Resource'
+import { DocumentedResourceMixin } from './DocumentedResource'
 import { RdfPropertyMixin } from './RdfProperty'
 
 export function SupportedPropertyMixin<TBase extends Constructor> (Base: TBase) {
@@ -33,7 +34,7 @@ export function SupportedPropertyMixin<TBase extends Constructor> (Base: TBase) 
         public property!: RdfProperty
     }
 
-    return SupportedProperty
+    return DocumentedResourceMixin(SupportedProperty)
 }
 
 SupportedPropertyMixin.shouldApply = (res: IResource) => res.hasType(hydra.SupportedProperty)

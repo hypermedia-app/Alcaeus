@@ -1,6 +1,7 @@
 import { ResourceFactory } from '@tpluscode/rdfine'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import * as FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import { IHydraResponse, create } from './HydraResponse'
@@ -34,17 +35,10 @@ const addOrReplaceGraph = async (
     }
 
     const graph = $rdf.namedNode(uri)
-    const dataset = await suitableProcessor.process(uri, response)
+    const parsedTriples = await suitableProcessor.process(uri, response)
     await alcaeus.dataset
         .removeMatches(undefined, undefined, undefined, graph)
-        .import(dataset.map(quad => {
-            return $rdf.quad(
-                quad.subject,
-                quad.predicate,
-                quad.object,
-                graph,
-            )
-        }).toStream())
+        .import(parsedTriples.pipe(new TripleToQuadTransform(graph)))
 }
 
 export class Alcaeus implements IHydraClient {

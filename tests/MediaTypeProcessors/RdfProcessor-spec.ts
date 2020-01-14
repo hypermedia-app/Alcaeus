@@ -25,7 +25,7 @@ describe('RdfProcessor', () => {
             })
 
             // when
-            const dataset = await processor.process('http://example.com/resource', response)
+            const dataset = await $rdf.dataset().import(await processor.process('http://example.com/resource', response))
 
             // then
             expect(dataset.size).toBeGreaterThan(0)
@@ -38,7 +38,7 @@ describe('RdfProcessor', () => {
             })
 
             // when
-            const dataset = await processor.process('http://example.com/resource', response)
+            const dataset = await $rdf.dataset().import(await processor.process('http://example.com/resource', response))
 
             // then
             expect(dataset.size).toBeGreaterThan(0)
@@ -72,7 +72,7 @@ describe('RdfProcessor', () => {
                     })
 
                     // when
-                    const dataset = await processor.process('http://example.com/resource', response)
+                    const dataset = await $rdf.dataset().import(await processor.process('http://example.com/resource', response))
 
                     // then
                     const expectedTypeQuad = $rdf.quad(

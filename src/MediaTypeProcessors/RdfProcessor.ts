@@ -1,19 +1,15 @@
 import $rdf from 'rdf-ext'
-import { DatasetCore } from 'rdf-js'
+import { DatasetCore, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { ParserFactory } from '../ParserFactory'
 import { IResponseWrapper } from '../ResponseWrapper'
 import * as inferences from './inferences'
 
-interface ConverterMap {
-    [type: string]: (value: string, type: string) => unknown;
-}
-
 export interface IMediaTypeProcessor {
     canProcess(mediaType: string);
     process(
         uri: string,
-        response: IResponseWrapper): Promise<DatasetCore>;
+        response: IResponseWrapper): Promise<Stream>;
 }
 
 const parserFactory = new ParserFactory()
@@ -26,7 +22,7 @@ function stripContentTypeParameters (mediaType: string) {
     return mediaType.split(';').shift()
 }
 
-async function parseResponse (responseText: string, uri: string, mediaType: string): Promise<DatasetCore> {
+async function parseResponse (responseText: string, uri: string, mediaType: string): Promise<Stream> {
     const parsers = parserFactory.create(uri)
     const quadStream = parsers.import(stripContentTypeParameters(mediaType), stringToStream(responseText))
     if (quadStream == null) {
@@ -36,7 +32,7 @@ async function parseResponse (responseText: string, uri: string, mediaType: stri
     const dataset = await $rdf.dataset().import(quadStream)
     runInferences(dataset)
 
-    return dataset
+    return dataset.toStream()
 }
 
 export default class RdfProcessor implements IMediaTypeProcessor {
@@ -44,7 +40,7 @@ export default class RdfProcessor implements IMediaTypeProcessor {
         return !!parserFactory.create().find(stripContentTypeParameters(mediaType))
     }
 
-    public async process (uri: string, response: IResponseWrapper): Promise<DatasetCore> {
+    public async process (uri: string, response: IResponseWrapper): Promise<Stream> {
         return parseResponse(await response.xhr.text(), uri, response.mediaType)
     }
 

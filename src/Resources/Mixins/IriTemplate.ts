@@ -6,7 +6,7 @@ import { IriTemplateMappingMixin } from './IriTemplateMapping'
 
 export function IriTemplateMixin<TBase extends Constructor> (Base: TBase) {
     @namespace(hydra)
-    class IriTemplate extends Base implements IIriTemplate {
+    class IriTemplate extends Base implements Partial<IIriTemplate> {
         @property.literal()
         public template!: string
 
@@ -21,10 +21,6 @@ export function IriTemplateMixin<TBase extends Constructor> (Base: TBase) {
             initial: hydra.BasicRepresentation,
         })
         public variableRepresentation!: HydraResource
-
-        public expand (): string {
-            throw new Error('Implement in derived class')
-        }
     }
 
     return IriTemplate

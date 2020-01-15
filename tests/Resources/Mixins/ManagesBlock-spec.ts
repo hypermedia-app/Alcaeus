@@ -134,6 +134,21 @@ describe('ManagesBlock', () => {
                     // then
                     expect(isMatch).toBeFalsy()
                 })
+
+                it('returns false when it is incomplete', () => {
+                    // given
+                    node
+                        .addOut(hydra.property, rdf.type)
+
+                    // when
+                    const isMatch = managesBlock.matches({
+                        object: $rdf.namedNode('http://example.com/vocab#class'),
+                        predicate: 'http://some.other/property',
+                    })
+
+                    // then
+                    expect(isMatch).toBeFalsy()
+                })
             })
 
             describe('by subject and predicate type', () => {

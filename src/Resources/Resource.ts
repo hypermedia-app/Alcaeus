@@ -1,4 +1,4 @@
-import { RdfResource, RdfResourceImpl, Constructor } from '@tpluscode/rdfine'
+import { RdfResource, RdfResourceImpl } from '@tpluscode/rdfine'
 import nonenumerable from '../helpers/nonenumerable'
 import { NamedNode, Term } from 'rdf-js'
 import { xsd } from '../Vocabs'
@@ -46,7 +46,7 @@ export default class Resource extends RdfResourceImpl implements IResource {
 
         const objects = this._node.out(propertyNode)
             .map(obj => {
-                return (this.constructor as Constructor).factory.createEntity<T>(obj)
+                return this._create<T>(obj)
             })
 
         if (objects.length > 0) {
@@ -64,7 +64,7 @@ export default class Resource extends RdfResourceImpl implements IResource {
         let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
         const values = this._node.out(propertyNode)
             .map(obj => {
-                return (this.constructor as Constructor).factory.createEntity<T>(obj)
+                return this._create<T>(obj)
             })
 
         if (!values) {

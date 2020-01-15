@@ -33,6 +33,23 @@ describe('ResourceGraph', () => {
             expect(actual!.id.value).toBe('http://example.com/biała gęś')
         })
 
+        it('should return undefined for resource not found', () => {
+            // given
+            cf({ dataset })
+                .namedNode('http://example.com/foo')
+                .addOut(rdf.type, schema.Document)
+            const graph = new ResourceGraph({
+                dataset,
+                factory,
+            })
+
+            // when
+            const actual = graph.get('http://example.com/bar')
+
+            // then
+            expect(actual).toBeUndefined()
+        })
+
         it('should return resource for encoded URI', () => {
             // given
             cf({ dataset })

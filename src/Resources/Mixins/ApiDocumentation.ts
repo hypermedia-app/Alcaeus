@@ -16,15 +16,17 @@ export function ApiDocumentationMixin<TBase extends Constructor> (Base: TBase) {
         public entrypoint!: HydraResource
 
         public loadEntrypoint () {
-            if (!this.entrypoint) {
+            const entrypoint = this.entrypoint
+
+            if (!entrypoint) {
                 return Promise.reject(new Error('The ApiDocumentation doesn\'t have an entrypoint.'))
             }
 
-            if (!this.entrypoint.load) {
+            if (!entrypoint.load) {
                 return Promise.reject(new Error('Cannot load entrypoint. Is it anonymous resource?'))
             }
 
-            return this.entrypoint.load()
+            return entrypoint.load()
         }
     }
 

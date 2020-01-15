@@ -1,59 +1,60 @@
-import { Mixin } from '../../src/Resources/Mixins/SupportedProperty'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { SupportedPropertyMixin } from '../../src/Resources/Mixins/SupportedProperty'
 import Resource from '../../src/Resources/Resource'
+import { hydra, rdfs, xml } from '../../src/Vocabs'
 
-class SupportedProperty extends Mixin(Resource) {
+class SupportedProperty extends SupportedPropertyMixin(Resource) {
 }
 
 describe('SupportedProperty', () => {
-    it('is readable if unspecified', () => {
-        const prop = new SupportedProperty({})
+    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let prop: SupportedProperty
 
+    beforeEach(() => {
+        node = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#SupportedProperty')
+
+        prop = new SupportedProperty(node)
+    })
+
+    it('is readable if unspecified', () => {
         expect(prop.readable).toBe(true)
     })
 
     it('can be made non readable', () => {
-        const prop = new SupportedProperty({ 'http://www.w3.org/ns/hydra/core#readable': false })
+        node.deleteOut(hydra.readable).addOut(hydra.readable, false)
 
         expect(prop.readable).toBe(false)
     })
 
     it('is writable if unspecified', () => {
-        const prop = new SupportedProperty({})
-
         expect(prop.writable).toBe(true)
     })
 
     it('can be made non writable', () => {
-        const prop = new SupportedProperty({ 'http://www.w3.org/ns/hydra/core#writeable': false })
+        node.deleteOut(hydra.writeable).addOut(hydra.writeable, false)
 
         expect(prop.writable).toBe(false)
     })
 
     it('is not required by default', () => {
-        const prop = new SupportedProperty({})
-
         expect(prop.required).toBe(false)
     })
 
     it('can be made required', () => {
-        const prop = new SupportedProperty({ 'http://www.w3.org/ns/hydra/core#required': true })
+        node.deleteOut(hydra.required).addOut(hydra.required, true)
 
         expect(prop.required).toBe(true)
     })
 
     it('should give access to property', () => {
-        const jsonLd = {
-            'http://www.w3.org/ns/hydra/core#property': {
-                '@id': 'http://example.com/property',
-                'http://www.w3.org/2000/01/rdf-schema#range': {
-                    '@id': 'http://www.w3.org/2001/XMLSchema#string',
-                },
-            },
-        }
-        const prop = new SupportedProperty(jsonLd) as any
+        node.addOut(hydra.property, node.namedNode('http://example.com/property'), p => {
+            p.addOut(rdfs.range, xml.string)
+        })
 
-        expect(prop.property['@id']).toBe('http://example.com/property')
-        expect(prop.property['http://www.w3.org/2000/01/rdf-schema#range']['@id'])
-            .toBe('http://www.w3.org/2001/XMLSchema#string')
+        expect(prop.property.id.value).toEqual('http://example.com/property')
+        expect(prop.property.range!.id).toEqual(xml.string)
     })
 })

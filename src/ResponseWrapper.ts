@@ -1,6 +1,9 @@
 import li from 'parse-link-header'
 import * as Constants from './Constants'
 import nonenumerable from './helpers/nonenumerable'
+import { hydra } from './Vocabs'
+
+const apiDocumentationRel = hydra.apiDocumentation.value
 
 export interface IResponseWrapper {
     /**
@@ -59,8 +62,8 @@ export class ResponseWrapper implements IResponseWrapper {
             const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
             const links = li(linkHeaders)
 
-            if (links[Constants.Core.Vocab('apiDocumentation')]) {
-                const linkUrl = links[Constants.Core.Vocab('apiDocumentation')].url
+            if (links[apiDocumentationRel]) {
+                const linkUrl = links[apiDocumentationRel].url
 
                 return this.resolveUri(linkUrl)
             }

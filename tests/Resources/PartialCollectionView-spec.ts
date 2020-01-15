@@ -1,46 +1,58 @@
-import 'core-js/es6/object'
-import { Core } from '../../src/Constants'
-import HydraResource from '../../src/Resources/HydraResource'
-import { Mixin } from '../../src/Resources/Mixins/PartialCollectionView'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import Parser from '@rdfjs/parser-jsonld'
+import { DatasetCore, NamedNode, Stream } from 'rdf-js'
+import stringToStream from 'string-to-stream'
+import Resource from '../../src/Resources/Resource'
+import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
 import { Bodies } from '../test-objects'
 
-let links
-class PartialCollectionView extends Mixin(HydraResource(null as any, () => links)) {}
+const parser = new Parser()
+
+class PartialCollectionView extends PartialCollectionViewMixin(Resource) {}
 
 describe('PartialCollectionView', () => {
-    beforeEach(() => { links = [] })
+    let node: SingleContextClownface<DatasetCore, NamedNode>
 
-    it('should link to the collection', () => {
-        const collection = {}
+    beforeEach(async () => {
+        const dataset = $rdf.dataset()
+        const jsonldStream = stringToStream(JSON.stringify(Bodies.hydraCollectionWithView)) as any as Stream
+        await dataset.import(parser.import(jsonldStream))
 
-        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null)
-        links = [
-            {
-                predicate: Core.Vocab('view'),
-                subject: collection,
-                subjectId: 'http://some.id',
-            },
-        ]
-
-        expect(Object.is(collection, pcv.collection)).toBe(true)
+        node = cf({ dataset })
+            .namedNode('http://example.com/resource?page=3')
     })
 
-    it('should contain null links to other pages if missing', () => {
-        const pcv = new PartialCollectionView({}, null)
+    it('should link to the collection', async () => {
+        const pcv = new PartialCollectionView(node)
 
-        expect(pcv.next).toBe(null)
-        expect(pcv.previous).toBe(null)
-        expect(pcv.first).toBe(null)
-        expect(pcv.last).toBe(null)
+        expect(pcv.collection!.id.value).toEqual('http://example.com/resource')
+    })
+
+    it('should contain no links to other pages if missing', () => {
+        // given
+        const noLinks = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/resource?page=3')
+
+        // when
+        const pcv = new PartialCollectionView(noLinks)
+
+        // then
+        expect(pcv.next).toBeUndefined()
+        expect(pcv.previous).toBeUndefined()
+        expect(pcv.first).toBeUndefined()
+        expect(pcv.last).toBeUndefined()
     })
 
     it('should contain links to other pages', () => {
-        const pcv = new PartialCollectionView(Bodies.hydraCollectionWithView['hydra:view'], null)
+        // when
+        const pcv = new PartialCollectionView(node)
 
-        expect(pcv.next!.id).toBe('http://example.com/resource?page=4')
-        expect(pcv.previous!.id).toBe('http://example.com/resource?page=2')
-        expect(pcv.first!.id).toBe('http://example.com/resource?page=1')
-        expect(pcv.last!.id).toBe('http://example.com/resource?page=58')
+        // then
+        expect(pcv.next!.id.value).toBe('http://example.com/resource?page=4')
+        expect(pcv.previous!.id.value).toBe('http://example.com/resource?page=2')
+        expect(pcv.first!.id.value).toBe('http://example.com/resource?page=1')
+        expect(pcv.last!.id.value).toBe('http://example.com/resource?page=58')
     })
 
     it('first should be nonenumerable', () => {

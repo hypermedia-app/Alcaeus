@@ -1,35 +1,37 @@
-import { Core } from '../../Constants'
-import { owl } from '../../Vocabs'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { hydra, owl } from '../../Vocabs'
 import { Class, ISupportedOperation } from '../index'
-import { HydraConstructor } from '../Mixin'
-import Nothing from '../Nothing'
-import { IResource } from '../Resource'
+import { DocumentedResourceMixin } from './DocumentedResource'
 
-export function Mixin<TBase extends HydraConstructor> (Base: TBase) {
+export function SupportedOperationMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
     abstract class SupportedOperation extends Base implements ISupportedOperation {
-        public get method () {
-            return this.getString(Core.Vocab('method')) || ''
-        }
+        @property.literal({
+            initial: '',
+        })
+        public method!: string
 
-        public get expects () {
-            return this.get<Class>(Core.Vocab('expects')) || new Nothing(this.apiDocumentation)
-        }
+        @property.resource({
+            initial: () => owl.Nothing,
+        })
+        public expects!: Class
 
-        public get returns () {
-            return this.get<Class>(Core.Vocab('returns')) || new Nothing(this.apiDocumentation)
-        }
+        @property.resource({
+            initial: () => owl.Nothing,
+        })
+        public returns!: Class
 
         public get requiresInput (): boolean {
             const method = this.method || ''
             const methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE'
 
-            const operationExpectsBody = !!this.expects && this.expects.id !== owl.Nothing
+            const operationExpectsBody = !!this.expects && !owl.Nothing.equals(this.expects.id)
 
             return methodExpectsBody || operationExpectsBody
         }
     }
 
-    return SupportedOperation
+    return DocumentedResourceMixin(SupportedOperation)
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('Operation'))
+SupportedOperationMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Operation)

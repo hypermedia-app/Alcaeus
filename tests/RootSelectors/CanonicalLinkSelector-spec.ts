@@ -1,4 +1,3 @@
-import { ResourceGraph } from '../../src/ResourceGraph'
 import { HydraResource } from '../../src/Resources'
 import { IResponseWrapper } from '../../src/ResponseWrapper'
 import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector'
@@ -8,9 +7,9 @@ describe('CanonicalLinkSelector', () => {
     it('should select the resource with id matching canonical link', () => {
         // given
         const expectedRoot = {} as HydraResource
-        const resources = new ResourceGraph()
-        resources['redirected-to'] = {} as HydraResource
-        resources['the-real-id'] = expectedRoot
+        const resources = new Map<string, HydraResource>()
+        resources.set('redirected-to', {} as HydraResource)
+        resources.set('the-real-id', expectedRoot)
         const response = {
             xhr: {
                 headers: new Headers({
@@ -30,7 +29,7 @@ describe('CanonicalLinkSelector', () => {
 
     it('should return null if canonical link rel is not present', () => {
         // given
-        const resources = new ResourceGraph()
+        const resources = new Map<string, HydraResource>()
         const response = {
             xhr: {
                 headers: new Headers({
@@ -43,12 +42,12 @@ describe('CanonicalLinkSelector', () => {
         const root = CanonicalLinkSelector.selectRoot(resources, response)
 
         // then
-        expect(root).toBeNull()
+        expect(root).toBeUndefined()
     })
 
-    it('should return null if link header is not present', () => {
+    it('should not select if link header is not present', () => {
         // given
-        const resources = new ResourceGraph()
+        const resources = new Map<string, HydraResource>()
         const response = {
             xhr: {
                 headers: new Headers({}),
@@ -59,6 +58,6 @@ describe('CanonicalLinkSelector', () => {
         const root = CanonicalLinkSelector.selectRoot(resources, response)
 
         // then
-        expect(root).toBeNull()
+        expect(root).toBeUndefined()
     })
 })

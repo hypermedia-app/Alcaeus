@@ -1,10 +1,18 @@
 import 'isomorphic-fetch'
+import { ResourceFactory } from '@tpluscode/rdfine'
 import * as sinon from 'sinon'
+import $rdf from 'rdf-ext'
+import cf from 'clownface'
+import namespace from '@rdfjs/namespace'
 import { create as HydraResponse } from '../src/HydraResponse'
-import { ResourceGraph } from '../src/ResourceGraph'
-import { HydraResource } from '../src/Resources'
 import Resource from '../src/Resources/Resource'
 import { IResponseWrapper } from '../src/ResponseWrapper'
+import { rdf } from '../src/Vocabs'
+
+const ex = namespace('http://example.com/')
+
+const factory = new ResourceFactory(Resource)
+const rootSelectors = []
 
 describe('HydraResponse', () => {
     it('should be iterable', () => {
@@ -12,19 +20,19 @@ describe('HydraResponse', () => {
         const xhr = {
             xhr: { } as Response,
         } as IResponseWrapper
-        const resources = {
-            a: 'a',
-            b: 'b',
-            c: 'c',
-            d: 'd',
-        }
-        const r12n = HydraResponse('urn:some:res', xhr, resources as any, [])
+        const dataset = $rdf.dataset()
+        cf({ dataset })
+            .namedNode(ex.a).addOut(rdf.type, ex.Res)
+            .namedNode(ex.b).addOut(rdf.type, ex.Res)
+            .namedNode(ex.c).addOut(rdf.type, ex.Res)
+            .namedNode(ex.d).addOut(rdf.type, ex.Res)
+        const r12n = HydraResponse(ex.a.value, xhr, { dataset, factory, rootSelectors })
 
         // when
         const array = Array.from(r12n)
 
         // then
-        expect(array.join()).toBe('a,b,c,d')
+        expect(array.map(r => r.id.value).join()).toBe('http://example.com/a,http://example.com/b,http://example.com/c,http://example.com/d')
     })
 
     describe('requestedUri', () => {
@@ -33,7 +41,7 @@ describe('HydraResponse', () => {
             const theUri = 'http://what/I/requested'
 
             // when
-            const response = HydraResponse(theUri, {} as IResponseWrapper)
+            const response = HydraResponse(theUri, {} as IResponseWrapper, { dataset: $rdf.dataset(), factory, rootSelectors })
 
             // then
             expect(response.requestedUri).toBe(theUri)
@@ -46,37 +54,37 @@ describe('HydraResponse', () => {
             const xhr = {
                 xhr: {} as Response,
             } as IResponseWrapper
-            const resources = new ResourceGraph()
             const selector = {
                 selectRoot: sinon.stub(),
             }
             selector.selectRoot.returns({
                 id: 'urn:other:resource',
             })
+            const dataset = $rdf.dataset()
 
             // when
-            const response = HydraResponse('urn:some:resource', xhr, resources, [ selector ])
+            const response = HydraResponse('urn:some:resource', xhr, { dataset, factory, rootSelectors: [ selector ] })
             const root = response.root
 
             // then
             expect(root!.id).toEqual('urn:other:resource')
-            expect(selector.selectRoot.calledWith(resources)).toBeTruthy()
+            expect(selector.selectRoot.called).toBeTruthy()
         })
     })
 
     describe('get', () => {
         it('returns objects from the resource graph', async () => {
             // given
-            const childRes = { id: 'urn:child:resource' }
-            const resources = new ResourceGraph()
-            resources.add(childRes as HydraResource)
-            const response = HydraResponse('urn:some:uri', {} as IResponseWrapper, resources, [])
+            const dataset = $rdf.dataset()
+            cf({ dataset })
+                .namedNode('urn:child:resource').addOut(rdf.type, ex.Type)
+            const response = HydraResponse('urn:some:uri', {} as IResponseWrapper, { dataset, factory, rootSelectors })
 
             // when
             const actualIndexed = response.get('urn:child:resource')
 
             // then
-            expect(Object.is(actualIndexed, childRes)).toBe(true)
+            expect(actualIndexed!.id.value).toBe('urn:child:resource')
         })
     })
 
@@ -86,24 +94,36 @@ describe('HydraResponse', () => {
             const xhr = {
                 xhr: { } as Response,
             } as IResponseWrapper
-            const resources = {
-                'urn:res:1': new Resource({
-                    '@type': 'urn:some:type',
-                }),
-                'urn:res:2': new Resource({
-                    '@type': 'urn:some:type',
-                }),
-                'urn:res:3': new Resource({
-                    '@type': 'urn:other:type',
-                }),
-                'urn:res:4': new Resource({
-                    '@type': 'urn:other:type',
-                }),
-            }
-            const r12n = HydraResponse('urn:some:res', xhr, resources as any, [])
+            const dataset = $rdf.dataset()
+            cf({ dataset })
+                .namedNode('urn:res:1').addOut(rdf.type, ex.Type1)
+                .namedNode('urn:res:2').addOut(rdf.type, ex.Type1)
+                .namedNode('urn:res:3').addOut(rdf.type, ex.Type2)
+                .namedNode('urn:res:4').addOut(rdf.type, ex.Type3)
+            const r12n = HydraResponse('urn:some:res', xhr, { dataset, factory, rootSelectors })
 
             // when
-            const ofType = r12n.ofType('urn:some:type')
+            const ofType = r12n.ofType(ex.Type1)
+
+            // then
+            expect(ofType.length).toBe(2)
+        })
+
+        it('should return all matching resources by string', () => {
+            // given
+            const xhr = {
+                xhr: { } as Response,
+            } as IResponseWrapper
+            const dataset = $rdf.dataset()
+            cf({ dataset })
+                .namedNode('urn:res:1').addOut(rdf.type, ex.Type1)
+                .namedNode('urn:res:2').addOut(rdf.type, ex.Type1)
+                .namedNode('urn:res:3').addOut(rdf.type, ex.Type2)
+                .namedNode('urn:res:4').addOut(rdf.type, ex.Type3)
+            const r12n = HydraResponse('urn:some:res', xhr, { dataset, factory, rootSelectors })
+
+            // when
+            const ofType = r12n.ofType(ex.Type1.value)
 
             // then
             expect(ofType.length).toBe(2)
@@ -118,7 +138,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr)
+            const r12n = HydraResponse('urn:some:res', xhr, { dataset: $rdf.dataset(), factory, rootSelectors })
 
             // then
             expect(r12n.length).toBe(0)
@@ -131,7 +151,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr)
+            const r12n = HydraResponse('urn:some:res', xhr, { dataset: $rdf.dataset(), factory, rootSelectors })
 
             // then
             expect(r12n.ofType('whatever').length).toBe(0)
@@ -146,7 +166,7 @@ describe('HydraResponse', () => {
             } as IResponseWrapper
 
             // when
-            const r12n = HydraResponse('urn:some:res', xhr)
+            const r12n = HydraResponse('urn:some:res', xhr, { dataset: $rdf.dataset(), factory, rootSelectors })
 
             // then
             expect(r12n.root).toBeNull()

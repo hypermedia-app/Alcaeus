@@ -1,22 +1,15 @@
+import cf, { Clownface } from 'clownface'
+import $rdf from 'rdf-ext'
 import Resource from '../../src/Resources/Resource'
-import { Bodies } from '../test-objects'
+import namespace from '@rdfjs/namespace'
+
+const ex = namespace('http://example.com/')
 
 describe('Resource', () => {
-    describe('id', () => {
-        it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'id')!.enumerable)
-                .toBe(false)
-        })
+    let graph: Clownface
 
-        it('throws when identifier is not string', () => {
-            // when
-            const resource = new Resource({
-                '@id': 666,
-            })
-
-            // then
-            expect(() => resource.id).toThrow()
-        })
+    beforeEach(() => {
+        graph = cf({ dataset: $rdf.dataset() })
     })
 
     describe('isAnonymous', () => {
@@ -27,9 +20,8 @@ describe('Resource', () => {
 
         it('returns true when id in an URL', () => {
             // given
-            const resource = new Resource({
-                '@id': 'https://example.com/res',
-            })
+            const node = graph.namedNode('https://example.com/res')
+            const resource = new Resource(node)
 
             // then
             expect(resource.isAnonymous).toBeFalsy()
@@ -37,9 +29,8 @@ describe('Resource', () => {
 
         it('returns true when id in an URN', () => {
             // given
-            const resource = new Resource({
-                '@id': 'urn:not:uri',
-            })
+            const node = graph.namedNode('urn:not:uri')
+            const resource = new Resource(node)
 
             // then
             expect(resource.isAnonymous).toBeFalsy()
@@ -47,90 +38,55 @@ describe('Resource', () => {
 
         it('returns true when id in an blank identifier', () => {
             // given
-            const resource = new Resource({
-                '@id': '_:blank',
-            })
+            const node = graph.blankNode()
+            const resource = new Resource(node)
 
             // then
             expect(resource.isAnonymous).toBeTruthy()
         })
     })
 
-    describe('types', () => {
-        it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'types')!.enumerable)
-                .toBe(false)
-        })
-
-        it('should return array for single @type', () => {
-            const resource = new Resource(Bodies.someJsonLdExpanded)
-
-            expect(resource.types.length).toBe(1)
-        })
-
-        it('should return all @types', () => {
-            const resource = new Resource(Bodies.multipleTypesExpanded)
-
-            expect(resource.types.length).toBe(2)
-        })
-
-        it('should return empty array when undefined', () => {
-            const resource = new Resource({})
-
-            expect(resource.types.length).toBe(0)
-        })
-    })
-
     describe('getBoolean', () => {
         it('throws when value is not boolean', () => {
-            const resource = new Resource({
-                'foo': 'https://example.com/res',
-            })
+            const node = graph.blankNode()
+            node.addOut(ex.foo, ex.bar)
+            const resource = new Resource(node)
 
             // then
-            expect(() => resource.getBoolean('foo')).toThrow()
+            expect(() => resource.getBoolean(ex.foo)).toThrow()
         })
 
         it('return false when value is undefined', () => {
-            const resource = new Resource({
-            })
+            const node = graph.blankNode()
+            const resource = new Resource(node)
 
             // then
-            expect(resource.getBoolean('foo')).toBeFalsy()
-        })
-
-        it('return false when value is null', () => {
-            const resource = new Resource({
-                'foo': null,
-            })
-
-            // then
-            expect(resource.getBoolean('foo')).toBeFalsy()
+            expect(resource.getBoolean(ex.foo)).toBeFalsy()
         })
 
         it('return the value when it is set', () => {
-            const resource = new Resource({
-                'foo': true,
-            })
+            const node = graph.blankNode()
+            node.addOut(ex.foo, true)
+            const resource = new Resource(node)
 
             // then
-            expect(resource.getBoolean('foo')).toBeTruthy()
+            expect(resource.getBoolean(ex.foo)).toBeTruthy()
         })
     })
 
     describe('getNumber', () => {
         it('throws when value is not number', () => {
-            const resource = new Resource({
-                'foo': 'https://example.com/res',
-            })
+            const node = graph.blankNode()
+            node.addOut(ex.foo, ex.bar)
+            const resource = new Resource(node)
 
             // then
-            expect(() => resource.getNumber('foo')).toThrow()
+            expect(() => resource.getNumber(ex.foo)).toThrow()
         })
 
         it('return null when value is undefined', () => {
-            const resource = new Resource({
-            })
+            const node = graph.blankNode()
+            const resource = new Resource(node)
 
             // then
             expect(resource.getNumber('foo')).toBeNull()
@@ -138,21 +94,21 @@ describe('Resource', () => {
     })
 
     describe('getString', () => {
-        it('throws when value is not string', () => {
-            const resource = new Resource({
-                'foo': 134,
-            })
+        it('returns string value of literal', () => {
+            const node = graph.blankNode()
+            node.addOut(ex.foo, 123)
+            const resource = new Resource(node)
 
             // then
-            expect(() => resource.getString('foo')).toThrow()
+            expect(resource.getString(ex.foo)).toBe('123')
         })
 
         it('return null when value is undefined', () => {
-            const resource = new Resource({
-            })
+            const node = graph.blankNode()
+            const resource = new Resource(node)
 
             // then
-            expect(resource.getString('foo')).toBeNull()
+            expect(resource.getString(ex.foo)).toBeNull()
         })
     })
 })

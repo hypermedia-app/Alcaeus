@@ -1,25 +1,18 @@
 /* tslint:disable:interface-over-type-literal */
-import { Maybe } from 'tsmonad'
+import { RdfResource } from '@tpluscode/rdfine'
+import { NamedNode } from 'rdf-js'
 import { IHydraResponse } from '../HydraResponse'
 import { IOperationFinder } from './CoreMixins/OperationFinder'
 import { IResource } from './Resource'
 
 export interface ManagesBlockPattern {
-    subject?: string | IResource;
-    predicate?: string | (IRdfProperty & IResource);
-    object?: string | (IClass & IResource);
+    subject?: string | IResource | NamedNode;
+    predicate?: string | (IRdfProperty & IResource) | NamedNode;
+    object?: string | (IClass & IResource) | NamedNode;
 }
 
 export interface IApiDocumentation {
     classes: Class[];
-    getClass(classId: string): Class | null;
-    getOperations(classUri: string, predicateUri?: string): SupportedOperation[];
-    getProperties(classUri: string): SupportedProperty[];
-
-    /**
-     * @deprecated
-     */
-    getEntrypoint(): Promise<IHydraResponse>;
 
     loadEntrypoint(): Promise<IHydraResponse>;
 }
@@ -41,10 +34,6 @@ export interface IHydraResource {
      * Gets the operations which can be performed on this resource
      */
     readonly operations: IOperation[];
-    /**
-     * Gets the API Documentation which was linked to this resource representation
-     */
-    readonly apiDocumentation: Maybe<ApiDocumentation>;
 
     /**
      * Gathers all properties from current resource's classes
@@ -66,7 +55,7 @@ export interface IHydraResource {
     /**
      * Dereferences the resource
      */
-    load(): Promise<IHydraResponse>;
+    load?(): Promise<IHydraResponse>;
 }
 
 export interface IStatusCodeDescription {
@@ -141,7 +130,7 @@ export interface IOperation {
     returns: Class;
     requiresInput: boolean;
     invoke(body: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
-    supportedOperation: SupportedOperation;
+    supportedOperation: RdfResource & ISupportedOperation & IDocumentedResource;
 
     /**
      * Gets the resource on which the operation will be invoked
@@ -181,28 +170,26 @@ export interface IPartialCollectionView {
     /**
      * Gets the first page resource of a collection
      */
-    readonly first: HydraResource | null;
+    readonly first: HydraResource | undefined;
     /**
      * Gets the previous page resource of a collection
      */
-    readonly previous: HydraResource | null;
+    readonly previous: HydraResource | undefined;
     /**
      * Gets the next page resource of a collection
      */
-    readonly next: HydraResource | null;
+    readonly next: HydraResource | undefined;
     /**
      * Gets the last page resource of a collection
      */
-    readonly last: HydraResource | null;
+    readonly last: HydraResource | undefined;
 }
-
-export type VariableRepresentation = 'BasicRepresentation' | 'ExplicitRepresentation';
 
 export interface IIriTemplate {
     template: string;
     mappings: IIriTemplateMapping[];
-    variableRepresentation: VariableRepresentation;
-    expand(): string;
+    variableRepresentation: Resource;
+    expand(mode: any): string;
 }
 
 export interface IIriTemplateMapping {
@@ -235,7 +222,7 @@ export interface IManagesBlock {
     matches(filter: ManagesBlockPattern): boolean;
 }
 
-interface ResourceIndexer {
+export interface ResourceIndexer {
     [ prop: string ]: unknown | unknown[];
 }
 type Resource = IHydraResource & IResource
@@ -249,4 +236,4 @@ export type Collection = ICollection & HydraResource;
 export type PartialCollectionView = IPartialCollectionView & IView & HydraResource;
 export type RdfProperty = IRdfProperty & DocumentedResource;
 export type ApiDocumentation = IApiDocumentation & IResource;
-export type View = IView & IResource;
+export type View = IView & HydraResource;

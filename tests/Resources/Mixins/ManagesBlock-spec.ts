@@ -1,27 +1,34 @@
-import { Core } from '../../../src/Constants'
-import { ApiDocumentation, RdfProperty } from '../../../src/Resources'
-import Resource from '../../../src/Resources/HydraResource'
-import { Mixin, shouldApply } from '../../../src/Resources/Mixins/ManagesBlock'
-import { IResource } from '../../../src/Resources/Resource'
-import TypeCollection from '../../../src/TypeCollection'
-import { rdf } from '../../../src/Vocabs'
+import cf, { Clownface, SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { BlankNode, DatasetCore } from 'rdf-js'
+import Resource, { IResource } from '../../../src/Resources/Resource'
+import { RdfProperty } from '../../../src/Resources'
+import { ManagesBlockMixin } from '../../../src/Resources/Mixins/ManagesBlock'
+import { foaf, hydra, rdf } from '../../../src/Vocabs'
 
-class ManagesBlock extends Mixin(Resource(null as any, () => [])) {}
+class ManagesBlock extends ManagesBlockMixin(Resource) {}
 
 describe('ManagesBlock', () => {
+    let dataset: DatasetCore
+    let apiDocsGraph: Clownface
+    let node: SingleContextClownface<DatasetCore, BlankNode>
+    let managesBlock: ManagesBlock
+
+    beforeEach(() => {
+        dataset = $rdf.dataset()
+        node = cf({ dataset }).blankNode()
+        apiDocsGraph = cf({ dataset, graph: $rdf.namedNode('http://example.com/docs') })
+
+        managesBlock = new ManagesBlock(node)
+    })
+
     describe('shouldApply', () => {
         it('should return true if resource is object of hydra:manages property', () => {
             // given
-            const res = {
-                _reverseLinks: [{
-                    predicate: Core.Vocab('manages'),
-                    subject: null,
-                    subjectId: '',
-                }],
-            } as any
+            node.addIn(hydra.manages, node.blankNode())
 
             // when
-            const result = shouldApply(res)
+            const result = ManagesBlockMixin.shouldApply(managesBlock)
 
             // then
             expect(result).toBeTruthy()
@@ -32,120 +39,64 @@ describe('ManagesBlock', () => {
         describe('object', () => {
             it('returns class from ApiDocumentation', () => {
                 // given
-                const clas = {} as any
-                const apiDoc = {
-                    getClass: () => clas,
-                } as any as ApiDocumentation
-                const resource = {
-                    [Core.Vocab('object')]: {
-                        id: 'http://vocab/class',
-                    },
-                }
-                const mb = new ManagesBlock(resource, apiDoc)
+                apiDocsGraph.namedNode('http://vocab/class').addOut(rdf.type, hydra.Class)
+                node.addOut(hydra.object, node.namedNode('http://vocab/class'))
 
                 // when
-                const obj = mb.object
+                const obj = managesBlock.object
 
                 // then
-                expect(obj).toBe(clas)
+                expect(obj.hasType(hydra.Class)).toBe(true)
             })
 
             it('returns class from representation if missing in ApiDocumentation', () => {
                 // given
-                const clas = {
-                    id: 'http://vocab/class',
-                } as any
-                const apiDoc = {
-                    getClass: () => null,
-                } as any as ApiDocumentation
-                const resource = {
-                    [Core.Vocab('object')]: clas,
-                }
-                const mb = new ManagesBlock(resource, apiDoc)
+                node.addOut(hydra.object, node.namedNode('http://vocab/class'))
 
                 // when
-                const obj = mb.object
+                const obj = managesBlock.object
 
                 // then
-                expect(obj).toBe(clas)
-            })
-
-            it('returns null if not on object', () => {
-                // given
-                const apiDoc = {
-                    getClass: () => null,
-                } as any as ApiDocumentation
-                const resource = {
-                    [Core.Vocab('object')]: null,
-                }
-                const mb = new ManagesBlock(resource, apiDoc)
-
-                // when
-                const obj = mb.object
-
-                // then
-                expect(obj).toBeNull()
+                expect(obj.id.value).toBe('http://vocab/class')
             })
         })
 
         describe('subject', () => {
             it('returns rdf:subject', () => {
                 // given
-                const value = {
-                    id: 'http://example.org/term',
-                } as any
-                const resource = {
-                    [Core.Vocab('subject')]: value,
-                }
-                const mb = new ManagesBlock(resource, {} as any as ApiDocumentation)
+                node.addOut(hydra.subject, node.namedNode('http://example.org/term'))
 
                 // when
-                const obj = mb.subject
+                const obj = managesBlock.subject
 
                 // then
-                expect(obj).toBe(value)
+                expect(obj.id.value).toBe('http://example.org/term')
             })
         })
 
         describe('predicate', () => {
             it('returns rdf:subject', () => {
                 // given
-                const value = {
-                    id: 'http://example.org/predicate',
-                } as any
-                const resource = {
-                    [Core.Vocab('property')]: value,
-                }
-                const mb = new ManagesBlock(resource, {} as any as ApiDocumentation)
+                node.addOut(hydra.property, node.namedNode('http://example.org/predicate'))
 
                 // when
-                const obj = mb.property
+                const obj = managesBlock.property
 
                 // then
-                expect(obj).toBe(value)
+                expect(obj.id.value).toBe('http://example.org/predicate')
             })
         })
 
         describe('matches', () => {
-            const apiDoc = {
-                getClass: (id) => ({ id }),
-            } as any as ApiDocumentation
-
             describe('by class type', () => {
                 it('returns true when object is string found of the rdf:object resource', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('object')]: {
-                            id: 'http://example.com/vocab#class',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: rdf.type,
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.object, node.namedNode('http://example.com/vocab#class'))
+                        .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = mb.matches({
+                    const isMatch = managesBlock.matches({
                         object: 'http://example.com/vocab#class',
                     })
 
@@ -155,25 +106,13 @@ describe('ManagesBlock', () => {
 
                 it('returns true when object is resource with id of rdf:object resource', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('object')]: {
-                            id: 'http://example.com/vocab#class',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: rdf.type,
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.object, node.namedNode('http://example.com/vocab#class'))
+                        .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = mb.matches({
-                        object: {
-                            id: 'http://example.com/vocab#class',
-                            isAnonymous: false,
-                            supportedOperations: [],
-                            supportedProperties: [],
-                            types: TypeCollection.create(),
-                        } as any,
+                    const isMatch = managesBlock.matches({
+                        object: $rdf.namedNode('http://example.com/vocab#class'),
                     })
 
                     // then
@@ -182,25 +121,28 @@ describe('ManagesBlock', () => {
 
                 it('returns false when predicate is not rdf:type', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('object')]: {
-                            id: 'http://example.com/vocab#class',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: rdf.type,
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.object, node.namedNode('http://example.com/vocab#class'))
+                        .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = mb.matches({
-                        object: {
-                            id: 'http://example.com/vocab#class',
-                            isAnonymous: false,
-                            supportedOperations: [],
-                            supportedProperties: [],
-                            types: TypeCollection.create(),
-                        } as any,
+                    const isMatch = managesBlock.matches({
+                        object: $rdf.namedNode('http://example.com/vocab#class'),
+                        predicate: 'http://some.other/property',
+                    })
+
+                    // then
+                    expect(isMatch).toBeFalsy()
+                })
+
+                it('returns false when it is incomplete', () => {
+                    // given
+                    node
+                        .addOut(hydra.property, rdf.type)
+
+                    // when
+                    const isMatch = managesBlock.matches({
+                        object: $rdf.namedNode('http://example.com/vocab#class'),
                         predicate: 'http://some.other/property',
                     })
 
@@ -212,18 +154,12 @@ describe('ManagesBlock', () => {
             describe('by subject and predicate type', () => {
                 it('returns true if pattern is matching string object and string property', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('subject')]: {
-                            id: 'http://example.com/person/Tomasz',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: 'http://xmlns.com/foaf/0.1/knows',
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.subject, node.namedNode('http://example.com/person/Tomasz'))
+                        .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = mb.matches({
+                    const isMatch = managesBlock.matches({
                         predicate: 'http://xmlns.com/foaf/0.1/knows',
                         subject: 'http://example.com/person/Tomasz',
                     })
@@ -234,21 +170,13 @@ describe('ManagesBlock', () => {
 
                 it('returns true if pattern is matching string object and resource property', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('subject')]: {
-                            id: 'http://example.com/person/Tomasz',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: 'http://xmlns.com/foaf/0.1/knows',
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.subject, node.namedNode('http://example.com/person/Tomasz'))
+                        .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = mb.matches({
-                        predicate: {
-                            id: 'http://xmlns.com/foaf/0.1/knows',
-                        } as any as RdfProperty,
+                    const isMatch = managesBlock.matches({
+                        predicate: foaf.knows,
                         subject: 'http://example.com/person/Tomasz',
                     })
 
@@ -258,22 +186,14 @@ describe('ManagesBlock', () => {
 
                 it('returns true if pattern is matching resource object and string property', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('subject')]: {
-                            id: 'http://example.com/person/Tomasz',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: 'http://xmlns.com/foaf/0.1/knows',
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.subject, node.namedNode('http://example.com/person/Tomasz'))
+                        .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = mb.matches({
+                    const isMatch = managesBlock.matches({
                         predicate: 'http://xmlns.com/foaf/0.1/knows',
-                        subject: {
-                            id: 'http://example.com/person/Tomasz',
-                        } as any as IResource,
+                        subject: $rdf.namedNode('http://example.com/person/Tomasz'),
                     })
 
                     // then
@@ -282,23 +202,17 @@ describe('ManagesBlock', () => {
 
                 it('returns true if pattern is matching resource object and resource property', () => {
                     // given
-                    const resource = {
-                        [Core.Vocab('subject')]: {
-                            id: 'http://example.com/person/Tomasz',
-                        },
-                        [Core.Vocab('property')]: {
-                            id: 'http://xmlns.com/foaf/0.1/knows',
-                        },
-                    }
-                    const mb = new ManagesBlock(resource, apiDoc)
+                    node
+                        .addOut(hydra.subject, node.namedNode('http://example.com/person/Tomasz'))
+                        .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = mb.matches({
+                    const isMatch = managesBlock.matches({
                         predicate: {
-                            id: 'http://xmlns.com/foaf/0.1/knows',
+                            id: foaf.knows,
                         } as any as RdfProperty,
                         subject: {
-                            id: 'http://example.com/person/Tomasz',
+                            id: $rdf.namedNode('http://example.com/person/Tomasz'),
                         } as any as IResource,
                     })
 

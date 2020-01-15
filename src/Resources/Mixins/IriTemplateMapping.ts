@@ -1,30 +1,32 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { hydra } from '../../Vocabs'
 import { IIriTemplateMapping, RdfProperty } from '../index'
-import { Constructor } from '../Mixin'
 import { IResource } from '../Resource'
+import { RdfPropertyMixin } from './RdfProperty'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
+export function IriTemplateMappingMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
     class IriTemplateMapping extends Base implements IIriTemplateMapping {
-        @nonenumerable
-        public get variable () {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.getString(Core.Vocab('variable'), { strict: true })!
-        }
+        @property.literal({
+            strict: true,
+        })
+        public variable!: string
 
-        @nonenumerable
-        public get property () {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.get<RdfProperty>(Core.Vocab('property'), { strict: true })!
-        }
+        @property.resource({
+            strict: true,
+            as: [RdfPropertyMixin],
+        })
+        public property!: RdfProperty
 
-        @nonenumerable
-        public get required () {
-            return this.getBoolean(Core.Vocab('required'))
-        }
+        @property.literal({
+            strict: true,
+            type: Boolean,
+            initial: false,
+        })
+        public required!: boolean
     }
 
     return IriTemplateMapping
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('IriTemplateMapping'))
+IriTemplateMappingMixin.shouldApply = (res: IResource) => res.hasType(hydra.IriTemplateMapping)

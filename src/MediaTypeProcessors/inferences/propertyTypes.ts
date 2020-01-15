@@ -1,29 +1,23 @@
-import $rdf from 'rdf-ext'
-import * as Constants from '../../Constants'
-import { rdf } from '../../Vocabs'
+import cf from 'clownface'
+import { DatasetCore } from 'rdf-js'
+import { hydra, rdf } from '../../Vocabs'
 
 const propertyRangeMappings = [
-    [Constants.Core.Vocab('supportedClass'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('expects'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('returns'), Constants.Core.Vocab('Class')],
-    [Constants.Core.Vocab('supportedOperation'), Constants.Core.Vocab('Operation')],
-    [Constants.Core.Vocab('operation'), Constants.Core.Vocab('Operation')],
-    [Constants.Core.Vocab('supportedProperty'), Constants.Core.Vocab('SupportedProperty')],
-    [Constants.Core.Vocab('statusCodes'), Constants.Core.Vocab('StatusCodeDescription')],
-    [Constants.Core.Vocab('property'), rdf.Property],
-    [Constants.Core.Vocab('mapping'), Constants.Core.Vocab('IriTemplateMapping')],
+    [hydra.supportedClass, hydra.Class],
+    [hydra.expects, hydra.Class],
+    [hydra.returns, hydra.Class],
+    [hydra.supportedOperation, hydra.SupportedOperation],
+    [hydra.operation, hydra.Operation],
+    [hydra.supportedProperty, hydra.SupportedProperty],
+    [hydra.statusCodes, hydra.StatusCodeDescription],
+    [hydra.property, rdf.Property],
+    [hydra.mapping, hydra.IriTemplateMapping],
 ]
 
-export function inferTypesFromPropertyRanges (dataset) {
-    propertyRangeMappings.map((mapping) => {
-        const matches = dataset.match(null, $rdf.namedNode(mapping[0]), null, null)
+export function inferTypesFromPropertyRanges (dataset: DatasetCore) {
+    const node = cf({ dataset })
 
-        matches.forEach((triple) => {
-            dataset.add($rdf.triple(
-                triple.object,
-                $rdf.namedNode(rdf.type),
-                $rdf.namedNode(mapping[1])
-            ))
-        })
+    propertyRangeMappings.map(([ property, type ]) => {
+        node.out(property).addOut(rdf.type, type)
     })
 }

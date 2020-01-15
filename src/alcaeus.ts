@@ -1,10 +1,12 @@
-// tslint:disable no-console
-import { Core } from './Constants'
+import { ResourceFactory } from '@tpluscode/rdfine'
+import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import * as FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import { IHydraResponse, create } from './HydraResponse'
 import { IMediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
-import { ApiDocumentation, IOperation } from './Resources'
+import { IOperation } from './Resources'
 import { IResponseWrapper } from './ResponseWrapper'
 import { IRootSelector } from './RootSelectors'
 
@@ -12,36 +14,31 @@ export interface IHydraClient {
     rootSelectors: IRootSelector[];
     mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
     loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
+    loadDocumentation (uri: string, headers: HeadersInit): void;
     invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
+    dataset: DatasetExt;
+    factory: ResourceFactory;
+    documentationLoaded: Promise<IHydraResponse[]>;
 }
 
-const getHydraResponse = async (
+const addOrReplaceGraph = async (
     alcaeus: IHydraClient,
     response: IResponseWrapper,
-    uri: string,
-    apiDocumentation?: ApiDocumentation): Promise<IHydraResponse> => {
+    uri: string): Promise<void> => {
     const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
         .find((processor) => processor.canProcess(response.mediaType))
 
-    if (suitableProcessor) {
-        const graph = await suitableProcessor.process(alcaeus, uri, response, apiDocumentation)
-        return create(uri, response, graph, alcaeus.rootSelectors)
+    if (!suitableProcessor) {
+        console.warn(`No processor found for media type ${response.mediaType}`)
+        return
     }
 
-    console.warn(`No processor found for media type ${response.mediaType}`)
-
-    return create(uri, response)
-}
-
-function getApiDocumentation (this: Alcaeus, response: IResponseWrapper, headers): Promise<ApiDocumentation | null> {
-    if (response.apiDocumentationLink) {
-        return this.loadDocumentation(response.apiDocumentationLink, headers)
-    } else {
-        console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
-
-        return Promise.resolve(null)
-    }
+    const graph = $rdf.namedNode(uri)
+    const parsedTriples = await suitableProcessor.process(uri, response)
+    await alcaeus.dataset
+        .removeMatches(undefined, undefined, undefined, graph)
+        .import(parsedTriples.pipe(new TripleToQuadTransform(graph)))
 }
 
 export class Alcaeus implements IHydraClient {
@@ -51,53 +48,43 @@ export class Alcaeus implements IHydraClient {
 
     public defaultHeaders: HeadersInit | (() => HeadersInit) = {}
 
-    public constructor (rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
+    public readonly dataset: DatasetExt = $rdf.dataset()
+
+    public readonly factory: ResourceFactory
+
+    private readonly __documentationPromises: Map<string, Promise<IHydraResponse>> = new Map()
+
+    public constructor (
+        rootSelectors: IRootSelector[],
+        mediaTypeProcessors: { [name: string]: IMediaTypeProcessor },
+        factory: ResourceFactory
+    ) {
         this.rootSelectors = rootSelectors
         this.mediaTypeProcessors = mediaTypeProcessors
+        this.factory = factory
+    }
+
+    public get documentationLoaded () {
+        return Promise.all(this.__documentationPromises.values())
     }
 
     public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
         const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
+        await addOrReplaceGraph(this, response, uri)
+        this.__getApiDocumentation(response, headers)
 
-        const apiDocumentation = await getApiDocumentation.call(this, response, headers)
-
-        if (apiDocumentation) {
-            return getHydraResponse(this, response, uri, apiDocumentation)
-        }
-
-        return getHydraResponse(this, response, uri)
+        return create(uri, response, this)
     }
 
-    public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
-        try {
-            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
-            const representation = await getHydraResponse(this, response, uri)
-            const resource = representation.root
-            if (!resource) {
-                console.warn('Could not determine root resource')
-                return null
-            }
-            const resourceType = resource['@type']
+    public loadDocumentation (uri: string, headers: HeadersInit = {}) {
+        const request = FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
+            .then(async response => {
+                await addOrReplaceGraph(this, response, uri)
+                return response
+            })
+            .then(response => create(uri, response, this))
 
-            let resourceHasApiDocType
-
-            if (Array.isArray(resourceType)) {
-                resourceHasApiDocType = resourceType.includes(Core.Vocab('ApiDocumentation'))
-            } else {
-                resourceHasApiDocType = resourceType === Core.Vocab('ApiDocumentation')
-            }
-
-            if (resourceHasApiDocType === false) {
-                console.warn(`The resource ${uri} does not appear to be an API Documentation`)
-            }
-
-            return resource as any as ApiDocumentation
-        } catch (e) {
-            console.warn(`Failed to load ApiDocumentation from ${uri}`)
-            console.warn(e)
-            console.warn(e.stack)
-            return null
-        }
+        this.__documentationPromises.set(uri, request)
     }
 
     public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<IHydraResponse> {
@@ -113,13 +100,18 @@ export class Alcaeus implements IHydraClient {
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)
-        const apiDocumentation = await getApiDocumentation.call(this, response, mergedHeaders)
+        this.__getApiDocumentation(response, headers)
 
-        if (apiDocumentation) {
-            return getHydraResponse(this, response, uri, apiDocumentation)
+        return create(uri, response, this)
+    }
+
+    private __getApiDocumentation (response: IResponseWrapper, headers: HeadersInit) {
+        if (!response.apiDocumentationLink) {
+            console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
+            return
         }
 
-        return getHydraResponse(this, response, uri)
+        this.loadDocumentation(response.apiDocumentationLink, headers)
     }
 
     private __mergeHeaders (headers: Headers): Headers {

@@ -1,6 +1,8 @@
-import { expand } from '@zazuko/rdf-vocabularies'
-import { IOperation, IHydraResource, Class, SupportedOperation } from '../index'
-import { Constructor } from '../Mixin'
+import { Constructor, RdfResource } from '@tpluscode/rdfine'
+import { NamedNode, Quad } from 'rdf-js'
+import { hydra, rdf } from '../../Vocabs'
+import { IOperation, IHydraResource, Class, ISupportedOperation } from '../index'
+import { IResource } from '../Resource'
 
 type Constraint<TExactMatch, TFuncMatch = TExactMatch> = (string | TExactMatch) | ((value: TFuncMatch) => boolean)
 
@@ -14,23 +16,23 @@ export interface Criteria {
      * Filters operations by exactly matching the hydra:expects annotation or via a custom check function.
      * The exact match can be ether a `Class` object or identifier
      */
-    expecting?: Constraint<Class>;
+    expecting?: Constraint<Class | NamedNode, Class>;
 
     /**
      * Filters operations by exactly matching the hydra:returns annotation or via a custom check function.
      * The exact match can be ether a `Class` object or identifier
      */
-    returning?: Constraint<Class>;
+    returning?: Constraint<Class | NamedNode, Class>;
 
     /**
      * Filters operations by exactly matching supported operation's id or types, or by
      * executing a custom function against the supported operation
      */
-    bySupportedOperation?: Constraint<string, SupportedOperation>;
+    bySupportedOperation?: Constraint<NamedNode, RdfResource & ISupportedOperation>;
 }
 
 export interface RecursiveStopConditions {
-    excludedProperties: string[];
+    excludedProperties: (string | NamedNode | RdfResource)[];
 }
 
 /**
@@ -76,16 +78,20 @@ function satisfiesMethod (criteria: Criteria, operation: IOperation) {
     })
 }
 
-function matchClass (expected: Constraint<Class>, actual: Class) {
+function matchClass (expected: Constraint<Class | NamedNode, Class>, actual: Class) {
     if (typeof expected === 'string') {
-        return actual.id === expected
+        return actual.id.value === expected
     }
 
     if (typeof expected === 'function') {
         return expected(actual)
     }
 
-    return expected.id === actual.id
+    if ('id' in expected) {
+        return expected.id.equals(actual.id)
+    }
+
+    return actual.id.equals(expected as NamedNode)
 }
 
 function satisfiesExpects (criteria: Criteria, operation: IOperation) {
@@ -99,7 +105,11 @@ function satisfiesReturns (criteria: Criteria, operation: IOperation) {
 function satisfiesTypeOrId (criteria: Criteria, operation: IOperation) {
     return satisfies(criteria.bySupportedOperation, operation.supportedOperation, (expected, actual) => {
         if (typeof expected === 'string') {
-            return actual.id === expected || actual.types.contains(expected)
+            return actual.id.value === expected || actual.hasType(expected)
+        }
+
+        if ('termType' in expected) {
+            return expected.equals(actual.id)
         }
 
         return expected(actual)
@@ -119,40 +129,54 @@ function createMatcher (operation: IOperation) {
     }
 }
 
-const toResourceWithOperations = (stopConditions: RecursiveStopConditions) => {
-    return (resources, [ prop, value ]) => {
-        if (stopConditions.excludedProperties.includes(prop)) {
-            return resources
+const excludedProperties = (stopConditions: RecursiveStopConditions) => {
+    const propertiesToExclude = stopConditions.excludedProperties.map(ex => {
+        if (typeof ex === 'string') {
+            return ex
         }
 
-        let array = Array.isArray(value) ? value : [ value ]
+        if ('id' in ex) {
+            return ex.id.value
+        }
 
-        const moreResources = array
-            .filter(resource => resource !== null &&
-                typeof resource === 'object' &&
-                'getOperationsDeep' in resource)
+        return ex.value
+    })
 
-        return [...resources, ...moreResources]
+    return (quad: Quad) => {
+        return !propertiesToExclude.includes(quad.predicate.value)
     }
 }
 
-export function OperationFinder<TBase extends Constructor<IHydraResource>> (Base: TBase) {
-    return class OperationFinderMixinClass extends Base implements IOperationFinder {
+function toResourceNodes <T extends RdfResource> (self: RdfResource, mixins) {
+    return (nodes: T[], quad: Quad): T[] => {
+        if (quad.object.termType === 'NamedNode' || quad.object.termType === 'BlankNode') {
+            return [...nodes, self._create<T>(self._node.node(quad.object), mixins)]
+        }
+
+        return nodes
+    }
+}
+
+export function OperationFinderMixin<TBase extends Constructor<IHydraResource & IResource>> (Base: TBase) {
+    return class OperationFinder extends Base implements IOperationFinder {
         public getOperationsDeep (
-            stopConditions: RecursiveStopConditions = { excludedProperties: expand('hydra:member') },
-            previousResources: OperationFinderMixinClass[] = []) {
-            return Object.entries(this)
-                .reduce(toResourceWithOperations(stopConditions), [] as OperationFinderMixinClass[])
-                .reduce((operations, resource, index, resources) => {
-                    if (previousResources.includes(resource)) return operations
+            stopConditions: RecursiveStopConditions = { excludedProperties: [hydra.member, rdf.type] },
+            previousResources: OperationFinder[] = []) {
+            const childResources = [...this._node.dataset.match(this.id)]
+                .filter(excludedProperties(stopConditions))
+                .reduce<OperationFinder[]>(toResourceNodes(this, [OperationFinderMixin]), [])
 
-                    const currentlyVisited = [...resources, ...previousResources, this]
+            return childResources.reduce((operations, child, index, resources) => {
+                if (previousResources.find(previous => previous.id.equals(child.id))) return operations
 
-                    return [
-                        ...operations,
-                        ...resource.getOperationsDeep(stopConditions, currentlyVisited),
-                    ]
-                }, this.operations)
+                const currentlyVisited = [...resources, ...previousResources, this]
+
+                const childOps = child.getOperationsDeep(stopConditions, currentlyVisited)
+                return [
+                    ...operations,
+                    ...childOps,
+                ]
+            }, this.operations || [])
         }
 
         public findOperations (...criteria: Criteria[]) {
@@ -187,3 +211,5 @@ export function OperationFinder<TBase extends Constructor<IHydraResource>> (Base
         }
     }
 }
+
+OperationFinderMixin.shouldApply = true

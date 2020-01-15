@@ -1,44 +1,43 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
-import { IAsObject, IIncomingLink } from '../../internals'
-import { HydraResource, IPartialCollectionView, IView } from '../index'
-import { Constructor } from '../Mixin'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { SingleContextClownface } from 'clownface'
+import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
+import { hydra } from '../../Vocabs'
+import { Collection, HydraResource, IPartialCollectionView, IView } from '../index'
 import { IResource } from '../Resource'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
+export function PartialCollectionViewMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
     class PartialCollectionView extends Base implements IPartialCollectionView, IView {
-        @nonenumerable
-        public get first () {
-            return this.get<HydraResource>(Core.Vocab('first'))
-        }
+        @property.resource()
+        public first!: HydraResource
 
-        @nonenumerable
-        public get previous () {
-            return this.get<HydraResource>(Core.Vocab('previous'))
-        }
+        @property.resource()
+        public previous!: HydraResource
 
-        @nonenumerable
-        public get next () {
-            return this.get<HydraResource>(Core.Vocab('next'))
-        }
+        @property.resource()
+        public next!: HydraResource
 
-        @nonenumerable
-        public get last () {
-            return this.get<HydraResource>(Core.Vocab('last'))
-        }
+        @property.resource()
+        public last!: HydraResource
 
-        @nonenumerable
         public get collection () {
-            const reverseLinks = (this as any as IAsObject)._reverseLinks
-            const collectionLink = reverseLinks.find((linkArray: IIncomingLink) => {
-                return linkArray.predicate === Core.Vocab('view')
-            })
+            const collection = this._node.in(hydra.view)
 
-            return collectionLink ? collectionLink.subject : null
+            return collection.toArray()
+                .reduce((namedNodes, node) => {
+                    if (node.term.termType === 'BlankNode' || node.term.termType === 'NamedNode') {
+                        namedNodes.push(node as any)
+                    }
+
+                    return namedNodes
+                }, [] as SingleContextClownface<DatasetCore, NamedNode | BlankNode>[])
+                .map(collectionNode => {
+                    return this._create<Collection>(collectionNode)
+                })[0] || null
         }
     }
 
     return PartialCollectionView
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('PartialCollectionView'))
+PartialCollectionViewMixin.shouldApply = (res: IResource) => res.hasType(hydra.PartialCollectionView)

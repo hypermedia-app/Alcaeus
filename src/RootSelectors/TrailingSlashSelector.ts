@@ -11,6 +11,6 @@ export default {
             id = response.requestedUri + '/'
         }
 
-        return resources[id]
+        return resources.get(id)
     },
 }

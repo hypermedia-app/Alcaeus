@@ -1,5 +1,4 @@
-import * as _ from 'lodash'
-import { Core, JsonLd, MediaTypes } from '../src/Constants'
+import { MediaTypes } from '../src/Constants'
 import { IResponseWrapper } from '../src/ResponseWrapper'
 import 'isomorphic-fetch'
 import stringToStream from 'string-to-stream'
@@ -8,37 +7,6 @@ import Parser from '@rdfjs/parser-n3'
 import { prefixes } from '@zazuko/rdf-vocabularies'
 
 const parser = new Parser()
-
-function addPredicateGetter (this: any, prop: string, pred: string, wrapArray: boolean = true) {
-    Object.defineProperty(this, prop, {
-        get: () => {
-            const ret = this[pred]
-            if (Array.isArray(ret) === false && wrapArray) {
-                return [ret]
-            }
-
-            return ret
-        },
-    })
-}
-
-export function fakeAlcaeusResources (obj: object) {
-    if (!obj || typeof obj !== 'object') {
-        return {}
-    }
-
-    const addGetter = addPredicateGetter.bind(obj)
-
-    addGetter('id', JsonLd.Id, false)
-    addGetter('types', JsonLd.Type, false)
-    addGetter('supportedProperties', Core.Vocab('supportedProperty'))
-    addGetter('supportedOperations', Core.Vocab('supportedOperation'))
-    addGetter('property', Core.Vocab('property'), false)
-
-    _.forOwn(obj, fakeAlcaeusResources)
-
-    return obj
-}
 
 export function responseBuilder (): any {
     let statusCode = 200
@@ -142,6 +110,6 @@ export function createGraph (ntriples: string) {
     PREFIX hydra: <${prefixes.hydra}>
 
     ${ntriples}`)
-        return dataset.import(await parser.import(stream))
+        return dataset.import(parser.import(stream as any))
     }
 }

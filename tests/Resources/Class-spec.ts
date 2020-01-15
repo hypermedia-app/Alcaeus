@@ -1,75 +1,130 @@
-import { promises as jsonld } from 'jsonld'
-import { Mixin } from '../../src/Resources/Mixins/Class'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import namespace from '@rdfjs/namespace'
+import { ClassMixin } from '../../src/Resources/Mixins/Class'
 import Resource from '../../src/Resources/Resource'
-import Context from '../test-objects/Context'
+import { hydra } from '../../src/Vocabs'
+import * as graphs from './Class-spec-graphs'
 
-class Class extends Mixin(Resource) {}
+const vocab = namespace('http://example.com/vocab#')
+
+class Class extends ClassMixin(Resource) {}
 
 describe('Class', () => {
-    const hydraClass = {
-        '@context': Context,
-        '@id': 'http://example.com/vocab#SomeClass',
-        'supportedOperation': [{}],
-        'supportedProperty': [{}],
-    }
+    let hydraClassNode: SingleContextClownface<DatasetCore, NamedNode>
+
+    beforeEach(() => {
+        hydraClassNode = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#SomeClass')
+    })
 
     describe('getting operations', () => {
         it('should return operations', async () => {
             // then
-            const compacted = await jsonld.compact(hydraClass, {})
+            hydraClassNode.addOut(hydra.supportedOperation, hydraClassNode.blankNode())
 
             // when
-            const clas = new Class(compacted)
+            const clas = new Class(hydraClassNode)
 
             // then
             expect(clas.supportedOperations.length).toBe(1)
         })
 
         it('should return empty array if property is missing', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-            })
+            // when
+            const clas = new Class(hydraClassNode)
 
+            // then
             expect(clas.supportedOperations.length).toBe(0)
         })
 
-        it('should return empty array if property is null', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-                'http://www.w3.org/ns/hydra/core#supportedOperation': null,
-            })
+        it('should combine own operations with inherited operations', async () => {
+            // given
+            const dataset = await graphs.multiLevelSupportedOperations()
+            const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
 
-            expect(clas.supportedOperations.length).toBe(0)
+            // when
+            const properties = clas.supportedOperations
+
+            // then
+            expect(properties).toHaveLength(3)
+        })
+
+        it('should deduplicate supported operations by operation id', async () => {
+            // given
+            const dataset = await graphs.duplicateInheritedOperationsSameId()
+            const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
+
+            // when
+            const operations = clas.supportedOperations
+
+            // then
+            expect(operations).toHaveLength(1)
         })
     })
 
     describe('getting properties', () => {
-        it('should return properties', async () => {
+        it('should return properties', () => {
             // given
-            const compacted = await jsonld.compact(hydraClass, {})
+            hydraClassNode.addOut(hydra.supportedProperty, hydraClassNode.blankNode())
 
             // when
-            const clas = new Class(compacted)
+            const clas = new Class(hydraClassNode)
 
             // then
             expect(clas.supportedProperties.length).toBe(1)
         })
 
         it('should return empty array if property is missing', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-            })
+            const clas = new Class(hydraClassNode)
 
             expect(clas.supportedProperties.length).toBe(0)
         })
 
-        it('should return empty array if property is null', () => {
-            const clas = new Class({
-                '@id': 'http://example.com/vocab#SomeClass',
-                'http://www.w3.org/ns/hydra/core#supportedProperty': null,
-            })
+        it('should combine own properties with inherited properties', async () => {
+            // given
+            const dataset = await graphs.multiLevelSupportedProperties()
+            const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
 
-            expect(clas.supportedProperties.length).toBe(0)
+            // when
+            const properties = clas.supportedProperties
+
+            // then
+            expect(properties).toHaveLength(4)
+        })
+
+        it('should deduplicate supported properties by rdf property', async () => {
+            // given
+            const dataset = await graphs.duplicateInheritedProperties()
+            const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
+
+            // when
+            const properties = clas.supportedProperties
+
+            // then
+            expect(properties).toHaveLength(1)
+            expect(properties[0].title).toEqual('Overridden title')
+        })
+    })
+
+    describe('getTypeHierarchy', () => {
+        it('retrieves own types and superclasses', async () => {
+            // given
+            const dataset = await graphs.multiLevelSupportedOperations()
+            const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
+
+            // when
+            const types = [...clas.getTypeHierarchy()]
+
+            // then
+            expect(types.map(t => t.id.value)).toStrictEqual(
+                expect.arrayContaining([
+                    vocab.DraftIssue.value,
+                    vocab.Issue.value,
+                    vocab.BaseClass.value,
+                ])
+            )
         })
     })
 })

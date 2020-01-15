@@ -1,68 +1,127 @@
-import * as sinon from 'sinon'
+import namespace from '@rdfjs/namespace'
+import Parser from '@rdfjs/parser-n3'
+import { ResourceFactory } from '@tpluscode/rdfine'
+import cf, { Clownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { NamedNode, Stream } from 'rdf-js'
+import stringToStream from 'string-to-stream'
 import { IHydraClient } from '../../src/alcaeus'
-import { Core } from '../../src/Constants'
-import createClass from '../../src/Resources/HydraResource'
-import { Bodies } from '../test-objects'
+import * as mixins from '../../src/ResourceFactoryDefaults'
+import { createHydraResourceMixin } from '../../src/Resources/HydraResource'
+import Resource from '../../src/Resources/Resource'
+import { hydra, rdf } from '../../src/Vocabs'
 
-let reverseLinks
+const parser = new Parser()
+const ex = namespace('http://example.com/vocab#')
+
 let client = {} as IHydraClient
-const HydraResource = createClass(client, () => reverseLinks)
+const HydraResource = createHydraResourceMixin(client)(Resource)
+
+HydraResource.factory = new ResourceFactory(HydraResource)
+HydraResource.factory.addMixin(mixins.ClassMixin)
+HydraResource.factory.addMixin(mixins.SupportedPropertyMixin)
+HydraResource.factory.addMixin(mixins.SupportedOperationMixin)
+
+function parse (triples: string, baseIRI?: NamedNode): Stream {
+    const { value } = baseIRI || {}
+    const data = `
+    @prefix hydra: <${hydra().value}> .
+    @prefix ex: <${ex().value}> .
+    @prefix rdf: <${rdf().value}> .
+    
+    ${triples}`
+
+    return parser.import(stringToStream(data) as any as Stream, {
+        baseIRI: value,
+    })
+}
 
 describe('HydraResource', () => {
-    describe('apiDocumentation', () => {
-        it('should be non-enumerable', () => {
-            expect(HydraResource.prototype.propertyIsEnumerable('apiDocumentation'))
-                .toBe(false)
-        })
+    let dataset: DatasetExt
+    let node: Clownface
+
+    beforeEach(() => {
+        dataset = $rdf.dataset()
+        node = cf({ dataset })
     })
 
     describe('get operations', () => {
-        beforeEach(() => { reverseLinks = [] })
-
-        it('should combine operations from class and property', () => {
-            const getOperations = sinon.stub()
-            const apiDoc = {
-                getOperations,
-            } as any
-            getOperations.returns([])
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
-            reverseLinks = [
-                {
-                    predicate: 'http://example.com/vocab#other',
-                    subject: { types: ['http://example.com/vocab#Resource2', 'http://example.com/vocab#Resource3'] },
-                },
-            ]
-
-            // eslint-disable-next-line no-unused-vars
-            const ops = resource.operations
-
-            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true)
-            expect(getOperations.calledWithExactly(
-                'http://example.com/vocab#Resource2',
-                'http://example.com/vocab#other')).toBe(true)
-            expect(getOperations.calledWithExactly(
-                'http://example.com/vocab#Resource3',
-                'http://example.com/vocab#other')).toBe(true)
-        })
-
-        it('should combine operations for multiple @types', () => {
-            const getOperations = sinon.stub()
-            const apiDoc = {
-                getOperations,
-            } as any
-            getOperations.returns(Promise.resolve([]))
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, apiDoc)
-
-            // eslint-disable-next-line no-unused-vars
-            const ops = resource.operations
-
-            expect(getOperations.calledWithExactly('http://example.com/vocab#Resource')).toBe(true)
-            expect(getOperations.calledWithExactly('http://example.com/vocab#AnotherType')).toBe(true)
-        })
-
-        it('returns empty array when api documentation is unavailable', () => {
+        it('should combine operations from class and property', async () => {
             // given
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, null)
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:Resource .
+                       
+                    ex:Resource a hydra:Class ;
+                        hydra:supportedOperation [
+                            a hydra:SupportedOperation
+                        ] ;
+                        hydra:supportedProperty [
+                            a hydra:SupportedProperty ;
+                            hydra:property ex:knows
+                        ] .
+                    
+                    ex:knows hydra:supportedOperation [
+                        a hydra:SupportedOperation
+                    ] .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/A> a ex:Resource .
+                    <http://example.com/B> a ex:Resource .
+                    
+                    <http://example.com/A> ex:knows <http://example.com/B> .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/B'))
+
+            // when
+            const ops = resource.operations
+
+            // then
+            expect(ops.length).toEqual(2)
+        })
+
+        it('should combine operations for multiple @types', async () => {
+            // given
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:ResourceA, ex:ResourceB .
+                       
+                    ex:ResourceA a hydra:Class ;
+                        hydra:supportedOperation [
+                            a hydra:SupportedOperation
+                        ] .
+                    ex:ResourceB a hydra:Class ;
+                        hydra:supportedOperation [
+                            a hydra:SupportedOperation
+                        ] .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
+
+            // when
+            const ops = resource.operations
+
+            // then
+            expect(ops.length).toEqual(2)
+        })
+
+        it('returns empty array when api documentation is unavailable', async () => {
+            // given
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                `)
+            await dataset.import(resourceGraph)
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const ops = resource.operations
@@ -71,37 +130,24 @@ describe('HydraResource', () => {
             expect(ops.length).toBe(0)
         })
 
-        it('returns empty array when api documentation does not implement the necessary method', () => {
+        it('should return operations with unique supported operation ids', async () => {
             // given
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, {
-                getOperations: () => [],
-            } as any)
-
-            // when
-            const ops = resource.operations
-
-            // then
-            expect(ops.length).toBe(0)
-        })
-
-        it('should return operations with unique supported operation ids', () => {
-            // given
-            const getOperations = sinon.stub()
-            const apiDoc = {
-                getOperations,
-            } as any
-            getOperations.returns([
-                {
-                    '@id': '_:op1',
-                },
-            ])
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
-            reverseLinks = [
-                {
-                    predicate: 'http://example.com/vocab#other',
-                    subject: { types: ['http://example.com/vocab#Resource2', 'http://example.com/vocab#Resource3'] },
-                },
-            ]
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:ResourceA, ex:ResourceB .
+                       
+                    ex:ResourceA a hydra:Class ;
+                        hydra:supportedOperation ex:DeleteOperation .
+                    ex:ResourceB a hydra:Class ;
+                        hydra:supportedOperation ex:DeleteOperation.
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const ops = resource.operations
@@ -112,9 +158,14 @@ describe('HydraResource', () => {
     })
 
     describe('getProperties', () => {
-        it('returns empty array when ApiDocumentation is missing', () => {
+        it('returns empty array when ApiDocumentation is missing', async () => {
             // given
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, null)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                `)
+            await dataset.import(resourceGraph)
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const ops = resource.getProperties()
@@ -123,31 +174,24 @@ describe('HydraResource', () => {
             expect(ops.length).toBe(0)
         })
 
-        it('returns empty array when ApiDocumentation does not implement the interface', () => {
+        it('deduplicates multiple usage same rdf:property in supported properties', async () => {
             // given
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, {
-                getProperties: () => [],
-            } as any)
-
-            // when
-            const ops = resource.getProperties()
-
-            // then
-            expect(ops.length).toBe(0)
-        })
-
-        it('deduplicates multiple usage same rdf:property in supported properties', () => {
-            // given
-            const getProperties = sinon.stub()
-                .returns([ {
-                    property: {
-                        id: 'http://example.com/vocab#prop',
-                    },
-                }])
-            const apiDoc = {
-                getProperties,
-            } as any
-            const resource = new HydraResource(Bodies.multipleTypesExpanded, apiDoc)
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:ResourceA, ex:ResourceB .
+                       
+                    ex:ResourceA a hydra:Class ;
+                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                    ex:ResourceB a hydra:Class ;
+                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const links = resource.getProperties()
@@ -158,12 +202,22 @@ describe('HydraResource', () => {
     })
 
     describe('getLinks', () => {
-        it('should return empty array when no property is link', () => {
+        it('should return empty array when no property is link', async () => {
             // given
-            const apiDoc = {
-                getProperties: sinon.stub().returns([]),
-            } as any
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:Resource .
+                       
+                    ex:Resource a hydra:Class ;
+                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:Resource .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const links = resource.getLinks()
@@ -172,46 +226,52 @@ describe('HydraResource', () => {
             expect(links.length).toBe(0)
         })
 
-        it('should return ids and values for hydra:Link properties', () => {
+        it('should return ids and values for hydra:Link properties', async () => {
             // given
-            const getProperties = sinon.stub()
-                .returns([{
-                    property: {
-                        id: 'http://example.com/vocab#other',
-                        isLink: true,
-                    },
-                }, {
-                    property: {
-                        id: 'http://example.com/vocab#prop',
-                        isLink: false,
-                    },
-                }])
-            const apiDoc = {
-                getProperties,
-            } as any
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:Resource .
+                       
+                    ex:Resource a hydra:Class ;
+                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                        
+                    ex:knows a hydra:Link .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:Resource ;
+                        ex:knows <http://example.com/linked>.
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const links = resource.getLinks()
 
             // then
             expect(links.length).toBe(1)
-            expect(links[0].resources[0]['@id']).toBe('http://example.com/linked')
+            expect(links[0].resources[0].id.value).toBe('http://example.com/linked')
         })
 
-        it('should return empty result if a Link property is not used in a resource', () => {
+        it('should return empty result if a Link property is not used in a resource', async () => {
             // given
-            const getProperties = sinon.stub()
-                .returns([{
-                    property: {
-                        id: 'http://example.com/vocab#unused',
-                        isLink: true,
-                    },
-                }])
-            const apiDoc = {
-                getProperties,
-            } as any
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:Resource .
+                       
+                    ex:Resource a hydra:Class ;
+                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                        
+                    ex:knows a hydra:Link .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:Resource .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const links = resource.getLinks()
@@ -220,19 +280,24 @@ describe('HydraResource', () => {
             expect(links.length).toBe(0)
         })
 
-        it('should return all Link properties if requested explicitly', () => {
+        it('should return all Link properties if requested explicitly', async () => {
             // given
-            const getProperties = sinon.stub()
-                .returns([{
-                    property: {
-                        id: 'http://example.com/vocab#unused',
-                        isLink: true,
-                    },
-                }])
-            const apiDoc = {
-                getProperties,
-            } as any
-            const resource = new HydraResource(Bodies.someJsonLdExpanded, apiDoc)
+            const apiGraph = parse(
+                `
+                    <> a hydra:ApiDocumentation ;
+                        hydra:supportedClass ex:Resource .
+                       
+                    ex:Resource a hydra:Class ;
+                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                        
+                    ex:knows a hydra:Link .
+                `, ex.api)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> a ex:Resource .
+                `)
+            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const links = resource.getLinks(true)
@@ -243,9 +308,18 @@ describe('HydraResource', () => {
     })
 
     describe('getCollections', () => {
-        it('returns all hydra:collections', () => {
+        it('returns all hydra:collections', async () => {
             // given
-            const resource = new HydraResource(Bodies.withHydraCollections, {} as any)
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> hydra:collection 
+                        <http://example.com/collection1> ,
+                        <http://example.com/collection2> ,
+                        <http://example.com/collection3> ,
+                        <http://example.com/collection4> .
+                `)
+            await dataset.import(resourceGraph)
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const collections = resource.getCollections()
@@ -254,12 +328,23 @@ describe('HydraResource', () => {
             expect(collections.length).toBe(4)
         })
 
-        it('returns collections matching manages block Class given by id', () => {
+        it('returns collections matching manages block Class given by id', async () => {
             // given
-            const resource = new HydraResource(Bodies.withHydraCollections, {} as any) as any
-            resource[Core.Vocab('collection')][0].manages = [{
-                matches: () => true,
-            }]
+            const resourceGraph = parse(
+                `
+                    <http://example.com/> hydra:collection 
+                        <http://example.com/collection1> ,
+                        <http://example.com/collection2> ,
+                        <http://example.com/collection3> ,
+                        <http://example.com/collection4> .
+                        
+                    <http://example.com/collection1> hydra:manages [
+                        hydra:object <http://example.org/Class> ;
+                        hydra:property rdf:type
+                    ] .
+                `)
+            await dataset.import(resourceGraph)
+            const resource = new HydraResource(node.namedNode('http://example.com/'))
 
             // when
             const collections = resource.getCollections({
@@ -268,55 +353,7 @@ describe('HydraResource', () => {
 
             // then
             expect(collections.length).toBe(1)
-            expect(collections[0]['@id']).toBe('http://example.com/collection1')
-        })
-    })
-
-    describe('load', () => {
-        let alcaeus
-        let HydraResource
-
-        beforeEach(() => {
-            alcaeus = {
-                loadResource: sinon.spy(),
-            }
-            HydraResource = createClass(alcaeus as any, () => reverseLinks)
-        })
-
-        it('uses client to dereference self', () => {
-            // given
-            const resource = new HydraResource({
-                '@id': 'http://example.com/resource',
-            })
-
-            // when
-            resource.load()
-
-            // then
-            expect(alcaeus.loadResource.calledWithExactly('http://example.com/resource')).toBeTruthy()
-        })
-
-        it('throws when resource is a blank node', () => {
-            // given
-            const resource = new HydraResource({
-                '@id': '_:foo',
-            })
-
-            // then
-            expect(() => resource.load()).toThrow()
-            expect(alcaeus.loadResource.notCalled).toBeTruthy()
-        })
-    })
-
-    describe('OperationFinder', () => {
-        it('is implemented', () => {
-            // given
-            const resource = new HydraResource({})
-
-            // then
-            expect(resource).toHaveProperty('getOperationsDeep')
-            expect(resource).toHaveProperty('findOperations')
-            expect(resource).toHaveProperty('findOperationsDeep')
+            expect(collections[0].id.value).toBe('http://example.com/collection1')
         })
     })
 })

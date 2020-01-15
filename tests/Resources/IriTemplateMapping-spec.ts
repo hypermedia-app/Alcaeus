@@ -1,15 +1,25 @@
-import { Core } from '../../src/Constants'
-import { Mixin } from '../../src/Resources/Mixins/IriTemplateMapping'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { NamedNode } from 'rdf-js'
+import { IriTemplateMappingMixin } from '../../src/Resources/Mixins/IriTemplateMapping'
 import Resource from '../../src/Resources/Resource'
+import { hydra } from '../../src/Vocabs'
 
-class IriTemplateMapping extends Mixin(Resource) {}
+class IriTemplateMapping extends IriTemplateMappingMixin(Resource) {}
 
 describe('IriTemplateMapping', () => {
+    let node: SingleContextClownface<DatasetExt, NamedNode>
+
+    beforeEach(() => {
+        node = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#TemplateMapping')
+    })
+
     describe('required', () => {
-        it('should return true if missing', () => {
+        it('should return false if missing', () => {
             // given
-            const body = {}
-            const iriTemplate = new IriTemplateMapping(body)
+            const iriTemplate = new IriTemplateMapping(node)
 
             // then
             expect(iriTemplate.required).toBe(false)
@@ -24,10 +34,9 @@ describe('IriTemplateMapping', () => {
     describe('variable', () => {
         it('returns the correct value of hydra term', () => {
             // given
-            const body = {
-                [Core.Vocab('variable')]: 'test',
-            }
-            const iriTemplate = new IriTemplateMapping(body)
+            node.addOut(hydra.variable, 'test')
+
+            const iriTemplate = new IriTemplateMapping(node)
 
             // then
             expect(iriTemplate.variable).toBe('test')
@@ -37,15 +46,11 @@ describe('IriTemplateMapping', () => {
     describe('property', () => {
         it('returns the correct value of hydra term', () => {
             // given
-            const body = {
-                [Core.Vocab('property')]: {
-                    id: 'test',
-                },
-            }
-            const iriTemplate = new IriTemplateMapping(body)
+            node.addOut(hydra.property, node.namedNode('http://example.com/test'))
+            const iriTemplate = new IriTemplateMapping(node)
 
             // then
-            expect(iriTemplate.property.id).toBe('test')
+            expect(iriTemplate.property.id.value).toBe('http://example.com/test')
         })
     })
 })

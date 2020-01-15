@@ -23,14 +23,10 @@ const multipleManagesBlocksGraph = `
       hydra:member <member1>, <member2> .
 `
 
-const malformedManagesBlocksGraph = `
+const incompleteManagesBlocksGraph = `
   <collection> 
       a hydra:Collection ;
       hydra:manages [
-        hydra:property rdf:type ;
-        hydra:property rdf:foo ; # property twice
-        hydra:object <vocab#Member>
-      ], [
         hydra:property rdf:type ;
         hydra:object <vocab#Member> ; # manages block must only have two objects
         hydra:subject rdf:bar
@@ -41,4 +37,4 @@ const malformedManagesBlocksGraph = `
 
 export const managesWithType = createGraph(managesWithTypeGraph)
 export const multipleManagesBlocks = createGraph(multipleManagesBlocksGraph)
-export const malformedManagesBlocks = createGraph(malformedManagesBlocksGraph)
+export const incompleteManagesBlocks = createGraph(incompleteManagesBlocksGraph)

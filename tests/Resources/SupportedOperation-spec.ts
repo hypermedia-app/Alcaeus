@@ -1,123 +1,76 @@
-import { promises as jsonld } from 'jsonld'
-import { Core } from '../../src/Constants'
-import { Mixin } from '../../src/Resources/Mixins/SupportedOperation'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
 import Resource from '../../src/Resources/Resource'
-import { owl } from '../../src/Vocabs'
-import Context from '../test-objects/Context'
+import { hydra, owl } from '../../src/Vocabs'
 
-class SupportedOperation extends Mixin(Resource) {}
+class SupportedOperation extends SupportedOperationMixin(Resource) {}
 
 describe('SupportedOperation', () => {
-    let operationJsonLd
+    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let operation: SupportedOperation
 
     beforeEach(() => {
-        operationJsonLd = {
-            '@context': Context,
-            'description': 'The operation description',
-            'expects': owl.Nothing,
-            'method': 'TRACE',
-            'returns': 'http://example.com/Something',
-            'title': 'The operation',
-        }
+        node = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#SupportedOperation')
+
+        node
+            .addOut(hydra.description, 'The operation description')
+            .addOut(hydra.expects, owl.Nothing)
+            .addOut(hydra.method, 'TRACE')
+            .addOut(hydra.returns, node.namedNode('http://example.com/Something'))
+            .addOut(hydra.title, 'The operation')
+
+        operation = new SupportedOperation(node)
     })
 
     it('should expose operation method', async () => {
-        // given
-        const compacted = await jsonld.compact(operationJsonLd, {})
-
-        // wehen
-        const op = new SupportedOperation(compacted)
-
         // then
-        expect(op.method).toBe('TRACE')
+        expect(operation.method).toBe('TRACE')
     })
 
     it('should expose expected class id', async () => {
-        // given
-        const compacted = await jsonld.compact(operationJsonLd, {})
-
-        // when
-        const op = new SupportedOperation(compacted)
-
         // then
-        expect(op.expects!['@id']).toBe(owl.Nothing)
+        expect(operation.expects!.id).toEqual(owl.Nothing)
     })
 
     it('should expose returned class id', async () => {
-        // given
-        const compacted = await jsonld.compact(operationJsonLd, {})
-
-        // when
-        const op = new SupportedOperation(compacted)
-
         // then
-        expect(op.returns!['@id']).toBe('http://example.com/Something')
+        expect(operation.returns!.id.value).toEqual('http://example.com/Something')
     })
 
     describe('requiresInput', () => {
         it('should return false for GET operation', async () => {
             // given
-            const operation = {
-                '@context': Context,
-                'method': 'GET',
-            }
-
-            const compacted = await jsonld.compact(operation, {})
-
-            // when
-            const op = new SupportedOperation(compacted)
+            node.deleteOut(hydra.method).addOut(hydra.method, 'GET')
 
             // then
-            expect(op.requiresInput).toBe(false)
+            expect(operation.requiresInput).toBe(false)
         })
 
         it('should return false for DELETE operation', async () => {
             // given
-            const operation = {
-                '@context': Context,
-                'method': 'DELETE',
-            }
-
-            const compacted = await jsonld.compact(operation, {})
-
-            // when
-            const op = new SupportedOperation(compacted)
+            node.deleteOut(hydra.method).addOut(hydra.method, 'DELETE')
 
             // then
-            expect(op.requiresInput).toBe(false)
+            expect(operation.requiresInput).toBe(false)
         })
 
         it('should return true if operation expects a body', async () => {
             // given
-            const operation = {
-                '@context': Context,
-                'method': 'POST',
-            }
-
-            const compacted = await jsonld.compact(operation, {})
-
-            // when
-            const op = new SupportedOperation(compacted)
+            node.deleteOut(hydra.method).addOut(hydra.method, 'POST')
 
             // then
-            expect(op.requiresInput).toBe(true)
+            expect(operation.requiresInput).toBe(true)
         })
 
         it('should return true if operation expects nothing', async () => {
             // given
-            const operation = {
-                '@context': Context,
-                'method': 'POST',
-            }
-
-            const compacted = await jsonld.compact(operation, {})
-            compacted[Core.Vocab('expects')] = { id: owl.Nothing }
-
-            // when
-            const op = new SupportedOperation(compacted)
+            node.deleteOut(hydra.method).addOut(hydra.method, 'POST')
 
             // then
-            expect(op.requiresInput).toBe(true)
+            expect(operation.requiresInput).toBe(true)
         })
     })
 })

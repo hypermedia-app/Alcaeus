@@ -11,18 +11,18 @@ export function CollectionMixin <TBase extends Constructor> (Base: TBase) {
 
         @property.resource({
             path: 'member',
-            array: true,
+            values: 'array',
         })
         public members!: HydraResource[]
 
         @property.resource({
             path: 'view',
-            array: true,
+            values: 'array',
         })
         public views!: View[]
 
         @property.resource({
-            array: true,
+            values: 'array',
             as: [ManagesBlockMixin],
         })
         public manages!: IManagesBlock[]

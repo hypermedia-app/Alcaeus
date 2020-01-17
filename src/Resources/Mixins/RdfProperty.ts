@@ -21,7 +21,7 @@ export function RdfPropertyMixin<TBase extends Constructor> (Base: TBase) {
 
         @property.resource({
             path: hydra.supportedOperation,
-            array: true,
+            values: 'array',
             as: [SupportedOperationMixin],
         })
         public supportedOperations!: SupportedOperation[]

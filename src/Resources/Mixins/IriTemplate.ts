@@ -12,7 +12,7 @@ export function IriTemplateMixin<TBase extends Constructor> (Base: TBase) {
 
         @property.resource({
             path: hydra.mapping,
-            array: true,
+            values: 'array',
             as: [IriTemplateMappingMixin],
         })
         public mappings!: IIriTemplateMapping[]

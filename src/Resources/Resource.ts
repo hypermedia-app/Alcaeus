@@ -45,7 +45,8 @@ export default class Resource extends RdfResourceImpl implements IResource {
         let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
 
         const objects = this._node.out(propertyNode)
-            .map(obj => {
+            .filter(({ term }) => term.termType === 'NamedNode' || term.termType === 'BlankNode')
+            .map((obj) => {
                 return this._create<T>(obj)
             })
 
@@ -60,7 +61,7 @@ export default class Resource extends RdfResourceImpl implements IResource {
         return null
     }
 
-    public getArray<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode, options = { strict: false }): T[] {
+    public getArray<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode): T[] {
         let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
         const values = this._node.out(propertyNode)
             .map(obj => {

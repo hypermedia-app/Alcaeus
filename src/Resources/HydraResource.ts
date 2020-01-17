@@ -93,7 +93,7 @@ export function createHydraResourceMixin (alcaeus: IHydraClient) {
                 }, [] as { supportedProperty: SupportedProperty; objects: any[] }[])
             }
 
-            @property.resource({ path: hydra.collection, array: true, as: [CollectionMixin] })
+            @property.resource({ path: hydra.collection, values: 'array', as: [CollectionMixin] })
             public collections!: Collection[]
 
             public getCollections (filter?: ManagesBlockPattern) {

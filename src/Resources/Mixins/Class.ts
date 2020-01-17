@@ -9,21 +9,21 @@ export function ClassMixin<TBase extends Constructor> (Base: TBase) {
     class Class extends Base implements IClass {
         @property.resource({
             path: rdfs.subClassOf,
-            array: true,
+            values: 'array',
             as: [ClassMixin],
         })
         public subClassOf!: Class[]
 
         @property.resource({
             path: hydra.supportedOperation,
-            array: true,
+            values: 'array',
             as: [SupportedOperationMixin],
         })
         public __supportedOperations!: SupportedOperation[]
 
         @property.resource({
             path: hydra.supportedProperty,
-            array: true,
+            values: 'array',
             as: [SupportedPropertyMixin],
         })
         public __supportedProperties!: SupportedProperty[]

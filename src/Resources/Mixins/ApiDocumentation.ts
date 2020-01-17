@@ -8,7 +8,7 @@ export function ApiDocumentationMixin<TBase extends Constructor> (Base: TBase) {
     class ApiDocumentation extends Base implements IApiDocumentation {
         @property.resource({
             path: 'supportedClass',
-            array: true,
+            values: 'array',
         })
         public classes!: Class[]
 

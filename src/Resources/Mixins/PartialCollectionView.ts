@@ -1,6 +1,6 @@
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { SingleContextClownface } from 'clownface'
-import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
+import { DatasetCore } from 'rdf-js'
 import { hydra } from '../../Vocabs'
 import { Collection, HydraResource, IPartialCollectionView, IView } from '../index'
 import { IResource } from '../Resource'
@@ -30,7 +30,7 @@ export function PartialCollectionViewMixin<TBase extends Constructor> (Base: TBa
                     }
 
                     return namedNodes
-                }, [] as SingleContextClownface<DatasetCore, NamedNode | BlankNode>[])
+                }, [] as SingleContextClownface<DatasetCore, ResourceIdentifier>[])
                 .map(collectionNode => {
                     return this._create<Collection>(collectionNode)
                 })[0] || null

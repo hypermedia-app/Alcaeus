@@ -1,11 +1,11 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { SafeClownface } from 'clownface'
-import { BlankNode, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { hydra, rdf } from '../../Vocabs'
 import { Class, IManagesBlock, ManagesBlockPattern, RdfProperty } from '../index'
 import { IResource } from '../Resource'
 
-function getUri (factory: SafeClownface, resource: string | IResource | NamedNode): NamedNode | BlankNode {
+function getUri (factory: SafeClownface, resource: string | IResource | NamedNode): ResourceIdentifier {
     if (typeof resource === 'string') {
         return factory.namedNode(resource).term
     }

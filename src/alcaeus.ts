@@ -1,6 +1,7 @@
 import { ResourceFactory } from '@tpluscode/rdfine'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import { NamedNode } from 'rdf-js'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import * as FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
@@ -68,7 +69,9 @@ export class Alcaeus implements IHydraClient {
         return Promise.all(this.__documentationPromises.values())
     }
 
-    public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
+    public async loadResource (id: string | NamedNode, headers: HeadersInit = {}): Promise<IHydraResponse> {
+        const uri = typeof id === 'string' ? id : id.value
+
         const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
         await addOrReplaceGraph(this, response, uri)
         this.__getApiDocumentation(response, headers)

@@ -11,12 +11,12 @@ export { Alcaeus } from './alcaeus'
 export { default as Resource } from './Resources/Resource'
 export { ResourceIdentifier } from '@tpluscode/rdfine'
 
-const defaultRootSelectors = Object.values(AllDefault)
-const defaultProcessors = {
+export const defaultRootSelectors = Object.values(AllDefault)
+export const defaultProcessors = {
     RDF: new RdfProcessor(),
 }
 
-export const Hydra = (rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors) => {
+export function create ({ rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors } = {}) {
     let factory: ResourceFactory
     class HydraResource extends Resource {
         public static get factory () {
@@ -34,4 +34,4 @@ export const Hydra = (rootSelectors = defaultRootSelectors, mediaTypeProcessors 
     return alcaeus
 }
 
-export default Hydra()
+export default create()

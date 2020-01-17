@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2020-01-17)
+
+
+### Features
+
+* load method to allow named node param ([1e4cf66](https://github.com/wikibus/alcaeus/commit/1e4cf66b4443417148b0d19e21d5d62a133e80aa))
+
 ## [1.0.0-alpha.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.0...v1.0.0-alpha.2) (2020-01-17)
 
 

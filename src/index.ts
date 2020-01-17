@@ -2,7 +2,6 @@ import { ResourceFactory } from '@tpluscode/rdfine'
 import { Alcaeus } from './alcaeus'
 import { createResourceLoaderMixin } from './Resources/CoreMixins/ResourceLoaderMixin'
 import { createHydraResourceMixin } from './Resources/HydraResource'
-import { hydra } from './Vocabs'
 import RdfProcessor from './MediaTypeProcessors/RdfProcessor'
 import * as mixins from './ResourceFactoryDefaults'
 import { AllDefault } from './RootSelectors'
@@ -17,7 +16,6 @@ const defaultProcessors = {
     RDF: new RdfProcessor(),
 }
 
-export const Vocab = hydra
 export const Hydra = (rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors) => {
     let factory: ResourceFactory
     class HydraResource extends Resource {

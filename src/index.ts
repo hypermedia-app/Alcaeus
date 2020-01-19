@@ -10,6 +10,7 @@ export { Alcaeus } from './alcaeus'
 export { default as Resource } from './Resources/Resource'
 export { ResourceIdentifier } from '@tpluscode/rdfine'
 export * from './Resources/index'
+export { Operation } from './Resources/Operation'
 
 export const defaultRootSelectors = Object.values(AllDefault)
 export const defaultProcessors = {

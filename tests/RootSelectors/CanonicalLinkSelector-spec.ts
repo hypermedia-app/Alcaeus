@@ -1,5 +1,5 @@
 import { HydraResource } from '../../src/Resources'
-import { IResponseWrapper } from '../../src/ResponseWrapper'
+import { ResponseWrapper } from '../../src/ResponseWrapper'
 import CanonicalLinkSelector from '../../src/RootSelectors/CanonicalLinkSelector'
 import 'isomorphic-fetch'
 
@@ -36,7 +36,7 @@ describe('CanonicalLinkSelector', () => {
                     Link: '<the-real-id>; rel=prev',
                 }),
             },
-        } as IResponseWrapper
+        } as ResponseWrapper
 
         // when
         const root = CanonicalLinkSelector.selectRoot(resources, response)
@@ -52,7 +52,7 @@ describe('CanonicalLinkSelector', () => {
             xhr: {
                 headers: new Headers({}),
             },
-        } as IResponseWrapper
+        } as ResponseWrapper
 
         // when
         const root = CanonicalLinkSelector.selectRoot(resources, response)

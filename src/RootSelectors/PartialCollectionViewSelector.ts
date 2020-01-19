@@ -1,13 +1,13 @@
 import { hydra } from '../Vocabs'
-import { IHydraResponse } from '../HydraResponse'
-import { IResourceGraph } from '../ResourceGraph'
+import { HydraResponse } from '../HydraResponse'
+import { ResourceGraph } from '../ResourceGraph'
 import { View } from '../Resources'
-import { IResponseWrapper } from '../ResponseWrapper'
-import { IRootSelector } from './index'
+import { ResponseWrapper } from '../ResponseWrapper'
+import { RootSelector } from './index'
 
-export default function (selector: IRootSelector): IRootSelector {
+export default function (selector: RootSelector): RootSelector {
     return {
-        selectRoot (resources: IResourceGraph, response: IResponseWrapper & IHydraResponse) {
+        selectRoot (resources: ResourceGraph, response: ResponseWrapper & HydraResponse) {
             const maybeView = selector.selectRoot(resources, response) as View | undefined
 
             if (maybeView && maybeView.types.has(hydra.PartialCollectionView)) {

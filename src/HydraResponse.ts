@@ -2,14 +2,13 @@ import { ResourceFactory } from '@tpluscode/rdfine'
 import { DatasetCore, NamedNode, Quad } from 'rdf-js'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
-import { IHydraClient } from './alcaeus'
-import { ResourceGraph } from './ResourceGraph'
+import { HydraClient } from './alcaeus'
+import ResourceGraph from './ResourceGraph'
 import { HydraResource } from './Resources'
-import { IResource } from './Resources/Resource'
-import { IResponseWrapper, ResponseWrapper } from './ResponseWrapper'
+import ResponseWrapperImpl, { ResponseWrapper } from './ResponseWrapper'
 import { rdf } from './Vocabs'
 
-export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrapper {
+export interface HydraResponse extends Iterable<HydraResource>, ResponseWrapper {
 
     /**
      * Gets the root of the representation or undefined if it cannot be determined
@@ -31,7 +30,7 @@ export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrappe
      * @param {string} classId RDF class identifier
      * @returns {Array<HydraResource>}
      */
-    ofType(classId: string | NamedNode): IResource[];
+    ofType(classId: string | NamedNode): HydraResource[];
 }
 
 function quadReducer (dataset: DatasetCore, factory: ResourceFactory) {
@@ -49,12 +48,12 @@ function quadReducer (dataset: DatasetCore, factory: ResourceFactory) {
 
 export function create (
     uri: string,
-    response: IResponseWrapper,
-    alcaeus: Pick<IHydraClient, 'dataset' | 'rootSelectors' | 'factory'>): IHydraResponse {
+    response: ResponseWrapper,
+    alcaeus: Pick<HydraClient, 'dataset' | 'rootSelectors' | 'factory'>): HydraResponse {
     const resources = new ResourceGraph(alcaeus)
     const atomicGraph = cf({ dataset: alcaeus.dataset, graph: $rdf.namedNode(uri) })
 
-    class HydraResponse extends ResponseWrapper implements IHydraResponse {
+    class HydraResponseWrapper extends ResponseWrapperImpl implements HydraResponse {
         public constructor (requestedUri: string) {
             super(requestedUri, response.xhr)
         }
@@ -89,5 +88,5 @@ export function create (
         }
     }
 
-    return new HydraResponse(uri)
+    return new HydraResponseWrapper(uri)
 }

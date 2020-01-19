@@ -1,13 +1,31 @@
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra } from '../../Vocabs'
-import { ISupportedProperty, RdfProperty } from '../index'
-import { IResource } from '../Resource'
-import { DocumentedResourceMixin } from './DocumentedResource'
-import { RdfPropertyMixin } from './RdfProperty'
+import { HydraResource } from '../index'
+import { DocumentedResourceMixin, DocumentedResource } from './DocumentedResource'
+import { RdfProperty, RdfPropertyMixin } from './RdfProperty'
 
-export function SupportedPropertyMixin<TBase extends Constructor> (Base: TBase) {
+export interface SupportedProperty extends DocumentedResource {
+    /**
+     * Gets the value indicating if the property can be read from responses
+     */
+    readable: boolean;
+    /**
+     * Gets the value indicating if the property can be written by requests
+     */
+    writable: boolean;
+    /**
+     * Gets the value indicating if the property in required in request payload
+     */
+    required: boolean;
+    /**
+     * The actual RDF predicate to use in representations
+     */
+    property: RdfProperty;
+}
+
+export function SupportedPropertyMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
     @namespace(hydra)
-    class SupportedProperty extends Base implements ISupportedProperty {
+    class SupportedPropertyClass extends DocumentedResourceMixin(Base) implements SupportedProperty {
         @property.literal({
             type: Boolean,
             initial: true,
@@ -34,7 +52,7 @@ export function SupportedPropertyMixin<TBase extends Constructor> (Base: TBase) 
         public property!: RdfProperty
     }
 
-    return DocumentedResourceMixin(SupportedProperty)
+    return SupportedPropertyClass
 }
 
-SupportedPropertyMixin.shouldApply = (res: IResource) => res.hasType(hydra.SupportedProperty)
+SupportedPropertyMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.SupportedProperty)

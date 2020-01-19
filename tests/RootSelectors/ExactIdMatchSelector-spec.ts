@@ -1,5 +1,5 @@
 import $rdf from 'rdf-ext'
-import { IHydraResponse } from '../../src/HydraResponse'
+import { HydraResponse } from '../../src/HydraResponse'
 import { HydraResource } from '../../src/Resources'
 import ExactIdMatchSelector from '../../src/RootSelectors/ExactIdMatchSelector'
 
@@ -11,7 +11,7 @@ describe('ExactIdMatchSelector', () => {
         resources.set('id', expectedRoot as any)
         const response = {
             requestedUri: 'id',
-        } as IHydraResponse
+        } as HydraResponse
 
         // when
         const root = ExactIdMatchSelector.selectRoot(resources, response)

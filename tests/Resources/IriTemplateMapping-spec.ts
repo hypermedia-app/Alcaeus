@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { IriTemplateMappingMixin } from '../../src/Resources/Mixins/IriTemplateMapping'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from './_TestResource'
 import { hydra } from '../../src/Vocabs'
 
 class IriTemplateMapping extends IriTemplateMappingMixin(Resource) {}

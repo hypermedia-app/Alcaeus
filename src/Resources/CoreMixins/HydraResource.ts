@@ -1,22 +1,15 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
-import { IHydraClient } from '../alcaeus'
-import { hydra } from '../Vocabs'
-import {
-    Collection,
-    ManagesBlockPattern,
-    SupportedOperation,
-    SupportedProperty,
-    Class,
-    ISupportedProperty,
-    HydraResource,
-} from './index'
-import { CollectionMixin } from './Mixins/Collection'
-import { Operation } from './Operation'
-import { IResource } from './Resource'
+import { HydraClient } from '../../alcaeus'
+import { hydra } from '../../Vocabs'
+import { HydraResource } from '../index'
+import { Collection, CollectionMixin } from '../Mixins/Collection'
+import { ManagesBlockPattern } from '../Mixins/ManagesBlock'
+import { Class, SupportedProperty, SupportedOperation } from '..'
+import Operation from '../Operation'
 
-export function createHydraResourceMixin (alcaeus: IHydraClient) {
-    return function HydraResourceMixin<Base extends Constructor<RdfResource & IResource>> (base: Base) {
-        class HR extends base {
+export function createHydraResourceMixin (alcaeus: HydraClient) {
+    function HydraResourceMixin<Base extends Constructor<HydraResource>> (base: Base) {
+        class HydraResourceClass extends base implements HydraResource {
             public get operations () {
                 const classOperations = [...this.types.values()].reduce((operations, clas: RdfResource | Class) => {
                     if ('supportedOperations' in clas) {
@@ -35,7 +28,7 @@ export function createHydraResourceMixin (alcaeus: IHydraClient) {
                         const subject = this._create(this._node.namedNode(quad.subject))
                         return [...subject.types.values()].reduce((operations, clas: RdfResource | Class) => {
                             if ('supportedProperties' in clas) {
-                                const supportedProperty = clas.supportedProperties.find((prop: ISupportedProperty) => {
+                                const supportedProperty = clas.supportedProperties.find((prop: SupportedProperty) => {
                                     return prop.property && quad.predicate.equals(prop.property.id)
                                 })
 
@@ -51,7 +44,7 @@ export function createHydraResourceMixin (alcaeus: IHydraClient) {
                 const supportedOperations: SupportedOperation[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
                 const operations = supportedOperations.reduce((map, supportedOperation) => {
                     if (!map.has(supportedOperation.id.value)) {
-                        map.set(supportedOperation.id.value, new Operation(supportedOperation, alcaeus, this as any as HydraResource))
+                        map.set(supportedOperation.id.value, new Operation(supportedOperation, alcaeus, this as any))
                     }
 
                     return map
@@ -106,6 +99,10 @@ export function createHydraResourceMixin (alcaeus: IHydraClient) {
             }
         }
 
-        return HR
+        return HydraResourceClass
     }
+
+    HydraResourceMixin.shouldApply = true
+
+    return HydraResourceMixin
 }

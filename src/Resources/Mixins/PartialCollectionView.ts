@@ -1,13 +1,31 @@
-import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { SingleContextClownface } from 'clownface'
 import { DatasetCore } from 'rdf-js'
 import { hydra } from '../../Vocabs'
-import { Collection, HydraResource, IPartialCollectionView, IView } from '../index'
-import { IResource } from '../Resource'
+import { Collection, HydraResource, View } from '../index'
 
-export function PartialCollectionViewMixin<TBase extends Constructor> (Base: TBase) {
+export interface PartialCollectionView extends View {
+    /**
+     * Gets the first page resource of a collection
+     */
+    readonly first: HydraResource | undefined;
+    /**
+     * Gets the previous page resource of a collection
+     */
+    readonly previous: HydraResource | undefined;
+    /**
+     * Gets the next page resource of a collection
+     */
+    readonly next: HydraResource | undefined;
+    /**
+     * Gets the last page resource of a collection
+     */
+    readonly last: HydraResource | undefined;
+}
+
+export function PartialCollectionViewMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
     @namespace(hydra)
-    class PartialCollectionView extends Base implements IPartialCollectionView, IView {
+    class PartialCollectionViewClass extends Base implements PartialCollectionView {
         @property.resource()
         public first!: HydraResource
 
@@ -37,7 +55,7 @@ export function PartialCollectionViewMixin<TBase extends Constructor> (Base: TBa
         }
     }
 
-    return PartialCollectionView
+    return PartialCollectionViewClass
 }
 
-PartialCollectionViewMixin.shouldApply = (res: IResource) => res.hasType(hydra.PartialCollectionView)
+PartialCollectionViewMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.PartialCollectionView)

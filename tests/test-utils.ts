@@ -1,5 +1,5 @@
 import { MediaTypes } from '../src/Constants'
-import { IResponseWrapper } from '../src/ResponseWrapper'
+import { ResponseWrapper } from '../src/ResponseWrapper'
 import 'isomorphic-fetch'
 import stringToStream from 'string-to-stream'
 import rdf from 'rdf-ext'
@@ -82,7 +82,7 @@ export function responseBuilder (): any {
     }
 }
 
-export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): Promise<IResponseWrapper> {
+export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): Promise<ResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
     const xhr = await xhrBuilder.build()
 
@@ -96,7 +96,7 @@ export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): P
         get: () => xhr.clone(),
     })
 
-    return response as IResponseWrapper
+    return response as ResponseWrapper
 }
 
 export function createGraph (ntriples: string) {

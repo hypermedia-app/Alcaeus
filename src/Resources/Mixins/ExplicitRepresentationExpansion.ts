@@ -1,15 +1,15 @@
 import { Constructor, RdfResource } from '@tpluscode/rdfine'
-import { IIriTemplate } from '../index'
-import ExpansionModelBuilder, { IExpandedValue } from './ExpansionModelBuilder'
+import ExpansionModelBuilder, { ExpandedValue } from './ExpansionModelBuilder'
 import { hydra } from '../../Vocabs'
+import { IriTemplate } from './IriTemplate'
 
-export function ExplicitRepresentationExpansionMixin<TBase extends Constructor<RdfResource & IIriTemplate>> (Base: TBase) {
+export function ExplicitRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>> (Base: TBase) {
     class ExplicitRepresentationExpansion extends Base {
         public mapShorthandValue (value: string) {
             return `"${value}"`
         }
 
-        public mapExpandedValue (value: IExpandedValue) {
+        public mapExpandedValue (value: ExpandedValue) {
             if (value['@id']) {
                 return value['@id']
             }

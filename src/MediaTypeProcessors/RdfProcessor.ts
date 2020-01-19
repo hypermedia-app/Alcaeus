@@ -3,14 +3,14 @@ import { DatasetCore, Stream } from 'rdf-js'
 import { Readable } from 'stream'
 import stringToStream from 'string-to-stream'
 import { ParserFactory } from '../ParserFactory'
-import { IResponseWrapper } from '../ResponseWrapper'
+import { ResponseWrapper } from '../ResponseWrapper'
 import * as inferences from './inferences'
 
-export interface IMediaTypeProcessor {
+export interface MediaTypeProcessor {
     canProcess(mediaType: string);
     process(
         uri: string,
-        response: IResponseWrapper): Promise<Stream & Readable>;
+        response: ResponseWrapper): Promise<Stream & Readable>;
 }
 
 const parserFactory = new ParserFactory()
@@ -36,12 +36,12 @@ async function parseResponse (responseText: string, uri: string, mediaType: stri
     return dataset.toStream() as Readable & Stream
 }
 
-export default class RdfProcessor implements IMediaTypeProcessor {
+export default class RdfProcessor implements MediaTypeProcessor {
     public canProcess (mediaType): boolean {
         return !!parserFactory.create().find(stripContentTypeParameters(mediaType))
     }
 
-    public async process (uri: string, response: IResponseWrapper): Promise<Stream & Readable> {
+    public async process (uri: string, response: ResponseWrapper): Promise<Stream & Readable> {
         return parseResponse(await response.xhr.text(), uri, response.mediaType)
     }
 

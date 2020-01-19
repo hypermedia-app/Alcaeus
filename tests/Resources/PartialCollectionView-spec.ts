@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-jsonld'
 import { DatasetCore, NamedNode, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from './_TestResource'
 import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
 import { Bodies } from '../test-objects'
 

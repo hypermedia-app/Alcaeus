@@ -1,6 +1,17 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra, rdfs, schema } from '../../Vocabs'
-import { IDocumentedResource } from '../index'
+import { HydraResource } from '../index'
+
+export interface DocumentedResource extends HydraResource {
+    /**
+     * Gets the value of either hydra:title or schema:title or rdfs:label property
+     */
+    title: string;
+    /**
+     * Gets the value of either hydra:description or schema:description or rdfs:comment property
+     */
+    description: string;
+}
 
 function getTitle (res: RdfResource) {
     return res._node.out([
@@ -14,8 +25,8 @@ function getDescription (res: RdfResource) {
     ])
 }
 
-export function DocumentedResourceMixin<TBase extends Constructor> (Base: TBase) {
-    class HydraResource extends Base implements IDocumentedResource {
+export function DocumentedResourceMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    class DocumentedResourceClass extends Base implements DocumentedResource {
         @property.literal({ path: hydra.title })
         public __hydraTitle!: string
 
@@ -43,7 +54,7 @@ export function DocumentedResourceMixin<TBase extends Constructor> (Base: TBase)
         }
     }
 
-    return HydraResource
+    return DocumentedResourceClass
 }
 
 DocumentedResourceMixin.shouldApply = function (res: RdfResource) {

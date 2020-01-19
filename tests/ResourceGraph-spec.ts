@@ -3,7 +3,7 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import { Resource } from '../src'
-import { ResourceGraph } from '../src/ResourceGraph'
+import ResourceGraph from '../src/ResourceGraph'
 import { rdf, schema } from '../src/Vocabs'
 
 describe('ResourceGraph', () => {

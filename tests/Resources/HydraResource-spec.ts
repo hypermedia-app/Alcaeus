@@ -6,16 +6,16 @@ import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
-import { IHydraClient } from '../../src/alcaeus'
+import { HydraClient } from '../../src/alcaeus'
 import * as mixins from '../../src/ResourceFactoryDefaults'
-import { createHydraResourceMixin } from '../../src/Resources/HydraResource'
-import Resource from '../../src/Resources/Resource'
+import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
 import { hydra, rdf } from '../../src/Vocabs'
+import { Resource } from './_TestResource'
 
 const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
 
-let client = {} as IHydraClient
+let client = {} as HydraClient
 const HydraResource = createHydraResourceMixin(client)(Resource)
 
 HydraResource.factory = new ResourceFactory(HydraResource)

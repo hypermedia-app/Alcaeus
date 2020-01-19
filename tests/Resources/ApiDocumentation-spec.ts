@@ -4,7 +4,7 @@ import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
 import { ApiDocumentationMixin } from '../../src/Resources/Mixins/ApiDocumentation'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from './_TestResource'
 import { hydra } from '../../src/Vocabs'
 
 class ApiDocumentation extends ApiDocumentationMixin(Resource) { }

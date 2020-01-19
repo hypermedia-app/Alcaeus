@@ -3,7 +3,7 @@ import nonenumerable from '../helpers/nonenumerable'
 import { NamedNode, Term } from 'rdf-js'
 import { xsd } from '../Vocabs'
 
-export interface IResource extends RdfResource {
+export interface Resource extends RdfResource {
     /**
      * Gets a value indicating whether the resource is a blank node
      */
@@ -35,7 +35,7 @@ export interface IResource extends RdfResource {
     getNumber (property: string | NamedNode): number | null;
 }
 
-export default class Resource extends RdfResourceImpl implements IResource {
+export default class ResourceImpl extends RdfResourceImpl implements Resource {
     @nonenumerable
     public get isAnonymous () {
         return this.id.termType === 'BlankNode'

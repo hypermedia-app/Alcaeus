@@ -1,17 +1,17 @@
 import { ResourceFactory } from '@tpluscode/rdfine'
 import cf, { Clownface } from 'clownface'
-import { IHydraClient } from './alcaeus'
+import { HydraClient } from './alcaeus'
 import { HydraResource } from './Resources'
 
-export interface IResourceGraph {
+export interface ResourceGraph {
     get(uri: string): HydraResource | undefined;
 }
 
-export class ResourceGraph implements IResourceGraph {
+export default class implements ResourceGraph {
     private __graph: Clownface
     private __factory: ResourceFactory
 
-    public constructor (alcaeus: Pick<IHydraClient, 'dataset' | 'factory'>) {
+    public constructor (alcaeus: Pick<HydraClient, 'dataset' | 'factory'>) {
         this.__graph = cf({
             dataset: alcaeus.dataset,
         })

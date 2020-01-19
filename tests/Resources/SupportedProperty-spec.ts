@@ -2,7 +2,7 @@ import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import { SupportedPropertyMixin } from '../../src/Resources/Mixins/SupportedProperty'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from './_TestResource'
 import { hydra, rdfs, xml } from '../../src/Vocabs'
 
 class SupportedProperty extends SupportedPropertyMixin(Resource) {

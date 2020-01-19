@@ -1,7 +1,7 @@
 import { Constructor, RdfResource } from '@tpluscode/rdfine'
-import { IHydraClient } from '../../alcaeus'
+import { HydraClient } from '../../alcaeus'
 
-export function createResourceLoaderMixin (alcaeus: IHydraClient) {
+export function createResourceLoaderMixin (alcaeus: HydraClient) {
     function ResourceLoaderMixin<Base extends Constructor> (base: Base) {
         return class extends base {
             public load () {

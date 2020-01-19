@@ -1,5 +1,5 @@
 import { HydraResource } from '../../src/Resources'
-import { IResponseWrapper } from '../../src/ResponseWrapper'
+import { ResponseWrapper } from '../../src/ResponseWrapper'
 import RedirectTargetSelector from '../../src/RootSelectors/RedirectTargetSelector'
 
 describe('RedirectTargetSelector', () => {
@@ -12,7 +12,7 @@ describe('RedirectTargetSelector', () => {
             xhr: {
                 url: 'redirected-to',
             },
-        } as IResponseWrapper
+        } as ResponseWrapper
 
         // when
         const root = RedirectTargetSelector.selectRoot(resources, response)
@@ -29,7 +29,7 @@ describe('RedirectTargetSelector', () => {
             xhr: {
                 url: 'redirected-to',
             },
-        } as IResponseWrapper
+        } as ResponseWrapper
 
         // when
         const root = RedirectTargetSelector.selectRoot(resources, response)

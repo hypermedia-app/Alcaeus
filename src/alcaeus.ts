@@ -5,27 +5,27 @@ import { NamedNode } from 'rdf-js'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import * as FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
-import { IHydraResponse, create } from './HydraResponse'
-import { IMediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
-import { IOperation } from './Resources'
-import { IResponseWrapper } from './ResponseWrapper'
-import { IRootSelector } from './RootSelectors'
+import { HydraResponse, create } from './HydraResponse'
+import { MediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
+import { Operation } from './Resources/Operation'
+import { ResponseWrapper } from './ResponseWrapper'
+import { RootSelector } from './RootSelectors'
 
-export interface IHydraClient {
-    rootSelectors: IRootSelector[];
-    mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
-    loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
+export interface HydraClient {
+    rootSelectors: RootSelector[];
+    mediaTypeProcessors: { [name: string]: MediaTypeProcessor };
+    loadResource(uri: string, headers?: HeadersInit): Promise<HydraResponse>;
     loadDocumentation (uri: string, headers: HeadersInit): void;
-    invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
+    invokeOperation(operation: Operation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
-    documentationLoaded: Promise<IHydraResponse[]>;
+    apiDocumentations: Promise<HydraResponse[]>;
 }
 
 const addOrReplaceGraph = async (
-    alcaeus: IHydraClient,
-    response: IResponseWrapper,
+    alcaeus: HydraClient,
+    response: ResponseWrapper,
     uri: string): Promise<void> => {
     const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
         .find((processor) => processor.canProcess(response.mediaType))
@@ -42,10 +42,10 @@ const addOrReplaceGraph = async (
         .import(parsedTriples.pipe(new TripleToQuadTransform(graph)))
 }
 
-export class Alcaeus implements IHydraClient {
-    public rootSelectors: IRootSelector[];
+export class Alcaeus implements HydraClient {
+    public rootSelectors: RootSelector[];
 
-    public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
+    public mediaTypeProcessors: { [name: string]: MediaTypeProcessor };
 
     public defaultHeaders: HeadersInit | (() => HeadersInit) = {}
 
@@ -53,11 +53,11 @@ export class Alcaeus implements IHydraClient {
 
     public readonly factory: ResourceFactory
 
-    private readonly __documentationPromises: Map<string, Promise<IHydraResponse>> = new Map()
+    private readonly __documentationPromises: Map<string, Promise<HydraResponse>> = new Map()
 
     public constructor (
-        rootSelectors: IRootSelector[],
-        mediaTypeProcessors: { [name: string]: IMediaTypeProcessor },
+        rootSelectors: RootSelector[],
+        mediaTypeProcessors: { [name: string]: MediaTypeProcessor },
         factory: ResourceFactory
     ) {
         this.rootSelectors = rootSelectors
@@ -65,11 +65,22 @@ export class Alcaeus implements IHydraClient {
         this.factory = factory
     }
 
-    public get documentationLoaded () {
+    public get apiDocumentations () {
         return Promise.all(this.__documentationPromises.values())
+        /* .then(responses => responses.map<ApiDocumentation | RdfResource | null>(r => r.root))
+            .then(docs => {
+                return docs.reduce((notNull, doc) => {
+                    if (doc && 'loadEntrypoint' in doc) {
+                        notNull.push(doc)
+                    }
+
+                    return notNull
+                },
+                [] as ApiDocumentation[])
+            }) */
     }
 
-    public async loadResource (id: string | NamedNode, headers: HeadersInit = {}): Promise<IHydraResponse> {
+    public async loadResource (id: string | NamedNode, headers: HeadersInit = {}): Promise<HydraResponse> {
         const uri = typeof id === 'string' ? id : id.value
 
         const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
@@ -90,7 +101,7 @@ export class Alcaeus implements IHydraClient {
         this.__documentationPromises.set(uri, request)
     }
 
-    public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<IHydraResponse> {
+    public async invokeOperation (operation: Operation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<HydraResponse> {
         if (typeof headers === 'string') {
             headers = {
                 'content-type': headers,
@@ -108,7 +119,7 @@ export class Alcaeus implements IHydraClient {
         return create(uri, response, this)
     }
 
-    private __getApiDocumentation (response: IResponseWrapper, headers: HeadersInit) {
+    private __getApiDocumentation (response: ResponseWrapper, headers: HeadersInit) {
         if (!response.apiDocumentationLink) {
             console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
             return

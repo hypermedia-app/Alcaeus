@@ -1,15 +1,16 @@
-import { Constructor, RdfResource } from '@tpluscode/rdfine'
+import { Constructor } from '@tpluscode/rdfine'
 import URITemplate from 'es6-url-template'
-import { IIriTemplate, IIriTemplateMapping } from '../index'
+import { IriTemplate } from './IriTemplate'
+import { IriTemplateMapping } from './IriTemplateMapping'
 
-export interface IExpandedValue {
+export interface ExpandedValue {
     ['@value']: string;
     ['@language']: string;
     ['@id']: string;
     ['@type']: string;
 }
 
-export default function <TBase extends Constructor<RdfResource & IIriTemplate>> (Base: TBase) {
+export default function <TBase extends Constructor<IriTemplate>> (Base: TBase) {
     abstract class Builder extends Base {
         public expand (model): string {
             const uriTemplate = new URITemplate(this.template)
@@ -19,8 +20,8 @@ export default function <TBase extends Constructor<RdfResource & IIriTemplate>> 
             return uriTemplate.expand(variables)
         }
 
-        public buildExpansionModel (mappings: IIriTemplateMapping[], model: object) {
-            return mappings.map((mapping: IIriTemplateMapping) => {
+        public buildExpansionModel (mappings: IriTemplateMapping[], model: object) {
+            return mappings.map((mapping: IriTemplateMapping) => {
                 return {
                     value: model[mapping.property.id.value],
                     variable: mapping.variable,
@@ -40,7 +41,7 @@ export default function <TBase extends Constructor<RdfResource & IIriTemplate>> 
 
         public abstract mapShorthandValue(value: string);
 
-        public abstract mapExpandedValue(value: IExpandedValue);
+        public abstract mapExpandedValue(value: ExpandedValue);
     }
 
     return Builder

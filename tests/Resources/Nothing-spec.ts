@@ -1,7 +1,7 @@
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import { NothingMixin } from '../../src/Resources/Nothing'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from './_TestResource'
 import { owl } from '../../src/Vocabs'
 
 class Nothing extends NothingMixin(Resource) {}

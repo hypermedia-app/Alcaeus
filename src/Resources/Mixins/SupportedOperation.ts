@@ -1,11 +1,19 @@
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra, owl } from '../../Vocabs'
-import { Class, ISupportedOperation } from '../index'
-import { DocumentedResourceMixin } from './DocumentedResource'
+import { HydraResource } from '../index'
+import { Class } from './Class'
+import { DocumentedResourceMixin, DocumentedResource } from './DocumentedResource'
 
-export function SupportedOperationMixin<TBase extends Constructor> (Base: TBase) {
+export interface SupportedOperation extends DocumentedResource {
+    method: string;
+    expects: Class;
+    returns: Class;
+    requiresInput: boolean;
+}
+
+export function SupportedOperationMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
     @namespace(hydra)
-    abstract class SupportedOperation extends Base implements ISupportedOperation {
+    abstract class SupportedOperationClass extends DocumentedResourceMixin(Base) implements SupportedOperation {
         @property.literal({
             initial: '',
         })
@@ -31,7 +39,7 @@ export function SupportedOperationMixin<TBase extends Constructor> (Base: TBase)
         }
     }
 
-    return DocumentedResourceMixin(SupportedOperation)
+    return SupportedOperationClass
 }
 
 SupportedOperationMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Operation)

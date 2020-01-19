@@ -1,11 +1,17 @@
-import { Constructor, property, namespace } from '@tpluscode/rdfine'
-import { Class, HydraResource, IApiDocumentation } from '../index'
-import { IResource } from '../Resource'
+import { Constructor, property, namespace, RdfResource } from '@tpluscode/rdfine'
+import { HydraResponse } from '../../HydraResponse'
+import { Class, HydraResource } from '../index'
 import { hydra } from '../../Vocabs'
 
-export function ApiDocumentationMixin<TBase extends Constructor> (Base: TBase) {
+export interface ApiDocumentation extends HydraResource {
+    classes: Class[];
+
+    loadEntrypoint(): Promise<HydraResponse>;
+}
+
+export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
     @namespace(hydra)
-    class ApiDocumentation extends Base implements IApiDocumentation {
+    class ApiDocumentationClass extends Base implements ApiDocumentation {
         @property.resource({
             path: 'supportedClass',
             values: 'array',
@@ -30,7 +36,7 @@ export function ApiDocumentationMixin<TBase extends Constructor> (Base: TBase) {
         }
     }
 
-    return ApiDocumentation
+    return ApiDocumentationClass
 }
 
-ApiDocumentationMixin.shouldApply = (res: IResource) => res.hasType(hydra.ApiDocumentation)
+ApiDocumentationMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.ApiDocumentation)

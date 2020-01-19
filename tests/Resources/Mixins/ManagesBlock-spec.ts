@@ -1,8 +1,9 @@
+import { RdfResource } from '@tpluscode/rdfine'
 import cf, { Clownface, SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
-import Resource, { IResource } from '../../../src/Resources/Resource'
-import { RdfProperty } from '../../../src/Resources'
+import { RdfProperty } from '../../../src/Resources/Mixins/RdfProperty'
+import Resource from '../../../src/Resources/Resource'
 import { ManagesBlockMixin } from '../../../src/Resources/Mixins/ManagesBlock'
 import { foaf, hydra, rdf } from '../../../src/Vocabs'
 
@@ -213,7 +214,7 @@ describe('ManagesBlock', () => {
                         } as any as RdfProperty,
                         subject: {
                             id: $rdf.namedNode('http://example.com/person/Tomasz'),
-                        } as any as IResource,
+                        } as any as RdfResource,
                     })
 
                     // then

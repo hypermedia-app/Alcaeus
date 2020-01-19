@@ -2,8 +2,8 @@ import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import { CollectionMixin } from '../../src/Resources/Mixins/Collection'
-import Resource from '../../src/Resources/Resource'
 import { hydra } from '../../src/Vocabs'
+import { Resource } from './_TestResource'
 
 class Collection extends CollectionMixin(Resource) {}
 

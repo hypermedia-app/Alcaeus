@@ -5,7 +5,7 @@ import { hydra } from './Vocabs'
 
 const apiDocumentationRel = hydra.apiDocumentation.value
 
-export interface IResponseWrapper {
+export interface ResponseWrapper {
     /**
      * Gets the URI used to perform the request
      */
@@ -41,7 +41,7 @@ export interface IResponseWrapper {
     resolveUri(uri: string): string;
 }
 
-export class ResponseWrapper implements IResponseWrapper {
+export default class implements ResponseWrapper {
     public readonly requestedUri: string;
 
     @nonenumerable

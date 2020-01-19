@@ -2,7 +2,7 @@ import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import { DocumentedResourceMixin } from '../../src/Resources/Mixins/DocumentedResource'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from './_TestResource'
 import { hydra, rdfs, schema } from '../../src/Vocabs'
 
 class DocumentedResource extends DocumentedResourceMixin(Resource) {}

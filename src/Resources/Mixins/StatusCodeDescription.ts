@@ -1,11 +1,14 @@
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra } from '../../Vocabs'
-import { IStatusCodeDescription } from '../index'
-import { IResource } from '../Resource'
+
+export interface StatusCodeDescription {
+    code: number | null;
+    description: string;
+}
 
 export function StatusCodeDescriptionMixin <TBase extends Constructor> (Base: TBase) {
     @namespace(hydra)
-    class StatusCodeDescription extends Base implements IStatusCodeDescription {
+    class StatusCodeDescriptionClass extends Base implements StatusCodeDescription {
         @property.literal({
             type: Number,
         })
@@ -15,7 +18,7 @@ export function StatusCodeDescriptionMixin <TBase extends Constructor> (Base: TB
         public description!: string
     }
 
-    return StatusCodeDescription
+    return StatusCodeDescriptionClass
 }
 
-StatusCodeDescriptionMixin.shouldApply = (res: IResource) => res.hasType(hydra.StatusCodeDescription)
+StatusCodeDescriptionMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.StatusCodeDescription)

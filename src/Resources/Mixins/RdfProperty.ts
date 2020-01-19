@@ -1,12 +1,31 @@
-import { Constructor, property } from '@tpluscode/rdfine'
+import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra, rdf, rdfs } from '../../Vocabs'
-import { Class, IRdfProperty, SupportedOperation } from '../index'
-import { IResource } from '../Resource'
+import { Class, HydraResource, SupportedOperation } from '../index'
 import { ClassMixin } from './Class'
+import { DocumentedResource, DocumentedResourceMixin } from './DocumentedResource'
 import { SupportedOperationMixin } from './SupportedOperation'
 
-export function RdfPropertyMixin<TBase extends Constructor> (Base: TBase) {
-    abstract class RdfProperty extends Base implements IRdfProperty {
+export interface RdfProperty extends DocumentedResource {
+    /**
+     * Gets the rdfs:range of a property
+     */
+    range: Class | null;
+    /**
+     * Gets the rdfs:domain of a property
+     */
+    domain: Class | null;
+    /**
+     * Gets the property's supported operations
+     */
+    supportedOperations: SupportedOperation[];
+    /**
+     * Gets a value indicating whether the property is a hydra:Link
+     */
+    isLink: boolean;
+}
+
+export function RdfPropertyMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    abstract class RdfPropertyClass extends DocumentedResourceMixin(Base) implements RdfProperty {
         @property.resource({
             path: rdfs.range,
             as: [ClassMixin],
@@ -31,7 +50,7 @@ export function RdfPropertyMixin<TBase extends Constructor> (Base: TBase) {
         }
     }
 
-    return RdfProperty
+    return RdfPropertyClass
 }
 
-RdfPropertyMixin.shouldApply = (res: IResource) => res.hasType(rdf.Property)
+RdfPropertyMixin.shouldApply = (res: RdfResource) => res.hasType(rdf.Property)

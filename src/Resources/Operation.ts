@@ -1,17 +1,37 @@
-import { RdfResource } from '@tpluscode/rdfine'
-import { IHydraClient } from '../alcaeus'
+import { HydraClient } from '../alcaeus'
 import nonenumerable from '../helpers/nonenumerable'
-import { HydraResource, IDocumentedResource, IOperation, ISupportedOperation } from './index'
+import { HydraResponse } from '../HydraResponse'
+import { Class, HydraResource } from './index'
+import { SupportedOperation } from './Mixins/SupportedOperation'
 
-export class Operation implements IOperation {
-    public readonly supportedOperation: RdfResource & ISupportedOperation & IDocumentedResource
+export interface Operation {
+    /**
+     * Gets the title of the operation
+     */
+    title: string;
+    description: string;
+    method: string;
+    expects: Class;
+    returns: Class;
+    requiresInput: boolean;
+    invoke(body: BodyInit, headers?: string | HeadersInit): Promise<HydraResponse>;
+    supportedOperation: SupportedOperation;
+
+    /**
+     * Gets the resource on which the operation will be invoked
+     */
+    target: HydraResource;
+}
+
+export default class implements Operation {
+    public readonly supportedOperation: SupportedOperation
 
     public readonly target: HydraResource
 
     @nonenumerable
-    private readonly __client: IHydraClient
+    private readonly __client: HydraClient
 
-    public constructor (supportedOperation: RdfResource & ISupportedOperation & IDocumentedResource, alcaeus: IHydraClient, resource: HydraResource) {
+    public constructor (supportedOperation: SupportedOperation, alcaeus: HydraClient, resource: HydraResource) {
         if (!supportedOperation) {
             throw new Error('Missing supportedOperation parameter')
         }

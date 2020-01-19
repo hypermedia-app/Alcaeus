@@ -1,8 +1,8 @@
-import { IResourceGraph } from '../ResourceGraph'
-import { IResponseWrapper } from '../ResponseWrapper'
+import { ResourceGraph } from '../ResourceGraph'
+import { ResponseWrapper } from '../ResponseWrapper'
 
 export default {
-    selectRoot (resources: IResourceGraph, response: IResponseWrapper) {
+    selectRoot (resources: ResourceGraph, response: ResponseWrapper) {
         return resources.get(response.xhr.url)
     },
 }

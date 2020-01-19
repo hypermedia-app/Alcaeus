@@ -1,6 +1,6 @@
 import 'core-js/es6/array'
 import 'core-js/es6/object'
-import { Hydra } from '../src'
+import { create } from '../src'
 import { Alcaeus } from '../src/alcaeus'
 import * as FetchUtil from '../src/FetchUtil'
 import { PartialCollectionView } from '../src/Resources'
@@ -17,7 +17,7 @@ describe('Hydra loadDocumentation', () => {
     let client: Alcaeus
 
     beforeEach(() => {
-        client = Hydra()
+        client = create()
     })
 
     it('should store its representation in the dataset', async () => {
@@ -32,7 +32,7 @@ describe('Hydra loadDocumentation', () => {
 
         // when
         client.loadDocumentation('http://api.example.com/doc/')
-        await client.documentationLoaded
+        await client.apiDocumentations
 
         // then
         expect(client.dataset.toCanonical()).toMatchSnapshot()
@@ -53,9 +53,9 @@ describe('Hydra loadDocumentation', () => {
 
         // when
         client.loadDocumentation('http://api.example.com/doc/')
-        await client.documentationLoaded
+        await client.apiDocumentations
         client.loadDocumentation('http://api.example.com/doc/')
-        await client.documentationLoaded
+        await client.apiDocumentations
 
         // then
         expect(client.dataset.toCanonical()).toMatchSnapshot()
@@ -67,7 +67,7 @@ describe('Hydra', () => {
     let client: Alcaeus
 
     beforeEach(() => {
-        client = Hydra()
+        client = create()
         loadDocumentation = (client.loadDocumentation = jest.fn().mockResolvedValue({}))
     })
 
@@ -266,7 +266,7 @@ describe('Hydra', () => {
         let client: Alcaeus
 
         beforeEach(() => {
-            client = Hydra()
+            client = create()
             fetchResource.mockResolvedValue({})
         })
 

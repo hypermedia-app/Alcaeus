@@ -4,8 +4,8 @@ import { BlankNode, DatasetCore } from 'rdf-js'
 import { JsonLd } from '../../../src/Constants'
 import { ExplicitRepresentationExpansionMixin } from '../../../src/Resources/Mixins/ExplicitRepresentationExpansion'
 import { IriTemplateMixin } from '../../../src/Resources/Mixins/IriTemplate'
-import Resource from '../../../src/Resources/Resource'
 import { hydra, rdf } from '../../../src/Vocabs'
+import { Resource } from '../_TestResource'
 
 class ExplicitRepresentationExpansion extends ExplicitRepresentationExpansionMixin(IriTemplateMixin(Resource)) {}
 

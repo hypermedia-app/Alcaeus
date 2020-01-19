@@ -6,7 +6,7 @@ import cf from 'clownface'
 import namespace from '@rdfjs/namespace'
 import { create as HydraResponse } from '../src/HydraResponse'
 import Resource from '../src/Resources/Resource'
-import { IResponseWrapper } from '../src/ResponseWrapper'
+import { ResponseWrapper } from '../src/ResponseWrapper'
 import { rdf } from '../src/Vocabs'
 
 const ex = namespace('http://example.com/')
@@ -19,7 +19,7 @@ describe('HydraResponse', () => {
         // given
         const xhr = {
             xhr: { } as Response,
-        } as IResponseWrapper
+        } as ResponseWrapper
         const dataset = $rdf.dataset()
         cf({ dataset })
             .namedNode(ex.a).addOut(rdf.type, ex.Res)
@@ -41,7 +41,7 @@ describe('HydraResponse', () => {
             const theUri = 'http://what/I/requested'
 
             // when
-            const response = HydraResponse(theUri, {} as IResponseWrapper, { dataset: $rdf.dataset(), factory, rootSelectors })
+            const response = HydraResponse(theUri, {} as ResponseWrapper, { dataset: $rdf.dataset(), factory, rootSelectors })
 
             // then
             expect(response.requestedUri).toBe(theUri)
@@ -53,7 +53,7 @@ describe('HydraResponse', () => {
             // given
             const xhr = {
                 xhr: {} as Response,
-            } as IResponseWrapper
+            } as ResponseWrapper
             const selector = {
                 selectRoot: sinon.stub(),
             }
@@ -78,7 +78,7 @@ describe('HydraResponse', () => {
             const dataset = $rdf.dataset()
             cf({ dataset })
                 .namedNode('urn:child:resource').addOut(rdf.type, ex.Type)
-            const response = HydraResponse('urn:some:uri', {} as IResponseWrapper, { dataset, factory, rootSelectors })
+            const response = HydraResponse('urn:some:uri', {} as ResponseWrapper, { dataset, factory, rootSelectors })
 
             // when
             const actualIndexed = response.get('urn:child:resource')
@@ -93,7 +93,7 @@ describe('HydraResponse', () => {
             // given
             const xhr = {
                 xhr: { } as Response,
-            } as IResponseWrapper
+            } as ResponseWrapper
             const dataset = $rdf.dataset()
             cf({ dataset })
                 .namedNode('urn:res:1').addOut(rdf.type, ex.Type1)
@@ -113,7 +113,7 @@ describe('HydraResponse', () => {
             // given
             const xhr = {
                 xhr: { } as Response,
-            } as IResponseWrapper
+            } as ResponseWrapper
             const dataset = $rdf.dataset()
             cf({ dataset })
                 .namedNode('urn:res:1').addOut(rdf.type, ex.Type1)
@@ -135,7 +135,7 @@ describe('HydraResponse', () => {
             // given
             const xhr = {
                 xhr: { } as Response,
-            } as IResponseWrapper
+            } as ResponseWrapper
 
             // when
             const r12n = HydraResponse('urn:some:res', xhr, { dataset: $rdf.dataset(), factory, rootSelectors })
@@ -148,7 +148,7 @@ describe('HydraResponse', () => {
             // given
             const xhr = {
                 xhr: { } as Response,
-            } as IResponseWrapper
+            } as ResponseWrapper
 
             // when
             const r12n = HydraResponse('urn:some:res', xhr, { dataset: $rdf.dataset(), factory, rootSelectors })
@@ -163,7 +163,7 @@ describe('HydraResponse', () => {
             // given
             const xhr = {
                 xhr: { } as Response,
-            } as IResponseWrapper
+            } as ResponseWrapper
 
             // when
             const r12n = HydraResponse('urn:some:res', xhr, { dataset: $rdf.dataset(), factory, rootSelectors })

@@ -2,7 +2,7 @@ import { DatasetCore, NamedNode } from 'rdf-js'
 import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import cf, { SingleContextClownface } from 'clownface'
-import { createResourceLoaderMixin } from '../../src/Resources/CoreMixins/ResourceLoaderMixin'
+import { createResourceLoaderMixin } from '../../src/Resources/CoreMixins'
 import Resource from '../../src/Resources/Resource'
 
 describe('ResourceLoaderMixin', () => {

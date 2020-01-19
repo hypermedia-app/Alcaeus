@@ -1,8 +1,8 @@
-import { IHydraResponse } from '../HydraResponse'
-import { IResourceGraph } from '../ResourceGraph'
+import { HydraResponse } from '../HydraResponse'
+import { ResourceGraph } from '../ResourceGraph'
 
 export default {
-    selectRoot (resources: IResourceGraph, response: IHydraResponse) {
+    selectRoot (resources: ResourceGraph, response: HydraResponse) {
         let id
 
         if (response.requestedUri.endsWith('/')) {

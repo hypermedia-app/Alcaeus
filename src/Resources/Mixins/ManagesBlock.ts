@@ -2,10 +2,41 @@ import { Constructor, namespace, property, RdfResource, ResourceIdentifier } fro
 import { SafeClownface } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { hydra, rdf } from '../../Vocabs'
-import { Class, IManagesBlock, ManagesBlockPattern, RdfProperty } from '../index'
-import { IResource } from '../Resource'
+import { HydraResource } from '../index'
+import { Class } from './Class'
+import { RdfProperty } from './RdfProperty'
 
-function getUri (factory: SafeClownface, resource: string | IResource | NamedNode): ResourceIdentifier {
+export interface ManagesBlockPattern {
+    subject?: string | RdfResource | NamedNode;
+    predicate?: string | RdfProperty | NamedNode;
+    object?: string | Class | NamedNode;
+}
+
+/**
+ * Represents the "manages block"
+ */
+export interface ManagesBlock {
+    /**
+     * Gets the subject resource from the manages block
+     */
+    subject: HydraResource | null;
+    /**
+     * Gets the predicate from the manages block
+     */
+    property: RdfProperty | null;
+    /**
+     * Gets the object class from the manages block
+     */
+    object: Class | null;
+
+    /**
+     * Checks if the current manages block matches the given pattern
+     * @param filter {ManagesBlockPattern}
+     */
+    matches(filter: ManagesBlockPattern): boolean;
+}
+
+function getUri (factory: SafeClownface, resource: string | RdfResource | NamedNode): ResourceIdentifier {
     if (typeof resource === 'string') {
         return factory.namedNode(resource).term
     }
@@ -19,9 +50,9 @@ function getUri (factory: SafeClownface, resource: string | IResource | NamedNod
 
 export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
     @namespace(hydra)
-    class ManagesBlock extends Base implements IManagesBlock {
+    class ManagesBlockClass extends Base implements ManagesBlock {
         @property.resource()
-        public subject!: IResource
+        public subject!: HydraResource
 
         @property.resource()
         public property!: RdfProperty
@@ -48,7 +79,7 @@ export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
         }
     }
 
-    return ManagesBlock
+    return ManagesBlockClass
 }
 
 ManagesBlockMixin.shouldApply = (res: RdfResource) => {

@@ -1,12 +1,18 @@
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra } from '../../Vocabs'
-import { HydraResource, IIriTemplate, IIriTemplateMapping } from '../index'
-import { IResource } from '../Resource'
-import { IriTemplateMappingMixin } from './IriTemplateMapping'
+import { HydraResource } from '../index'
+import { IriTemplateMapping, IriTemplateMappingMixin } from './IriTemplateMapping'
 
-export function IriTemplateMixin<TBase extends Constructor> (Base: TBase) {
+export interface IriTemplate extends HydraResource {
+    template: string;
+    mappings: IriTemplateMapping[];
+    variableRepresentation: HydraResource;
+    expand(mode: any): string;
+}
+
+export function IriTemplateMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
     @namespace(hydra)
-    class IriTemplate extends Base implements Partial<IIriTemplate> {
+    class IriTemplateClass extends Base implements IriTemplate {
         @property.literal()
         public template!: string
 
@@ -15,15 +21,19 @@ export function IriTemplateMixin<TBase extends Constructor> (Base: TBase) {
             values: 'array',
             as: [IriTemplateMappingMixin],
         })
-        public mappings!: IIriTemplateMapping[]
+        public mappings!: IriTemplateMapping[]
 
         @property({
             initial: hydra.BasicRepresentation,
         })
         public variableRepresentation!: HydraResource
+
+        public expand (): string {
+            throw new Error('Not implemented')
+        }
     }
 
-    return IriTemplate
+    return IriTemplateClass
 }
 
-IriTemplateMixin.shouldApply = (res: IResource) => res.hasType(hydra.IriTemplate)
+IriTemplateMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.IriTemplate)

@@ -2,11 +2,11 @@ import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
 import Resource from '../../src/Resources/Resource'
-import { IRootSelector } from '../../src/RootSelectors'
+import { RootSelector } from '../../src/RootSelectors'
 import { hydra } from '../../src/Vocabs'
-import { IHydraResponse } from '../../src/HydraResponse'
+import { HydraResponse } from '../../src/HydraResponse'
 import { HydraResource } from '../../src/Resources'
-import { IResponseWrapper } from '../../src/ResponseWrapper'
+import { ResponseWrapper } from '../../src/ResponseWrapper'
 import PartialCollectionViewSelector from '../../src/RootSelectors/PartialCollectionViewSelector'
 
 class View extends PartialCollectionViewMixin(Resource) {}
@@ -27,10 +27,10 @@ describe('PartialCollectionViewSelector', () => {
         resources.set('id', view as any)
         const response = {
             requestedUri: 'id',
-        } as IHydraResponse & IResponseWrapper
+        } as HydraResponse & ResponseWrapper
         const innerSelector = {
             selectRoot: () => view as any,
-        } as IRootSelector
+        } as RootSelector
 
         // when
         const root = PartialCollectionViewSelector(innerSelector)

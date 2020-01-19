@@ -8,10 +8,9 @@ import { Literal, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import * as mixins from '../../../src/ResourceFactoryDefaults'
 import { Class } from '../../../src/Resources'
-import { OperationFinderMixin } from '../../../src/Resources/CoreMixins/OperationFinder'
-import { createHydraResourceMixin } from '../../../src/Resources/HydraResource'
-import Resource from '../../../src/Resources/Resource'
+import { createHydraResourceMixin, OperationFinderMixin } from '../../../src/Resources/CoreMixins'
 import { hydra, owl } from '../../../src/Vocabs'
+import { Resource } from '../_TestResource'
 
 type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;

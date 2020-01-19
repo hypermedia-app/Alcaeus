@@ -1,18 +1,29 @@
-import { Constructor, property } from '@tpluscode/rdfine'
+import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { hydra, rdfs } from '../../Vocabs'
-import { IClass, SupportedOperation, SupportedProperty } from '../index'
-import { IResource } from '../Resource'
+import { HydraResource, SupportedOperation, SupportedProperty } from '../index'
 import { SupportedOperationMixin } from './SupportedOperation'
 import { SupportedPropertyMixin } from './SupportedProperty'
 
-export function ClassMixin<TBase extends Constructor> (Base: TBase) {
-    class Class extends Base implements IClass {
+export interface Class extends HydraResource {
+    /**
+     * Gets the operations supported by this class
+     */
+    supportedOperations: SupportedOperation[];
+
+    /**
+     * Gets the properties supported by this class
+     */
+    supportedProperties: SupportedProperty[];
+}
+
+export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    class ClassClass extends Base implements Class {
         @property.resource({
             path: rdfs.subClassOf,
             values: 'array',
             as: [ClassMixin],
         })
-        public subClassOf!: Class[]
+        public subClassOf!: this[]
 
         @property.resource({
             path: hydra.supportedOperation,
@@ -52,7 +63,7 @@ export function ClassMixin<TBase extends Constructor> (Base: TBase) {
             }, [] as SupportedProperty[])
         }
 
-        public * getTypeHierarchy (): Generator<Class> {
+        public * getTypeHierarchy (): Generator<this> {
             yield this
 
             for (const superclass of this.subClassOf) {
@@ -63,7 +74,7 @@ export function ClassMixin<TBase extends Constructor> (Base: TBase) {
         }
     }
 
-    return Class
+    return ClassClass
 }
 
-ClassMixin.shouldApply = (res: IResource) => res.hasType(hydra.Class)
+ClassMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Class)

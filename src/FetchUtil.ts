@@ -1,5 +1,5 @@
 import * as Constants from './Constants'
-import { ResponseWrapper } from './ResponseWrapper'
+import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
 
 // tslint:disable:max-line-length

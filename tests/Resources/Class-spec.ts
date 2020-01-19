@@ -3,8 +3,8 @@ import $rdf from 'rdf-ext'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
 import { ClassMixin } from '../../src/Resources/Mixins/Class'
-import Resource from '../../src/Resources/Resource'
 import { hydra } from '../../src/Vocabs'
+import { Resource } from './_TestResource'
 import * as graphs from './Class-spec-graphs'
 
 const vocab = namespace('http://example.com/vocab#')

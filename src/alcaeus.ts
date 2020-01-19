@@ -102,16 +102,7 @@ export class Alcaeus implements HydraClient {
         this.__documentationPromises.set(uri, request)
     }
 
-    public async invokeOperation (operation: Operation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<HydraResponse> {
-        if (typeof headers === 'string') {
-            headers = {
-                'content-type': headers,
-            }
-
-            // TODO: remove in 1.0
-            console.warn('DEPRECATION NOTICE: passing content type as string will be removed in version 1.0')
-        }
-
+    public async invokeOperation (operation: Pick<Operation, 'method'>, uri: string, body?: BodyInit, headers: HeadersInit = {}): Promise<HydraResponse> {
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)

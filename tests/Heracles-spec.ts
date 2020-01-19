@@ -240,28 +240,6 @@ describe('Hydra', () => {
         })
     })
 
-    describe('invokeOperation', () => {
-        it('should wrap string as content-type header for 4th parameter', () => {
-            // given
-            const operation = {
-                method: 'post',
-            } as any
-
-            // when
-            client.invokeOperation(operation, 'uri', 'XYZ', 'application/rdf+xml')
-
-            // then
-            expect(invokeOperation)
-                .toHaveBeenCalledWith(
-                    'post',
-                    'uri',
-                    'XYZ',
-                    new Headers({
-                        'content-type': 'application/rdf+xml',
-                    }))
-        })
-    })
-
     describe('customizing default headers', () => {
         let client: Alcaeus
 
@@ -294,7 +272,7 @@ describe('Hydra', () => {
                 }
                 const operation = {
                     method: 'post',
-                } as any
+                }
 
                 // when
                 client.invokeOperation(operation, 'uri')
@@ -367,7 +345,7 @@ describe('Hydra', () => {
                 })
                 const operation = {
                     method: 'post',
-                } as any
+                }
 
                 // when
                 client.invokeOperation(operation, 'uri')

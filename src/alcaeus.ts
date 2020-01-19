@@ -1,4 +1,4 @@
-import { ResourceFactory } from '@tpluscode/rdfine'
+import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
@@ -7,6 +7,7 @@ import * as FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import { HydraResponse, create } from './HydraResponse'
 import { MediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
+import { ApiDocumentation } from './Resources'
 import { Operation } from './Resources/Operation'
 import { ResponseWrapper } from './ResponseWrapper'
 import { RootSelector } from './RootSelectors'
@@ -20,7 +21,7 @@ export interface HydraClient {
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
-    apiDocumentations: Promise<HydraResponse[]>;
+    apiDocumentations: Promise<ApiDocumentation[]>;
 }
 
 const addOrReplaceGraph = async (
@@ -67,7 +68,7 @@ export class Alcaeus implements HydraClient {
 
     public get apiDocumentations () {
         return Promise.all(this.__documentationPromises.values())
-        /* .then(responses => responses.map<ApiDocumentation | RdfResource | null>(r => r.root))
+            .then(responses => responses.map<ApiDocumentation | RdfResource | null>(r => r.root))
             .then(docs => {
                 return docs.reduce((notNull, doc) => {
                     if (doc && 'loadEntrypoint' in doc) {
@@ -77,7 +78,7 @@ export class Alcaeus implements HydraClient {
                     return notNull
                 },
                 [] as ApiDocumentation[])
-            }) */
+            })
     }
 
     public async loadResource (id: string | NamedNode, headers: HeadersInit = {}): Promise<HydraResponse> {

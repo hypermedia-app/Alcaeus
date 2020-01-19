@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.3](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2020-01-19)
+
+
+### Bug Fixes
+
+* change api documentation promise to return instances ([a82bdcd](https://github.com/wikibus/alcaeus/commit/a82bdcda02f2601942a760014c3299d7ea16058e))
+* remove deprecated code ([5a07cff](https://github.com/wikibus/alcaeus/commit/5a07cffe149d9bef451e936584abdf78a1ca4dad))
+* rename and reorganize interfaces ([46c3d73](https://github.com/wikibus/alcaeus/commit/46c3d73b837d5ef8af50fdbba996c145c75be38f))
+
 ## [1.0.0-alpha.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2020-01-17)
 
 

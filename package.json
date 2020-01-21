@@ -44,7 +44,7 @@
   "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
     "@rdfjs/parser-jsonld": "^1.2.0",
-    "@tpluscode/rdfine": "^0.2.3",
+    "@tpluscode/rdfine": "^0.2.6",
     "es6-url-template": "^1.0.3",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-form-data": "^2.0.0",

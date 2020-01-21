@@ -7,7 +7,7 @@ import * as FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import { HydraResponse, create } from './HydraResponse'
 import { MediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
-import { ApiDocumentation } from './Resources'
+import { ApiDocumentation, HydraResource } from './Resources'
 import { Operation } from './Resources/Operation'
 import { ResponseWrapper } from './ResponseWrapper'
 import { RootSelector } from './RootSelectors'
@@ -43,7 +43,7 @@ const addOrReplaceGraph = async (
         .import(parsedTriples.pipe(new TripleToQuadTransform(graph)))
 }
 
-export class Alcaeus implements HydraClient {
+export class Alcaeus<R extends HydraResource> implements HydraClient {
     public rootSelectors: RootSelector[];
 
     public mediaTypeProcessors: { [name: string]: MediaTypeProcessor };
@@ -52,14 +52,14 @@ export class Alcaeus implements HydraClient {
 
     public readonly dataset: DatasetExt = $rdf.dataset()
 
-    public readonly factory: ResourceFactory
+    public readonly factory: ResourceFactory<R>
 
     private readonly __documentationPromises: Map<string, Promise<HydraResponse>> = new Map()
 
     public constructor (
         rootSelectors: RootSelector[],
         mediaTypeProcessors: { [name: string]: MediaTypeProcessor },
-        factory: ResourceFactory
+        factory: ResourceFactory<R>
     ) {
         this.rootSelectors = rootSelectors
         this.mediaTypeProcessors = mediaTypeProcessors

@@ -6,7 +6,7 @@ import { Operation } from './Operation'
 import { Resource } from './Resource'
 import { SupportedProperty } from './Mixins/SupportedProperty'
 
-export interface HydraResource extends RdfResource, Resource, ResourceIndexer, OperationFinder {
+export type HydraResource = RdfResource & Resource & OperationFinder & {
     /**
      * Gets the operations which can be performed on this resource
      */
@@ -40,10 +40,6 @@ export interface View extends HydraResource {
      * Gets the actual collection resource, of which this view is part
      */
     readonly collection: HydraResource | null;
-}
-
-export interface ResourceIndexer {
-    [ prop: string ]: unknown | unknown[];
 }
 
 export { DocumentedResource } from './Mixins/DocumentedResource'

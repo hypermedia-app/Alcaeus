@@ -8,7 +8,7 @@ import Resource from './Resources/Resource'
 
 export { Alcaeus } from './alcaeus'
 export { default as Resource } from './Resources/Resource'
-export { ResourceIdentifier } from '@tpluscode/rdfine'
+export { ResourceIdentifier, ResourceIndexer } from '@tpluscode/rdfine'
 export * from './Resources/index'
 export { Operation } from './Resources/Operation'
 
@@ -18,7 +18,7 @@ export const defaultProcessors = {
 }
 
 export function create ({ rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors } = {}) {
-    let factory: ResourceFactory
+    let factory: ResourceFactory<HydraResource>
     class HydraResource extends Resource {
         public static get factory () {
             return factory

@@ -72,6 +72,6 @@ export default class implements Operation {
     }
 
     public invoke (body?: BodyInit, headers: string | HeadersInit = { }) {
-        return this.__client.invokeOperation(this, this.target.id.value, body, headers)
+        return this.__client.invokeOperation(this, body, headers)
     }
 }

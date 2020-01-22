@@ -1,6 +1,6 @@
 import { ResourceFactory } from '@tpluscode/rdfine'
-import { DatasetCore, NamedNode, Quad } from 'rdf-js'
-import cf from 'clownface'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { HydraClient } from './alcaeus'
 import ResourceGraph from './ResourceGraph'
@@ -33,25 +33,21 @@ export interface HydraResponse extends Iterable<HydraResource>, ResponseWrapper 
     ofType(classId: string | NamedNode): HydraResource[];
 }
 
-function quadReducer (dataset: DatasetCore, factory: ResourceFactory) {
-    return function (resources: HydraResource[], q: Quad) {
-        if (q.subject.termType === 'NamedNode' || q.subject.termType === 'BlankNode') {
-            resources.push(factory.createEntity<HydraResource>(cf({
-                dataset,
-                term: q.subject,
-            })))
-        }
-
-        return resources
-    }
-}
-
 export function create (
     uri: string,
     response: ResponseWrapper,
-    alcaeus: Pick<HydraClient, 'dataset' | 'rootSelectors' | 'factory'>): HydraResponse {
-    const resources = new ResourceGraph(alcaeus)
-    const atomicGraph = cf({ dataset: alcaeus.dataset, graph: $rdf.namedNode(uri) })
+    dataset: DatasetCore,
+    factory: ResourceFactory,
+    alcaeus: Pick<HydraClient, 'rootSelectors'>): HydraResponse {
+    const resources = new ResourceGraph(dataset, factory)
+    const representationGraph = cf({ dataset, graph: $rdf.namedNode(uri) }) as any
+
+    function createEntity (node: SingleContextClownface) {
+        return factory.createEntity(cf({
+            dataset,
+            term: node.term,
+        }))
+    }
 
     class HydraResponseWrapper extends ResponseWrapperImpl implements HydraResponse {
         public constructor (requestedUri: string) {
@@ -73,18 +69,19 @@ export function create (
         }
 
         public get length (): number {
-            return atomicGraph.terms.length
+            return representationGraph.in().terms.length
         }
 
         public ofType (classId: string | NamedNode) {
             const type = typeof classId === 'string' ? $rdf.namedNode(classId) : classId
 
-            return [...alcaeus.dataset.match(null, rdf.type, type)]
-                .reduce(quadReducer(alcaeus.dataset, alcaeus.factory), [])
+            return representationGraph.has(rdf.type, type)
+                .map(createEntity)
         }
 
         public [Symbol.iterator] () {
-            return [...alcaeus.dataset].reduce(quadReducer(alcaeus.dataset, alcaeus.factory), [])[Symbol.iterator]()
+            return representationGraph.in()
+                .map(createEntity)[Symbol.iterator]()
         }
     }
 

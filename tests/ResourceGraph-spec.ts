@@ -21,10 +21,10 @@ describe('ResourceGraph', () => {
             cf({ dataset })
                 .namedNode('http://example.com/biała gęś')
                 .addOut(rdf.type, schema.Document)
-            const graph = new ResourceGraph({
+            const graph = new ResourceGraph(
                 dataset,
                 factory,
-            })
+            )
 
             // when
             const actual = graph.get('http://example.com/biała gęś')
@@ -38,10 +38,10 @@ describe('ResourceGraph', () => {
             cf({ dataset })
                 .namedNode('http://example.com/foo')
                 .addOut(rdf.type, schema.Document)
-            const graph = new ResourceGraph({
+            const graph = new ResourceGraph(
                 dataset,
                 factory,
-            })
+            )
 
             // when
             const actual = graph.get('http://example.com/bar')
@@ -55,10 +55,10 @@ describe('ResourceGraph', () => {
             cf({ dataset })
                 .namedNode('http://example.com/biała gęś')
                 .addOut(rdf.type, schema.Document)
-            const graph = new ResourceGraph({
+            const graph = new ResourceGraph(
                 dataset,
                 factory,
-            })
+            )
 
             // when
             const actual = graph.get('http://example.com/bia%C5%82a%20g%C4%99%C5%9B')

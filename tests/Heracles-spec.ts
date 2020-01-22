@@ -1,7 +1,8 @@
 import 'core-js/es6/array'
 import 'core-js/es6/object'
+import namespace from '@rdfjs/namespace'
 import { create } from '../src'
-import { Alcaeus } from '../src/alcaeus'
+import { HydraClient } from '../src/alcaeus'
 import * as FetchUtil from '../src/FetchUtil'
 import { PartialCollectionView } from '../src/Resources'
 import { hydra } from '../src/Vocabs'
@@ -10,11 +11,13 @@ import { mockedResponse, responseBuilder } from './test-utils'
 
 jest.mock('../src/FetchUtil')
 
+const ex = namespace('http://example.com/')
+
 const fetchResource = (FetchUtil.fetchResource as jest.Mock).mockResolvedValue({})
 const invokeOperation = (FetchUtil.invokeOperation as jest.Mock).mockResolvedValue({})
 
 describe('Hydra loadDocumentation', () => {
-    let client: Alcaeus
+    let client: HydraClient
 
     beforeEach(() => {
         client = create()
@@ -64,7 +67,7 @@ describe('Hydra loadDocumentation', () => {
 
 describe('Hydra', () => {
     let loadDocumentation: jest.Mock
-    let client: Alcaeus
+    let client: HydraClient
 
     beforeEach(() => {
         client = create()
@@ -240,8 +243,71 @@ describe('Hydra', () => {
         })
     })
 
+    describe('invokeOperation', () => {
+        describe('POST method', () => {
+            it('does not store response in dataset', async () => {
+                // given
+                invokeOperation.mockResolvedValueOnce(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
+                }))
+                const operation = {
+                    method: 'POST',
+                    target: {
+                        id: ex.resource,
+                    },
+                }
+
+                // when
+                await client.invokeOperation(operation)
+
+                // then
+                expect(client.dataset).toHaveLength(0)
+            })
+
+            it('returns data from the response', async () => {
+                // given
+                invokeOperation.mockResolvedValueOnce(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
+                }))
+                const operation = {
+                    method: 'POST',
+                    target: {
+                        id: ex.resource,
+                    },
+                }
+
+                // when
+                const response = await client.invokeOperation(operation)
+
+                // then
+                expect(response.length).toBeGreaterThan(0)
+            })
+        })
+
+        describe('GET method', () => {
+            it('stores response in dataset', async () => {
+                // given
+                invokeOperation.mockResolvedValueOnce(mockedResponse({
+                    xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
+                }))
+                const operation = {
+                    method: 'GET',
+                    target: {
+                        id: ex.resource,
+                    },
+                }
+
+                // when
+                await client.invokeOperation(operation)
+
+                // then
+                expect(client.dataset.length).toBeGreaterThan(0)
+            })
+        })
+    })
+
     describe('customizing default headers', () => {
-        let client: Alcaeus
+        let client: HydraClient
 
         beforeEach(() => {
             client = create()
@@ -272,16 +338,19 @@ describe('Hydra', () => {
                 }
                 const operation = {
                     method: 'post',
+                    target: {
+                        id: ex.uri,
+                    },
                 }
 
                 // when
-                client.invokeOperation(operation, 'uri')
+                client.invokeOperation(operation)
 
                 // then
                 expect(invokeOperation)
                     .toHaveBeenCalledWith(
                         'post',
-                        'uri',
+                        ex.uri.value,
                         undefined,
                         new Headers({
                             'authorization': 'Bearer foobar',
@@ -345,16 +414,19 @@ describe('Hydra', () => {
                 })
                 const operation = {
                     method: 'post',
+                    target: {
+                        id: ex.uri,
+                    },
                 }
 
                 // when
-                client.invokeOperation(operation, 'uri')
+                client.invokeOperation(operation)
 
                 // then
                 expect(invokeOperation)
                     .toHaveBeenCalledWith(
                         'post',
-                        'uri',
+                        ex.uri.value,
                         undefined,
                         new Headers({
                             'authorization': 'Token xyz',

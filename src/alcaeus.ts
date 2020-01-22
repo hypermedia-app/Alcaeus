@@ -12,22 +12,23 @@ import { Operation } from './Resources/Operation'
 import { ResponseWrapper } from './ResponseWrapper'
 import { RootSelector } from './RootSelectors'
 
+type InvokedOperation = Pick<Operation, 'method'> & {
+    target: Pick<HydraResource, 'id'>;
+}
+
 export interface HydraClient {
     rootSelectors: RootSelector[];
     mediaTypeProcessors: { [name: string]: MediaTypeProcessor };
     loadResource(uri: string, headers?: HeadersInit): Promise<HydraResponse>;
-    loadDocumentation (uri: string, headers: HeadersInit): void;
-    invokeOperation(operation: Operation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<HydraResponse>;
+    loadDocumentation (uri: string, headers?: HeadersInit): void;
+    invokeOperation(operation: InvokedOperation, body?: BodyInit, headers?: string | HeadersInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
     apiDocumentations: Promise<ApiDocumentation[]>;
 }
 
-const addOrReplaceGraph = async (
-    alcaeus: HydraClient,
-    response: ResponseWrapper,
-    uri: string): Promise<void> => {
+async function parseResponse (uri: string, alcaeus: HydraClient, response: ResponseWrapper) {
     const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
         .find((processor) => processor.canProcess(response.mediaType))
 
@@ -38,12 +39,22 @@ const addOrReplaceGraph = async (
 
     const graph = $rdf.namedNode(uri)
     const parsedTriples = await suitableProcessor.process(uri, response)
-    await alcaeus.dataset
-        .removeMatches(undefined, undefined, undefined, graph)
-        .import(parsedTriples.pipe(new TripleToQuadTransform(graph)))
+    return parsedTriples.pipe(new TripleToQuadTransform(graph))
 }
 
-export class Alcaeus<R extends HydraResource> implements HydraClient {
+const addOrReplaceGraph = async (
+    alcaeus: HydraClient,
+    response: ResponseWrapper,
+    uri: string): Promise<void> => {
+    const graph = $rdf.namedNode(uri)
+    const parsedTriples = await parseResponse(uri, alcaeus, response)
+
+    await alcaeus.dataset
+        .removeMatches(undefined, undefined, undefined, graph)
+        .import(parsedTriples)
+}
+
+export class Alcaeus<R extends HydraResource = never> implements HydraClient {
     public rootSelectors: RootSelector[];
 
     public mediaTypeProcessors: { [name: string]: MediaTypeProcessor };
@@ -81,34 +92,37 @@ export class Alcaeus<R extends HydraResource> implements HydraClient {
             })
     }
 
-    public async loadResource (id: string | NamedNode, headers: HeadersInit = {}): Promise<HydraResponse> {
+    public async loadResource (id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse> {
         const uri = typeof id === 'string' ? id : id.value
 
         const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
         await addOrReplaceGraph(this, response, uri)
-        this.__getApiDocumentation(response, headers)
+        if (dereferenceApiDocumentation) {
+            this.__getApiDocumentation(response, headers)
+        }
 
-        return create(uri, response, this)
+        return create(uri, response, this.dataset, this.factory, this)
     }
 
     public loadDocumentation (uri: string, headers: HeadersInit = {}) {
-        const request = FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
-            .then(async response => {
-                await addOrReplaceGraph(this, response, uri)
-                return response
-            })
-            .then(response => create(uri, response, this))
-
-        this.__documentationPromises.set(uri, request)
+        this.__documentationPromises.set(uri, this.loadResource(uri, headers, false))
     }
 
-    public async invokeOperation (operation: Pick<Operation, 'method'>, uri: string, body?: BodyInit, headers: HeadersInit = {}): Promise<HydraResponse> {
+    public async invokeOperation (operation: InvokedOperation, body?: BodyInit, headers: HeadersInit = {}): Promise<HydraResponse> {
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
+        const uri = operation.target.id.value
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)
         this.__getApiDocumentation(response, headers)
 
-        return create(uri, response, this)
+        if (operation.method.toUpperCase() === 'GET') {
+            await addOrReplaceGraph(this, response, uri)
+            return create(uri, response, this.dataset, this.factory, this)
+        }
+
+        const parsedResponse = await parseResponse(uri, this, response)
+        const dataset = await this.dataset.clone().import(parsedResponse)
+        return create(uri, response, dataset, this.factory, this)
     }
 
     private __getApiDocumentation (response: ResponseWrapper, headers: HeadersInit) {

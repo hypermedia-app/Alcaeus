@@ -1,5 +1,5 @@
 import { ResourceFactory } from '@tpluscode/rdfine'
-import { Alcaeus } from './alcaeus'
+import { Alcaeus, HydraClient } from './alcaeus'
 import * as coreMixins from './Resources/CoreMixins'
 import RdfProcessor from './MediaTypeProcessors/RdfProcessor'
 import * as mixins from './ResourceFactoryDefaults'
@@ -17,7 +17,7 @@ export const defaultProcessors = {
     RDF: new RdfProcessor(),
 }
 
-export function create ({ rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors } = {}) {
+export function create ({ rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors } = {}): HydraClient {
     let factory: ResourceFactory<HydraResource>
     class HydraResource extends Resource {
         public static get factory () {

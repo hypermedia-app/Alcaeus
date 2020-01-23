@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.4](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2020-01-23)
+
+
+### Bug Fixes
+
+* also export Operation from main ([e1e8c44](https://github.com/wikibus/alcaeus/commit/e1e8c44b19dc6d49189e1d9c7a7d9fa7cca164f7))
+* invoked operation does not return the representation object ([2a8a214](https://github.com/wikibus/alcaeus/commit/2a8a214458ac36c5d0de6544685d535e0acfbaf5))
+
 ## [1.0.0-alpha.3](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2020-01-19)
 
 

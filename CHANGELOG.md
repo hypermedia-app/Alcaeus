@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.5](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2020-01-26)
+
+
+### Bug Fixes
+
+* add NamedNode to inout type foe load methods ([d60a1b0](https://github.com/wikibus/alcaeus/commit/d60a1b0c342e187bad501ed00cc74b80c220cf80))
+
 ## [1.0.0-alpha.4](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2020-01-23)
 
 

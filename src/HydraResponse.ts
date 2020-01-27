@@ -1,4 +1,4 @@
-import { ResourceFactory } from '@tpluscode/rdfine'
+import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
@@ -8,12 +8,12 @@ import { HydraResource } from './Resources'
 import ResponseWrapperImpl, { ResponseWrapper } from './ResponseWrapper'
 import { rdf } from './Vocabs'
 
-export interface HydraResponse extends Iterable<HydraResource>, ResponseWrapper {
+export interface HydraResponse<T extends RdfResource = HydraResource> extends Iterable<HydraResource>, ResponseWrapper {
 
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
-    root: HydraResource | null;
+    root: HydraResource | (HydraResource & T) | null;
 
     /**
      * Gets the number of resource within this representation

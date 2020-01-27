@@ -1,7 +1,6 @@
-import { DatasetCore, NamedNode } from 'rdf-js'
 import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
-import cf, { SingleContextClownface } from 'clownface'
+import cf from 'clownface'
 import { createResourceLoaderMixin } from '../../src/Resources/CoreMixins'
 import Resource from '../../src/Resources/Resource'
 
@@ -35,7 +34,7 @@ describe('ResourceLoaderMixin', () => {
         it('uses client to dereference self', () => {
             // given
             const node = cf({ dataset: $rdf.dataset() })
-                .namedNode('http://example.com/resource') as any as SingleContextClownface<DatasetCore, NamedNode>
+                .namedNode('http://example.com/resource')
             const resource = new HydraResource(node)
 
             // when

@@ -19,8 +19,8 @@ type InvokedOperation = Pick<Operation, 'method'> & {
 export interface HydraClient {
     rootSelectors: RootSelector[];
     mediaTypeProcessors: { [name: string]: MediaTypeProcessor };
-    loadResource(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse>;
-    loadDocumentation (uri: string | NamedNode, headers?: HeadersInit): void;
+    loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>;
+    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): void;
     invokeOperation(operation: InvokedOperation, body?: BodyInit, headers?: string | HeadersInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
@@ -92,7 +92,7 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
             })
     }
 
-    public async loadResource (id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse> {
+    public async loadResource <T extends RdfResource> (id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<T>> {
         const uri = typeof id === 'string' ? id : id.value
 
         const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))

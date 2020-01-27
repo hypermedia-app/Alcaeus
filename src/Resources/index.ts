@@ -6,7 +6,7 @@ import { Operation } from './Operation'
 import { Resource } from './Resource'
 import { SupportedProperty } from './Mixins/SupportedProperty'
 
-export type HydraResource = RdfResource & Resource & OperationFinder & {
+export interface HydraResource extends RdfResource, Resource, OperationFinder {
     /**
      * Gets the operations which can be performed on this resource
      */
@@ -32,7 +32,7 @@ export type HydraResource = RdfResource & Resource & OperationFinder & {
     /**
      * Dereferences the resource
      */
-    load?(): Promise<HydraResponse>;
+    load?(): Promise<HydraResponse<this>>;
 }
 
 export interface View extends HydraResource {

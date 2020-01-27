@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.6](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2020-01-27)
+
+
+### Features
+
+* make collection generic for nicer runtime typings ([15483e3](https://github.com/wikibus/alcaeus/commit/15483e37ffb7b5404b4d1ad92e9d537345484389))
+
+
+### Bug Fixes
+
+* collection mixin was ot hooked up to factory ([604de05](https://github.com/wikibus/alcaeus/commit/604de05140cec094902be22dd04701809c9ecb5e))
+* required dependency string-to-stream missing ([259bf16](https://github.com/wikibus/alcaeus/commit/259bf1682865e70d073ff4e8fb1b245ab5d3ec50))
+
 ## [1.0.0-alpha.5](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2020-01-26)
 
 

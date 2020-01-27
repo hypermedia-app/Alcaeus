@@ -3,7 +3,7 @@ import { View, HydraResource } from '../index'
 import { hydra } from '../../Vocabs'
 import { ManagesBlock, ManagesBlockMixin } from './ManagesBlock'
 
-export interface Collection<T extends HydraResource = HydraResource> extends HydraResource {
+export interface Collection<T = HydraResource> extends HydraResource {
     /**
      * Gets the total number of items within the entire collection.
      * Note that this number can be larger then the number of `members` in the case of partial collections
@@ -13,7 +13,7 @@ export interface Collection<T extends HydraResource = HydraResource> extends Hyd
      * Gets the collection member included in the current representation.
      * In the case of partial collections they may only be a subset of all members
      */
-    readonly members: T[];
+    readonly members: (HydraResource & T)[];
     /**
      * Gets the views of a partial collection
      */

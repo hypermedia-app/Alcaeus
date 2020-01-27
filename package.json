@@ -50,7 +50,8 @@
     "isomorphic-form-data": "^2.0.0",
     "parse-link-header": "^1.0.1",
     "rdf-ext": "^1.0.0",
-    "rdf-transform-triple-to-quad": "^1.0.1"
+    "rdf-transform-triple-to-quad": "^1.0.1",
+    "string-to-stream": "^3.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
@@ -93,7 +94,6 @@
     "sinon": "^7.3.2",
     "standard": "^12.0.1",
     "standard-version": "^7.0.1",
-    "string-to-stream": "^3.0.1",
     "typescript": "^3.7.4",
     "whatwg-fetch": "^3.0.0"
   },

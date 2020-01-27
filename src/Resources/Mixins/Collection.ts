@@ -52,4 +52,4 @@ export function CollectionMixin <TBase extends Constructor<HydraResource>> (Base
     return CollectionClass
 }
 
-export const shouldApply = (res: RdfResource) => res.hasType(hydra.Collection)
+CollectionMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Collection)

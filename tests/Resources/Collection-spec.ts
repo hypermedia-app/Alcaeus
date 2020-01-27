@@ -2,7 +2,7 @@ import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import { CollectionMixin } from '../../src/Resources/Mixins/Collection'
-import { hydra } from '../../src/Vocabs'
+import { hydra, rdf } from '../../src/Vocabs'
 import { Resource } from './_TestResource'
 
 class Collection extends CollectionMixin(Resource) {}
@@ -76,5 +76,28 @@ describe('Collection', () => {
             // then
             expect(collection.totalItems).toBe(167)
         })
+    })
+})
+
+describe('CollectionMixin', () => {
+    let collectionNode: SingleContextClownface<DatasetCore, NamedNode>
+
+    beforeEach(() => {
+        collectionNode = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#Collection')
+    })
+
+    it('should apply to hydra:Collection', () => {
+        // given
+        collectionNode.addOut(rdf.type, hydra.Collection)
+        const collection = new Resource(collectionNode)
+
+        // then
+        expect(CollectionMixin.shouldApply(collection)).toBe(true)
+    })
+
+    it('should be non-enumerable', () => {
+        expect(Collection.prototype.propertyIsEnumerable('members'))
+            .toBe(false)
     })
 })

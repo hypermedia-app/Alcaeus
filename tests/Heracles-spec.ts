@@ -1,6 +1,8 @@
 import 'core-js/es6/array'
 import 'core-js/es6/object'
 import namespace from '@rdfjs/namespace'
+import JsonLdParser from '@rdfjs/parser-jsonld'
+import * as Constants from './Constants'
 import { create } from '../src'
 import { HydraClient } from '../src/alcaeus'
 import * as FetchUtil from '../src/FetchUtil'
@@ -16,11 +18,15 @@ const ex = namespace('http://example.com/')
 const fetchResource = (FetchUtil.fetchResource as jest.Mock).mockResolvedValue({})
 const invokeOperation = (FetchUtil.invokeOperation as jest.Mock).mockResolvedValue({})
 
+const parsers = { [Constants.MediaTypes.jsonLd]: new JsonLdParser() }
+
 describe('Hydra loadDocumentation', () => {
     let client: HydraClient
 
     beforeEach(() => {
-        client = create()
+        client = create({
+            parsers,
+        })
     })
 
     it('should store its representation in the dataset', async () => {
@@ -70,7 +76,9 @@ describe('Hydra', () => {
     let client: HydraClient
 
     beforeEach(() => {
-        client = create()
+        client = create({
+            parsers,
+        })
         loadDocumentation = (client.loadDocumentation = jest.fn().mockResolvedValue({}))
     })
 
@@ -104,6 +112,19 @@ describe('Hydra', () => {
 
             // then
             expect(res!.id.value).toBe(id)
+        })
+
+        it('should parse json-ld response when media type has additional parameters', async () => {
+            // given
+            fetchResource.mockResolvedValueOnce(mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd, 'application/ld+json; charset=utf-8'),
+            }))
+
+            // when
+            const hydraRes = await client.loadResource('http://example.com/resource')
+
+            // then
+            expect(hydraRes.length).toBeGreaterThan(0)
         })
 
         it('should load documentation', async () => {
@@ -311,7 +332,12 @@ describe('Hydra', () => {
 
         beforeEach(() => {
             client = create()
-            fetchResource.mockResolvedValue({})
+            fetchResource.mockResolvedValue(mockedResponse({
+                xhrBuilder: responseBuilder().body(''),
+            }))
+            invokeOperation.mockResolvedValueOnce(mockedResponse({
+                xhrBuilder: responseBuilder().body(''),
+            }))
         })
 
         describe('as HeadersInit object', () => {
@@ -326,7 +352,7 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', new Headers({
+                    'uri', expect.anything(), new Headers({
                         'authorization': 'Bearer foobar',
                     }))
             })
@@ -351,10 +377,11 @@ describe('Hydra', () => {
                     .toHaveBeenCalledWith(
                         'post',
                         ex.uri.value,
-                        undefined,
+                        expect.anything(),
                         new Headers({
                             'authorization': 'Bearer foobar',
-                        }))
+                        }),
+                        undefined,)
             })
 
             it('passes them to loadDocumentation', () => {
@@ -368,7 +395,7 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'doc', new Headers({
+                    'doc', expect.anything(), new Headers({
                         'authorization': 'Bearer foobar',
                     }))
             })
@@ -386,7 +413,7 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', new Headers({
+                    'uri', expect.anything(), new Headers({
                         'authorization': 'Token xyz',
                     }))
             })
@@ -402,7 +429,7 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'doc', new Headers({
+                    'doc', expect.anything(), new Headers({
                         'authorization': 'Token xyz',
                     }))
             })
@@ -427,10 +454,11 @@ describe('Hydra', () => {
                     .toHaveBeenCalledWith(
                         'post',
                         ex.uri.value,
-                        undefined,
+                        expect.anything(),
                         new Headers({
                             'authorization': 'Token xyz',
-                        }))
+                        }),
+                        undefined)
             })
         })
     })

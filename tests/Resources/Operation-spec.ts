@@ -67,11 +67,12 @@ describe('Operation', () => {
                 'x-foo': 'bar',
             })
 
-            expect(alcaeus.invokeOperation.firstCall.args[2])
+            expect(alcaeus.invokeOperation.firstCall.args[1])
                 .toStrictEqual({
                     'content-type': 'text/turtle',
                     'x-foo': 'bar',
                 })
+            expect(alcaeus.invokeOperation.firstCall.args[2]).toStrictEqual('')
         })
     })
 

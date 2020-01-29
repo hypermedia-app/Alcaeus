@@ -1,4 +1,4 @@
-import { inferTypesFromPropertyRanges } from '../../../src/MediaTypeProcessors/inferences'
+import { inferTypesFromPropertyRanges } from '../../../src/RdfProcessor/inferences'
 import * as specGraphs from './propertyTypes-spec-graphs'
 
 describe('property types inference', () => {

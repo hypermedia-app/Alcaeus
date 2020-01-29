@@ -73,7 +73,7 @@ export default class implements ResponseWrapper {
     }
 
     public get mediaType (): string {
-        return this.xhr.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd
+        return this.xhr.headers.get(Constants.Headers.ContentType) || ''
     }
 
     public get redirectUrl () {

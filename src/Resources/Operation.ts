@@ -1,4 +1,4 @@
-import { HydraClient } from '../alcaeus'
+import { HydraClient, OperationHeaders } from '../alcaeus'
 import nonenumerable from '../helpers/nonenumerable'
 import { HydraResponse } from '../HydraResponse'
 import { Class, HydraResource } from './index'
@@ -14,7 +14,8 @@ export interface Operation {
     expects: Class;
     returns: Class;
     requiresInput: boolean;
-    invoke(body: BodyInit, headers?: string | HeadersInit): Promise<HydraResponse>;
+    invoke(): Promise<HydraResponse>;
+    invoke(body: BodyInit, headers: OperationHeaders): Promise<HydraResponse>;
     supportedOperation: SupportedOperation;
 
     /**
@@ -71,7 +72,11 @@ export default class implements Operation {
         return this.supportedOperation.description
     }
 
-    public invoke (body?: BodyInit, headers: string | HeadersInit = { }) {
-        return this.__client.invokeOperation(this, body, headers)
+    public invoke (body?: BodyInit, headers?: OperationHeaders): Promise<HydraResponse> {
+        if (body !== null && typeof body !== 'undefined' && headers !== null && typeof headers !== 'undefined') {
+            return this.__client.invokeOperation(this, headers, body)
+        }
+
+        return this.__client.invokeOperation(this)
     }
 }

@@ -1,7 +1,7 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
-import { JsonLd } from '../../../src/Constants'
+import { JsonLd } from '../../Constants'
 import { ExplicitRepresentationExpansionMixin } from '../../../src/Resources/Mixins/ExplicitRepresentationExpansion'
 import { IriTemplateMixin } from '../../../src/Resources/Mixins/IriTemplate'
 import { hydra, rdf } from '../../../src/Vocabs'

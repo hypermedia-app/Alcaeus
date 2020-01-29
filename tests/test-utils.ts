@@ -1,4 +1,4 @@
-import { MediaTypes } from '../src/Constants'
+import { MediaTypes } from './Constants'
 import { ResponseWrapper } from '../src/ResponseWrapper'
 import 'isomorphic-fetch'
 import stringToStream from 'string-to-stream'
@@ -8,7 +8,7 @@ import { prefixes } from '@zazuko/rdf-vocabularies'
 
 const parser = new Parser()
 
-export function responseBuilder (): any {
+export function responseBuilder () {
     let statusCode = 200
     let responseBody = '{}'
     let responseUri

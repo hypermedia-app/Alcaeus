@@ -1,3 +1,6 @@
+import { EventEmitter } from 'events'
+import SinkMap from '@rdfjs/sink-map'
+import { Sink, Stream } from 'rdf-js'
 import * as sinon from 'sinon'
 import 'whatwg-fetch'
 import * as fetchUtil from '../src/FetchUtil'
@@ -6,6 +9,15 @@ import { responseBuilder } from './test-utils'
 
 describe('FetchUtil', () => {
     let windowFetch
+    const parsers = new SinkMap<EventEmitter, Stream>()
+
+    beforeAll(() => {
+        const dummyParser: Sink<EventEmitter, Stream> = {} as any
+
+        parsers.set('application/ld+json', dummyParser)
+        parsers.set('application/n-triples', dummyParser)
+        parsers.set('application/n-quads', dummyParser)
+    })
 
     beforeEach(() => {
         windowFetch = sinon.stub(window, 'fetch')
@@ -18,7 +30,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {})
+            await fetchUtil.fetchResource('http://example.com/resource', parsers, {})
 
             // then
             const requestHeaders = windowFetch.firstCall.args[1].headers
@@ -32,7 +44,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {
+            await fetchUtil.fetchResource('http://example.com/resource', parsers, {
                 'x-foo': 'bar',
             })
 
@@ -49,7 +61,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {
+            await fetchUtil.fetchResource('http://example.com/resource', parsers, {
                 'x-foo': 'bar',
             })
 
@@ -65,7 +77,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {
+            await fetchUtil.fetchResource('http://example.com/resource', parsers, {
                 'accept': 'application/vnd.custom+rdf',
             })
 
@@ -86,7 +98,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', 'foo', {})
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', parsers, {}, 'foo')
 
             // then
             const body = windowFetch.firstCall.args[1].body
@@ -99,9 +111,9 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', 'foo', {
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', parsers, {
                 'x-foo': 'bar',
-            })
+            }, 'foo')
 
             // then
             const requestHeaders = windowFetch.firstCall.args[1].headers
@@ -116,9 +128,9 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', 'foo', {
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', parsers, {
                 'x-foo': 'bar',
-            })
+            }, 'foo')
 
             // then
             const requestHeaders = windowFetch.firstCall.args[1].headers
@@ -132,27 +144,13 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', 'foo', {
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', parsers, {
                 'accept': 'application/vnd.custom+rdf',
-            })
+            }, 'foo')
 
             // then
             const requestHeaders = windowFetch.firstCall.args[1].headers
             expect(requestHeaders.get('accept')).toBe('application/vnd.custom+rdf')
-        })
-
-        it('should set default json-ld content type header when sending body', async () => {
-            // given
-            windowFetch.withArgs('http://example.com/resource')
-                .returns(responseBuilder().body(Bodies.someJsonLd).build())
-
-            // when
-            await fetchUtil.invokeOperation('post', 'http://example.com/resource', 'foo', {})
-
-            // then
-            const request = windowFetch.firstCall.args[1]
-            expect(request.headers.get('content-type')).toBe('application/ld+json')
-            expect(request.body).toBe('foo')
         })
 
         it('should set not set content-type header for FormData bodies', async () => {
@@ -161,7 +159,7 @@ describe('FetchUtil', () => {
                 .returns(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('post', 'http://example.com/resource', new FormData(), {})
+            await fetchUtil.invokeOperation('post', 'http://example.com/resource', parsers, {}, new FormData())
 
             // then
             const request = windowFetch.firstCall.args[1]

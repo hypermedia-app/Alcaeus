@@ -1,9 +1,10 @@
+import { EventEmitter } from 'events'
 import { ResourceFactory } from '@tpluscode/rdfine'
+import { Sink, Stream } from 'rdf-js'
 import { Alcaeus, HydraClient } from './alcaeus'
 import * as coreMixins from './Resources/CoreMixins'
-import RdfProcessor from './MediaTypeProcessors/RdfProcessor'
 import * as mixins from './ResourceFactoryDefaults'
-import { AllDefault } from './RootSelectors'
+import { AllDefault, RootSelector } from './RootSelectors'
 import Resource from './Resources/Resource'
 
 export { Alcaeus } from './alcaeus'
@@ -13,11 +14,13 @@ export * from './Resources/index'
 export { Operation } from './Resources/Operation'
 
 export const defaultRootSelectors = Object.values(AllDefault)
-export const defaultProcessors = {
-    RDF: new RdfProcessor(),
+
+interface AlcaeusInit {
+    rootSelectors?: RootSelector[];
+    parsers?: Record<string, Sink<EventEmitter, Stream>>;
 }
 
-export function create ({ rootSelectors = defaultRootSelectors, mediaTypeProcessors = defaultProcessors } = {}): HydraClient {
+export function create ({ rootSelectors, parsers }: AlcaeusInit = {}): HydraClient {
     let factory: ResourceFactory<HydraResource>
     class HydraResource extends Resource {
         public static get factory () {
@@ -26,7 +29,11 @@ export function create ({ rootSelectors = defaultRootSelectors, mediaTypeProcess
     }
 
     factory = new ResourceFactory(HydraResource)
-    const alcaeus = new Alcaeus(rootSelectors, mediaTypeProcessors, factory)
+    const alcaeus = new Alcaeus(rootSelectors || defaultRootSelectors, factory)
+
+    if (parsers) {
+        Object.entries(parsers).forEach(pair => alcaeus.parsers.set(...pair))
+    }
 
     factory.addMixin(coreMixins.createResourceLoaderMixin(alcaeus))
     factory.addMixin(coreMixins.createHydraResourceMixin(alcaeus))

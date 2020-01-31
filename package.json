@@ -50,7 +50,7 @@
     "isomorphic-form-data": "^2.0.0",
     "parse-link-header": "^1.0.1",
     "rdf-ext": "^1.0.0",
-    "rdf-transform-triple-to-quad": "^1.0.1",
+    "rdf-transform-triple-to-quad": "^1.0.2",
     "string-to-stream": "^3.0.1"
   },
   "devDependencies": {

@@ -115,3 +115,5 @@ dist/
 _book/
 lib/
 docs/latest/
+*.d.ts
+*.d.ts.map

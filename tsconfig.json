@@ -10,7 +10,8 @@
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": false,
     "declaration": true,
-    "declarationDir": "types",
+    "declarationDir": ".",
+    "declarationMap": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "lib": [

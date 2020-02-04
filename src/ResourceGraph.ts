@@ -1,6 +1,5 @@
 import { ResourceFactory } from '@tpluscode/rdfine'
-import cf, { Clownface } from 'clownface'
-import { DatasetCore } from 'rdf-js'
+import { Clownface } from 'clownface'
 import { HydraResource } from './Resources'
 
 export interface ResourceGraph {
@@ -11,10 +10,8 @@ export default class implements ResourceGraph {
     private __graph: Clownface
     private __factory: ResourceFactory
 
-    public constructor (dataset: DatasetCore, factory: ResourceFactory) {
-        this.__graph = cf({
-            dataset,
-        })
+    public constructor (graph: Clownface, factory: ResourceFactory) {
+        this.__graph = graph
         this.__factory = factory
     }
 

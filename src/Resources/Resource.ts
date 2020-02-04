@@ -12,12 +12,12 @@ export interface Resource extends RdfResource {
      * Gets the value of a property
      * @param property
      */
-    get<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode): T | null;
+    get<T extends RdfResource = RdfResource> (property: string | NamedNode): T | null;
     /**
      * Gets the value of a property and ensures that an array will be returned
      * @param property
      */
-    getArray<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode): T[];
+    getArray<T extends RdfResource = RdfResource> (property: string | NamedNode): T[];
     /**
      * Gets the property value if it's boolean. Throws if it's not
      * @param property
@@ -41,10 +41,10 @@ export default class ResourceImpl extends RdfResourceImpl implements Resource {
         return this.id.termType === 'BlankNode'
     }
 
-    public get<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode, { strict } = { strict: false }): T | null {
-        let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
+    public get<T extends RdfResource = RdfResource> (property: string | NamedNode, { strict } = { strict: false }): T | null {
+        let propertyNode = typeof property === 'string' ? this._selfGraph.namedNode(property) : property
 
-        const objects = this._node.out(propertyNode)
+        const objects = this._selfGraph.out(propertyNode)
             .filter(({ term }) => term.termType === 'NamedNode' || term.termType === 'BlankNode')
             .map((obj) => {
                 return this._create<T>(obj)
@@ -61,9 +61,9 @@ export default class ResourceImpl extends RdfResourceImpl implements Resource {
         return null
     }
 
-    public getArray<T extends RdfResource = RdfResourceImpl> (property: string | NamedNode): T[] {
-        let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
-        const values = this._node.out(propertyNode)
+    public getArray<T extends RdfResource = RdfResource> (property: string | NamedNode): T[] {
+        let propertyNode = typeof property === 'string' ? this._selfGraph.namedNode(property) : property
+        const values = this._selfGraph.out(propertyNode)
             .filter(({ term }) => term.termType === 'NamedNode' || term.termType === 'BlankNode')
             .map(obj => {
                 return this._create<T>(obj)
@@ -116,16 +116,16 @@ export default class ResourceImpl extends RdfResourceImpl implements Resource {
         }
 
         if (value.termType === 'Literal' && xsd.boolean.equals(value.datatype)) {
-            return value.equals(this._node.literal(true).term)
+            return value.equals(this._selfGraph.literal(true).term)
         }
 
         throw new Error(`Expected property '${property}' to be a boolean but found '${value}'`)
     }
 
     private __getNodes (property: string | NamedNode, { strict } = { strict: false }): Term[] {
-        let propertyNode = typeof property === 'string' ? this._node.namedNode(property) : property
+        let propertyNode = typeof property === 'string' ? this._selfGraph.namedNode(property) : property
 
-        const objects = this._node.out(propertyNode).terms
+        const objects = this._selfGraph.out(propertyNode).terms
 
         if (objects.length > 0) {
             return objects

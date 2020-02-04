@@ -19,13 +19,13 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
                     return operations
                 }, [] as SupportedOperation[])
 
-                const propertyOperations = [...this._node.dataset.match(null, null, this._node.term)]
+                const propertyOperations = [...this._selfGraph.dataset.match(null, null, this._selfGraph.term)]
                     .reduce((operations, quad) => {
                         if (quad.subject.termType !== 'NamedNode') {
                             return operations
                         }
 
-                        const subject = this._create(this._node.namedNode(quad.subject))
+                        const subject = this._create(this._selfGraph.namedNode(quad.subject))
                         return [...subject.types.values()].reduce((operations, clas: RdfResource | Class) => {
                             if ('supportedProperties' in clas) {
                                 const supportedProperty = clas.supportedProperties.find((prop: SupportedProperty) => {

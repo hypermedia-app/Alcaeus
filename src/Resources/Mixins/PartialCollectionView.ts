@@ -39,7 +39,7 @@ export function PartialCollectionViewMixin<TBase extends Constructor<HydraResour
         public last!: HydraResource
 
         public get collection () {
-            const collection = this._node.in(hydra.view)
+            const collection = this._selfGraph.in(hydra.view)
 
             return collection.toArray()
                 .reduce((namedNodes, node) => {

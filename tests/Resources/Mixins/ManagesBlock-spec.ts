@@ -1,5 +1,5 @@
 import { RdfResource } from '@tpluscode/rdfine'
-import cf, { Clownface, SingleContextClownface } from 'clownface'
+import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
 import { RdfProperty } from '../../../src/Resources/Mixins/RdfProperty'
@@ -11,14 +11,12 @@ class ManagesBlock extends ManagesBlockMixin(Resource) {}
 
 describe('ManagesBlock', () => {
     let dataset: DatasetCore
-    let apiDocsGraph: Clownface
     let node: SingleContextClownface<DatasetCore, BlankNode>
     let managesBlock: ManagesBlock
 
     beforeEach(() => {
         dataset = $rdf.dataset()
         node = cf({ dataset }).blankNode()
-        apiDocsGraph = cf({ dataset, graph: $rdf.namedNode('http://example.com/docs') })
 
         managesBlock = new ManagesBlock(node)
     })
@@ -38,18 +36,6 @@ describe('ManagesBlock', () => {
 
     describe('Mixin', () => {
         describe('object', () => {
-            it('returns class from ApiDocumentation', () => {
-                // given
-                apiDocsGraph.namedNode('http://vocab/class').addOut(rdf.type, hydra.Class)
-                node.addOut(hydra.object, node.namedNode('http://vocab/class'))
-
-                // when
-                const obj = managesBlock.object
-
-                // then
-                expect(obj.hasType(hydra.Class)).toBe(true)
-            })
-
             it('returns class from representation if missing in ApiDocumentation', () => {
                 // given
                 node.addOut(hydra.object, node.namedNode('http://vocab/class'))

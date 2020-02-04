@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { ResourceFactory } from '@tpluscode/rdfine'
+import { ResourceFactoryImpl } from '@tpluscode/rdfine'
 import { Sink, Stream } from 'rdf-js'
 import { Alcaeus, HydraClient } from './alcaeus'
 import * as coreMixins from './Resources/CoreMixins'
@@ -21,14 +21,14 @@ interface AlcaeusInit {
 }
 
 export function create ({ rootSelectors, parsers }: AlcaeusInit = {}): HydraClient {
-    let factory: ResourceFactory<HydraResource>
+    let factory: ResourceFactoryImpl<HydraResource>
     class HydraResource extends Resource {
         public static get factory () {
             return factory
         }
     }
 
-    factory = new ResourceFactory(HydraResource)
+    factory = new ResourceFactoryImpl(HydraResource)
     const alcaeus = new Alcaeus(rootSelectors || defaultRootSelectors, factory)
 
     if (parsers) {

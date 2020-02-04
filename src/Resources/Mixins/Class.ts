@@ -1,4 +1,4 @@
-import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, property, RdfResource, TypeCollectionImpl } from '@tpluscode/rdfine'
 import { hydra, rdfs } from '../../Vocabs'
 import { HydraResource, SupportedOperation, SupportedProperty } from '../index'
 import { SupportedOperationMixin } from './SupportedOperation'
@@ -29,6 +29,7 @@ export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBas
             path: hydra.supportedOperation,
             values: 'array',
             as: [SupportedOperationMixin],
+            subjectFromAllGraphs: true,
         })
         public __supportedOperations!: SupportedOperation[]
 
@@ -36,8 +37,13 @@ export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBas
             path: hydra.supportedProperty,
             values: 'array',
             as: [SupportedPropertyMixin],
+            subjectFromAllGraphs: true,
         })
         public __supportedProperties!: SupportedProperty[]
+
+        public get types () {
+            return new TypeCollectionImpl(this, true)
+        }
 
         public get supportedOperations (): SupportedOperation[] {
             return [...this.getTypeHierarchy()].reduce((operations, type) => {

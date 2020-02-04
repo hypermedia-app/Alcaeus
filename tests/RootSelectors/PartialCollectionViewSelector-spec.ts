@@ -1,7 +1,7 @@
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
-import Resource from '../../src/Resources/Resource'
+import { Resource } from '../Resources/_TestResource'
 import { RootSelector } from '../../src/RootSelectors'
 import { hydra } from '../../src/Vocabs'
 import { HydraResponse } from '../../src/HydraResponse'
@@ -21,7 +21,7 @@ describe('PartialCollectionViewSelector', () => {
         })
         view.types.add(hydra.PartialCollectionView)
         cf({ dataset })
-            .namedNode('collection').addOut(hydra.view, view._node)
+            .namedNode('collection').addOut(hydra.view, view._selfGraph)
 
         const resources = new Map<string, HydraResource>()
         resources.set('id', view as any)

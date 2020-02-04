@@ -1,5 +1,5 @@
 import 'isomorphic-fetch'
-import { ResourceFactory } from '@tpluscode/rdfine'
+import { ResourceFactoryImpl } from '@tpluscode/rdfine'
 import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
@@ -11,7 +11,7 @@ import { rdf } from '../src/Vocabs'
 
 const ex = namespace('http://example.com/')
 
-const factory = new ResourceFactory(Resource)
+const factory = new ResourceFactoryImpl(Resource)
 const rootSelectors = []
 
 describe('HydraResponse', () => {

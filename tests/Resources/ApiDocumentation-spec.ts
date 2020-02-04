@@ -1,5 +1,5 @@
 import 'core-js/es6/array'
-import { Constructor, ResourceFactory } from '@tpluscode/rdfine'
+import { Constructor, ResourceFactoryImpl } from '@tpluscode/rdfine'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
@@ -29,7 +29,7 @@ describe('ApiDocumentation', () => {
         node = cf({ dataset: $rdf.dataset() }).blankNode()
         load = jest.fn()
 
-        ApiDocumentation.factory = new ResourceFactory(Resource)
+        ApiDocumentation.factory = new ResourceFactoryImpl(Resource)
     })
 
     describe('getting entrypoint', () => {

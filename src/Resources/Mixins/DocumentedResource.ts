@@ -14,13 +14,13 @@ export interface DocumentedResource extends HydraResource {
 }
 
 function getTitle (res: RdfResource) {
-    return res._node.out([
+    return res._selfGraph.out([
         hydra.title, rdfs.label, schema.title,
     ])
 }
 
 function getDescription (res: RdfResource) {
-    return res._node.out([
+    return res._selfGraph.out([
         hydra.description, rdfs.comment, schema.description,
     ])
 }

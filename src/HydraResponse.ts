@@ -39,11 +39,11 @@ export function create (
     dataset: DatasetCore,
     factory: ResourceFactory,
     alcaeus: Pick<HydraClient, 'rootSelectors'>): HydraResponse {
-    const resources = new ResourceGraph(dataset, factory)
-    const representationGraph = cf({ dataset, graph: $rdf.namedNode(uri) }) as any
+    const representationGraph = cf({ dataset, graph: $rdf.namedNode(uri) })
+    const resources = new ResourceGraph(representationGraph, factory)
 
     function createEntity (node: SingleContextClownface) {
-        return factory.createEntity(cf({
+        return factory.createEntity<HydraResource>(cf({
             dataset,
             term: node.term,
         }))

@@ -61,9 +61,9 @@ export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
         public object!: Class
 
         public matches ({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
-            const predicateId = getUri(this._node, predicate)
-            const objectId = getUri(this._node, object)
-            const subjectId = getUri(this._node, subject)
+            const predicateId = getUri(this._selfGraph, predicate)
+            const objectId = getUri(this._selfGraph, object)
+            const subjectId = getUri(this._selfGraph, subject)
 
             if (object && this.object && this.property) {
                 const predicateIsRdfType = rdf.type.equals(predicateId)
@@ -83,5 +83,5 @@ export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
 }
 
 ManagesBlockMixin.shouldApply = (res: RdfResource) => {
-    return res._node.in(hydra.manages).terms.length > 0
+    return res._selfGraph.in(hydra.manages).terms.length > 0
 }

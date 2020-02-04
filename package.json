@@ -10,8 +10,11 @@
     "test": "tests"
   },
   "files": [
-    "types",
-    "lib"
+    "lib",
+    "*.d.ts",
+    "*.d.ts.map",
+    "**/*.d.ts",
+    "**/*.d.ts.map"
   ],
   "scripts": {
     "test": "jest",

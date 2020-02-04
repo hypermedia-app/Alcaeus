@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.9](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2020-02-04)
+
+
+### Bug Fixes
+
+* **build:** reduce bundle size by updating rdf-transform-to-quad ([fa9cc01](https://github.com/wikibus/alcaeus/commit/fa9cc01899b05da443359bbd3c28ea80fb6de498))
+
 ## [1.0.0-alpha.8](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2020-01-29)
 
 

@@ -1,4 +1,4 @@
-import { expand } from '@zazuko/rdf-vocabularies'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { IOperation, IHydraResource, Class, SupportedOperation } from '../index'
 import { Constructor } from '../Mixin'
 
@@ -139,7 +139,7 @@ const toResourceWithOperations = (stopConditions: RecursiveStopConditions) => {
 export function OperationFinder<TBase extends Constructor<IHydraResource>> (Base: TBase) {
     return class OperationFinderMixinClass extends Base implements IOperationFinder {
         public getOperationsDeep (
-            stopConditions: RecursiveStopConditions = { excludedProperties: expand('hydra:member') },
+            stopConditions: RecursiveStopConditions = { excludedProperties: [hydra.member.value] },
             previousResources: OperationFinderMixinClass[] = []) {
             return Object.entries(this)
                 .reduce(toResourceWithOperations(stopConditions), [] as OperationFinderMixinClass[])

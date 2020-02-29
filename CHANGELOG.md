@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.6](https://github.com/wikibus/alcaeus/compare/v0.10.5...v0.10.6) (2020-02-29)
+
+
+### Bug Fixes
+
+* alcaeus had an unlisted dependency ([ed80788](https://github.com/wikibus/alcaeus/commit/ed80788c8d83574906f74ff5ad64814f100e8dc9))
+
 ### [0.10.5](https://github.com/wikibus/alcaeus/compare/v0.10.4...v0.10.5) (2019-12-07)
 
 

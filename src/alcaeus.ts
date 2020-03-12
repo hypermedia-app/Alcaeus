@@ -15,8 +15,6 @@ import { Operation } from './Resources/Operation'
 import { ResponseWrapper } from './ResponseWrapper'
 import { RootSelector } from './RootSelectors'
 
-export { OperationHeaders } from './FetchUtil'
-
 type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<HydraResource, 'id'>;
 }
@@ -26,8 +24,7 @@ export interface HydraClient {
     parsers: SinkMap<EventEmitter, Stream>;
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>;
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): void;
-    invokeOperation(operation: InvokedOperation, headers: FetchUtil.OperationHeaders, body: BodyInit): Promise<HydraResponse>;
-    invokeOperation(operation: InvokedOperation, headers?: HeadersInit): Promise<HydraResponse>;
+    invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
@@ -119,7 +116,7 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
         this.__documentationPromises.set(uri, this.loadResource(uri, headers, false))
     }
 
-    public async invokeOperation (operation: InvokedOperation, headers: FetchUtil.OperationHeaders, body?: BodyInit): Promise<HydraResponse> {
+    public async invokeOperation (operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse> {
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
         const uri = operation.target.id.value
 

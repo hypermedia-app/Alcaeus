@@ -5,9 +5,6 @@ import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
 
 type Parsers = SinkMap<EventEmitter, Stream>
-export type OperationHeaders = HeadersInit & {
-    'content-type': string;
-}
 
 function requestAcceptHeaders (sinkMap: Parsers) {
     return [...sinkMap.keys()].join(', ')

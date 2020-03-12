@@ -41,7 +41,7 @@
   "bugs": {
     "url": "https://github.com/wikibus/alcaeus/issues"
   },
-  "homepage": "https://github.com/wikibus/alcaeus#readme",
+  "homepage": "https://alcaeus.hydra.how",
   "dependencies": {
     "@rdfjs/parser-jsonld": "^1.1.1",
     "@rdfjs/serializer-jsonld": "^1.2.0",

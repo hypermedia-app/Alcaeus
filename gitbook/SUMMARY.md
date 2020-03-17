@@ -23,3 +23,4 @@
   * [Request headers](./js-api/request-headers.md)
   * [Media types](./js-api/media-type-processor.md)
   * [Hydra vocabulary](./hydra-vocab.md)
+  * [Base URL](./js-api/base-url.md)

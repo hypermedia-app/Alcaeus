@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.7](https://github.com/wikibus/alcaeus/compare/v0.10.6...v0.10.7) (2020-03-17)
+
+
+### Features
+
+* setting base URI to allow relative resource ids ([275664d](https://github.com/wikibus/alcaeus/commit/275664d3cc62709cd00eebbc5f973e5560482069))
+
 ### [0.10.6](https://github.com/wikibus/alcaeus/compare/v0.10.5...v0.10.6) (2020-02-29)
 
 

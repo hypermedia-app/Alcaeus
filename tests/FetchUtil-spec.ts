@@ -74,6 +74,19 @@ describe('FetchUtil', () => {
             expect(requestHeaders.get('accept')).toBe('application/vnd.custom+rdf')
         })
 
+        it('should resolve relative URI against', async () => {
+            // given
+            windowFetch.withArgs('http://example.com/resource')
+                .returns(responseBuilder().body(Bodies.someJsonLd).build())
+
+            // when
+            await fetchUtil.fetchResource('resource', {}, 'http://example.com/foo/')
+
+            // then
+            const uri = windowFetch.firstCall.args[0]
+            expect(uri).toEqual('http://example.com/foo/resource')
+        })
+
         afterEach(() => {
             windowFetch.restore()
         })
@@ -166,6 +179,19 @@ describe('FetchUtil', () => {
             // then
             const request = windowFetch.firstCall.args[1]
             expect(request.headers.get('content-type')).toBeNull()
+        })
+
+        it('should resolve relative URI against', async () => {
+            // given
+            windowFetch.withArgs('http://example.com/resource')
+                .returns(responseBuilder().body(Bodies.someJsonLd).build())
+
+            // when
+            await fetchUtil.invokeOperation('get', 'resource', 'foo', {}, 'http://example.com/foo/')
+
+            // then
+            const uri = windowFetch.firstCall.args[0]
+            expect(uri).toEqual('http://example.com/foo/resource')
         })
 
         afterEach(() => {

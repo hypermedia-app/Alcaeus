@@ -26,6 +26,28 @@ describe('Hydra loadDocumentation', () => {
         // then
         expect(doc!.id).toBe('http://api.example.com/doc/')
     })
+
+    it(`passes base URI to fetch`, async () => {
+        // given
+        fetchResource.mockResolvedValueOnce(mockedResponse({
+            xhrBuilder: responseBuilder().body(Documentations.classWithOperation),
+        }))
+        Hydra.baseUri = 'http://example.com/foo/'
+
+        // when
+        await Hydra.loadResource('bar/docs')
+
+        // then
+        expect(fetchResource)
+            .toHaveBeenCalledWith(
+                'bar/docs',
+                expect.anything(),
+                'http://example.com/foo/')
+    })
+
+    afterEach(() => {
+        Hydra.baseUri = undefined
+    })
 })
 
 describe('Hydra', () => {
@@ -33,6 +55,10 @@ describe('Hydra', () => {
 
     beforeAll(() => {
         loadDocumentation = (Hydra.loadDocumentation = jest.fn().mockResolvedValue({}))
+    })
+
+    afterEach(() => {
+        Hydra.baseUri = undefined
     })
 
     describe('loadResource', () => {
@@ -192,6 +218,24 @@ describe('Hydra', () => {
             expect(objectsAreSame).toBeTruthy()
         })
 
+        it(`passes base URI to fetch`, async () => {
+            // given
+            fetchResource.mockResolvedValueOnce(mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            }))
+            Hydra.baseUri = 'http://example.com/foo/'
+
+            // when
+            await Hydra.loadResource('bar/baz')
+
+            // then
+            expect(fetchResource)
+                .toHaveBeenCalledWith(
+                    'bar/baz',
+                    expect.anything(),
+                    'http://example.com/foo/')
+        })
+
         afterEach(() => {
             loadDocumentation.mockRestore()
             fetchResource.mockReset()
@@ -258,6 +302,26 @@ describe('Hydra', () => {
     })
 
     describe('invokeOperation', () => {
+        it(`passes base URI to fetch`, () => {
+            // given
+            const operation = {
+                method: 'post',
+            } as any
+            Hydra.baseUri = 'http://example.com/foo/'
+
+            // when
+            Hydra.invokeOperation(operation, 'bar/baz')
+
+            // then
+            expect(invokeOperation)
+                .toHaveBeenCalledWith(
+                    'post',
+                    'bar/baz',
+                    undefined,
+                    expect.anything(),
+                    'http://example.com/foo/')
+        })
+
         it('should wrap string as content-type header for 4th parameter', () => {
             // given
             const operation = {
@@ -275,7 +339,8 @@ describe('Hydra', () => {
                     'XYZ',
                     new Headers({
                         'content-type': 'application/rdf+xml',
-                    }))
+                    }),
+                    undefined)
         })
     })
 
@@ -301,7 +366,8 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'uri', new Headers({
                         'authorization': 'Bearer foobar',
-                    }))
+                    }),
+                    undefined)
             })
 
             it('passes them to invokeOperation', () => {
@@ -324,7 +390,8 @@ describe('Hydra', () => {
                         undefined,
                         new Headers({
                             'authorization': 'Bearer foobar',
-                        }))
+                        }),
+                        undefined)
             })
 
             it('passes them to loadDocumentation', () => {
@@ -340,7 +407,8 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', new Headers({
                         'authorization': 'Bearer foobar',
-                    }))
+                    }),
+                    undefined)
             })
         })
 
@@ -358,7 +426,8 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'uri', new Headers({
                         'authorization': 'Token xyz',
-                    }))
+                    }),
+                    undefined)
             })
 
             it('passes them to loadDocumentation', () => {
@@ -374,7 +443,8 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', new Headers({
                         'authorization': 'Token xyz',
-                    }))
+                    }),
+                    undefined)
             })
 
             it('passes them to invokeOperation', () => {
@@ -397,7 +467,8 @@ describe('Hydra', () => {
                         undefined,
                         new Headers({
                             'authorization': 'Token xyz',
-                        }))
+                        }),
+                        undefined)
             })
         })
     })

@@ -45,6 +45,8 @@ function getApiDocumentation (this: Alcaeus, response: IResponseWrapper, headers
 }
 
 export class Alcaeus implements IHydraClient {
+    public baseUri?: string = undefined
+
     public rootSelectors: IRootSelector[];
 
     public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
@@ -57,7 +59,7 @@ export class Alcaeus implements IHydraClient {
     }
 
     public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
-        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
+        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)), this.baseUri)
 
         const apiDocumentation = await getApiDocumentation.call(this, response, headers)
 
@@ -70,7 +72,7 @@ export class Alcaeus implements IHydraClient {
 
     public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
         try {
-            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)))
+            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)), this.baseUri)
             const representation = await getHydraResponse(this, response, uri)
             const resource = representation.root
             if (!resource) {
@@ -112,7 +114,7 @@ export class Alcaeus implements IHydraClient {
 
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
 
-        const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders)
+        const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders, this.baseUri)
         const apiDocumentation = await getApiDocumentation.call(this, response, mergedHeaders)
 
         if (apiDocumentation) {

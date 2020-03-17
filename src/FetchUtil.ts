@@ -5,7 +5,12 @@ import { merge } from './helpers/MergeHeaders'
 // tslint:disable:max-line-length
 const requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads
 
-async function getResponse (uri: string, method: string, headers: HeadersInit = {}, body?: BodyInit) {
+async function getResponse (uri, { method, headers = {}, body, baseUri }: { method: string; headers?: HeadersInit; body?: BodyInit; baseUri?: string }) {
+    let effectiveUri = uri
+    if (uri.match(/^https?:\/\//) === null && baseUri) {
+        effectiveUri = new URL(uri, baseUri).toString()
+    }
+
     const defaultHeaders: HeadersInit = {
         accept: requestAcceptHeaders,
     }
@@ -24,19 +29,24 @@ async function getResponse (uri: string, method: string, headers: HeadersInit = 
 
     requestInit.headers = merge(new Headers(defaultHeaders), new Headers(headers))
 
-    const res = await fetch(uri, requestInit)
+    const res = await fetch(effectiveUri, requestInit)
 
-    return new ResponseWrapper(uri, res)
+    return new ResponseWrapper(effectiveUri, res)
 }
 
-export function fetchResource (uri: string, headers: HeadersInit): Promise<ResponseWrapper> {
-    return getResponse(uri, 'get', headers)
+export function fetchResource (uri: string, headers: HeadersInit, baseUri?: string): Promise<ResponseWrapper> {
+    return getResponse(uri, {
+        method: 'get',
+        headers,
+        baseUri,
+    })
 }
 
 export function invokeOperation (
     method: string,
     uri: string,
     body?: BodyInit,
-    headers?: HeadersInit): Promise<ResponseWrapper> {
-    return getResponse(uri, method, headers, body)
+    headers?: HeadersInit,
+    baseUri?: string): Promise<ResponseWrapper> {
+    return getResponse(uri, { method, headers, body, baseUri })
 }

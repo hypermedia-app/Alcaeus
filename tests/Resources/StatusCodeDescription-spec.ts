@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { StatusCodeDescriptionMixin } from '../../src/Resources/Mixins/StatusCodeDescription'
 import Resource from '../../src/Resources/Resource'
 import { hydra } from '../../src/Vocabs'
@@ -8,7 +8,7 @@ import { hydra } from '../../src/Vocabs'
 class StatusCodeDescription extends StatusCodeDescriptionMixin(Resource) {}
 
 describe('StatusCodeDescription', () => {
-    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let node: SingleContextClownface<NamedNode>
     let statusCodeDescription: StatusCodeDescription
 
     beforeEach(() => {

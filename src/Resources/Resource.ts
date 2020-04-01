@@ -1,4 +1,4 @@
-import { RdfResource, RdfResourceImpl } from '@tpluscode/rdfine'
+import RdfResourceImpl, { RdfResource } from '@tpluscode/rdfine'
 import nonenumerable from '../helpers/nonenumerable'
 import { NamedNode, Term } from 'rdf-js'
 import { xsd } from '../Vocabs'

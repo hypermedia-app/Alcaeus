@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { RdfPropertyMixin } from '../../src/Resources/Mixins/RdfProperty'
 import { Resource } from './_TestResource'
 import { hydra, owl, rdf, rdfs, xsd } from '../../src/Vocabs'
@@ -8,7 +8,7 @@ import { hydra, owl, rdf, rdfs, xsd } from '../../src/Vocabs'
 class RdfProperty extends RdfPropertyMixin(Resource) {}
 
 describe('RdfProperty', () => {
-    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let node: SingleContextClownface<NamedNode>
     let property: RdfProperty
 
     beforeEach(() => {

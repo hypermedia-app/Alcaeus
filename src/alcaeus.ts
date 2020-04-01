@@ -3,7 +3,7 @@ import Parsers, { SinkMap } from '@rdfjs/sink-map'
 import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { NamedNode, Stream } from 'rdf-js'
+import { DatasetCore, NamedNode, Stream } from 'rdf-js'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import stringToStream from 'string-to-stream'
 import * as FetchUtil from './FetchUtil'
@@ -71,13 +71,13 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
 
     public readonly dataset: DatasetExt = $rdf.dataset()
 
-    public readonly factory: ResourceFactory<R>
+    public readonly factory: ResourceFactory<DatasetCore, R>
 
     private readonly __documentationPromises: Map<string, Promise<HydraResponse>> = new Map()
 
     public constructor (
         rootSelectors: RootSelector[],
-        factory: ResourceFactory<R>
+        factory: ResourceFactory<DatasetCore, R>
     ) {
         this.rootSelectors = rootSelectors
         this.factory = factory

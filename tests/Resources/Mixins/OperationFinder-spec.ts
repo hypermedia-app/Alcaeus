@@ -1,6 +1,6 @@
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
-import { ResourceFactoryImpl } from '@tpluscode/rdfine'
+import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf, { Clownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
@@ -32,11 +32,11 @@ function parse (triples: string): Stream {
 class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin({} as any)(Resource)) {
 }
 
-TestOperationFinder.factory = new ResourceFactoryImpl(TestOperationFinder)
+TestOperationFinder.factory = new ResourceFactory(TestOperationFinder)
 TestOperationFinder.factory.addMixin(mixins.ClassMixin)
 
 describe('OperationFinder', () => {
-    let graph: Clownface<DatasetExt>
+    let graph: Clownface<any, DatasetExt>
 
     beforeEach(() => {
         graph = cf({ dataset: $rdf.dataset() })

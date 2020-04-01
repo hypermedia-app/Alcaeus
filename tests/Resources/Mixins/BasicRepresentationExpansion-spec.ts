@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, BlankNode } from 'rdf-js'
+import { BlankNode } from 'rdf-js'
 import { JsonLd } from '../../Constants'
 import { BasicRepresentationExpansionMixin } from '../../../src/Resources/Mixins/BasicRepresentationExpansion'
 import { IriTemplateMixin } from '../../../src/Resources/Mixins/IriTemplate'
@@ -10,7 +10,7 @@ import { Resource } from '../_TestResource'
 class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(IriTemplateMixin(Resource)) {}
 
 describe('BasicRepresentationExpansion', () => {
-    let node: SingleContextClownface<DatasetCore, BlankNode>
+    let node: SingleContextClownface<BlankNode>
     let resource: BasicRepresentationExpansion
 
     beforeEach(() => {

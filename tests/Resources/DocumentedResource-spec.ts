@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { DocumentedResourceMixin } from '../../src/Resources/Mixins/DocumentedResource'
 import { Resource } from './_TestResource'
 import { hydra, rdfs, schema } from '../../src/Vocabs'
@@ -8,7 +8,7 @@ import { hydra, rdfs, schema } from '../../src/Vocabs'
 class DocumentedResource extends DocumentedResourceMixin(Resource) {}
 
 describe('DocumentedResource', () => {
-    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let node: SingleContextClownface<NamedNode>
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() })

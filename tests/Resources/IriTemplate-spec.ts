@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { IriTemplateMixin } from '../../src/Resources/Mixins/IriTemplate'
 import { Resource } from './_TestResource'
 import { hydra } from '../../src/Vocabs'
@@ -12,7 +12,7 @@ class IriTemplate extends IriTemplateMixin(Resource) {
 }
 
 describe('IriTemplate', () => {
-    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let node: SingleContextClownface<NamedNode>
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() })

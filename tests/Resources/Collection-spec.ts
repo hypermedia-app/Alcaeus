@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { CollectionMixin } from '../../src/Resources/Mixins/Collection'
 import { hydra, rdf } from '../../src/Vocabs'
 import { Resource } from './_TestResource'
@@ -8,7 +8,7 @@ import { Resource } from './_TestResource'
 class Collection extends CollectionMixin(Resource) {}
 
 describe('Collection', () => {
-    let collectionNode: SingleContextClownface<DatasetCore, NamedNode>
+    let collectionNode: SingleContextClownface<NamedNode>
 
     beforeEach(() => {
         collectionNode = cf({ dataset: $rdf.dataset() })
@@ -80,7 +80,7 @@ describe('Collection', () => {
 })
 
 describe('CollectionMixin', () => {
-    let collectionNode: SingleContextClownface<DatasetCore, NamedNode>
+    let collectionNode: SingleContextClownface<NamedNode>
 
     beforeEach(() => {
         collectionNode = cf({ dataset: $rdf.dataset() })

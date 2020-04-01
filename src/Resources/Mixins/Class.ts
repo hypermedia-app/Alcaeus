@@ -1,4 +1,5 @@
-import { Constructor, property, RdfResource, TypeCollectionImpl } from '@tpluscode/rdfine'
+import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import TypeCollection from '@tpluscode/rdfine/lib/TypeCollection'
 import { hydra, rdfs } from '../../Vocabs'
 import { HydraResource, SupportedOperation, SupportedProperty } from '../index'
 import { SupportedOperationMixin } from './SupportedOperation'
@@ -42,7 +43,7 @@ export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBas
         public __supportedProperties!: SupportedProperty[]
 
         public get types () {
-            return new TypeCollectionImpl(this, true)
+            return new TypeCollection(this, true)
         }
 
         public get supportedOperations (): SupportedOperation[] {

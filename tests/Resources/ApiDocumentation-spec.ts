@@ -1,8 +1,9 @@
 import 'core-js/es6/array'
-import { Constructor, ResourceFactoryImpl } from '@tpluscode/rdfine'
+import { Constructor } from '@tpluscode/rdfine'
+import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { BlankNode, DatasetCore } from 'rdf-js'
+import { BlankNode } from 'rdf-js'
 import { ApiDocumentationMixin } from '../../src/Resources/Mixins/ApiDocumentation'
 import { Resource } from './_TestResource'
 import { hydra } from '../../src/Vocabs'
@@ -22,14 +23,14 @@ function MockLoad (loadFunc) {
 }
 
 describe('ApiDocumentation', () => {
-    let node: SingleContextClownface<DatasetCore, BlankNode>
+    let node: SingleContextClownface<BlankNode>
     let load: jest.Mock
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() }).blankNode()
         load = jest.fn()
 
-        ApiDocumentation.factory = new ResourceFactoryImpl(Resource)
+        ApiDocumentation.factory = new ResourceFactory(Resource)
     })
 
     describe('getting entrypoint', () => {

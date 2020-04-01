@@ -1,4 +1,4 @@
-import { ResourceFactory, ResourceFactoryImpl } from '@tpluscode/rdfine'
+import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import $rdf from 'rdf-ext'
 import cf, { Clownface } from 'clownface'
 import { Resource } from '../src'
@@ -11,7 +11,7 @@ describe('ResourceGraph', () => {
 
     beforeEach(() => {
         dataset = cf({ dataset: $rdf.dataset() })
-        factory = new ResourceFactoryImpl(Resource)
+        factory = new ResourceFactory(Resource)
     })
 
     describe('get', () => {

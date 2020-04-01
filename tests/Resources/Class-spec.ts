@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
 import { ClassMixin } from '../../src/Resources/Mixins/Class'
 import { hydra } from '../../src/Vocabs'
@@ -12,7 +12,7 @@ const vocab = namespace('http://example.com/vocab#')
 class Class extends ClassMixin(Resource) {}
 
 describe('Class', () => {
-    let hydraClassNode: SingleContextClownface<DatasetCore, NamedNode>
+    let hydraClassNode: SingleContextClownface<NamedNode>
 
     beforeEach(() => {
         hydraClassNode = cf({ dataset: $rdf.dataset() })

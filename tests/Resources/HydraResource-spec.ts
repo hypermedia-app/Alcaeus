@@ -1,6 +1,6 @@
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
-import { ResourceFactoryImpl } from '@tpluscode/rdfine'
+import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf, { Clownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
@@ -18,7 +18,7 @@ const ex = namespace('http://example.com/vocab#')
 let client = {} as HydraClient
 const HydraResource = createHydraResourceMixin(client)(Resource)
 
-HydraResource.factory = new ResourceFactoryImpl(HydraResource)
+HydraResource.factory = new ResourceFactory(HydraResource)
 HydraResource.factory.addMixin(mixins.ClassMixin)
 HydraResource.factory.addMixin(mixins.SupportedPropertyMixin)
 HydraResource.factory.addMixin(mixins.SupportedOperationMixin)

@@ -1,6 +1,6 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
 import { Resource } from './_TestResource'
 import { hydra, owl } from '../../src/Vocabs'
@@ -8,7 +8,7 @@ import { hydra, owl } from '../../src/Vocabs'
 class SupportedOperation extends SupportedOperationMixin(Resource) {}
 
 describe('SupportedOperation', () => {
-    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let node: SingleContextClownface<NamedNode>
     let operation: SupportedOperation
 
     beforeEach(() => {

@@ -11,7 +11,7 @@ class ManagesBlock extends ManagesBlockMixin(Resource) {}
 
 describe('ManagesBlock', () => {
     let dataset: DatasetCore
-    let node: SingleContextClownface<DatasetCore, BlankNode>
+    let node: SingleContextClownface<BlankNode>
     let managesBlock: ManagesBlock
 
     beforeEach(() => {

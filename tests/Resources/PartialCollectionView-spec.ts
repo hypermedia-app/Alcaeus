@@ -1,7 +1,7 @@
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-jsonld'
-import { DatasetCore, NamedNode, Stream } from 'rdf-js'
+import { NamedNode, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { Resource } from './_TestResource'
 import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
@@ -12,7 +12,7 @@ const parser = new Parser()
 class PartialCollectionView extends PartialCollectionViewMixin(Resource) {}
 
 describe('PartialCollectionView', () => {
-    let node: SingleContextClownface<DatasetCore, NamedNode>
+    let node: SingleContextClownface<NamedNode>
 
     beforeEach(async () => {
         const dataset = $rdf.dataset()

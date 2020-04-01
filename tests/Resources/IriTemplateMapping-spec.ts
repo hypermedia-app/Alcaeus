@@ -9,7 +9,7 @@ import { hydra } from '../../src/Vocabs'
 class IriTemplateMapping extends IriTemplateMappingMixin(Resource) {}
 
 describe('IriTemplateMapping', () => {
-    let node: SingleContextClownface<DatasetExt, NamedNode>
+    let node: SingleContextClownface<NamedNode, DatasetExt>
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() })

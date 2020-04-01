@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import cf, { Clownface } from 'clownface'
 import { Resource } from '../src'
 import ResourceGraph from '../src/ResourceGraph'
-import { rdf, schema } from '../src/Vocabs'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 
 describe('ResourceGraph', () => {
     let dataset: Clownface

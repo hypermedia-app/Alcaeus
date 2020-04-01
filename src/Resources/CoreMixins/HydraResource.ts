@@ -1,6 +1,6 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { HydraClient } from '../../alcaeus'
-import { hydra } from '../../Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
 import { Collection, CollectionMixin } from '../Mixins/Collection'
 import { ManagesBlockPattern } from '../Mixins/ManagesBlock'

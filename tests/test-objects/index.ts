@@ -1,4 +1,4 @@
-import { xsd } from '../../src/Vocabs'
+import { xsd } from '@tpluscode/rdf-ns-builders'
 import Context from '../test-objects/Context'
 
 export const Bodies = {

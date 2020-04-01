@@ -48,6 +48,7 @@
   "dependencies": {
     "@rdfjs/sink-map": "^1.0.1",
     "@tpluscode/rdfine": "^0.4",
+    "@tpluscode/rdf-ns-builders": "^0.1",
     "es6-url-template": "^1.0.3",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-form-data": "^2.0.0",

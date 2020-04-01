@@ -1,7 +1,7 @@
 import li from 'parse-link-header'
 import * as Constants from './Constants'
 import nonenumerable from './helpers/nonenumerable'
-import { hydra } from './Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 const apiDocumentationRel = hydra.apiDocumentation.value
 

@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
 import { Resource } from './_TestResource'
-import { hydra, owl } from '../../src/Vocabs'
+import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 
 class SupportedOperation extends SupportedOperationMixin(Resource) {}
 

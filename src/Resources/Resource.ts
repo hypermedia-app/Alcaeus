@@ -1,7 +1,7 @@
 import RdfResourceImpl, { RdfResource } from '@tpluscode/rdfine'
 import nonenumerable from '../helpers/nonenumerable'
 import { NamedNode, Term } from 'rdf-js'
-import { xsd } from '../Vocabs'
+import { xsd } from '@tpluscode/rdf-ns-builders'
 
 export interface Resource extends RdfResource {
     /**

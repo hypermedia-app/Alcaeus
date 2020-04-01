@@ -1,6 +1,6 @@
 import cf from 'clownface'
 import { DatasetCore } from 'rdf-js'
-import { hydra, rdf } from '../../Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 const propertyRangeMappings = [
     [hydra.supportedClass, hydra.Class],

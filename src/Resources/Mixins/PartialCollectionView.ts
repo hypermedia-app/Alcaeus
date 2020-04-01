@@ -1,6 +1,6 @@
 import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { SingleContextClownface } from 'clownface'
-import { hydra } from '../../Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Collection, HydraResource, View } from '../index'
 
 export interface PartialCollectionView extends View {

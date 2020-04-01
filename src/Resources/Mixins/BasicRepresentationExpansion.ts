@@ -1,5 +1,5 @@
 import { Constructor, RdfResource } from '@tpluscode/rdfine'
-import { hydra } from '../../Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import ExpansionModelBuilder, { ExpandedValue } from './ExpansionModelBuilder'
 import { IriTemplate } from './IriTemplate'
 

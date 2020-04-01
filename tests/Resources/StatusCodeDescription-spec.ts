@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { StatusCodeDescriptionMixin } from '../../src/Resources/Mixins/StatusCodeDescription'
 import Resource from '../../src/Resources/Resource'
-import { hydra } from '../../src/Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 class StatusCodeDescription extends StatusCodeDescriptionMixin(Resource) {}
 

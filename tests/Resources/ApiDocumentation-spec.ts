@@ -6,7 +6,7 @@ import $rdf from 'rdf-ext'
 import { BlankNode } from 'rdf-js'
 import { ApiDocumentationMixin } from '../../src/Resources/Mixins/ApiDocumentation'
 import { Resource } from './_TestResource'
-import { hydra } from '../../src/Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 class ApiDocumentation extends ApiDocumentationMixin(Resource) { }
 function MockLoad (loadFunc) {

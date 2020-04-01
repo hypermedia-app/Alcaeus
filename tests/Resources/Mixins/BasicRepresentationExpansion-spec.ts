@@ -4,7 +4,7 @@ import { BlankNode } from 'rdf-js'
 import { JsonLd } from '../../Constants'
 import { BasicRepresentationExpansionMixin } from '../../../src/Resources/Mixins/BasicRepresentationExpansion'
 import { IriTemplateMixin } from '../../../src/Resources/Mixins/IriTemplate'
-import { hydra, rdf } from '../../../src/Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { Resource } from '../_TestResource'
 
 class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(IriTemplateMixin(Resource)) {}

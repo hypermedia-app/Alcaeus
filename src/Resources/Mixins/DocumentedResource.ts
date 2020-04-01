@@ -1,5 +1,5 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
-import { hydra, rdfs, schema } from '../../Vocabs'
+import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
 
 export interface DocumentedResource extends HydraResource {

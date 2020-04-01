@@ -1,7 +1,7 @@
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import processor from '../../src/RdfProcessor'
-import { hydra, rdf } from '../../src/Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 describe('RdfProcessor', () => {
     describe('process', () => {

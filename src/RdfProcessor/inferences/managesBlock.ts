@@ -1,6 +1,6 @@
 import cf, { Clownface } from 'clownface'
 import { DatasetCore } from 'rdf-js'
-import { hydra } from '../../Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 interface ManagesBlockAssertion {
     subject: Clownface;

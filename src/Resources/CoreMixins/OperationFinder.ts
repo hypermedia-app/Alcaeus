@@ -1,6 +1,6 @@
 import { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { NamedNode, Quad } from 'rdf-js'
-import { hydra, rdf } from '../../Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { Class, HydraResource } from '../index'
 import { SupportedOperation } from '../Mixins/SupportedOperation'
 import { Operation } from '../Operation'

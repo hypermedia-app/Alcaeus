@@ -1,6 +1,6 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import TypeCollection from '@tpluscode/rdfine/lib/TypeCollection'
-import { hydra, rdfs } from '../../Vocabs'
+import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
 import { HydraResource, SupportedOperation, SupportedProperty } from '../index'
 import { SupportedOperationMixin } from './SupportedOperation'
 import { SupportedPropertyMixin } from './SupportedProperty'

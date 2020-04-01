@@ -1,4 +1,4 @@
-import { hydra } from '../Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { HydraResponse } from '../HydraResponse'
 import { ResourceGraph } from '../ResourceGraph'
 import { View } from '../Resources'

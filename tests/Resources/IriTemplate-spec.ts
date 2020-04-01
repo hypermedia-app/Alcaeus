@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { IriTemplateMixin } from '../../src/Resources/Mixins/IriTemplate'
 import { Resource } from './_TestResource'
-import { hydra } from '../../src/Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 class IriTemplate extends IriTemplateMixin(Resource) {
     public expand () {

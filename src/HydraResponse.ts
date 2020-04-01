@@ -6,7 +6,7 @@ import { HydraClient } from './alcaeus'
 import ResourceGraph from './ResourceGraph'
 import { HydraResource } from './Resources'
 import ResponseWrapperImpl, { ResponseWrapper } from './ResponseWrapper'
-import { rdf } from './Vocabs'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
 export interface HydraResponse<T extends RdfResource = HydraResource> extends Iterable<HydraResource>, ResponseWrapper {
 

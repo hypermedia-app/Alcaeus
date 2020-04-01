@@ -7,7 +7,7 @@ import { create } from '../src'
 import { HydraClient } from '../src/alcaeus'
 import * as FetchUtil from '../src/FetchUtil'
 import { PartialCollectionView } from '../src/Resources'
-import { hydra } from '../src/Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Bodies } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
 

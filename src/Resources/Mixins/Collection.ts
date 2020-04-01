@@ -1,6 +1,6 @@
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { View, HydraResource } from '../index'
-import { hydra } from '../../Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { ManagesBlock, ManagesBlockMixin } from './ManagesBlock'
 
 export interface Collection<T = HydraResource> extends HydraResource {

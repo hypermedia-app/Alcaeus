@@ -7,7 +7,7 @@ import namespace from '@rdfjs/namespace'
 import { create as HydraResponse } from '../src/HydraResponse'
 import Resource from '../src/Resources/Resource'
 import { ResponseWrapper } from '../src/ResponseWrapper'
-import { rdf } from '../src/Vocabs'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
 const ex = namespace('http://example.com/')
 

@@ -5,7 +5,7 @@ import { BlankNode, DatasetCore } from 'rdf-js'
 import { RdfProperty } from '../../../src/Resources/Mixins/RdfProperty'
 import Resource from '../../../src/Resources/Resource'
 import { ManagesBlockMixin } from '../../../src/Resources/Mixins/ManagesBlock'
-import { foaf, hydra, rdf } from '../../../src/Vocabs'
+import { foaf, hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 class ManagesBlock extends ManagesBlockMixin(Resource) {}
 

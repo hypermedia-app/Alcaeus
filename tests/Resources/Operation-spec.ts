@@ -8,7 +8,7 @@ import { HydraResource } from '../../src/Resources'
 import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
 import Operation from '../../src/Resources/Operation'
 import { Resource } from './_TestResource'
-import { hydra } from '../../src/Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 const ex = namespace('http://example.com/')
 class SupportedOperation extends SupportedOperationMixin(Resource) {}

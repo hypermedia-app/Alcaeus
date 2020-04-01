@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
 import { ClassMixin } from '../../src/Resources/Mixins/Class'
-import { hydra } from '../../src/Vocabs'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Resource } from './_TestResource'
 import * as graphs from './Class-spec-graphs'
 

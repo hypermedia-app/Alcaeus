@@ -9,7 +9,7 @@ import stringToStream from 'string-to-stream'
 import { HydraClient } from '../../src/alcaeus'
 import * as mixins from '../../src/ResourceFactoryDefaults'
 import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
-import { hydra, rdf } from '../../src/Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { Resource } from './_TestResource'
 
 const parser = new Parser()

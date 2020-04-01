@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { DocumentedResourceMixin } from '../../src/Resources/Mixins/DocumentedResource'
 import { Resource } from './_TestResource'
-import { hydra, rdfs, schema } from '../../src/Vocabs'
+import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 
 class DocumentedResource extends DocumentedResourceMixin(Resource) {}
 

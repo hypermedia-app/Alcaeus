@@ -9,7 +9,7 @@ import stringToStream from 'string-to-stream'
 import * as mixins from '../../../src/ResourceFactoryDefaults'
 import { Class } from '../../../src/Resources'
 import { createHydraResourceMixin, OperationFinderMixin } from '../../../src/Resources/CoreMixins'
-import { hydra, owl } from '../../../src/Vocabs'
+import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 import { Resource } from '../_TestResource'
 
 type RecursivePartial<T> = {

@@ -1,7 +1,7 @@
 import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { SafeClownface } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import { hydra, rdf } from '../../Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
 import { Class } from './Class'
 import { RdfProperty } from './RdfProperty'

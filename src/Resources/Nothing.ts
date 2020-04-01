@@ -1,5 +1,5 @@
 import { Constructor, RdfResource } from '@tpluscode/rdfine'
-import { owl } from '../Vocabs'
+import { owl } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from './index'
 import { ClassMixin } from './Mixins/Class'
 import { DocumentedResource } from './Mixins/DocumentedResource'

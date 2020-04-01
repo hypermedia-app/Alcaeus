@@ -2,7 +2,7 @@ import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { CollectionMixin } from '../../src/Resources/Mixins/Collection'
-import { hydra, rdf } from '../../src/Vocabs'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { Resource } from './_TestResource'
 
 class Collection extends CollectionMixin(Resource) {}

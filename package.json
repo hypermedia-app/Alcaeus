@@ -2,30 +2,19 @@
   "name": "alcaeus",
   "version": "1.0.0-alpha.10",
   "description": "Hydra Core hypermedia-aware client library",
-  "main": "lib/node/index.node.js",
-  "types": "types/index.d.ts",
-  "module": "lib/es/index.js",
-  "module.root": "lib/es",
+  "main": "main.js",
+  "types": "index.d.ts",
+  "module": "index.js",
   "directories": {
     "test": "tests"
   },
-  "files": [
-    "lib",
-    "*.d.ts",
-    "*.d.ts.map",
-    "**/*.d.ts",
-    "**/*.d.ts.map"
-  ],
   "scripts": {
     "test": "jest",
-    "build": "npm run build:nodejs; npm run build:default",
-    "build:nodejs": "tsc -p tsconfig.node.json",
-    "build:default": "tsc -p tsconfig.es.json",
+    "build": "tsc",
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "gitbook": "gitbook serve",
     "lint": "eslint . --ext .ts --quiet",
-    "prepack": "rm -rf lib; npm run build",
-    "release": "standard-version"
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -50,6 +39,7 @@
     "@tpluscode/rdfine": "^0.4",
     "@tpluscode/rdf-ns-builders": "^0.1",
     "es6-url-template": "^1.0.3",
+    "esm": "^3.2.25",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-form-data": "^2.0.0",
     "parse-link-header": "^1.0.1",
@@ -82,7 +72,6 @@
     "@zazuko/rdf-vocabularies": "^2019.10.22",
     "babel-plugin-module-resolver": "^4.0.0",
     "core-js": "^2.5.0",
-    "cz-conventional-changelog": "^2.1.0",
     "eslint": "^6.0.1",
     "eslint-plugin-jest": "^22.14.1",
     "gitbook-cli": "^2.3.2",
@@ -99,7 +88,6 @@
     "lint-staged": "^8.0.0",
     "sinon": "^7.3.2",
     "standard": "^12.0.1",
-    "standard-version": "^7.0.1",
     "typescript": "^3.7.4",
     "whatwg-fetch": "^3.0.0"
   },

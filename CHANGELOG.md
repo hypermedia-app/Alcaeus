@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.11](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2020-04-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* no separate commonjs build may require setting up esm
+
+### Features
+
+* only single es modules build ([76382b6](https://github.com/wikibus/alcaeus/commit/76382b6ab78704b8e3074a5e830c01352a02e3fb))
+
 ## [1.0.0-alpha.10](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2020-03-12)
 
 ## [1.0.0-alpha.9](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2020-02-04)

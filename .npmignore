@@ -9,3 +9,4 @@ tests/
 .travis.yml
 .editorconfig
 *ignore
+coverage/

@@ -41,7 +41,7 @@ describe('Hydra loadDocumentation', () => {
 
         // when
         client.loadDocumentation('http://api.example.com/doc/')
-        await client.apiDocumentations
+        await client.apiDocumentationRequests
 
         // then
         expect(client.dataset.toCanonical()).toMatchSnapshot()
@@ -62,9 +62,9 @@ describe('Hydra loadDocumentation', () => {
 
         // when
         client.loadDocumentation('http://api.example.com/doc/')
-        await client.apiDocumentations
+        await client.apiDocumentationRequests
         client.loadDocumentation('http://api.example.com/doc/')
-        await client.apiDocumentations
+        await client.apiDocumentationRequests
 
         // then
         expect(client.dataset.toCanonical()).toMatchSnapshot()

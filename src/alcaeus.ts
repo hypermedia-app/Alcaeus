@@ -28,7 +28,8 @@ export interface HydraClient {
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
-    apiDocumentations: Promise<ApiDocumentation[]>;
+    apiDocumentations: ApiDocumentation[];
+    apiDocumentationRequests: Promise<void>;
 }
 
 function stripContentTypeParameters (mediaType: string) {
@@ -73,7 +74,9 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
 
     public readonly factory: ResourceFactory<DatasetCore, R>
 
-    private readonly __documentationPromises: Map<string, Promise<HydraResponse>> = new Map()
+    private readonly __documentationPromises: Map<string, Promise<void>> = new Map()
+
+    private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
 
     public constructor (
         rootSelectors: RootSelector[],
@@ -83,19 +86,12 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
         this.factory = factory
     }
 
-    public get apiDocumentations () {
-        return Promise.all(this.__documentationPromises.values())
-            .then(responses => responses.map<ApiDocumentation | RdfResource | null>(r => r.root))
-            .then(docs => {
-                return docs.reduce((notNull, doc) => {
-                    if (doc && 'loadEntrypoint' in doc) {
-                        notNull.push(doc)
-                    }
+    public get apiDocumentationRequests () {
+        return Promise.all(this.__documentationPromises.values()).then(() => {})
+    }
 
-                    return notNull
-                },
-                [] as ApiDocumentation[])
-            })
+    public get apiDocumentations () {
+        return [...this.__apiDocumentations.values()]
     }
 
     public async loadResource <T extends RdfResource> (id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<T>> {
@@ -113,7 +109,14 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
     public loadDocumentation (id: string | NamedNode, headers: HeadersInit = {}) {
         const uri: string = typeof id === 'string' ? id : id.value
 
-        this.__documentationPromises.set(uri, this.loadResource(uri, headers, false))
+        const docsPromise = this.loadResource<ApiDocumentation>(uri, headers, false)
+            .then(response => {
+                const apiDocs = response.root
+                if (apiDocs && 'classes' in apiDocs) {
+                    this.__apiDocumentations.set(uri, apiDocs)
+                }
+            })
+        this.__documentationPromises.set(uri, docsPromise)
     }
 
     public async invokeOperation (operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse> {

@@ -1,13 +1,15 @@
+import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
+import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
-import cf, { Clownface } from 'clownface'
+import cf from 'clownface'
 import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import { NamedNode, Stream } from 'rdf-js'
+import { Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { HydraClient } from '../../src/alcaeus'
 import * as mixins from '../../src/ResourceFactoryDefaults'
+import { ApiDocumentation } from '../../src/Resources'
 import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { Resource } from './_TestResource'
@@ -15,67 +17,63 @@ import { Resource } from './_TestResource'
 const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
 
-let client = {} as HydraClient
+const apiDocumentations: ApiDocumentation[] = []
+let client = {
+    apiDocumentations,
+} as HydraClient
 const HydraResource = createHydraResourceMixin(client)(Resource)
 
 HydraResource.factory = new ResourceFactory(HydraResource)
+HydraResource.factory.addMixin(mixins.ApiDocumentationMixin)
 HydraResource.factory.addMixin(mixins.ClassMixin)
 HydraResource.factory.addMixin(mixins.SupportedPropertyMixin)
 HydraResource.factory.addMixin(mixins.SupportedOperationMixin)
 
-function parse (triples: string, baseIRI?: NamedNode): Stream {
-    const { value } = baseIRI || {}
-    const data = `
-    @prefix hydra: <${hydra().value}> .
-    @prefix ex: <${ex().value}> .
-    @prefix rdf: <${rdf().value}> .
-    
-    ${triples}`
-
-    return parser.import(stringToStream(data) as any as Stream, {
-        baseIRI: value,
-    })
+function parse (triples: TurtleTemplateResult): Stream {
+    return parser.import(stringToStream(triples.toString()))
 }
 
 describe('HydraResource', () => {
-    let dataset: DatasetExt
-    let node: Clownface
-
     beforeEach(() => {
-        dataset = $rdf.dataset()
-        node = cf({ dataset })
+        apiDocumentations.splice(0, apiDocumentations.length)
     })
 
     describe('get operations', () => {
         it('should combine operations from class and property', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:Resource .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Resource} .
                        
-                    ex:Resource a hydra:Class ;
-                        hydra:supportedOperation [
-                            a hydra:SupportedOperation
+                    ${ex.Resource} a ${hydra.Class} ;
+                        ${hydra.supportedOperation} [
+                            a ${hydra.SupportedOperation}
                         ] ;
-                        hydra:supportedProperty [
-                            a hydra:SupportedProperty ;
-                            hydra:property ex:knows
+                        ${hydra.supportedProperty} [
+                            a ${hydra.SupportedProperty} ;
+                            ${hydra.property} ${ex.knows}
                         ] .
                     
-                    ex:knows hydra:supportedOperation [
-                        a hydra:SupportedOperation
+                    ${ex.knows} ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation}
                     ] .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/A> a ex:Resource .
-                    <http://example.com/B> a ex:Resource .
-                    
-                    <http://example.com/A> ex:knows <http://example.com/B> .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/B'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/A> a ${ex.Resource} .
+                    <http://example.com/B> a ${ex.Resource} .
+                    
+                    <http://example.com/A> ${ex.knows} <http://example.com/B> .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/B'),
+            }))
 
             // when
             const ops = resource.operations
@@ -87,25 +85,31 @@ describe('HydraResource', () => {
         it('should combine operations for multiple @types', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:ResourceA, ex:ResourceB .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.ResourceA}, ${ex.ResourceB} .
                        
-                    ex:ResourceA a hydra:Class ;
-                        hydra:supportedOperation [
-                            a hydra:SupportedOperation
+                    ${ex.ResourceA} a ${hydra.Class} ;
+                        ${hydra.supportedOperation} [
+                            a ${hydra.SupportedOperation}
                         ] .
-                    ex:ResourceB a hydra:Class ;
-                        hydra:supportedOperation [
-                            a hydra:SupportedOperation
+                    ${ex.ResourceB} a ${hydra.Class} ;
+                        ${hydra.supportedOperation} [
+                            a ${hydra.SupportedOperation}
                         ] .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const ops = resource.operations
@@ -117,11 +121,13 @@ describe('HydraResource', () => {
         it('returns empty array when api documentation is unavailable', async () => {
             // given
             const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                turtle`
+                    <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
                 `)
-            await dataset.import(resourceGraph)
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const ops = resource.operations
@@ -133,21 +139,27 @@ describe('HydraResource', () => {
         it('should return operations with unique supported operation ids', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:ResourceA, ex:ResourceB .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.ResourceA}, ${ex.ResourceB} .
                        
-                    ex:ResourceA a hydra:Class ;
-                        hydra:supportedOperation ex:DeleteOperation .
-                    ex:ResourceB a hydra:Class ;
-                        hydra:supportedOperation ex:DeleteOperation.
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                    ${ex.ResourceA} a ${hydra.Class} ;
+                        ${hydra.supportedOperation} ${ex.DeleteOperation} .
+                    ${ex.ResourceB} a ${hydra.Class} ;
+                        ${hydra.supportedOperation} ${ex.DeleteOperation}.
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const ops = resource.operations
@@ -161,11 +173,13 @@ describe('HydraResource', () => {
         it('returns empty array when ApiDocumentation is missing', async () => {
             // given
             const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                turtle`
+                    <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
                 `)
-            await dataset.import(resourceGraph)
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const ops = resource.getProperties()
@@ -177,21 +191,27 @@ describe('HydraResource', () => {
         it('deduplicates multiple usage same rdf:property in supported properties', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:ResourceA, ex:ResourceB .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.ResourceA}, ${ex.ResourceB} .
                        
-                    ex:ResourceA a hydra:Class ;
-                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
-                    ex:ResourceB a hydra:Class ;
-                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:ResourceA, ex:ResourceB .
+                    ${ex.ResourceA} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
+                    ${ex.ResourceB} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const links = resource.getProperties()
@@ -205,19 +225,25 @@ describe('HydraResource', () => {
         it('should return empty array when no property is link', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:Resource .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Resource} .
                        
-                    ex:Resource a hydra:Class ;
-                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:Resource .
+                    ${ex.Resource} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.Resource} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const links = resource.getLinks()
@@ -229,22 +255,28 @@ describe('HydraResource', () => {
         it('should return ids and values for hydra:Link properties', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:Resource .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Resource} .
                        
-                    ex:Resource a hydra:Class ;
-                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                    ${ex.Resource} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                         
-                    ex:knows a hydra:Link .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:Resource ;
-                        ex:knows <http://example.com/linked>.
+                    ${ex.knows} a ${hydra.Link} .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.Resource} ;
+                        ${ex.knows} <http://example.com/linked>.
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const links = resource.getLinks()
@@ -257,21 +289,27 @@ describe('HydraResource', () => {
         it('should return empty result if a Link property is not used in a resource', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:Resource .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Resource} .
                        
-                    ex:Resource a hydra:Class ;
-                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                    ${ex.Resource} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                         
-                    ex:knows a hydra:Link .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:Resource .
+                    ${ex.knows} a ${hydra.Link} .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.Resource} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const links = resource.getLinks()
@@ -283,21 +321,27 @@ describe('HydraResource', () => {
         it('should return all Link properties if requested explicitly', async () => {
             // given
             const apiGraph = parse(
-                `
-                    <> a hydra:ApiDocumentation ;
-                        hydra:supportedClass ex:Resource .
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Resource} .
                        
-                    ex:Resource a hydra:Class ;
-                        hydra:supportedProperty [ a hydra:SupportedProperty; hydra:property ex:knows ] .
+                    ${ex.Resource} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                         
-                    ex:knows a hydra:Link .
-                `, ex.api)
-            const resourceGraph = parse(
-                `
-                    <http://example.com/> a ex:Resource .
+                    ${ex.knows} a ${hydra.Link} .
                 `)
-            await dataset.import(apiGraph).then(ds => ds.import(resourceGraph))
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            apiDocumentations.push(HydraResource.factory.createEntity<ApiDocumentation>({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            }))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.Resource} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const links = resource.getLinks(true)
@@ -311,15 +355,17 @@ describe('HydraResource', () => {
         it('returns all hydra:collections', async () => {
             // given
             const resourceGraph = parse(
-                `
-                    <http://example.com/> hydra:collection 
+                turtle`
+                    <http://example.com/> ${hydra.collection} 
                         <http://example.com/collection1> ,
                         <http://example.com/collection2> ,
                         <http://example.com/collection3> ,
                         <http://example.com/collection4> .
                 `)
-            await dataset.import(resourceGraph)
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const collections = resource.getCollections()
@@ -331,20 +377,22 @@ describe('HydraResource', () => {
         it('returns collections matching manages block Class given by id', async () => {
             // given
             const resourceGraph = parse(
-                `
-                    <http://example.com/> hydra:collection 
+                turtle`
+                    <http://example.com/> ${hydra.collection} 
                         <http://example.com/collection1> ,
                         <http://example.com/collection2> ,
                         <http://example.com/collection3> ,
                         <http://example.com/collection4> .
                         
-                    <http://example.com/collection1> hydra:manages [
-                        hydra:object <http://example.org/Class> ;
-                        hydra:property rdf:type
+                    <http://example.com/collection1> ${hydra.manages} [
+                        ${hydra.object} <http://example.org/Class> ;
+                        ${hydra.property} ${rdf.type}
                     ] .
                 `)
-            await dataset.import(resourceGraph)
-            const resource = new HydraResource(node.namedNode('http://example.com/'))
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
 
             // when
             const collections = resource.getCollections({

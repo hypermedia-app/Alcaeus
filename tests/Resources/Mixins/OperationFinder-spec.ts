@@ -1,13 +1,15 @@
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
+import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf, { Clownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { Literal, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
+import { HydraClient } from '../../../src/alcaeus'
 import * as mixins from '../../../src/ResourceFactoryDefaults'
-import { Class } from '../../../src/Resources'
+import { ApiDocumentation, Class } from '../../../src/Resources'
 import { createHydraResourceMixin, OperationFinderMixin } from '../../../src/Resources/CoreMixins'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 import { Resource } from '../_TestResource'
@@ -18,43 +20,49 @@ type RecursivePartial<T> = {
 
 const ex = namespace('http://example.com/vocab#')
 const parser = new Parser()
-function parse (triples: string): Stream {
-    const data = `
-    @prefix hydra: <${hydra().value}> .
-    @prefix ex: <${ex().value}> .
-    @prefix owl: <${owl().value}> .
-    
-    ${triples}`
-
-    return parser.import(stringToStream(data) as any as Stream)
+function parse (triples: TurtleTemplateResult): Stream {
+    return parser.import(stringToStream(triples.toString()))
 }
 
-class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin({} as any)(Resource)) {
+const apiDocumentations: ApiDocumentation[] = []
+let client = {
+    apiDocumentations,
+} as HydraClient
+class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin(client)(Resource)) {
 }
 
 TestOperationFinder.factory = new ResourceFactory(TestOperationFinder)
 TestOperationFinder.factory.addMixin(mixins.ClassMixin)
+TestOperationFinder.factory.addMixin(mixins.ApiDocumentationMixin)
+TestOperationFinder.factory.addMixin(mixins.SupportedPropertyMixin)
+TestOperationFinder.factory.addMixin(mixins.SupportedOperationMixin)
 
 describe('OperationFinder', () => {
     let graph: Clownface<any, DatasetExt>
 
     beforeEach(() => {
+        apiDocumentations.splice(0, apiDocumentations.length)
         graph = cf({ dataset: $rdf.dataset() })
     })
 
     describe('getOperationsDeep', () => {
         it('finds operations from children', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ] .
-                    
-                <http://example.com/> a ex:Class; ex:hasChild <http://example.com/child> .
-                <http://example.com/child> a ex:Class ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class}; ${ex.hasChild} <http://example.com/child> .
+                <http://example.com/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.Class} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -67,16 +75,21 @@ describe('OperationFinder', () => {
 
         it('handles cycled resource graphs', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ] .
-                    
-                <http://example.com/> a ex:Class; ex:hasChild <http://example.com/child> .
-                <http://example.com/child> a ex:Class ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:Class ; ex:hasChild <http://example.com/>.
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class}; ${ex.hasChild} <http://example.com/child> .
+                <http://example.com/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/>.
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -89,16 +102,21 @@ describe('OperationFinder', () => {
 
         it('excludes objects of hydra:member property by default', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ] .
-                    
-                <http://example.com/> hydra:member <http://example.com/child> .
-                <http://example.com/child> a ex:Class ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> ${hydra.member} <http://example.com/child> .
+                <http://example.com/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.Class} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -111,16 +129,21 @@ describe('OperationFinder', () => {
 
         it('excludes nothing when excludedProperties is empty', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ] .
-                    
-                <http://example.com/> hydra:member <http://example.com/child> .
-                <http://example.com/child> a ex:Class ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> ${hydra.member} <http://example.com/child> .
+                <http://example.com/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.Class} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -135,18 +158,23 @@ describe('OperationFinder', () => {
 
         it('excludes provided properties', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ] .
-                    
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
                 <http://example.com/>
-                    ex:hasChild <http://example.com/child> ;
-                    ex:hasSibling <http://example.com/sibling> .
-                <http://example.com/child> a ex:Class .
-                <http://example.com/sibling> a ex:Class .
+                    ${ex.hasChild} <http://example.com/child> ;
+                    ${ex.hasSibling} <http://example.com/sibling> .
+                <http://example.com/child> a ${ex.Class} .
+                <http://example.com/sibling> a ${ex.Class} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -163,20 +191,25 @@ describe('OperationFinder', () => {
     describe('findOperations', () => {
         it('returns all non-GET operations if no method criteria are given', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [
-                        a hydra:SupportedOperation ;
-                        hydra:method "DELETE"
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "DELETE"
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "GET"
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "GET"
                     ] .
-                    
-                <http://example.com/> a ex:Class .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -190,20 +223,25 @@ describe('OperationFinder', () => {
 
         it('includes by case-insensitive method name', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [
-                        a hydra:SupportedOperation ;
-                        hydra:method "DELETE"
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "DELETE"
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "GET"
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "GET"
                     ] .
-                    
-                <http://example.com/> a ex:Class .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -219,23 +257,28 @@ describe('OperationFinder', () => {
 
         it('includes by OR-ing multiple criteria', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [
-                        a hydra:SupportedOperation ;
-                        hydra:method "DELETE"
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "DELETE"
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "GET"
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "GET"
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "POST"
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "POST"
                     ] .
-                    
-                <http://example.com/> a ex:Class .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -255,26 +298,31 @@ describe('OperationFinder', () => {
 
         it('includes by expected class id', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [
-                        a hydra:SupportedOperation ;
-                        hydra:method "DELETE" ;
-                        hydra:expects owl:Nothing
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "DELETE" ;
+                        ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "GET" ;
-                        hydra:expects owl:Nothing
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "GET" ;
+                        ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "POST" ;
-                        hydra:expects ex:Person
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "POST" ;
+                        ${hydra.expects} ${ex.Person}
                     ] .
-                    
-                <http://example.com/> a ex:Class .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`                   
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -290,20 +338,25 @@ describe('OperationFinder', () => {
 
         it('excludes GET operations if not otherwise filtered explicitly', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation ex:Action .
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} ${ex.Action} .
                     
-                ex:Action
-                    a hydra:SupportedOperation ;
-                    hydra:expects ex:Foo ;
-                    hydra:returns ex:Bar ;
-                    hydra:method "GET" .
-                    
-                <http://example.com/> a ex:Class .
+                ${ex.Action}
+                    a ${hydra.SupportedOperation} ;
+                    ${hydra.expects} ${ex.Foo} ;
+                    ${hydra.returns} ${ex.Bar} ;
+                    ${hydra.method} "GET" .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`                   
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -322,23 +375,28 @@ describe('OperationFinder', () => {
 
         it('includes by expected class instance', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [
-                        a hydra:SupportedOperation ;
-                        hydra:expects owl:Nothing
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:expects owl:Nothing
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:expects ex:Person
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.expects} ${ex.Person}
                     ] .
-                    
-                <http://example.com/> a ex:Class .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -356,26 +414,31 @@ describe('OperationFinder', () => {
 
         it('includes by custom match function', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [
-                        a hydra:SupportedOperation ;
-                        hydra:method "DELETE" ;
-                        hydra:expects owl:Nothing
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "DELETE" ;
+                        ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "PUT" ;
-                        hydra:expects ex:NewPerson
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "PUT" ;
+                        ${hydra.expects} ${ex.NewPerson}
                     ] , [
-                        a hydra:SupportedOperation ;
-                        hydra:method "POST" ;
-                        hydra:expects ex:Person
+                        a ${hydra.SupportedOperation} ;
+                        ${hydra.method} "POST" ;
+                        ${hydra.expects} ${ex.Person}
                     ] .
-                    
-                <http://example.com/> a ex:Class .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -395,17 +458,22 @@ describe('OperationFinder', () => {
 
         it('includes by exact id of supported operation', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ; hydra:supportedOperation ex:DeleteOp , ex:PostOp , ex:PutOp .
+                ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} ${ex.DeleteOp} , ${ex.PostOp} , ${ex.PutOp} .
                     
-                ex:DeleteOp a hydra:SupportedOperation ; hydra:method "DELETE" .
-                ex:PostOp a hydra:SupportedOperation ; hydra:method "DELETE" .
-                ex:PutOp a hydra:SupportedOperation ; hydra:method "DELETE" .
-                    
-                <http://example.com/> a ex:Class .
+                ${ex.DeleteOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+                ${ex.PostOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+                ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -421,16 +489,22 @@ describe('OperationFinder', () => {
 
         it('includes by exact type of supported operation', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ; hydra:supportedOperation 
-                    [ a hydra:SupportedOperation , ex:DeleteOp ; hydra:method "DELETE" ] ,
-                    [ a hydra:SupportedOperation , ex:PostOp ; hydra:method "DELETE" ] ,
-                    [ a hydra:SupportedOperation , ex:PutOp ; hydra:method "DELETE" ] .
-                    
-                <http://example.com/> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} 
+                    [ a ${hydra.SupportedOperation} , ${ex.DeleteOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.SupportedOperation} , ${ex.PostOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.SupportedOperation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
+                ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -446,16 +520,21 @@ describe('OperationFinder', () => {
 
         it('includes callback with ISupportedOperation', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ; hydra:supportedOperation ex:OperationA , ex:OperationB , ex:OperationC .
-                ex:OperationA a hydra:SupportedOperation ; ex:custom 'A' . 
-                ex:OperationB a hydra:SupportedOperation ; ex:custom 'B' .
-                ex:OperationC a hydra:SupportedOperation ; ex:custom 'C' .
-                    
-                <http://example.com/> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} ${ex.OperationA} , ${ex.OperationB} , ${ex.OperationC} .
+                ${ex.OperationA} a ${hydra.SupportedOperation} ; ${ex.custom} 'A' . 
+                ${ex.OperationB} a ${hydra.SupportedOperation} ; ${ex.custom} 'B' .
+                ${ex.OperationC} a ${hydra.SupportedOperation} ; ${ex.custom} 'C' .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
             `))
             const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -479,20 +558,25 @@ describe('OperationFinder', () => {
     describe('findOperationsDeep', () => {
         it('called without parameters finds non-get operations from children', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:ClassWithGet, ex:ClassWithPut, ex:ClassWithPost .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.ClassWithGet}, ${ex.ClassWithPut}, ${ex.ClassWithPost} .
                     
-                ex:ClassWithGet a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ; hydra:method "GET" ] .
-                ex:ClassWithPut a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ; hydra:method "PUT" ] .
-                ex:ClassWithPost a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ; hydra:method "POST" ] .
-                    
-                <http://example.com/> a ex:ClassWithGet; ex:hasChild <http://example.com/child> .
-                <http://example.com/child> a ex:ClassWithPost ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:ClassWithPost .
+                ${ex.ClassWithGet} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "GET" ] .
+                ${ex.ClassWithPut} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "PUT" ] .
+                ${ex.ClassWithPost} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "POST" ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.ClassWithGet}; ${ex.hasChild} <http://example.com/child> .
+                <http://example.com/child> a ${ex.ClassWithPost} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.ClassWithPost} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -508,16 +592,21 @@ describe('OperationFinder', () => {
 
         it('uses first parameter to stop optionally drilling down', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation [ a hydra:SupportedOperation ] .
-                    
-                <http://example.com/> a ex:Class; ex:hasChild <http://example.com/child> .
-                <http://example.com/child> a ex:Class ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class}; ${ex.hasChild} <http://example.com/child> .
+                <http://example.com/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.Class} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
@@ -535,18 +624,23 @@ describe('OperationFinder', () => {
 
         it('filters operations by criteria', async () => {
             // given
-            await graph.dataset.import(parse(`
-                ex:api a hydra:ApiDocumentation ;
-                    hydra:supportedClass ex:Class .
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
                     
-                ex:Class a hydra:Class ;
-                    hydra:supportedOperation 
-                        [ a hydra:SupportedOperation ; hydra:method "GET" ] ,
-                        [ a hydra:SupportedOperation ; hydra:method "POST" ].
-                    
-                <http://example.com/> a ex:Class ; ex:hasChild <http://example.com/child> .
-                <http://example.com/child> a ex:Class ; ex:hasChild <http://example.com/child/child> .
-                <http://example.com/child/child> a ex:Class .
+                ${ex.Class} a ${hydra.Class} ;
+                    ${hydra.supportedOperation} 
+                        [ a ${hydra.SupportedOperation} ; ${hydra.method} "GET" ] ,
+                        [ a ${hydra.SupportedOperation} ; ${hydra.method} "POST" ].
+            `)
+            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child> .
+                <http://example.com/child> a ${ex.Class} ; ${ex.hasChild} <http://example.com/child/child> .
+                <http://example.com/child/child> a ${ex.Class} .
             `))
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 

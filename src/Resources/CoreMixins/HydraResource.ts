@@ -8,16 +8,16 @@ import { Class, SupportedProperty, SupportedOperation } from '..'
 import Operation from '../Operation'
 
 export function createHydraResourceMixin (alcaeus: HydraClient) {
+    function getSupportedClasses (resource: RdfResource) {
+        return alcaeus.apiDocumentations
+            .reduce<Class[]>((classes, docs) => [...classes, ...docs.classes.filter(c => resource.types.has(c))], [])
+    }
+
     function HydraResourceMixin<Base extends Constructor<HydraResource>> (base: Base) {
         class HydraResourceClass extends base implements HydraResource {
             public get operations () {
-                const classOperations = [...this.types.values()].reduce((operations, clas: RdfResource | Class) => {
-                    if ('supportedOperations' in clas) {
-                        return [...operations, ...clas.supportedOperations]
-                    }
-
-                    return operations
-                }, [] as SupportedOperation[])
+                const classOperations = getSupportedClasses(this)
+                    .reduce<SupportedOperation[]>((operations, clas: Class) => [...operations, ...clas.supportedOperations], [])
 
                 const propertyOperations = [...this._selfGraph.dataset.match(null, null, this._selfGraph.term)]
                     .reduce((operations, quad) => {
@@ -26,8 +26,8 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
                         }
 
                         const subject = this._create(this._selfGraph.namedNode(quad.subject))
-                        return [...subject.types.values()].reduce((operations, clas: RdfResource | Class) => {
-                            if ('supportedProperties' in clas) {
+                        return getSupportedClasses(subject)
+                            .reduce((operations, clas: Class) => {
                                 const supportedProperty = clas.supportedProperties.find((prop: SupportedProperty) => {
                                     return prop.property && quad.predicate.equals(prop.property.id)
                                 })
@@ -35,10 +35,9 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
                                 if (supportedProperty) {
                                     return [...operations, ...supportedProperty.property.supportedOperations]
                                 }
-                            }
 
-                            return operations
-                        }, operations)
+                                return operations
+                            }, operations)
                     }, [] as SupportedOperation[])
 
                 const supportedOperations: SupportedOperation[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
@@ -64,13 +63,8 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
             }
 
             public getProperties (): { supportedProperty: SupportedProperty; objects: any[] }[] {
-                const classProperties = [...this.types.values()].reduce((properties, clas: RdfResource | Class) => {
-                    if ('supportedProperties' in clas) {
-                        return [...properties, clas.supportedProperties]
-                    }
-
-                    return properties
-                }, [] as SupportedProperty[][])
+                const classProperties = getSupportedClasses(this)
+                    .reduce<SupportedProperty[][]>((operations, clas: Class) => [...operations, clas.supportedProperties], [])
 
                 return classProperties.reduce((current, supportedProperties) => {
                     const next = supportedProperties

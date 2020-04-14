@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.12](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2020-04-14)
+
+
+### Bug Fixes
+
+* operations are searched in the resource's graph only ([25d3aba](https://github.com/wikibus/alcaeus/commit/25d3abad0392c800d8909700a8113d02e6cc809a))
+
 ## [1.0.0-alpha.11](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2020-04-02)
 
 

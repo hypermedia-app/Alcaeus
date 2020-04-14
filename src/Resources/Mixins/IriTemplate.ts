@@ -7,7 +7,7 @@ export interface IriTemplate extends HydraResource {
     template: string;
     mappings: IriTemplateMapping[];
     variableRepresentation: HydraResource;
-    expand(mode: any): string;
+    expand(model: any): string;
 }
 
 export function IriTemplateMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {

@@ -36,7 +36,7 @@
   "homepage": "https://github.com/wikibus/alcaeus#readme",
   "dependencies": {
     "@rdfjs/sink-map": "^1.0.1",
-    "@tpluscode/rdfine": "^0.4",
+    "@tpluscode/rdfine": "^0.4.2",
     "@tpluscode/rdf-ns-builders": "^0.1",
     "es6-url-template": "^1.0.3",
     "esm": "^3.2.25",

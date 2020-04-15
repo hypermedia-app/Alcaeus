@@ -1,21 +1,27 @@
+import { turtle } from '@tpluscode/rdf-string'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
+import stringToStream from 'string-to-stream'
+import Parser from '@rdfjs/parser-n3'
 import { ClassMixin } from '../../src/Resources/Mixins/Class'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Resource } from './_TestResource'
 import * as graphs from './Class-spec-graphs'
 
+const parser = new Parser()
 const vocab = namespace('http://example.com/vocab#')
 
 class Class extends ClassMixin(Resource) {}
 
 describe('Class', () => {
     let hydraClassNode: SingleContextClownface<NamedNode>
+    let dataset
 
     beforeEach(() => {
-        hydraClassNode = cf({ dataset: $rdf.dataset() })
+        dataset = $rdf.dataset()
+        hydraClassNode = cf({ dataset })
             .namedNode('http://example.com/vocab#SomeClass')
     })
 
@@ -29,6 +35,32 @@ describe('Class', () => {
 
             // then
             expect(clas.supportedOperations.length).toBe(1)
+        })
+
+        it('should return from every graph', async () => {
+            // then
+            await dataset.import(parser.import(stringToStream(turtle`
+                ${vocab.G1} {
+                    ${vocab.SomeClass} ${hydra.supportedOperation} [
+                       ${hydra.title} "Operation 1"
+                    ] .
+                }
+
+                ${vocab.G2} {
+                    ${vocab.SomeClass} ${hydra.supportedOperation} [
+                        ${hydra.title} "Operation 2"
+                    ] .
+                }
+            `.toString())))
+
+            // when
+            const clas = new Class(hydraClassNode)
+
+            // then
+            expect(clas.supportedOperations.length).toBe(2)
+            expect(clas.supportedOperations.map(so => so.title)).toEqual(
+                expect.arrayContaining(['Operation 1', 'Operation 2'])
+            )
         })
 
         it('should return empty array if property is missing', () => {

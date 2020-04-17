@@ -8,7 +8,6 @@ import * as mixins from './ResourceFactoryDefaults'
 import { AllDefault, RootSelector } from './RootSelectors'
 import Resource from './Resources/Resource'
 
-export { Alcaeus } from './alcaeus'
 export { default as Resource } from './Resources/Resource'
 export { ResourceIdentifier, ResourceIndexer } from '@tpluscode/rdfine'
 export * from './Resources/index'

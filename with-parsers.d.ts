@@ -1,4 +1,4 @@
-import { Alcaeus } from './src/alcaeus'
+import { Alcaeus } from './alcaeus'
 
 declare const client: Alcaeus
 

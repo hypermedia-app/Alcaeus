@@ -5,15 +5,13 @@ import { DatasetCore, Stream } from 'rdf-js'
 import { Alcaeus, HydraClient } from './alcaeus'
 import * as coreMixins from './Resources/CoreMixins'
 import * as mixins from './ResourceFactoryDefaults'
-import { AllDefault, RootSelector } from './RootSelectors'
+import { defaultSelectors, RootSelector } from './RootSelectors'
 import Resource from './Resources/Resource'
 
 export { default as Resource } from './Resources/Resource'
 export { ResourceIdentifier, ResourceIndexer } from '@tpluscode/rdfine'
 export * from './Resources/index'
 export { Operation } from './Resources/Operation'
-
-export const defaultRootSelectors = Object.values(AllDefault)
 
 interface AlcaeusInit {
     rootSelectors?: RootSelector[];
@@ -29,7 +27,7 @@ export function create ({ rootSelectors, parsers }: AlcaeusInit = {}): HydraClie
     }
 
     factory = new ResourceFactory(HydraResource)
-    const alcaeus = new Alcaeus(rootSelectors || defaultRootSelectors, factory)
+    const alcaeus = new Alcaeus(rootSelectors || Object.values(defaultSelectors), factory)
 
     if (parsers) {
         parsers.forEach((parser, mediaType) => alcaeus.parsers.set(mediaType, parser))

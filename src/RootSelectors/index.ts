@@ -13,10 +13,10 @@ export interface RootSelector {
     selectRoot(resources: ResourceGraph, response: ResponseWrapper & HydraResponse): HydraResource | undefined;
 }
 
-export const AllDefault = {
-    1: PartialCollectionViewSelector(CanonicalLinkSelector),
-    2: PartialCollectionViewSelector(LocationSelector),
-    3: PartialCollectionViewSelector(ExactIdMatchSelector),
-    4: PartialCollectionViewSelector(TrailingSlashSelector),
-    5: PartialCollectionViewSelector(RedirectTargetSelector),
+export const defaultSelectors = {
+    'CanonicalLink': PartialCollectionViewSelector(CanonicalLinkSelector),
+    'LocationHeader': PartialCollectionViewSelector(LocationSelector),
+    'ExactId': PartialCollectionViewSelector(ExactIdMatchSelector),
+    'TrailingSlash': PartialCollectionViewSelector(TrailingSlashSelector),
+    'Redirect': PartialCollectionViewSelector(RedirectTargetSelector),
 }

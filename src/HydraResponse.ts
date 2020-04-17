@@ -49,6 +49,10 @@ export function create (
         }))
     }
 
+    function byInProperties (left: HydraResource, right: HydraResource) {
+        return left._selfGraph.in().terms.length - right._selfGraph.in().terms.length
+    }
+
     class HydraResponseWrapper extends ResponseWrapperImpl implements HydraResponse {
         public constructor (requestedUri: string) {
             super(requestedUri, response.xhr)
@@ -59,13 +63,17 @@ export function create (
         }
 
         public get root () {
-            return alcaeus.rootSelectors.reduce((resource: HydraResource | undefined, selector) => {
-                if (!resource) {
-                    resource = selector.selectRoot(resources, this)
+            const potentialRoots = alcaeus.rootSelectors.reduceRight<HydraResource[]>((candidates, selector) => {
+                const candidate = selector.selectRoot(resources, this)
+                if (candidate) {
+                    return [...candidates, candidate]
                 }
 
-                return resource
-            }, undefined) || null
+                return candidates
+            }, [])
+
+            // selects the resource which is object of least relations in graph
+            return potentialRoots.sort(byInProperties)[0]
         }
 
         public get length (): number {

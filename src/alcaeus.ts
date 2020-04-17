@@ -23,13 +23,12 @@ export interface HydraClient {
     rootSelectors: RootSelector[];
     parsers: SinkMap<EventEmitter, Stream>;
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>;
-    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): void;
+    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation | null>;
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
     dataset: DatasetExt;
     factory: ResourceFactory;
     apiDocumentations: ApiDocumentation[];
-    apiDocumentationRequests: Promise<void>;
 }
 
 function stripContentTypeParameters (mediaType: string) {
@@ -74,8 +73,6 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
 
     public readonly factory: ResourceFactory<DatasetCore, R>
 
-    private readonly __documentationPromises: Map<string, Promise<void>> = new Map()
-
     private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
 
     public constructor (
@@ -84,10 +81,6 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
     ) {
         this.rootSelectors = rootSelectors
         this.factory = factory
-    }
-
-    public get apiDocumentationRequests () {
-        return Promise.all(this.__documentationPromises.values()).then(() => {})
     }
 
     public get apiDocumentations () {
@@ -100,23 +93,23 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
         const response = await FetchUtil.fetchResource(uri, this.parsers, this.__mergeHeaders(new Headers(headers)))
         await addOrReplaceGraph(this, response, uri)
         if (dereferenceApiDocumentation) {
-            this.__getApiDocumentation(response, headers)
+            await this.__getApiDocumentation(response, headers)
         }
 
         return create(uri, response, this.dataset, this.factory, this)
     }
 
-    public loadDocumentation (id: string | NamedNode, headers: HeadersInit = {}) {
+    public async loadDocumentation (id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation | null> {
         const uri: string = typeof id === 'string' ? id : id.value
 
-        const docsPromise = this.loadResource<ApiDocumentation>(uri, headers, false)
-            .then(response => {
-                const apiDocs = response.root
-                if (apiDocs && 'classes' in apiDocs) {
-                    this.__apiDocumentations.set(uri, apiDocs)
-                }
-            })
-        this.__documentationPromises.set(uri, docsPromise)
+        const response = await this.loadResource<ApiDocumentation>(uri, headers, false)
+        const apiDocs = response.root
+        if (apiDocs && 'classes' in apiDocs) {
+            this.__apiDocumentations.set(uri, apiDocs)
+            return apiDocs
+        }
+
+        return null
     }
 
     public async invokeOperation (operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse> {
@@ -124,7 +117,7 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
         const uri = operation.target.id.value
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, this.parsers, mergedHeaders, body)
-        this.__getApiDocumentation(response, headers)
+        await this.__getApiDocumentation(response, headers)
 
         if (operation.method.toUpperCase() === 'GET') {
             await addOrReplaceGraph(this, response, uri)
@@ -140,13 +133,13 @@ export class Alcaeus<R extends HydraResource = never> implements HydraClient {
         return create(uri, response, dataset, this.factory, this)
     }
 
-    private __getApiDocumentation (response: ResponseWrapper, headers: HeadersInit) {
+    private async __getApiDocumentation (response: ResponseWrapper, headers: HeadersInit): Promise<void> {
         if (!response.apiDocumentationLink) {
             console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
             return
         }
 
-        this.loadDocumentation(response.apiDocumentationLink, headers)
+        await this.loadDocumentation(response.apiDocumentationLink, headers)
     }
 
     private __mergeHeaders (headers: Headers): Headers {

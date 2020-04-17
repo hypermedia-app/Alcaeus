@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.14](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2020-04-17)
+
+
+### Features
+
+* **node:** add a cjs module exporting client with all parsers ([59f8311](https://github.com/wikibus/alcaeus/commit/59f8311fdc77a58a77c3cd332e337d935b6239d6))
+
+
+### Bug Fixes
+
+* initializing alcaeus with parsers ([afd6e37](https://github.com/wikibus/alcaeus/commit/afd6e37999315a223c409f7af1a0fa000e323d57))
+
 ## [1.0.0-alpha.13](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2020-04-15)
 
 ## [1.0.0-alpha.12](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2020-04-14)

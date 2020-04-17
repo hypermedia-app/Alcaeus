@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.15](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2020-04-17)
+
+
+### Bug Fixes
+
+* improve how root is selected by checking graph connections ([2d36689](https://github.com/wikibus/alcaeus/commit/2d36689c38f000eb5454f05ac75df374629b6855)), closes [#161](https://github.com/wikibus/alcaeus/issues/161)
+* operation finder should not traverse graphs ([049f74a](https://github.com/wikibus/alcaeus/commit/049f74a046032e5bf4851b847d087fa22a7102d4))
+
 ## [1.0.0-alpha.14](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2020-04-17)
 
 

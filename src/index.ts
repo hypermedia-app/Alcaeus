@@ -1,6 +1,7 @@
+import { SinkMap } from '@rdfjs/sink-map'
 import { EventEmitter } from 'events'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
-import { DatasetCore, Sink, Stream } from 'rdf-js'
+import { DatasetCore, Stream } from 'rdf-js'
 import { Alcaeus, HydraClient } from './alcaeus'
 import * as coreMixins from './Resources/CoreMixins'
 import * as mixins from './ResourceFactoryDefaults'
@@ -17,7 +18,7 @@ export const defaultRootSelectors = Object.values(AllDefault)
 
 interface AlcaeusInit {
     rootSelectors?: RootSelector[];
-    parsers?: Record<string, Sink<EventEmitter, Stream>>;
+    parsers?: SinkMap<EventEmitter, Stream>;
 }
 
 export function create ({ rootSelectors, parsers }: AlcaeusInit = {}): HydraClient {
@@ -32,7 +33,7 @@ export function create ({ rootSelectors, parsers }: AlcaeusInit = {}): HydraClie
     const alcaeus = new Alcaeus(rootSelectors || defaultRootSelectors, factory)
 
     if (parsers) {
-        Object.entries(parsers).forEach(pair => alcaeus.parsers.set(...pair))
+        parsers.forEach((parser, mediaType) => alcaeus.parsers.set(mediaType, parser))
     }
 
     factory.addMixin(coreMixins.createResourceLoaderMixin(alcaeus))

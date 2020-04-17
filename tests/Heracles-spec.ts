@@ -2,6 +2,7 @@ import 'core-js/es6/array'
 import 'core-js/es6/object'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
+import SinkMap from '@rdfjs/sink-map'
 import * as Constants from './Constants'
 import { create } from '../src'
 import { HydraClient } from '../src/alcaeus'
@@ -18,7 +19,9 @@ const ex = namespace('http://example.com/')
 const fetchResource = (FetchUtil.fetchResource as jest.Mock).mockResolvedValue({})
 const invokeOperation = (FetchUtil.invokeOperation as jest.Mock).mockResolvedValue({})
 
-const parsers = { [Constants.MediaTypes.jsonLd]: new JsonLdParser() }
+const parsers = new SinkMap([
+    [Constants.MediaTypes.jsonLd, new JsonLdParser()],
+])
 
 describe('Hydra loadDocumentation', () => {
     let client: HydraClient

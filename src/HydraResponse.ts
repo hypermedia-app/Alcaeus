@@ -73,7 +73,7 @@ export function create (
             }, [])
 
             // selects the resource which is object of least relations in graph
-            return potentialRoots.sort(byInProperties)[0]
+            return potentialRoots.sort(byInProperties)[0] || null
         }
 
         public get length (): number {

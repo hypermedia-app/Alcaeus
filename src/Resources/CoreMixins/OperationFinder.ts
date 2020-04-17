@@ -163,7 +163,7 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>> (
         public getOperationsDeep (
             stopConditions: RecursiveStopConditions = { excludedProperties: [hydra.member, rdf.type] },
             previousResources: this[] = []) {
-            const childResources = [...this._selfGraph.dataset.match(this.id)]
+            const childResources = [...this._selfGraph.dataset.match(this.id, null, null, this._graphId)]
                 .filter(excludedProperties(stopConditions))
                 .reduce<this[]>(toResourceNodes(this, [OperationFinderMixin]), [])
 

@@ -10,7 +10,7 @@ const parser = new Parser()
 
 export function responseBuilder () {
     let statusCode = 200
-    let responseBody = '{}'
+    let responseBody: any
     let responseUri
     const headers = {
         'Content-Type': MediaTypes.jsonLd,
@@ -20,9 +20,9 @@ export function responseBuilder () {
 
         body (body: string | object, contentType = MediaTypes.jsonLd) {
             if (typeof body === 'object') {
-                responseBody = JSON.stringify(body)
+                responseBody = stringToStream(JSON.stringify(body))
             } else {
-                responseBody = body as string
+                responseBody = stringToStream(body)
             }
             headers['Content-Type'] = contentType
             return this

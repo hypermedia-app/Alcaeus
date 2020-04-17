@@ -1,5 +1,6 @@
 import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
+import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { HydraClient } from './alcaeus'
@@ -33,10 +34,10 @@ export interface HydraResponse<T extends RdfResource = HydraResource> extends It
     ofType(classId: string | NamedNode): HydraResource[];
 }
 
-export function create (
+export function create <D extends DatasetIndexed> (
     uri: string,
     response: ResponseWrapper,
-    dataset: DatasetCore,
+    dataset: D,
     factory: ResourceFactory,
     alcaeus: Pick<HydraClient, 'rootSelectors'>): HydraResponse {
     const representationGraph = cf({ dataset, graph: $rdf.namedNode(uri) })

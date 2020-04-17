@@ -1,12 +1,13 @@
 import { EventEmitter } from 'events'
 import Parsers, { SinkMap } from '@rdfjs/sink-map'
 import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
-import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import createDataset from 'rdf-dataset-indexed'
+import $rdf from '@rdfjs/data-model'
+import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { DatasetCore, NamedNode, Stream } from 'rdf-js'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
-import stringToStream from 'string-to-stream'
 import * as FetchUtil from './FetchUtil'
+import { patchResponseBody } from './helpers/fetchToStream'
 import { merge } from './helpers/MergeHeaders'
 import { HydraResponse, create } from './HydraResponse'
 import RdfProcessor from './RdfProcessor'
@@ -19,14 +20,14 @@ type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<HydraResource, 'id'>;
 }
 
-export interface HydraClient {
+export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     rootSelectors: RootSelector[];
     parsers: SinkMap<EventEmitter, Stream>;
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>;
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation | null>;
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
-    dataset: DatasetExt;
+    dataset: D;
     factory: ResourceFactory;
     apiDocumentations: ApiDocumentation[];
 }
@@ -36,8 +37,7 @@ function stripContentTypeParameters (mediaType: string) {
 }
 
 async function parseResponse (uri: string, alcaeus: HydraClient, response: ResponseWrapper): Promise<Stream | null> {
-    const responseText = await response.xhr.text()
-    const quadStream = alcaeus.parsers.import(stripContentTypeParameters(response.mediaType), stringToStream(responseText))
+    const quadStream = alcaeus.parsers.import(stripContentTypeParameters(response.mediaType), patchResponseBody(response.xhr))
     if (quadStream == null) {
         console.warn(`No parser found for media type ${response.mediaType}`)
         return null
@@ -62,25 +62,29 @@ const addOrReplaceGraph = async (
         .import(parsedTriples)
 }
 
-export class Alcaeus<R extends HydraResource = never> implements HydraClient {
+interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> {
+    rootSelectors: RootSelector[];
+    factory: ResourceFactory<DatasetCore, R>;
+    dataset: D;
+}
+
+export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
     public rootSelectors: RootSelector[];
 
     public parsers = new Parsers<EventEmitter, Stream>();
 
     public defaultHeaders: HeadersInit | (() => HeadersInit) = {}
 
-    public readonly dataset: DatasetExt = $rdf.dataset()
+    public readonly dataset: D
 
     public readonly factory: ResourceFactory<DatasetCore, R>
 
     private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
 
-    public constructor (
-        rootSelectors: RootSelector[],
-        factory: ResourceFactory<DatasetCore, R>
-    ) {
+    public constructor ({ rootSelectors, factory, dataset }: AlcaeusInit) {
         this.rootSelectors = rootSelectors
         this.factory = factory
+        this.dataset = dataset || createDataset() as any
     }
 
     public get apiDocumentations () {

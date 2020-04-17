@@ -3,6 +3,8 @@ import 'core-js/es6/object'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
 import SinkMap from '@rdfjs/sink-map'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import $rdf from 'rdf-ext'
 import * as Constants from './Constants'
 import { create } from '../src'
 import { HydraClient } from '../src/alcaeus'
@@ -24,11 +26,12 @@ const parsers = new SinkMap([
 ])
 
 describe('Hydra loadDocumentation', () => {
-    let client: HydraClient
+    let client: HydraClient<DatasetExt>
 
     beforeEach(() => {
         client = create({
             parsers,
+            dataset: $rdf.dataset(),
         })
     })
 

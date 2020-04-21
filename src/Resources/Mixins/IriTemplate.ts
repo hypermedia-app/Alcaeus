@@ -12,7 +12,7 @@ export interface IriTemplate extends HydraResource {
 
 export function IriTemplateMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
     @namespace(hydra)
-    class IriTemplateClass extends Base implements IriTemplate {
+    abstract class IriTemplateClass extends Base implements IriTemplate {
         @property.literal()
         public template!: string
 
@@ -28,9 +28,7 @@ export function IriTemplateMixin<TBase extends Constructor<HydraResource>> (Base
         })
         public variableRepresentation!: HydraResource
 
-        public expand (): string {
-            throw new Error('Not implemented')
-        }
+        public abstract expand (): string
     }
 
     return IriTemplateClass

@@ -1,5 +1,6 @@
 import { Constructor } from '@tpluscode/rdfine'
 import URITemplate from 'es6-url-template'
+import url from 'url'
 import { IriTemplate } from './IriTemplate'
 import { IriTemplateMapping } from './IriTemplateMapping'
 
@@ -16,8 +17,13 @@ export default function <TBase extends Constructor<IriTemplate>> (Base: TBase) {
             const uriTemplate = new URITemplate(this.template)
 
             const variables = this.buildExpansionModel(this.mappings, model)
+            const expanded = uriTemplate.expand(variables)
 
-            return uriTemplate.expand(variables)
+            if (this._parent && this._parent.id.termType === 'NamedNode') {
+                return url.resolve(this._parent.id.value, expanded)
+            }
+
+            return expanded
         }
 
         public buildExpansionModel (mappings: IriTemplateMapping[], model: object) {

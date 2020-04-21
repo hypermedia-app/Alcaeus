@@ -38,7 +38,7 @@
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/sink-map": "^1.0.1",
     "@tpluscode/rdf-ns-builders": "^0.1",
-    "@tpluscode/rdfine": "^0.4.6",
+    "@tpluscode/rdfine": "^0.4.7",
     "es6-url-template": "^1.0.3",
     "esm": "^3.2.25",
     "isomorphic-fetch": "^2.2.1",

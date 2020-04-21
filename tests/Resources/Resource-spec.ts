@@ -12,40 +12,6 @@ describe('Resource', () => {
         graph = cf({ dataset: $rdf.dataset() })
     })
 
-    describe('isAnonymous', () => {
-        it('should be non-enumerable', () => {
-            expect(Object.getOwnPropertyDescriptor(Resource.prototype, 'isAnonymous')!.enumerable)
-                .toBe(false)
-        })
-
-        it('returns true when id in an URL', () => {
-            // given
-            const node = graph.namedNode('https://example.com/res')
-            const resource = new Resource(node)
-
-            // then
-            expect(resource.isAnonymous).toBeFalsy()
-        })
-
-        it('returns true when id in an URN', () => {
-            // given
-            const node = graph.namedNode('urn:not:uri')
-            const resource = new Resource(node)
-
-            // then
-            expect(resource.isAnonymous).toBeFalsy()
-        })
-
-        it('returns true when id in an blank identifier', () => {
-            // given
-            const node = graph.blankNode()
-            const resource = new Resource(node)
-
-            // then
-            expect(resource.isAnonymous).toBeTruthy()
-        })
-    })
-
     describe('getBoolean', () => {
         it('throws when value is not boolean', () => {
             const node = graph.blankNode()

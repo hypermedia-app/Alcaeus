@@ -19,7 +19,7 @@ export default function <TBase extends Constructor<IriTemplate>> (Base: TBase) {
             const variables = this.buildExpansionModel(this.mappings, model)
             const expanded = uriTemplate.expand(variables)
 
-            if (this._parent && this._parent.id.termType === 'NamedNode') {
+            if (this._parent && !this._parent.isAnonymous) {
                 return url.resolve(this._parent.id.value, expanded)
             }
 

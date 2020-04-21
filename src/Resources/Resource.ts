@@ -1,13 +1,8 @@
 import RdfResourceImpl, { RdfResource } from '@tpluscode/rdfine'
-import nonenumerable from '../helpers/nonenumerable'
 import { NamedNode, Term } from 'rdf-js'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 
 export interface Resource extends RdfResource {
-    /**
-     * Gets a value indicating whether the resource is a blank node
-     */
-    isAnonymous: boolean;
     /**
      * Gets the value of a property
      * @param property
@@ -36,11 +31,6 @@ export interface Resource extends RdfResource {
 }
 
 export default class ResourceImpl extends RdfResourceImpl implements Resource {
-    @nonenumerable
-    public get isAnonymous () {
-        return this.id.termType === 'BlankNode'
-    }
-
     public get<T extends RdfResource = RdfResource> (property: string | NamedNode, { strict } = { strict: false }): T | null {
         let propertyNode = typeof property === 'string' ? this._selfGraph.namedNode(property) : property
 

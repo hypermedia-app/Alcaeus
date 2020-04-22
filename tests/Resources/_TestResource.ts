@@ -1,10 +1,10 @@
+import RdfResource from '@tpluscode/rdfine'
 import { HydraResource, SupportedProperty } from '../../src/Resources'
 import { Criteria, RecursiveStopConditions } from '../../src/Resources/CoreMixins/OperationFinder'
 import { ManagesBlockPattern } from '../../src/Resources/Mixins/ManagesBlock'
 import { Operation } from '../../src/Resources/Operation'
-import Base from '../../src/Resources/Resource'
 
-export class Resource extends Base implements HydraResource {
+export class Resource extends RdfResource implements HydraResource {
     [prop: string]: unknown | unknown[];
 
     public get operations (): Operation[] {

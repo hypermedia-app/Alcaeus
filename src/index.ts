@@ -1,5 +1,6 @@
 import { SinkMap } from '@rdfjs/sink-map'
 import { EventEmitter } from 'events'
+import RdfResource from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import { DatasetCore, Stream } from 'rdf-js'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
@@ -7,9 +8,7 @@ import { Alcaeus, HydraClient } from './alcaeus'
 import * as coreMixins from './Resources/CoreMixins'
 import * as mixins from './ResourceFactoryDefaults'
 import { defaultSelectors, RootSelector } from './RootSelectors'
-import Resource from './Resources/Resource'
 
-export { default as Resource } from './Resources/Resource'
 export { ResourceIdentifier, ResourceIndexer } from '@tpluscode/rdfine'
 export * from './Resources/index'
 export { Operation } from './Resources/Operation'
@@ -22,7 +21,7 @@ interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
 
 export function create <D extends DatasetIndexed = DatasetIndexed> ({ rootSelectors, parsers, dataset }: AlcaeusInit<D> = {}): HydraClient<D> {
     let factory: ResourceFactory<DatasetCore, HydraResource>
-    class HydraResource extends Resource {
+    class HydraResource extends RdfResource {
         public static get factory () {
             return factory
         }

@@ -1,9 +1,8 @@
-import { RdfResource } from '@tpluscode/rdfine'
+import Resource, { RdfResource } from '@tpluscode/rdfine'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
 import { RdfProperty } from '../../../src/Resources/Mixins/RdfProperty'
-import Resource from '../../../src/Resources/Resource'
 import { ManagesBlockMixin } from '../../../src/Resources/Mixins/ManagesBlock'
 import { foaf, hydra, rdf } from '@tpluscode/rdf-ns-builders'
 

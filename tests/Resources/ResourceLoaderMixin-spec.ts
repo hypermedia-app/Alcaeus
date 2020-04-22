@@ -2,7 +2,7 @@ import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import { createResourceLoaderMixin } from '../../src/Resources/CoreMixins'
-import Resource from '../../src/Resources/Resource'
+import Resource from '@tpluscode/rdfine'
 
 describe('ResourceLoaderMixin', () => {
     describe('shouldApply', () => {

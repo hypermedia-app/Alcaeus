@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import namespace from '@rdfjs/namespace'
 import { create as HydraResponse } from '../src/HydraResponse'
-import Resource from '../src/Resources/Resource'
+import Resource from '@tpluscode/rdfine'
 import { ResponseWrapper } from '../src/ResponseWrapper'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 

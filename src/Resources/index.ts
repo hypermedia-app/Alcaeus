@@ -3,10 +3,9 @@ import { HydraResponse } from '../HydraResponse'
 import { OperationFinder } from './CoreMixins/OperationFinder'
 import { ManagesBlockPattern } from './Mixins/ManagesBlock'
 import { Operation } from './Operation'
-import { Resource } from './Resource'
 import { SupportedProperty } from './Mixins/SupportedProperty'
 
-export interface HydraResource extends RdfResource, Resource, OperationFinder {
+export interface HydraResource extends RdfResource, OperationFinder {
     /**
      * Gets the operations which can be performed on this resource
      */

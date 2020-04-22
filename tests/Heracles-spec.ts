@@ -72,6 +72,25 @@ describe('Hydra loadDocumentation', () => {
         // then
         expect(client.dataset.toCanonical()).toMatchSnapshot()
     })
+
+    it(`passes base URI to fetch`, async () => {
+        // given
+        fetchResource.mockResolvedValueOnce(mockedResponse({
+            xhrBuilder: responseBuilder().body(''),
+        }))
+        client.baseUri = 'http://example.com/foo/'
+
+        // when
+        await client.loadDocumentation('bar/docs')
+
+        // then
+        expect(fetchResource)
+            .toHaveBeenCalledWith(
+                'bar/docs',
+                expect.objectContaining({
+                    baseUri: 'http://example.com/foo/',
+                }))
+    })
 })
 
 describe('Hydra', () => {
@@ -355,9 +374,10 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', expect.anything(), new Headers({
+                    'uri',
+                    expect.objectContaining({ headers: new Headers({
                         'authorization': 'Bearer foobar',
-                    }))
+                    }) }))
             })
 
             it('passes them to invokeOperation', () => {
@@ -380,11 +400,11 @@ describe('Hydra', () => {
                     .toHaveBeenCalledWith(
                         'post',
                         ex.uri.value,
-                        expect.anything(),
-                        new Headers({
-                            'authorization': 'Bearer foobar',
-                        }),
-                        undefined,)
+                        expect.objectContaining({
+                            headers: new Headers({
+                                'authorization': 'Bearer foobar',
+                            }),
+                        }))
             })
 
             it('passes them to loadDocumentation', () => {
@@ -398,8 +418,10 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'doc', expect.anything(), new Headers({
-                        'authorization': 'Bearer foobar',
+                    'doc', expect.objectContaining({
+                        headers: new Headers({
+                            'authorization': 'Bearer foobar',
+                        }),
                     }))
             })
         })
@@ -416,9 +438,9 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', expect.anything(), new Headers({
+                    'uri', expect.objectContaining({ headers: new Headers({
                         'authorization': 'Token xyz',
-                    }))
+                    }) }))
             })
 
             it('passes them to loadDocumentation', () => {
@@ -432,8 +454,10 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'doc', expect.anything(), new Headers({
-                        'authorization': 'Token xyz',
+                    'doc', expect.objectContaining({
+                        headers: new Headers({
+                            'authorization': 'Token xyz',
+                        }),
                     }))
             })
 
@@ -457,11 +481,11 @@ describe('Hydra', () => {
                     .toHaveBeenCalledWith(
                         'post',
                         ex.uri.value,
-                        expect.anything(),
-                        new Headers({
-                            'authorization': 'Token xyz',
-                        }),
-                        undefined)
+                        expect.objectContaining({
+                            headers: new Headers({
+                                'authorization': 'Token xyz',
+                            }),
+                        }))
             })
         })
     })

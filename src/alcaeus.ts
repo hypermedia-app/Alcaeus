@@ -21,6 +21,7 @@ type InvokedOperation = Pick<Operation, 'method'> & {
 }
 
 export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
+    baseUri?: string;
     rootSelectors: RootSelector[];
     parsers: SinkMap<EventEmitter, Stream>;
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>;
@@ -69,6 +70,8 @@ interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed 
 }
 
 export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
+    public baseUri?: string = undefined;
+
     public rootSelectors: RootSelector[];
 
     public parsers = new Parsers<EventEmitter, Stream>();
@@ -94,7 +97,11 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
     public async loadResource <T extends RdfResource> (id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<T>> {
         const uri = typeof id === 'string' ? id : id.value
 
-        const response = await FetchUtil.fetchResource(uri, this.parsers, this.__mergeHeaders(new Headers(headers)))
+        const response = await FetchUtil.fetchResource(uri, {
+            parsers: this.parsers,
+            baseUri: this.baseUri,
+            headers: this.__mergeHeaders(new Headers(headers)),
+        })
         await addOrReplaceGraph(this, response, uri)
         if (dereferenceApiDocumentation) {
             await this.__getApiDocumentation(response, headers)
@@ -120,7 +127,12 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
         const uri = operation.target.id.value
 
-        const response = await FetchUtil.invokeOperation(operation.method, uri, this.parsers, mergedHeaders, body)
+        const response = await FetchUtil.invokeOperation(operation.method, uri, {
+            parsers: this.parsers,
+            headers: mergedHeaders,
+            body,
+            baseUri: this.baseUri,
+        })
         await this.__getApiDocumentation(response, headers)
 
         if (operation.method.toUpperCase() === 'GET') {

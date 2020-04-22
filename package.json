@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/wikibus/alcaeus/issues"
   },
-  "homepage": "https://github.com/wikibus/alcaeus#readme",
+  "homepage": "https://alcaeus.hydra.how",
   "dependencies": {
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/sink-map": "^1.0.1",

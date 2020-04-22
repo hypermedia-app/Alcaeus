@@ -46,7 +46,7 @@
     "parse-link-header": "^1.0.1",
     "rdf-dataset-indexed": "^0.4.0",
     "rdf-transform-triple-to-quad": "^1.0.2",
-    "readable-stream": "^2.2.1"
+    "readable-stream": "^3.6.0"
   },
   "devDependencies": {
     "@babel/helper-create-class-features-plugin": "^7.9.5",

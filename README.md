@@ -12,21 +12,26 @@ Alcaeus is the birth name of Heracles. The demigod who defeated Hydra.
 Use npm or yarn:
 
 ``` bash
-yarn add alcaeus
+npm i -S alcaeus
 ```
 
 ## Usage
 
 ``` js
-import {Hydra} from 'alcaeus';
+import Hydra from 'alcaeus';
+import Parser from '@rdfjs/parser-n3';
+
+Hydra.parsers.set('text/turtle', Parser);
+
+// Alternatively, use an import which loads @rdfjs/parsers-common
+// import Hydra from 'alcaeus/with-parsers'
 
 const representation = await Hydra.loadResource('http://example.com/resource');
 const rootResource = representation.root;
 
 // contains supported classes, operations, etc.
-const apiDocs = rootResource.apiDocumentation;
+const apiDocs = Hydra.apiDocumentations[0];
     
-// same as rootResource['@id']
 const id = rootResource.id; 
 ```
 

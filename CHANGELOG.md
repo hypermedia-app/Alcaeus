@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2020-04-23)
+
+
+### Bug Fixes
+
+* add required transitive dependencies to package.json ([57ab8ce](https://github.com/wikibus/alcaeus/commit/57ab8cea9c690ce4e8e25ce0a4dad2ca1e3dab49))
+
 ## [1.0.0-beta.0](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.16...v1.0.0-beta.0) (2020-04-23)
 
 ## [1.0.0-alpha.16](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2020-04-22)

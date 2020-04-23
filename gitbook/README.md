@@ -17,7 +17,7 @@ $ npm install --save alcaeus
 Typically one would import an instance set up with sensible defaults
 
 ```js
-import {Hydra} from 'alcaeus';
+import Hydra from 'alcaeus'
 ```
 
 {% hint style="info" %}
@@ -28,9 +28,9 @@ import {Hydra} from 'alcaeus';
 Here's a most basic example, which fetches an API entrypoint
 
 {% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+const Hydra = require("alcaeus@{{ book.version }}");
 
-await client.loadResource('https://sources.test.wikibus.org/');
+await Hydra.loadResource('https://sources.test.wikibus.org/');
 {% endrunkit %}
 
 {% hint style="info" %}

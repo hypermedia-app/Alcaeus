@@ -35,10 +35,12 @@
   },
   "homepage": "https://alcaeus.hydra.how",
   "dependencies": {
+    "@rdfjs/data-model": "^1.1.2",
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/sink-map": "^1.0.1",
     "@tpluscode/rdf-ns-builders": "^0.1",
     "@tpluscode/rdfine": "^0.4.8",
+    "clownface": "^0.12.3",
     "es6-url-template": "^1.0.3",
     "esm": "^3.2.25",
     "isomorphic-fetch": "^2.2.1",
@@ -57,9 +59,10 @@
     "@babel/preset-typescript": "^7.9.0",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
-    "@rdfjs/data-model": "^1.1.2",
+    "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/parser-jsonld": "^1.2.0",
     "@rdfjs/parser-n3": "^1.1.3",
+    "@tpluscode/eslint-config": "^0.1",
     "@tpluscode/rdf-string": "^0.2.10",
     "@types/clownface": "^0.12.13",
     "@types/isomorphic-fetch": "0.0.35",
@@ -79,6 +82,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "core-js": "^2.5.0",
     "eslint": "^6.0.1",
+    "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^22.14.1",
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-advanced-emoji": "^0.2.2",
@@ -102,8 +106,7 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --quiet --fix --ignore-path .eslintignore",
-      "git add"
+      "eslint --quiet --fix --ignore-path .eslintignore"
     ]
   },
   "config": {

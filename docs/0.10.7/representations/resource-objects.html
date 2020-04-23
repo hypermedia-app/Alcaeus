@@ -1,0 +1,734 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Resource objects · Alcaeus Hydra client</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-hints/plugin-hints.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-etoc/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-forkmegithub/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="collections.html" />
+    
+    
+    <link rel="prev" href="iterating.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Getting started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="readme.html">
+            
+                <a href="readme.html">
+            
+                    
+                    Resource representations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="hydra.html">
+            
+                <a href="hydra.html">
+            
+                    
+                    Hydra resources
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="get.html">
+            
+                <a href="get.html">
+            
+                    
+                    Getting specific resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="root.html">
+            
+                <a href="root.html">
+            
+                    
+                    Root resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="by-type.html">
+            
+                <a href="by-type.html">
+            
+                    
+                    Selecting by type
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="iterating.html">
+            
+                <a href="iterating.html">
+            
+                    
+                    Iterating resources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="resource-objects.html">
+            
+                <a href="resource-objects.html">
+            
+                    
+                    Resource objects
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="collections.html">
+            
+                <a href="collections.html">
+            
+                    
+                    Collections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="resource-properties.html">
+            
+                <a href="resource-properties.html">
+            
+                    
+                    Properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="mixins.html">
+            
+                <a href="mixins.html">
+            
+                    
+                    Extending resources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="resource-affordances.html">
+            
+                <a href="resource-affordances.html">
+            
+                    
+                    Affordances
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="affordances/links.html">
+            
+                <a href="affordances/links.html">
+            
+                    
+                    hydra:Link
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="affordances/collection-property.html">
+            
+                <a href="affordances/collection-property.html">
+            
+                    
+                    hydra:collection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="affordances/invoking-operations.html">
+            
+                <a href="affordances/invoking-operations.html">
+            
+                    
+                    Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="affordances/finding-operations.html">
+            
+                <a href="affordances/finding-operations.html">
+            
+                    
+                    Finding operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../api-documentation/readme.html">
+            
+                <a href="../api-documentation/readme.html">
+            
+                    
+                    API Documentation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../api-documentation/entrypoint.html">
+            
+                <a href="../api-documentation/entrypoint.html">
+            
+                    
+                    Entrypoint
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../api-documentation/class.html">
+            
+                <a href="../api-documentation/class.html">
+            
+                    
+                    Supported classes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../api-documentation/supported-property.html">
+            
+                <a href="../api-documentation/supported-property.html">
+            
+                    
+                    Supported properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../api-documentation/operation.html">
+            
+                <a href="../api-documentation/operation.html">
+            
+                    
+                    Supported operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Other
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../js-api/request-headers.html">
+            
+                <a href="../js-api/request-headers.html">
+            
+                    
+                    Request headers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../js-api/media-type-processor.html">
+            
+                <a href="../js-api/media-type-processor.html">
+            
+                    
+                    Media types
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../hydra-vocab.html">
+            
+                <a href="../hydra-vocab.html">
+            
+                    
+                    Hydra vocabulary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../js-api/base-url.html">
+            
+                <a href="../js-api/base-url.html">
+            
+                    
+                    Base URL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Resource objects</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="resource-objects-in-javascript">Resource objects in JavaScript</h1>
+<!-- toc --><div id="toc" class="toc">
+
+<ul>
+<li><a href="#accessing-properties">Accessing properties</a><ul>
+<li><a href="#resource-identifier">Resource identifier</a></li>
+<li><a href="#recognizing-anonymous-resources">Recognizing anonymous resources</a></li>
+<li><a href="#resource-types">Resource type(s)</a></li>
+</ul>
+</li>
+<li><a href="#reshaping-the-json-structure">Reshaping the JSON structure</a></li>
+<li><a href="#loading-related-resources">Loading related resources</a></li>
+</ul>
+
+</div><!-- tocstop -->
+<h2 id="accessing-properties">Accessing properties</h2>
+<p>Individual resources within a representation will be always in the form similar to expanded JSON-LD, with all
+properties and classes as absolute URIs. Getting any objects from within the tree is thus possible using JS
+indexer notation.</p>
+<p><pre class="pg-runkit">
+const client = require(&quot;alcaeus@0.10.7&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;https://sources.test.wikibus.org/book/1331&apos;);
+
+rep.root[&apos;http://schema.org/author&apos;][&apos;http://schema.org/name&apos;];
+</pre></p>
+<p><div class="alert alert-danger hints-alert"><div class="hints-icon"><i class="fa fa-exclamation-circle"></i></div><div class="hints-container"><p> Note that RDF literals are currently unwrapped from their JSON-LD <code>@value</code> object.
+ There is an <a href="https://github.com/wikibus/Alcaeus/issues/26" target="_blank">issue</a> pending to introduce
+ an extensibility point and more semantic behaviour depending on the literal <code>@type</code>.</p>
+</div></div></p>
+<p>Read more about accessing property values on a <a href="resource-properties">dedicated page</a> </p>
+<h3 id="resource-identifier">Resource identifier</h3>
+<p>The resource identifier is accessible by the <code>@id</code> keyword just like any other JS property. For convenience
+it is being wrapped by a getter, which makes it easier to use in declarative binding syntax.</p>
+<p><pre class="pg-runkit">
+const client = require(&quot;alcaeus@0.10.7&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;https://sources.test.wikibus.org/book/1331&apos;);
+
+rep.root.id;
+</pre></p>
+<h3 id="recognizing-anonymous-resources">Recognizing anonymous resources</h3>
+<p>RDF recognizes two kinds of resource identifiers: </p>
+<ul>
+<li>URIs, such as <code>http://www.wikidata.org/entity/Q61694</code></li>
+<li>Blank nodes, such as identified by as pseudo URI staring with <code>_:</code></li>
+</ul>
+<p>Resources identified by blank nodes are only recognizable within a single graph and
+they are called <strong>anonymous resource</strong>.</p>
+<p>While it is trivial to tell one from the other just by looking at the <code>id</code>, Alcaeus
+resources provide a convenience getter:</p>
+<p><pre class="pg-runkit">
+const { Hydra } = require(&quot;alcaeus@0.10.7&quot;);
+
+const representation = await Hydra.loadResource(&apos;https://sources.test.wikibus.org/book/1331&apos;);
+
+[...representation].map(resource =&gt; ({
+  id: resource.id,
+  isAnonymous: resource.isAnonymous
+}))
+</pre></p>
+<h3 id="resource-types">Resource type(s)</h3>
+<p>Similarly to the identifier, the JSON-LD <code>@type</code> keyword can be used on any resource object. It is impractical
+though, because JSON-LD allows both an array or a single string value which makes handling types awkward. For
+that reason there is a <code>types</code> getter which wraps them in an Array-like object which also comes with a <code>contains</code>
+method to check if a resource is of give type.</p>
+<p><pre class="pg-runkit">
+const client = require(&quot;alcaeus@0.10.7&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;https://sources.test.wikibus.org/book/1331&apos;);
+
+const example = {
+  types: rep.root.types,
+  isBook: rep.root.hasType(&apos;http://schema.org/Book&apos;)
+}
+</pre></p>
+<h2 id="reshaping-the-json-structure">Reshaping the JSON structure</h2>
+<p>It is possible to process a resource using JSON-LD <a href="https://www.w3.org/TR/json-ld-api/#compaction" target="_blank">compaction</a> algorithm as an ad-hoc way of simplifying</p>
+<p><pre class="pg-runkit">
+const client = require(&quot;alcaeus@0.10.7&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;https://sources.test.wikibus.org/book/1331&apos;);
+
+await rep.root.compact({
+  &apos;@vocab&apos;: &apos;https://wikibus.org/ontology#&apos;,
+  &apos;@base&apos;: &apos;https://wikibus.org/&apos;,
+  &apos;sch&apos;: &apos;http://schema.org/&apos;
+});
+</pre></p>
+<p><div class="alert alert-info hints-alert"><div class="hints-icon"><i class="fa fa-info-circle"></i></div><div class="hints-container"><p> The <code>compact</code> method returns a plain JS object, removing any properties added by Alcaeus.</p>
+</div></div></p>
+<p><div class="alert alert-danger hints-alert"><div class="hints-icon"><i class="fa fa-exclamation-circle"></i></div><div class="hints-container"><p> Compaction will fail miserably if attempted on a graph with cycles. In such case it is necessary to first
+ break the cycles by using some JS library like <a href="https://www.npmjs.com/package/json-cycle" target="_blank">json-cycle</a> or
+ <a href="https://www.mpjs.com/packages/circular-json" target="_blank">circular-json</a>.</p>
+</div></div></p>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><p> There is a more maintainable way of extending the resource objects by applying custom class mixins which
+ can add methods and properties to the JS objects without sacrificing other functionalities. To learn more
+ read the <a href="mixins.html">dedicated page</a>.</p>
+</div></div></p>
+<h2 id="loading-related-resources">Loading related resources</h2>
+<p>It is possible to quickly dereference a linked resource using a handy <code>load</code> method
+of all resource objects.</p>
+<p>The example below shows how it&apos;s used to deference first member of a <a href="collections">collection</a>.</p>
+<p><pre class="pg-runkit">
+const client = require(&quot;alcaeus@0.10.7&quot;).Hydra;
+
+const rep = await client.loadResource(&apos;https://sources.test.wikibus.org/books&apos;);
+
+await rep.root.members[0].load()
+</pre></p>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><p> The returned object is a <a href="hydra">hydra response</a> and not the resource itself.</p>
+</div></div></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="iterating.html" class="navigation navigation-prev " aria-label="Previous page: Iterating resources">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="collections.html" class="navigation navigation-next " aria-label="Next page: Collections">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Resource objects","level":"1.2.2","depth":2,"next":{"title":"Collections","level":"1.2.2.1","depth":3,"path":"representations/collections.md","ref":"representations/collections.md","articles":[]},"previous":{"title":"Iterating resources","level":"1.2.1.4","depth":3,"path":"representations/iterating.md","ref":"representations/iterating.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub","advanced-emoji"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"mindepth":2,"maxdepth":4,"header":1,"h2lb":3,"notoc":false},"search":{},"runkit":{},"hints":{"info":"fa fa-info-circle","tip":"fa fa-mortar-board","danger":"fa fa-exclamation-circle","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.10.7"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/resource-objects.md","mtime":"2020-04-23T06:46:01.365Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-23T10:57:50.818Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="https://embed.runkit.com"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-runkit/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-etoc/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-forkmegithub/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

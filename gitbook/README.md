@@ -45,3 +45,4 @@ For reference, here are snapshots of docs at their state in previous versions:
 * [0.4.0](../0.4.0)
 * [0.4.3](../0.4.3)
 * [0.5.3](../0.5.3)
+* [0.10.7](../0.10.7)

@@ -1,0 +1,680 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>hydra:collection · Alcaeus Hydra client</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-hints/plugin-hints.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-etoc/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-forkmegithub/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="invoking-operations.html" />
+    
+    
+    <link rel="prev" href="links.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Getting started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../readme.html">
+            
+                <a href="../readme.html">
+            
+                    
+                    Resource representations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../hydra.html">
+            
+                <a href="../hydra.html">
+            
+                    
+                    Hydra resources
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../get.html">
+            
+                <a href="../get.html">
+            
+                    
+                    Getting specific resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../root.html">
+            
+                <a href="../root.html">
+            
+                    
+                    Root resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../by-type.html">
+            
+                <a href="../by-type.html">
+            
+                    
+                    Selecting by type
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../iterating.html">
+            
+                <a href="../iterating.html">
+            
+                    
+                    Iterating resources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../resource-objects.html">
+            
+                <a href="../resource-objects.html">
+            
+                    
+                    Resource objects
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../collections.html">
+            
+                <a href="../collections.html">
+            
+                    
+                    Collections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../resource-properties.html">
+            
+                <a href="../resource-properties.html">
+            
+                    
+                    Properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../mixins.html">
+            
+                <a href="../mixins.html">
+            
+                    
+                    Extending resources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../resource-affordances.html">
+            
+                <a href="../resource-affordances.html">
+            
+                    
+                    Affordances
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="links.html">
+            
+                <a href="links.html">
+            
+                    
+                    hydra:Link
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3.2" data-path="collection-property.html">
+            
+                <a href="collection-property.html">
+            
+                    
+                    hydra:collection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="invoking-operations.html">
+            
+                <a href="invoking-operations.html">
+            
+                    
+                    Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="finding-operations.html">
+            
+                <a href="finding-operations.html">
+            
+                    
+                    Finding operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../api-documentation/readme.html">
+            
+                <a href="../../api-documentation/readme.html">
+            
+                    
+                    API Documentation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../api-documentation/entrypoint.html">
+            
+                <a href="../../api-documentation/entrypoint.html">
+            
+                    
+                    Entrypoint
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../api-documentation/class.html">
+            
+                <a href="../../api-documentation/class.html">
+            
+                    
+                    Supported classes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../api-documentation/supported-property.html">
+            
+                <a href="../../api-documentation/supported-property.html">
+            
+                    
+                    Supported properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../../api-documentation/operation.html">
+            
+                <a href="../../api-documentation/operation.html">
+            
+                    
+                    Supported operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Other
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../js-api/request-headers.html">
+            
+                <a href="../../js-api/request-headers.html">
+            
+                    
+                    Request headers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../js-api/media-type-processor.html">
+            
+                <a href="../../js-api/media-type-processor.html">
+            
+                    
+                    Media types
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../hydra-vocab.html">
+            
+                <a href="../../hydra-vocab.html">
+            
+                    
+                    Hydra vocabulary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../js-api/base-url.html">
+            
+                <a href="../../js-api/base-url.html">
+            
+                    
+                    Base URL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >hydra:collection</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="hydracollection-property"><code>hydra:collection</code> property</h1>
+<!-- toc --><div id="toc" class="toc">
+
+<ul>
+<li><a href="#discovering-specific-collections">Discovering specific collections</a></li>
+</ul>
+
+</div><!-- tocstop -->
+<p>Hydra offers a specialized property to link to collections without the need for minting a new
+relation every time such link is required.</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">&quot;@context&quot;</span>: {
+    <span class="hljs-string">&quot;collection&quot;</span>: {
+      <span class="hljs-string">&quot;@id&quot;</span>: <span class="hljs-string">&quot;http://www.w3.org/ns/hydra/core#collection&quot;</span>,
+      <span class="hljs-string">&quot;@type&quot;</span>: <span class="hljs-string">&quot;@id&quot;</span>
+    }
+  },
+  <span class="hljs-string">&quot;collection&quot;</span>: <span class="hljs-string">&quot;http://example.com/collection&quot;</span>
+}
+</code></pre>
+<p>It can easily be accessed from the resource itself using a dedicated getter method</p>
+<p><pre class="pg-runkit">
+const { Hydra } = require(&quot;alcaeus@0.10.7&quot;)
+
+const rep = await Hydra.loadResource(&apos;http://hydra-movies.herokuapp.com&apos;)
+
+rep.root.getCollections()
+</pre></p>
+<h2 id="discovering-specific-collections">Discovering specific collections</h2>
+<p>The <code>getCollections</code> method accepts an optional parameter which is used to find only
+collections conforming to given <a href="../collections.html#manages-block">&quot;manages block&quot; pattern</a>.</p>
+<p>Below is an example for finding collection with members of a given <code>SupportedClass</code>.</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { Hydra } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;alcaeus&quot;</span>)
+
+<span class="hljs-keyword">const</span> rep = <span class="hljs-keyword">await</span> Hydra.loadResource(<span class="hljs-string">&apos;http://hydra-movies.herokuapp.com&apos;</span>)
+<span class="hljs-keyword">const</span> supportedClass = rep.root.apiDocumentation.classes[<span class="hljs-number">0</span>]
+
+rep.root.getCollections({
+    object: supportedClass
+})
+</code></pre>
+<p><div class="alert alert-danger hints-alert"><div class="hints-icon"><i class="fa fa-exclamation-circle"></i></div><div class="hints-container"><p> When using the <code>object</code> parameter, <code>predicate</code> will implicitly be <code>rdf:type</code>. Changing
+ it to anything else will cause an empty result.</p>
+</div></div></p>
+<p>Second option is to look for collections by subject and predicate:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { Hydra } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;alcaeus&quot;</span>)
+
+<span class="hljs-keyword">const</span> rep = <span class="hljs-keyword">await</span> Hydra.loadResource(<span class="hljs-string">&apos;http://hydra-movies.herokuapp.com&apos;</span>)
+
+rep.root.getCollections({
+    subject: <span class="hljs-string">&apos;https://sources.test.wikibus.org/magazine/Buses&apos;</span>,
+    predicate: <span class="hljs-string">&apos;http://purl.org/dc/terms/isPartOf&apos;</span>
+})
+</code></pre>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><p> You may notice in the second snippet that strings are used for <code>subject</code>
+ and <code>predicate</code> parameters. Same is true for <code>object</code>; all three parameters can be either
+ strings (URI) or resource objects. </p>
+</div></div></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="links.html" class="navigation navigation-prev " aria-label="Previous page: hydra:Link">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="invoking-operations.html" class="navigation navigation-next " aria-label="Next page: Operations">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"hydra:collection","level":"1.2.3.2","depth":3,"next":{"title":"Operations","level":"1.2.3.3","depth":3,"path":"representations/affordances/invoking-operations.md","ref":"representations/affordances/invoking-operations.md","articles":[]},"previous":{"title":"hydra:Link","level":"1.2.3.1","depth":3,"path":"representations/affordances/links.md","ref":"representations/affordances/links.md","articles":[]},"dir":"ltr"},"config":{"plugins":["runkit","hints","etoc","forkmegithub","advanced-emoji"],"root":"./gitbook","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"etoc":{"mindepth":2,"maxdepth":4,"header":1,"h2lb":3,"notoc":false},"search":{},"runkit":{},"hints":{"info":"fa fa-info-circle","tip":"fa fa-mortar-board","danger":"fa fa-exclamation-circle","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"advanced-emoji":{"embedEmojis":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"forkmegithub":{"color":"darkblue","url":"https://github.com/wikibus/alcaeus"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"version":"0.10.7"},"title":"Alcaeus Hydra client","gitbook":"*"},"file":{"path":"representations/affordances/collection-property.md","mtime":"2020-04-22T12:16:25.286Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-23T10:57:50.818Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://embed.runkit.com"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-runkit/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-etoc/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-forkmegithub/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -2,11 +2,11 @@ import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export interface StatusCodeDescription {
-    code: number | null;
-    description: string;
+    code: number | null
+    description: string
 }
 
-export function StatusCodeDescriptionMixin <TBase extends Constructor> (Base: TBase) {
+export function StatusCodeDescriptionMixin <TBase extends Constructor>(Base: TBase) {
     @namespace(hydra)
     class StatusCodeDescriptionClass extends Base implements StatusCodeDescription {
         @property.literal({

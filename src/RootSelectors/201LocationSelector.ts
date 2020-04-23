@@ -3,7 +3,7 @@ import { ResourceGraph } from '../ResourceGraph'
 import { ResponseWrapper } from '../ResponseWrapper'
 
 export default {
-    selectRoot (resources: ResourceGraph, response: ResponseWrapper) {
+    selectRoot(resources: ResourceGraph, response: ResponseWrapper) {
         const location = response.xhr.headers.get(Constants.Headers.Location)
 
         if (response.xhr.status === 201 && location !== null) {

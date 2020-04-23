@@ -2,7 +2,7 @@ import { HydraResponse } from '../HydraResponse'
 import { ResourceGraph } from '../ResourceGraph'
 
 export default {
-    selectRoot (resources: ResourceGraph, response: HydraResponse) {
+    selectRoot(resources: ResourceGraph, response: HydraResponse) {
         let id
 
         if (response.requestedUri.endsWith('/')) {

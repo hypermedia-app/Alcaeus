@@ -7,7 +7,7 @@ import { RootSelector } from './index'
 
 export default function (selector: RootSelector): RootSelector {
     return {
-        selectRoot (resources: ResourceGraph, response: ResponseWrapper & HydraResponse) {
+        selectRoot(resources: ResourceGraph, response: ResponseWrapper & HydraResponse) {
             const maybeView = selector.selectRoot(resources, response) as View | undefined
 
             if (maybeView && maybeView.types.has(hydra.PartialCollectionView)) {

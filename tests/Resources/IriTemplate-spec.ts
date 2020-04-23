@@ -6,7 +6,7 @@ import { Resource } from './_TestResource'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 class IriTemplate extends IriTemplateMixin(Resource) {
-    public expand () {
+    public expand() {
         return ''
     }
 }

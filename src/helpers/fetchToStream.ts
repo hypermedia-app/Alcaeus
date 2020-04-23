@@ -2,7 +2,7 @@ import { Readable } from 'readable-stream'
 
 // from https://github.com/bergos/nodeify-fetch/blob/master/lib/WhatwgReadable.js
 class WhatwgReadable extends Readable {
-    public constructor (stream) {
+    public constructor(stream) {
         super({
             read: () => {
                 stream.read().then((chunk) => {
@@ -20,7 +20,7 @@ class WhatwgReadable extends Readable {
 }
 
 class ArrayBufferReadable extends Readable {
-    public constructor (callback) {
+    public constructor(callback) {
         let done = false
 
         super({
@@ -40,7 +40,7 @@ class ArrayBufferReadable extends Readable {
     }
 }
 
-export function patchResponseBody (body: Response | Body) {
+export function patchResponseBody(body: Response | Body) {
     if (body.body && 'readable' in body.body) {
         return body.body
     }

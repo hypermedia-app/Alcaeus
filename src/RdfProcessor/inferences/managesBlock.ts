@@ -3,12 +3,12 @@ import { DatasetCore } from 'rdf-js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 interface ManagesBlockAssertion {
-    subject: Clownface;
-    predicate: Clownface;
-    object: Clownface;
+    subject: Clownface
+    predicate: Clownface
+    object: Clownface
 }
 
-export function addExplicitStatementsInferredFromManagesBlock (dataset: DatasetCore) {
+export function addExplicitStatementsInferredFromManagesBlock(dataset: DatasetCore) {
     cf({ dataset }).has(hydra.manages).forEach(collection => {
         const managesBlocks = collection.out(hydra.manages)
 

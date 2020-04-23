@@ -3,13 +3,13 @@ import ExpansionModelBuilder, { ExpandedValue } from './ExpansionModelBuilder'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { IriTemplate } from './IriTemplate'
 
-export function ExplicitRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>> (Base: TBase) {
+export function ExplicitRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>>(Base: TBase) {
     class ExplicitRepresentationExpansion extends Base {
-        public mapShorthandValue (value: string) {
+        public mapShorthandValue(value: string) {
             return `"${value}"`
         }
 
-        public mapExpandedValue (value: ExpandedValue) {
+        public mapExpandedValue(value: ExpandedValue) {
             if (value['@id']) {
                 return value['@id']
             }

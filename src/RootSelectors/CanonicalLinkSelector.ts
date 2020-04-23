@@ -6,7 +6,7 @@ import { ResponseWrapper } from '../ResponseWrapper'
 const CanonicalLinkRel = 'canonical'
 
 export default {
-    selectRoot (resources: ResourceGraph, response: ResponseWrapper) {
+    selectRoot(resources: ResourceGraph, response: ResponseWrapper) {
         const linkHeaders = response.xhr.headers.get(Constants.Headers.Link)
         const links = li(linkHeaders)
 

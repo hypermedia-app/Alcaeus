@@ -9,22 +9,22 @@ export interface RdfProperty extends DocumentedResource {
     /**
      * Gets the rdfs:range of a property
      */
-    range: Class | null;
+    range: Class | null
     /**
      * Gets the rdfs:domain of a property
      */
-    domain: Class | null;
+    domain: Class | null
     /**
      * Gets the property's supported operations
      */
-    supportedOperations: SupportedOperation[];
+    supportedOperations: SupportedOperation[]
     /**
      * Gets a value indicating whether the property is a hydra:Link
      */
-    isLink: boolean;
+    isLink: boolean
 }
 
-export function RdfPropertyMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function RdfPropertyMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     abstract class RdfPropertyClass extends DocumentedResourceMixin(Base) implements RdfProperty {
         @property.resource({
             path: rdfs.range,
@@ -45,7 +45,7 @@ export function RdfPropertyMixin<TBase extends Constructor<HydraResource>> (Base
         })
         public supportedOperations!: SupportedOperation[]
 
-        public get isLink () {
+        public get isLink() {
             return this.hasType(hydra.Link)
         }
     }

@@ -7,9 +7,9 @@ import { Class } from './Class'
 import { RdfProperty } from './RdfProperty'
 
 export interface ManagesBlockPattern {
-    subject?: string | RdfResource | NamedNode;
-    predicate?: string | RdfProperty | NamedNode;
-    object?: string | Class | NamedNode;
+    subject?: string | RdfResource | NamedNode
+    predicate?: string | RdfProperty | NamedNode
+    object?: string | Class | NamedNode
 }
 
 /**
@@ -19,24 +19,24 @@ export interface ManagesBlock {
     /**
      * Gets the subject resource from the manages block
      */
-    subject: HydraResource | null;
+    subject: HydraResource | null
     /**
      * Gets the predicate from the manages block
      */
-    property: RdfProperty | null;
+    property: RdfProperty | null
     /**
      * Gets the object class from the manages block
      */
-    object: Class | null;
+    object: Class | null
 
     /**
      * Checks if the current manages block matches the given pattern
      * @param filter {ManagesBlockPattern}
      */
-    matches(filter: ManagesBlockPattern): boolean;
+    matches(filter: ManagesBlockPattern): boolean
 }
 
-function getUri (factory: SafeClownface, resource: string | RdfResource | NamedNode): ResourceIdentifier {
+function getUri(factory: SafeClownface, resource: string | RdfResource | NamedNode): ResourceIdentifier {
     if (typeof resource === 'string') {
         return factory.namedNode(resource).term
     }
@@ -48,7 +48,7 @@ function getUri (factory: SafeClownface, resource: string | RdfResource | NamedN
     return resource
 }
 
-export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
+export function ManagesBlockMixin<TBase extends Constructor>(Base: TBase) {
     @namespace(hydra)
     class ManagesBlockClass extends Base implements ManagesBlock {
         @property.resource()
@@ -60,7 +60,7 @@ export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
         @property.resource()
         public object!: Class
 
-        public matches ({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
+        public matches({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
             const predicateId = getUri(this._selfGraph, predicate)
             const objectId = getUri(this._selfGraph, object)
             const subjectId = getUri(this._selfGraph, subject)

@@ -6,26 +6,26 @@ export interface DocumentedResource extends HydraResource {
     /**
      * Gets the value of either hydra:title or schema:title or rdfs:label property
      */
-    title: string;
+    title: string
     /**
      * Gets the value of either hydra:description or schema:description or rdfs:comment property
      */
-    description: string;
+    description: string
 }
 
-function getTitle (res: RdfResource) {
+function getTitle(res: RdfResource) {
     return res._selfGraph.out([
         hydra.title, rdfs.label, schema.title,
     ])
 }
 
-function getDescription (res: RdfResource) {
+function getDescription(res: RdfResource) {
     return res._selfGraph.out([
         hydra.description, rdfs.comment, schema.description,
     ])
 }
 
-export function DocumentedResourceMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function DocumentedResourceMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     class DocumentedResourceClass extends Base implements DocumentedResource {
         @property.literal({ path: hydra.title })
         public __hydraTitle!: string
@@ -45,11 +45,11 @@ export function DocumentedResourceMixin<TBase extends Constructor<HydraResource>
         @property.literal({ path: schema.description })
         public __schemaDescription!: string
 
-        public get description (): string {
+        public get description(): string {
             return this.__hydraDescription || this.__rdfsComment || this.__schemaDescription
         }
 
-        public get title (): string {
+        public get title(): string {
             return this.__hydraTitle || this.__rdfsLabel || this.__schemaTitle
         }
     }

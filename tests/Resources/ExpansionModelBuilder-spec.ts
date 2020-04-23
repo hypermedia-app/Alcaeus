@@ -10,11 +10,11 @@ import { Resource } from './_TestResource'
 const ex = namespace('http://example.com/vocab#')
 
 class ExpansionModelBuilder extends ExpansionModelBuilderMixin(IriTemplateMixin(Resource)) {
-    public mapExpandedValue (value: ExpandedValue) {
+    public mapExpandedValue(value: ExpandedValue) {
         return value['@value']
     }
 
-    public mapShorthandValue (value: string) {
+    public mapShorthandValue(value: string) {
         return value
     }
 }

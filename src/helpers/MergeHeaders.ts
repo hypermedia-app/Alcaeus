@@ -1,4 +1,4 @@
-export function merge (headers: Headers, overrides: Headers): Headers {
+export function merge(headers: Headers, overrides: Headers): Headers {
     const merged = new Headers(headers)
 
     overrides.forEach((value, key) => {

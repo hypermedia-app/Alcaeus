@@ -29,7 +29,7 @@ HydraResource.factory.addMixin(mixins.ClassMixin)
 HydraResource.factory.addMixin(mixins.SupportedPropertyMixin)
 HydraResource.factory.addMixin(mixins.SupportedOperationMixin)
 
-function parse (triples: TurtleTemplateResult): Stream {
+function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 

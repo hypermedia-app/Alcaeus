@@ -1,31 +1,19 @@
 {
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "standard",
-    "plugin:jest/recommended"
+    "@tpluscode"
   ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "env": {
     "browser": true,
     "jest/globals": true
   },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "module"
-  },
   "plugins": [
-    "@typescript-eslint/eslint-plugin",
     "jest"
   ],
   "rules": {
-    "indent": "off",
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "@typescript-eslint/interface-name-prefix": "warn",
-    "@typescript-eslint/no-use-before-define": "warn",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/indent": ["error", 4],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["tests/**"]}]
   }
 }

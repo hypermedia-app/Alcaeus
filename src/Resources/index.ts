@@ -9,36 +9,36 @@ export interface HydraResource extends RdfResource, OperationFinder {
     /**
      * Gets the operations which can be performed on this resource
      */
-    readonly operations: Operation[];
+    readonly operations: Operation[]
 
     /**
      * Gathers all properties from current resource's classes
      */
-    getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[];
+    getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[]
 
     /**
      * Get all property/value pairs for hydra:Link properties
      *
      * @param includeMissing if true, will include properties not present in resource representation
      */
-    getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: HydraResource[]}[];
+    getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: HydraResource[]}[]
 
     /**
      * Gets objects of hydra:collection property
      */
-    getCollections(filter?: ManagesBlockPattern): HydraResource[];
+    getCollections(filter?: ManagesBlockPattern): HydraResource[]
 
     /**
      * Dereferences the resource
      */
-    load?(): Promise<HydraResponse<this>>;
+    load?(): Promise<HydraResponse<this>>
 }
 
 export interface View extends HydraResource {
     /**
      * Gets the actual collection resource, of which this view is part
      */
-    readonly collection: HydraResource | null;
+    readonly collection: HydraResource | null
 }
 
 export { DocumentedResource } from './Mixins/DocumentedResource'

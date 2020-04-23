@@ -9,15 +9,15 @@ export interface Class extends HydraResource {
     /**
      * Gets the operations supported by this class
      */
-    supportedOperations: SupportedOperation[];
+    supportedOperations: SupportedOperation[]
 
     /**
      * Gets the properties supported by this class
      */
-    supportedProperties: SupportedProperty[];
+    supportedProperties: SupportedProperty[]
 }
 
-export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function ClassMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     class ClassClass extends Base implements Class {
         @property.resource({
             path: rdfs.subClassOf,
@@ -42,11 +42,11 @@ export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBas
         })
         public __supportedProperties!: SupportedProperty[]
 
-        public get types () {
+        public get types() {
             return new TypeCollection(this, true)
         }
 
-        public get supportedOperations (): SupportedOperation[] {
+        public get supportedOperations(): SupportedOperation[] {
             return [...this.getTypeHierarchy()].reduce((operations, type) => {
                 return type.__supportedOperations.reduce((operations, operation) => {
                     if (operations.find(current => current.id.equals(operation.id))) {
@@ -58,7 +58,7 @@ export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBas
             }, [] as SupportedOperation[])
         }
 
-        public get supportedProperties (): SupportedProperty[] {
+        public get supportedProperties(): SupportedProperty[] {
             return [...this.getTypeHierarchy()].reduce((properties, type) => {
                 return type.__supportedProperties.reduce((properties, property) => {
                     if (properties.find(current => current.property.id.equals(property.property.id))) {
@@ -70,7 +70,7 @@ export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBas
             }, [] as SupportedProperty[])
         }
 
-        public * getTypeHierarchy (): Generator<this> {
+        public * getTypeHierarchy(): Generator<this> {
             yield this
 
             for (const superclass of this.subClassOf) {

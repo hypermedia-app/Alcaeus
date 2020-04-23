@@ -8,7 +8,7 @@ import { prefixes } from '@zazuko/rdf-vocabularies'
 
 const parser = new Parser()
 
-export function responseBuilder () {
+export function responseBuilder() {
     let statusCode = 200
     let responseBody: any
     let responseUri
@@ -18,7 +18,7 @@ export function responseBuilder () {
 
     return {
 
-        body (body: string | object, contentType = MediaTypes.jsonLd) {
+        body(body: string | object, contentType = MediaTypes.jsonLd) {
             if (typeof body === 'object') {
                 responseBody = stringToStream(JSON.stringify(body))
             } else {
@@ -28,43 +28,43 @@ export function responseBuilder () {
             return this
         },
 
-        redirect (redirectUri: string) {
+        redirect(redirectUri: string) {
             responseUri = redirectUri
             return this
         },
 
-        contentLocation (headerValue: string) {
+        contentLocation(headerValue: string) {
             headers['Content-Location'] = headerValue
             return this
         },
 
-        link (href: string, rel: string) {
+        link(href: string, rel: string) {
             headers.Link = `<${href}>; rel=${rel}`
             return this
         },
 
-        canonical (href: string) {
+        canonical(href: string) {
             return this.link(href, 'canonical')
         },
 
-        statusCode (status: number) {
+        statusCode(status: number) {
             statusCode = status
             return this
         },
 
-        notFound () {
+        notFound() {
             return this.statusCode(404)
         },
 
-        serverError () {
+        serverError() {
             return this.statusCode(500)
         },
 
-        apiDocumentation (docUri: string = 'http://api.example.com/doc/') {
+        apiDocumentation(docUri: string = 'http://api.example.com/doc/') {
             return this.link(docUri, 'http://www.w3.org/ns/hydra/core#apiDocumentation')
         },
 
-        build (): Promise<Response> {
+        build(): Promise<Response> {
             let response
 
             if (responseUri) {
@@ -82,7 +82,7 @@ export function responseBuilder () {
     }
 }
 
-export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): Promise<ResponseWrapper> {
+export async function mockedResponse({ includeDocsLink = true, xhrBuilder }): Promise<ResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
     const xhr = await xhrBuilder.build()
 
@@ -99,7 +99,7 @@ export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): P
     return response as ResponseWrapper
 }
 
-export function createGraph (ntriples: string) {
+export function createGraph(ntriples: string) {
     return async () => {
         const dataset = rdf.dataset()
         const stream = stringToStream(`

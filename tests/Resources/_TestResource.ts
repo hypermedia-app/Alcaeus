@@ -7,31 +7,31 @@ import { Operation } from '../../src/Resources/Operation'
 export class Resource extends RdfResource implements HydraResource {
     [prop: string]: unknown | unknown[];
 
-    public get operations (): Operation[] {
+    public get operations(): Operation[] {
         return []
     }
 
-    public findOperations (...criteria: Criteria[]): Operation[] {
+    public findOperations(...criteria: Criteria[]): Operation[] {
         return []
     }
 
-    public findOperationsDeep (...stopCondition: (RecursiveStopConditions | Criteria)[]): Operation[] {
+    public findOperationsDeep(...stopCondition: (RecursiveStopConditions | Criteria)[]): Operation[] {
         return []
     }
 
-    public getCollections (filter?: ManagesBlockPattern): HydraResource[] {
+    public getCollections(filter?: ManagesBlockPattern): HydraResource[] {
         return []
     }
 
-    public getLinks (includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: HydraResource[] }[] {
+    public getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: HydraResource[] }[] {
         return []
     }
 
-    public getOperationsDeep (condition?: RecursiveStopConditions): Operation[] {
+    public getOperationsDeep(condition?: RecursiveStopConditions): Operation[] {
         return []
     }
 
-    public getProperties (): { supportedProperty: SupportedProperty; objects: any[] }[] {
+    public getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[] {
         return []
     }
 }

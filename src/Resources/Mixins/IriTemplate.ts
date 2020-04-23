@@ -4,15 +4,15 @@ import { HydraResource } from '../index'
 import { IriTemplateMapping, IriTemplateMappingMixin } from './IriTemplateMapping'
 
 export interface IriTemplate extends HydraResource {
-    template: string;
-    mappings: IriTemplateMapping[];
-    variableRepresentation: HydraResource;
-    expand(model: any): string;
+    template: string
+    mappings: IriTemplateMapping[]
+    variableRepresentation: HydraResource
+    expand(model: any): string
 }
 
 // temporary fix to avoid combining abstract classes with decorators
 // see babel/babel#10514
-function AbstractExpander<TBase extends Constructor<HydraResource>> (Base: TBase) {
+function AbstractExpander<TBase extends Constructor<HydraResource>>(Base: TBase) {
     abstract class AbstractExpanderClass extends Base {
         public abstract expand (model: any): string
     }
@@ -20,7 +20,7 @@ function AbstractExpander<TBase extends Constructor<HydraResource>> (Base: TBase
     return AbstractExpanderClass
 }
 
-export function IriTemplateMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function IriTemplateMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     abstract class IriTemplateClass extends AbstractExpander(Base) implements IriTemplate {
         @property.literal()

@@ -8,22 +8,22 @@ export interface SupportedProperty extends DocumentedResource {
     /**
      * Gets the value indicating if the property can be read from responses
      */
-    readable: boolean;
+    readable: boolean
     /**
      * Gets the value indicating if the property can be written by requests
      */
-    writable: boolean;
+    writable: boolean
     /**
      * Gets the value indicating if the property in required in request payload
      */
-    required: boolean;
+    required: boolean
     /**
      * The actual RDF predicate to use in representations
      */
-    property: RdfProperty;
+    property: RdfProperty
 }
 
-export function SupportedPropertyMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function SupportedPropertyMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     class SupportedPropertyClass extends DocumentedResourceMixin(Base) implements SupportedProperty {
         @property.literal({

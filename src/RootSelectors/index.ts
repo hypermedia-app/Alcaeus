@@ -10,7 +10,7 @@ import RedirectTargetSelector from './RedirectTargetSelector'
 import TrailingSlashSelector from './TrailingSlashSelector'
 
 export interface RootSelector {
-    selectRoot(resources: ResourceGraph, response: ResponseWrapper & HydraResponse): HydraResource | undefined;
+    selectRoot(resources: ResourceGraph, response: ResponseWrapper & HydraResponse): HydraResource | undefined
 }
 
 export const defaultSelectors = {

@@ -8,23 +8,23 @@ export interface Collection<T = HydraResource> extends HydraResource {
      * Gets the total number of items within the entire collection.
      * Note that this number can be larger then the number of `members` in the case of partial collections
      */
-    readonly totalItems: number;
+    readonly totalItems: number
     /**
      * Gets the collection member included in the current representation.
      * In the case of partial collections they may only be a subset of all members
      */
-    readonly members: (HydraResource & T)[];
+    readonly members: (HydraResource & T)[]
     /**
      * Gets the views of a partial collection
      */
-    readonly views?: View[];
+    readonly views?: View[]
     /**
      * Gets the manages block for current collection
      */
-    readonly manages: ManagesBlock[];
+    readonly manages: ManagesBlock[]
 }
 
-export function CollectionMixin <TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function CollectionMixin <TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     class CollectionClass extends Base implements Collection {
         @property.literal({ type: Number, initial: 0 })

@@ -4,12 +4,12 @@ import { Class, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export interface ApiDocumentation extends HydraResource {
-    classes: Class[];
+    classes: Class[]
 
-    loadEntrypoint(): Promise<HydraResponse>;
+    loadEntrypoint(): Promise<HydraResponse>
 }
 
-export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     class ApiDocumentationClass extends Base implements ApiDocumentation {
         @property.resource({
@@ -21,7 +21,7 @@ export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>> 
         @property.resource()
         public entrypoint!: HydraResource
 
-        public loadEntrypoint () {
+        public loadEntrypoint() {
             const entrypoint = this.entrypoint
 
             if (!entrypoint) {

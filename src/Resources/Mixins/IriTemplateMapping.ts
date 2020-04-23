@@ -4,12 +4,12 @@ import { HydraResource } from '../index'
 import { RdfProperty, RdfPropertyMixin } from './RdfProperty'
 
 export interface IriTemplateMapping extends RdfResource {
-    property: RdfProperty;
-    variable: string;
-    required: boolean;
+    property: RdfProperty
+    variable: string
+    required: boolean
 }
 
-export function IriTemplateMappingMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function IriTemplateMappingMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     class IriTemplateMappingClass extends Base implements IriTemplateMapping {
         @property.literal({

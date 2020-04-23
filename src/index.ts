@@ -14,15 +14,15 @@ export * from './Resources/index'
 export { Operation } from './Resources/Operation'
 
 interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
-    rootSelectors?: RootSelector[];
-    parsers?: SinkMap<EventEmitter, Stream>;
-    dataset?: D;
+    rootSelectors?: RootSelector[]
+    parsers?: SinkMap<EventEmitter, Stream>
+    dataset?: D
 }
 
-export function create <D extends DatasetIndexed = DatasetIndexed> ({ rootSelectors, parsers, dataset }: AlcaeusInit<D> = {}): HydraClient<D> {
+export function create <D extends DatasetIndexed = DatasetIndexed>({ rootSelectors, parsers, dataset }: AlcaeusInit<D> = {}): HydraClient<D> {
     let factory: ResourceFactory<DatasetCore, HydraResource>
     class HydraResource extends RdfResource {
-        public static get factory () {
+        public static get factory() {
             return factory
         }
     }

@@ -14,27 +14,27 @@ export interface HydraResponse<T extends RdfResource = HydraResource> extends It
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
-    root: HydraResource | (HydraResource & T) | null;
+    root: HydraResource | (HydraResource & T) | null
 
     /**
      * Gets the number of resource within this representation
      */
-    length: number;
+    length: number
 
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    get(uri: string): HydraResource | undefined;
+    get(uri: string): HydraResource | undefined
 
     /**
      * Gets all resources of given RDF type from the representation
      * @param {string} classId RDF class identifier
      * @returns {Array<HydraResource>}
      */
-    ofType(classId: string | NamedNode): HydraResource[];
+    ofType(classId: string | NamedNode): HydraResource[]
 }
 
-export function create <D extends DatasetIndexed> (
+export function create <D extends DatasetIndexed>(
     uri: string,
     response: ResponseWrapper,
     dataset: D,
@@ -43,27 +43,27 @@ export function create <D extends DatasetIndexed> (
     const representationGraph = cf({ dataset, graph: $rdf.namedNode(uri) })
     const resources = new ResourceGraph(representationGraph, factory)
 
-    function createEntity (node: SingleContextClownface) {
+    function createEntity(node: SingleContextClownface) {
         return factory.createEntity<HydraResource>(cf({
             dataset,
             term: node.term,
         }))
     }
 
-    function byInProperties (left: HydraResource, right: HydraResource) {
+    function byInProperties(left: HydraResource, right: HydraResource) {
         return left._selfGraph.in().terms.length - right._selfGraph.in().terms.length
     }
 
     class HydraResponseWrapper extends ResponseWrapperImpl implements HydraResponse {
-        public constructor (requestedUri: string) {
+        public constructor(requestedUri: string) {
             super(requestedUri, response.xhr)
         }
 
-        public get (identifier: string) {
+        public get(identifier: string) {
             return resources.get(identifier)
         }
 
-        public get root () {
+        public get root() {
             const potentialRoots = alcaeus.rootSelectors.reduceRight<HydraResource[]>((candidates, selector) => {
                 const candidate = selector.selectRoot(resources, this)
                 if (candidate) {
@@ -77,18 +77,18 @@ export function create <D extends DatasetIndexed> (
             return potentialRoots.sort(byInProperties)[0] || null
         }
 
-        public get length (): number {
+        public get length(): number {
             return representationGraph.in().terms.length
         }
 
-        public ofType (classId: string | NamedNode) {
+        public ofType(classId: string | NamedNode) {
             const type = typeof classId === 'string' ? $rdf.namedNode(classId) : classId
 
             return representationGraph.has(rdf.type, type)
                 .map(createEntity)
         }
 
-        public [Symbol.iterator] () {
+        public [Symbol.iterator]() {
             return representationGraph.in()
                 .map(createEntity)[Symbol.iterator]()
         }

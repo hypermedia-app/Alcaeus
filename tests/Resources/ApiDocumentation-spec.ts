@@ -9,10 +9,10 @@ import { Resource } from './_TestResource'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 class ApiDocumentation extends ApiDocumentationMixin(Resource) { }
-function MockLoad (loadFunc) {
-    function Mixin<Base extends Constructor> (base: Base) {
+function MockLoad(loadFunc) {
+    function Mixin<Base extends Constructor>(base: Base) {
         return class extends base {
-            public get load () {
+            public get load() {
                 return loadFunc
             }
         }

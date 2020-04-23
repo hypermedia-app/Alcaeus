@@ -7,15 +7,15 @@ import { ManagesBlockPattern } from '../Mixins/ManagesBlock'
 import { Class, SupportedProperty, SupportedOperation } from '..'
 import Operation from '../Operation'
 
-export function createHydraResourceMixin (alcaeus: HydraClient) {
-    function getSupportedClasses (resource: RdfResource) {
+export function createHydraResourceMixin(alcaeus: HydraClient) {
+    function getSupportedClasses(resource: RdfResource) {
         return alcaeus.apiDocumentations
             .reduce<Class[]>((classes, docs) => [...classes, ...docs.classes.filter(c => resource.types.has(c))], [])
     }
 
-    function HydraResourceMixin<Base extends Constructor<HydraResource>> (base: Base) {
+    function HydraResourceMixin<Base extends Constructor<HydraResource>>(base: Base) {
         class HydraResourceClass extends base implements HydraResource {
-            public get operations () {
+            public get operations() {
                 const classOperations = getSupportedClasses(this)
                     .reduce<SupportedOperation[]>((operations, clas: Class) => [...operations, ...clas.supportedOperations], [])
 
@@ -52,7 +52,7 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
                 return [...operations.values()]
             }
 
-            public getLinks (includeMissing: boolean = false) {
+            public getLinks(includeMissing: boolean = false) {
                 return this.getProperties()
                     .filter((tuple) => tuple.supportedProperty.property.isLink)
                     .filter((tuple) => tuple.objects.length > 0 || includeMissing)
@@ -62,7 +62,7 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
                     }))
             }
 
-            public getProperties (): { supportedProperty: SupportedProperty; objects: any[] }[] {
+            public getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[] {
                 const classProperties = getSupportedClasses(this)
                     .reduce<SupportedProperty[][]>((operations, clas: Class) => [...operations, clas.supportedProperties], [])
 
@@ -83,7 +83,7 @@ export function createHydraResourceMixin (alcaeus: HydraClient) {
             @property.resource({ path: hydra.collection, values: 'array', as: [CollectionMixin] })
             public collections!: Collection[]
 
-            public getCollections (filter?: ManagesBlockPattern) {
+            public getCollections(filter?: ManagesBlockPattern) {
                 if (filter) {
                     return this.collections.filter((c) => c.manages &&
                         c.manages.find((managesBlock) => managesBlock.matches(filter)))

@@ -11,29 +11,29 @@ export interface Criteria {
     /**
      * Filters operations by exactly matching the HTTP method (case-insensitive)
      */
-    byMethod?: Constraint<string>;
+    byMethod?: Constraint<string>
 
     /**
      * Filters operations by exactly matching the hydra:expects annotation or via a custom check function.
      * The exact match can be ether a `Class` object or identifier
      */
-    expecting?: Constraint<Class | NamedNode, Class>;
+    expecting?: Constraint<Class | NamedNode, Class>
 
     /**
      * Filters operations by exactly matching the hydra:returns annotation or via a custom check function.
      * The exact match can be ether a `Class` object or identifier
      */
-    returning?: Constraint<Class | NamedNode, Class>;
+    returning?: Constraint<Class | NamedNode, Class>
 
     /**
      * Filters operations by exactly matching supported operation's id or types, or by
      * executing a custom function against the supported operation
      */
-    bySupportedOperation?: Constraint<NamedNode, SupportedOperation>;
+    bySupportedOperation?: Constraint<NamedNode, SupportedOperation>
 }
 
 export interface RecursiveStopConditions {
-    excludedProperties: (string | NamedNode | RdfResource)[];
+    excludedProperties: (string | NamedNode | RdfResource)[]
 }
 
 /**
@@ -44,24 +44,24 @@ export interface OperationFinder {
      * Recursively gets operations from this resource and its children in the graph
      * @param condition allows to control which properties should be followed
      */
-    getOperationsDeep (condition?: RecursiveStopConditions): Operation[];
+    getOperationsDeep (condition?: RecursiveStopConditions): Operation[]
 
     /**
      * Finds operations of this resource which match the given criteria
      * @param criteria zero or more criteria objects which filter out unwanted operations
      */
-    findOperations (...criteria: Criteria[]): Operation[];
+    findOperations (...criteria: Criteria[]): Operation[]
 
     /**
      * Finds operations of this resource and its children in graph, which match the given criteria
      * @param stopCondition (optional) allows to control which properties should be followed
      * @param moreCriteria zero or more criteria objects which filter out unwanted operations
      */
-    findOperationsDeep (stopCondition: RecursiveStopConditions, ...moreCriteria: Criteria[]): Operation[];
-    findOperationsDeep (...criteria: Criteria[]): Operation[];
+    findOperationsDeep (stopCondition: RecursiveStopConditions, ...moreCriteria: Criteria[]): Operation[]
+    findOperationsDeep (...criteria: Criteria[]): Operation[]
 }
 
-function satisfies<T, TValue> (criteria: T | undefined, value: TValue, actualCheck: (expected: T, actual: TValue) => boolean) {
+function satisfies<T, TValue>(criteria: T | undefined, value: TValue, actualCheck: (expected: T, actual: TValue) => boolean) {
     if (!criteria || !value) {
         return true
     }
@@ -69,7 +69,7 @@ function satisfies<T, TValue> (criteria: T | undefined, value: TValue, actualChe
     return actualCheck(criteria, value)
 }
 
-function satisfiesMethod (criteria: Criteria, operation: Operation) {
+function satisfiesMethod(criteria: Criteria, operation: Operation) {
     return satisfies(criteria.byMethod, operation.method, (expected, actual) => {
         if (typeof expected === 'string') {
             return expected.toUpperCase() === actual.toUpperCase()
@@ -79,7 +79,7 @@ function satisfiesMethod (criteria: Criteria, operation: Operation) {
     })
 }
 
-function matchClass (expected: Constraint<Class | NamedNode, Class>, actual: Class) {
+function matchClass(expected: Constraint<Class | NamedNode, Class>, actual: Class) {
     if (typeof expected === 'string') {
         return actual.id.value === expected
     }
@@ -95,15 +95,15 @@ function matchClass (expected: Constraint<Class | NamedNode, Class>, actual: Cla
     return actual.id.equals(expected as NamedNode)
 }
 
-function satisfiesExpects (criteria: Criteria, operation: Operation) {
+function satisfiesExpects(criteria: Criteria, operation: Operation) {
     return satisfies(criteria.expecting, operation.expects, matchClass)
 }
 
-function satisfiesReturns (criteria: Criteria, operation: Operation) {
+function satisfiesReturns(criteria: Criteria, operation: Operation) {
     return satisfies(criteria.returning, operation.returns, matchClass)
 }
 
-function satisfiesTypeOrId (criteria: Criteria, operation: Operation) {
+function satisfiesTypeOrId(criteria: Criteria, operation: Operation) {
     return satisfies(criteria.bySupportedOperation, operation.supportedOperation, (expected, actual) => {
         if (typeof expected === 'string') {
             return actual.id.value === expected || actual.hasType(expected)
@@ -117,7 +117,7 @@ function satisfiesTypeOrId (criteria: Criteria, operation: Operation) {
     })
 }
 
-function createMatcher (operation: Operation) {
+function createMatcher(operation: Operation) {
     return (criteria: Criteria) => {
         if (!criteria.byMethod) {
             criteria.byMethod = method => method.toUpperCase() !== 'GET'
@@ -148,7 +148,7 @@ const excludedProperties = (stopConditions: RecursiveStopConditions) => {
     }
 }
 
-function toResourceNodes <T extends RdfResource> (self: RdfResource, mixins) {
+function toResourceNodes <T extends RdfResource>(self: RdfResource, mixins) {
     return (nodes: T[], quad: Quad): T[] => {
         if (quad.object.termType === 'NamedNode' || quad.object.termType === 'BlankNode') {
             return [...nodes, self._create<T>(self._selfGraph.node(quad.object), mixins)]
@@ -158,9 +158,9 @@ function toResourceNodes <T extends RdfResource> (self: RdfResource, mixins) {
     }
 }
 
-export function OperationFinderMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function OperationFinderMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     return class OperationFinderClass extends Base implements OperationFinder {
-        public getOperationsDeep (
+        public getOperationsDeep(
             stopConditions: RecursiveStopConditions = { excludedProperties: [hydra.member, rdf.type] },
             previousResources: this[] = []) {
             const childResources = [...this._selfGraph.dataset.match(this.id, null, null, this._graphId)]
@@ -180,11 +180,11 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>> (
             }, this.operations || [])
         }
 
-        public findOperations (...criteria: Criteria[]) {
+        public findOperations(...criteria: Criteria[]) {
             return this.__filterOperations(this.operations, criteria)
         }
 
-        public findOperationsDeep (stopConditionOrCriteria?: Criteria | RecursiveStopConditions, ...moreCriteria: Criteria[]) {
+        public findOperationsDeep(stopConditionOrCriteria?: Criteria | RecursiveStopConditions, ...moreCriteria: Criteria[]) {
             if (!stopConditionOrCriteria) {
                 return this.__filterOperations(this.getOperationsDeep())
             }
@@ -196,7 +196,7 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>> (
             return this.__filterOperations(this.getOperationsDeep(), [ stopConditionOrCriteria, ...moreCriteria ])
         }
 
-        public __filterOperations (operations: Operation[], criteria: Criteria[] = []) {
+        public __filterOperations(operations: Operation[], criteria: Criteria[] = []) {
             let actualCriteria = [...criteria]
             if (actualCriteria.length === 0) {
                 actualCriteria.push({})

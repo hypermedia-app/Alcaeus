@@ -20,7 +20,7 @@ type RecursivePartial<T> = {
 
 const ex = namespace('http://example.com/vocab#')
 const parser = new Parser()
-function parse (triples: TurtleTemplateResult): Stream {
+function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 

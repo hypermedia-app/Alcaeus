@@ -14,7 +14,7 @@ const propertyRangeMappings = [
     [hydra.mapping, hydra.IriTemplateMapping],
 ]
 
-export function inferTypesFromPropertyRanges (dataset: DatasetCore) {
+export function inferTypesFromPropertyRanges(dataset: DatasetCore) {
     const node = cf({ dataset })
 
     propertyRangeMappings.map(([ property, type ]) => {

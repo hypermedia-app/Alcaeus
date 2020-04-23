@@ -7,22 +7,22 @@ export interface PartialCollectionView extends View {
     /**
      * Gets the first page resource of a collection
      */
-    readonly first: HydraResource | undefined;
+    readonly first: HydraResource | undefined
     /**
      * Gets the previous page resource of a collection
      */
-    readonly previous: HydraResource | undefined;
+    readonly previous: HydraResource | undefined
     /**
      * Gets the next page resource of a collection
      */
-    readonly next: HydraResource | undefined;
+    readonly next: HydraResource | undefined
     /**
      * Gets the last page resource of a collection
      */
-    readonly last: HydraResource | undefined;
+    readonly last: HydraResource | undefined
 }
 
-export function PartialCollectionViewMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function PartialCollectionViewMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     class PartialCollectionViewClass extends Base implements PartialCollectionView {
         @property.resource()
@@ -37,7 +37,7 @@ export function PartialCollectionViewMixin<TBase extends Constructor<HydraResour
         @property.resource()
         public last!: HydraResource
 
-        public get collection () {
+        public get collection() {
             const collection = this._selfGraph.in(hydra.view)
 
             return collection.toArray()

@@ -5,13 +5,13 @@ import { Class } from './Class'
 import { DocumentedResourceMixin, DocumentedResource } from './DocumentedResource'
 
 export interface SupportedOperation extends DocumentedResource {
-    method: string;
-    expects: Class;
-    returns: Class;
-    requiresInput: boolean;
+    method: string
+    expects: Class
+    returns: Class
+    requiresInput: boolean
 }
 
-export function SupportedOperationMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+export function SupportedOperationMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
     abstract class SupportedOperationClass extends DocumentedResourceMixin(Base) implements SupportedOperation {
         @property.literal({
@@ -29,7 +29,7 @@ export function SupportedOperationMixin<TBase extends Constructor<HydraResource>
         })
         public returns!: Class
 
-        public get requiresInput (): boolean {
+        public get requiresInput(): boolean {
             const method = this.method || ''
             const methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE'
 

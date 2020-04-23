@@ -151,7 +151,7 @@ export const Bodies = {
         },
     },
 
-    rdfList () {
+    rdfList() {
         return {
             '@context': {
                 'http://example.com/arr': {

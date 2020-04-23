@@ -3,13 +3,13 @@ import { hydra } from '@tpluscode/rdf-ns-builders'
 import ExpansionModelBuilder, { ExpandedValue } from './ExpansionModelBuilder'
 import { IriTemplate } from './IriTemplate'
 
-export function BasicRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>> (Base: TBase) {
+export function BasicRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>>(Base: TBase) {
     class BasicRepresentationExpansion extends Base {
-        public mapShorthandValue (value: any) {
+        public mapShorthandValue(value: any) {
             return value
         }
 
-        public mapExpandedValue (value: ExpandedValue) {
+        public mapExpandedValue(value: ExpandedValue) {
             return value['@value'] || value['@id']
         }
     }

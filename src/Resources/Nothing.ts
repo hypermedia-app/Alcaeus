@@ -4,13 +4,13 @@ import { HydraResource } from './index'
 import { ClassMixin } from './Mixins/Class'
 import { DocumentedResource } from './Mixins/DocumentedResource'
 
-export function NothingMixin<Base extends Constructor<HydraResource>> (base: Base) {
+export function NothingMixin<Base extends Constructor<HydraResource>>(base: Base) {
     class Nothing extends base implements DocumentedResource {
-        public get title () {
+        public get title() {
             return 'Nothing'
         }
 
-        public get description () {
+        public get description() {
             return 'Nothing'
         }
     }

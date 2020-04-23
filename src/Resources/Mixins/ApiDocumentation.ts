@@ -1,65 +1,42 @@
-import { deprecated } from 'core-decorators'
-import { Core, JsonLd } from '../../Constants'
-import { Class, HydraResource, IApiDocumentation, ISupportedProperty } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, property, namespace, RdfResource } from '@tpluscode/rdfine'
+import { HydraResponse } from '../../HydraResponse'
+import { Class, HydraResource } from '../index'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    abstract class ApiDocumentation extends Base implements IApiDocumentation {
-        public abstract get _alcaeus();
+export interface ApiDocumentation extends HydraResource {
+    classes: Class[];
 
-        public get classes () {
-            return this.getArray<Class>(Core.Vocab('supportedClass'))
-        }
+    loadEntrypoint(): Promise<HydraResponse>;
+}
 
-        public getOperations (classUri: string, predicateUri?: string) {
-            const clas = this.getClass(classUri)
-            if (!clas) {
-                return []
-            }
+export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    @namespace(hydra)
+    class ApiDocumentationClass extends Base implements ApiDocumentation {
+        @property.resource({
+            path: 'supportedClass',
+            values: 'array',
+        })
+        public classes!: Class[]
 
-            if (!predicateUri) {
-                return clas.supportedOperations
-            }
-
-            const supportedProperty = clas.supportedProperties.find((prop: ISupportedProperty) => {
-                return prop.property && prop.property.id === predicateUri
-            })
-            if (!supportedProperty) {
-                return []
-            }
-
-            return supportedProperty.property.supportedOperations
-        }
-
-        public getProperties (classUri: string) {
-            const clas = this.getClass(classUri)
-            if (!clas) {
-                return []
-            }
-            return clas.supportedProperties
-        }
-
-        public getClass (classId) {
-            return this.classes.find((clas) => clas[JsonLd.Id] === classId) || null
-        }
-
-        @deprecated
-        public getEntrypoint () {
-            return this.loadEntrypoint()
-        }
+        @property.resource()
+        public entrypoint!: HydraResource
 
         public loadEntrypoint () {
-            const entrypoint = this.get<HydraResource>(Core.Vocab('entrypoint'))
+            const entrypoint = this.entrypoint
+
             if (!entrypoint) {
                 return Promise.reject(new Error('The ApiDocumentation doesn\'t have an entrypoint.'))
             }
 
-            return this._alcaeus.loadResource(entrypoint.id)
+            if (!entrypoint.load) {
+                return Promise.reject(new Error('Cannot load entrypoint. Is it anonymous resource?'))
+            }
+
+            return entrypoint.load()
         }
     }
 
-    return ApiDocumentation
+    return ApiDocumentationClass
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('ApiDocumentation'))
+ApiDocumentationMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.ApiDocumentation)

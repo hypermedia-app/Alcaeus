@@ -1,34 +1,29 @@
-import { Core, JsonLd } from '../../../src/Constants'
-import { Mixin, shouldApply } from '../../../src/Resources/Mixins/BasicRepresentationExpansion'
-import { Mixin as IriTemplate } from '../../../src/Resources/Mixins/IriTemplate'
-import Resource from '../../../src/Resources/Resource'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { BlankNode } from 'rdf-js'
+import { JsonLd } from '../../Constants'
+import { BasicRepresentationExpansionMixin } from '../../../src/Resources/Mixins/BasicRepresentationExpansion'
+import { IriTemplateMixin } from '../../../src/Resources/Mixins/IriTemplate'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import { Resource } from '../_TestResource'
 
-class BasicRepresentationExpansion extends Mixin(IriTemplate(Resource)) {}
+class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(IriTemplateMixin(Resource)) {}
 
 describe('BasicRepresentationExpansion', () => {
+    let node: SingleContextClownface<BlankNode>
+    let resource: BasicRepresentationExpansion
+
+    beforeEach(() => {
+        node = cf({ dataset: $rdf.dataset() }).blankNode()
+
+        node.addOut(rdf.type, hydra.IriTemplate)
+        resource = new BasicRepresentationExpansion(node)
+    })
+
     describe('shouldApply', () => {
-        let body
-
-        beforeEach(() => {
-            body = new Resource({
-                [JsonLd.Type]: Core.Vocab('IriTemplate'),
-            })
-        })
-
         it('is true when variableRepresentation is not defined', () => {
             // when
-            const result = shouldApply(body)
-
-            // then
-            expect(result).toBe(true)
-        })
-
-        it('is true when variableRepresentation is null', () => {
-            // given
-            body[Core.Vocab('variableRepresentation')] = null
-
-            // when
-            const result = shouldApply(body)
+            const result = BasicRepresentationExpansionMixin.shouldApply(resource)
 
             // then
             expect(result).toBe(true)
@@ -36,12 +31,10 @@ describe('BasicRepresentationExpansion', () => {
 
         it('is true when variableRepresentation is BasicRepresentation', () => {
             // given
-            body[Core.Vocab('variableRepresentation')] = {
-                '@id': Core.Vocab('BasicRepresentation'),
-            }
+            node.addOut(hydra.variableRepresentation, hydra.BasicRepresentation)
 
             // when
-            const result = shouldApply(body)
+            const result = BasicRepresentationExpansionMixin.shouldApply(resource)
 
             // then
             expect(result).toBe(true)
@@ -49,30 +42,20 @@ describe('BasicRepresentationExpansion', () => {
     })
 
     describe('expand', () => {
-        let iriTemplate
-
         describe('uses BasicRepresentation rules when', () => {
             const valueProperty = 'http://example.com/someProp'
 
             beforeEach(() => {
-                const body = {
-                    [Core.Vocab('mapping')]: [
-                        {
-                            property: {
-                                id: valueProperty,
-                            },
-                            variable: 'value',
-                        },
-                    ],
-                    [Core.Vocab('template')]: 'http://example.com/find/{value}',
-                }
-
-                iriTemplate = new BasicRepresentationExpansion(body)
+                node.addOut(hydra.mapping, m => {
+                    m.addOut(hydra.property, node.namedNode(valueProperty))
+                    m.addOut(hydra.variable, 'value')
+                })
+                node.addOut(hydra.template, 'http://example.com/find/{value}')
             })
 
             it('expands IRI', () => {
                 // when
-                const expanded = iriTemplate.expand({
+                const expanded = resource.expand({
                     [valueProperty]: {
                         [JsonLd.Id]: 'http://www.hydra-cg.com/',
                     },
@@ -84,7 +67,7 @@ describe('BasicRepresentationExpansion', () => {
 
             it('expands string', () => {
                 // when
-                const expanded = iriTemplate.expand({
+                const expanded = resource.expand({
                     [valueProperty]: 'A simple string',
                 })
 
@@ -94,7 +77,7 @@ describe('BasicRepresentationExpansion', () => {
 
             it('expands string with quote', () => {
                 // when
-                const expanded = iriTemplate.expand({
+                const expanded = resource.expand({
                     [valueProperty]: 'A string " with a quote',
                 })
 
@@ -104,7 +87,7 @@ describe('BasicRepresentationExpansion', () => {
 
             it('expands decimal value', () => {
                 // when
-                const expanded = iriTemplate.expand({
+                const expanded = resource.expand({
                     [valueProperty]: { '@value': `5.5`, '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
                 })
 
@@ -114,7 +97,7 @@ describe('BasicRepresentationExpansion', () => {
 
             it('expands language tagged string', () => {
                 // when
-                const expanded = iriTemplate.expand({
+                const expanded = resource.expand({
                     [valueProperty]: { '@value': `A simple string`, '@language': 'en' },
                 })
 

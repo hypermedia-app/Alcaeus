@@ -1,20 +1,87 @@
-import { Core } from '../../Constants'
-import { IClass, SupportedOperation, SupportedProperty } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import TypeCollection from '@tpluscode/rdfine/lib/TypeCollection'
+import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
+import { HydraResource, SupportedOperation, SupportedProperty } from '../index'
+import { SupportedOperationMixin } from './SupportedOperation'
+import { SupportedPropertyMixin } from './SupportedProperty'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    abstract class Class extends Base implements IClass {
-        public get supportedOperations () {
-            return this.getArray<SupportedOperation>(Core.Vocab('supportedOperation'))
+export interface Class extends HydraResource {
+    /**
+     * Gets the operations supported by this class
+     */
+    supportedOperations: SupportedOperation[];
+
+    /**
+     * Gets the properties supported by this class
+     */
+    supportedProperties: SupportedProperty[];
+}
+
+export function ClassMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    class ClassClass extends Base implements Class {
+        @property.resource({
+            path: rdfs.subClassOf,
+            values: 'array',
+            as: [ClassMixin],
+        })
+        public subClassOf!: this[]
+
+        @property.resource({
+            path: hydra.supportedOperation,
+            values: 'array',
+            as: [SupportedOperationMixin],
+            subjectFromAllGraphs: true,
+        })
+        public __supportedOperations!: SupportedOperation[]
+
+        @property.resource({
+            path: hydra.supportedProperty,
+            values: 'array',
+            as: [SupportedPropertyMixin],
+            subjectFromAllGraphs: true,
+        })
+        public __supportedProperties!: SupportedProperty[]
+
+        public get types () {
+            return new TypeCollection(this, true)
         }
 
-        public get supportedProperties () {
-            return this.getArray<SupportedProperty>(Core.Vocab('supportedProperty'))
+        public get supportedOperations (): SupportedOperation[] {
+            return [...this.getTypeHierarchy()].reduce((operations, type) => {
+                return type.__supportedOperations.reduce((operations, operation) => {
+                    if (operations.find(current => current.id.equals(operation.id))) {
+                        return operations
+                    }
+
+                    return [...operations, operation]
+                }, operations)
+            }, [] as SupportedOperation[])
+        }
+
+        public get supportedProperties (): SupportedProperty[] {
+            return [...this.getTypeHierarchy()].reduce((properties, type) => {
+                return type.__supportedProperties.reduce((properties, property) => {
+                    if (properties.find(current => current.property.id.equals(property.property.id))) {
+                        return properties
+                    }
+
+                    return [...properties, property]
+                }, properties)
+            }, [] as SupportedProperty[])
+        }
+
+        public * getTypeHierarchy (): Generator<this> {
+            yield this
+
+            for (const superclass of this.subClassOf) {
+                for (const type of superclass.getTypeHierarchy()) {
+                    yield type
+                }
+            }
         }
     }
 
-    return Class
+    return ClassClass
 }
 
-export const shouldApply = (res: IResource) => res.types.contains((Core.Vocab('Class')))
+ClassMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Class)

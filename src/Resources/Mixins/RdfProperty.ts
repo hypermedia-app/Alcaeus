@@ -1,29 +1,56 @@
-import { Core } from '../../Constants'
-import { rdf, rdfs } from '../../Vocabs'
-import { Class, IRdfProperty, SupportedOperation } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import { hydra, rdf, rdfs } from '@tpluscode/rdf-ns-builders'
+import { Class, HydraResource, SupportedOperation } from '../index'
+import { ClassMixin } from './Class'
+import { DocumentedResource, DocumentedResourceMixin } from './DocumentedResource'
+import { SupportedOperationMixin } from './SupportedOperation'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    abstract class RdfProperty extends Base implements IRdfProperty {
-        public get range () {
-            return this.get<Class>(rdfs('range'))
-        }
+export interface RdfProperty extends DocumentedResource {
+    /**
+     * Gets the rdfs:range of a property
+     */
+    range: Class | null;
+    /**
+     * Gets the rdfs:domain of a property
+     */
+    domain: Class | null;
+    /**
+     * Gets the property's supported operations
+     */
+    supportedOperations: SupportedOperation[];
+    /**
+     * Gets a value indicating whether the property is a hydra:Link
+     */
+    isLink: boolean;
+}
 
-        public get domain () {
-            return this.get<Class>(rdfs('domain'))
-        }
+export function RdfPropertyMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    abstract class RdfPropertyClass extends DocumentedResourceMixin(Base) implements RdfProperty {
+        @property.resource({
+            path: rdfs.range,
+            as: [ClassMixin],
+        })
+        public range!: Class
 
-        public get supportedOperations () {
-            return this.getArray<SupportedOperation>(Core.Vocab('supportedOperation'))
-        }
+        @property.resource({
+            path: rdfs.domain,
+            as: [ClassMixin],
+        })
+        public domain!: Class
+
+        @property.resource({
+            path: hydra.supportedOperation,
+            values: 'array',
+            as: [SupportedOperationMixin],
+        })
+        public supportedOperations!: SupportedOperation[]
 
         public get isLink () {
-            return this.types.contains(Core.Vocab('Link'))
+            return this.hasType(hydra.Link)
         }
     }
 
-    return RdfProperty
+    return RdfPropertyClass
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(rdf.Property)
+RdfPropertyMixin.shouldApply = (res: RdfResource) => res.hasType(rdf.Property)

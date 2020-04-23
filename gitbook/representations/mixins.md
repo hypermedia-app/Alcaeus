@@ -50,7 +50,7 @@ const Mixin = Base => {
 };
 
 const shouldApply = resource => {
-  return resource.types.contains('http://schema.org/Book');
+  return resource.hasType('http://schema.org/Book');
 };
 
 // Add mixin to the client

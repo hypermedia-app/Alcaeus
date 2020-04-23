@@ -1,7 +1,7 @@
-import { IHydraResponse } from '../HydraResponse'
-import { IResourceGraph } from '../ResourceGraph'
+import { HydraResponse } from '../HydraResponse'
+import { ResourceGraph } from '../ResourceGraph'
 import { HydraResource } from '../Resources'
-import { IResponseWrapper } from '../ResponseWrapper'
+import { ResponseWrapper } from '../ResponseWrapper'
 import CanonicalLinkSelector from './CanonicalLinkSelector'
 import ExactIdMatchSelector from './ExactIdMatchSelector'
 import LocationSelector from './201LocationSelector'
@@ -9,14 +9,14 @@ import PartialCollectionViewSelector from './PartialCollectionViewSelector'
 import RedirectTargetSelector from './RedirectTargetSelector'
 import TrailingSlashSelector from './TrailingSlashSelector'
 
-export interface IRootSelector {
-    selectRoot(resources: IResourceGraph, response: IResponseWrapper & IHydraResponse): HydraResource;
+export interface RootSelector {
+    selectRoot(resources: ResourceGraph, response: ResponseWrapper & HydraResponse): HydraResource | undefined;
 }
 
-export const AllDefault = {
-    1: PartialCollectionViewSelector(CanonicalLinkSelector),
-    2: PartialCollectionViewSelector(LocationSelector),
-    3: PartialCollectionViewSelector(ExactIdMatchSelector),
-    4: PartialCollectionViewSelector(TrailingSlashSelector),
-    5: PartialCollectionViewSelector(RedirectTargetSelector),
+export const defaultSelectors = {
+    'CanonicalLink': PartialCollectionViewSelector(CanonicalLinkSelector),
+    'LocationHeader': PartialCollectionViewSelector(LocationSelector),
+    'ExactId': PartialCollectionViewSelector(ExactIdMatchSelector),
+    'TrailingSlash': PartialCollectionViewSelector(TrailingSlashSelector),
+    'Redirect': PartialCollectionViewSelector(RedirectTargetSelector),
 }

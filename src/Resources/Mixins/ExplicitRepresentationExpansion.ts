@@ -1,15 +1,15 @@
-import { Core, JsonLd } from '../../Constants'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
-import ExpansionModelBuilder, { IExpandedValue } from './ExpansionModelBuilder'
+import { Constructor, RdfResource } from '@tpluscode/rdfine'
+import ExpansionModelBuilder, { ExpandedValue } from './ExpansionModelBuilder'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { IriTemplate } from './IriTemplate'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
+export function ExplicitRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>> (Base: TBase) {
     class ExplicitRepresentationExpansion extends Base {
         public mapShorthandValue (value: string) {
             return `"${value}"`
         }
 
-        public mapExpandedValue (value: IExpandedValue) {
+        public mapExpandedValue (value: ExpandedValue) {
             if (value['@id']) {
                 return value['@id']
             }
@@ -29,14 +29,11 @@ export function Mixin<TBase extends Constructor> (Base: TBase) {
     return ExpansionModelBuilder(ExplicitRepresentationExpansion)
 }
 
-export function shouldApply (resource: IResource) {
-    const isTemplate = resource.types.contains(Core.Vocab('IriTemplate'))
+ExplicitRepresentationExpansionMixin.shouldApply = function (resource: RdfResource) {
+    const isTemplate = resource.hasType(hydra.IriTemplate)
 
-    const isUndefined = typeof resource[Core.Vocab('variableRepresentation')] === 'undefined' ||
-        resource[Core.Vocab('variableRepresentation')] === null
+    const isExplicitRepresentation = resource._selfGraph.out(hydra.variableRepresentation)
+        .values.includes(hydra.ExplicitRepresentation.value)
 
-    const isExactMatch = resource[Core.Vocab('variableRepresentation')] &&
-        resource[Core.Vocab('variableRepresentation')][JsonLd.Id] === Core.Vocab('ExplicitRepresentation')
-
-    return isTemplate && (!isUndefined && isExactMatch)
+    return isTemplate && isExplicitRepresentation
 }

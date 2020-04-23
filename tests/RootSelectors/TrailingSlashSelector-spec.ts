@@ -1,5 +1,4 @@
-import { IHydraResponse } from '../../src/HydraResponse'
-import { ResourceGraph } from '../../src/ResourceGraph'
+import { HydraResponse } from '../../src/HydraResponse'
 import { HydraResource } from '../../src/Resources'
 import TrailingSlashSelector from '../../src/RootSelectors/TrailingSlashSelector'
 
@@ -8,11 +7,11 @@ describe('TrailingSlashSelector', () => {
         it('should return the correct one', () => {
             // given
             const expectedRoot = {} as HydraResource
-            const resources = new ResourceGraph()
-            resources['http://some/id'] = expectedRoot
+            const resources = new Map<string, HydraResource>()
+            resources.set('http://some/id', expectedRoot)
             const response = {
                 requestedUri: 'http://some/id/',
-            } as IHydraResponse
+            } as HydraResponse
 
             // when
             const root = TrailingSlashSelector.selectRoot(resources, response)
@@ -26,11 +25,11 @@ describe('TrailingSlashSelector', () => {
         it('should return the correct one', () => {
             // given
             const expectedRoot = {} as HydraResource
-            const resources = new ResourceGraph()
-            resources['http://some/id/'] = expectedRoot
+            const resources = new Map<string, HydraResource>()
+            resources.set('http://some/id/', expectedRoot)
             const response = {
                 requestedUri: 'http://some/id',
-            } as IHydraResponse
+            } as HydraResponse
 
             // when
             const root = TrailingSlashSelector.selectRoot(resources, response)

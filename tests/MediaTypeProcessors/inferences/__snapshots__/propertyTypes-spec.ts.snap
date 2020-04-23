@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`property types inference adds rdf:type assertions for known properties 1`] = `
+"<http://example.com/API> <http://www.w3.org/ns/hydra/core#supportedClass> <http://example.com/Class> .
+<http://example.com/Class> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Class> .
+<http://example.com/Class> <http://www.w3.org/ns/hydra/core#supportedOperation> <http://example.com/Operation> .
+<http://example.com/Class> <http://www.w3.org/ns/hydra/core#supportedProperty> <http://example.com/Property> .
+<http://example.com/ExpectedClass> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Class> .
+<http://example.com/IriTemplateMapping> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#IriTemplateMapping> .
+<http://example.com/Operation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#SupportedOperation> .
+<http://example.com/Operation> <http://www.w3.org/ns/hydra/core#expects> <http://example.com/ExpectedClass> .
+<http://example.com/Operation> <http://www.w3.org/ns/hydra/core#returns> <http://example.com/ReturnedClass> .
+<http://example.com/Operation> <http://www.w3.org/ns/hydra/core#statusCodes> _:c14n0 .
+<http://example.com/OperationInstance> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Operation> .
+<http://example.com/Property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#SupportedProperty> .
+<http://example.com/Property> <http://www.w3.org/ns/hydra/core#property> <http://xmlns.com/foaf/0.1/knows> .
+<http://example.com/Resource> <http://www.w3.org/ns/hydra/core#mapping> <http://example.com/IriTemplateMapping> .
+<http://example.com/Resource> <http://www.w3.org/ns/hydra/core#operation> <http://example.com/OperationInstance> .
+<http://example.com/ReturnedClass> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Class> .
+<http://xmlns.com/foaf/0.1/knows> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+_:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#StatusCodeDescription> .
+"
+`;

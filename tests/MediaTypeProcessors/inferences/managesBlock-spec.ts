@@ -1,4 +1,4 @@
-import { addExplicitStatementsInferredFromManagesBlock } from '../../../src/MediaTypeProcessors/inferences'
+import { addExplicitStatementsInferredFromManagesBlock } from '../../../src/RdfProcessor/inferences'
 import * as specGraphs from './managesBlock-spec-graphs'
 
 describe('manages block inference', () => {
@@ -26,7 +26,7 @@ describe('manages block inference', () => {
 
     it('ignores malformed manages blocks', async () => {
         // given
-        const dataset = await specGraphs.malformedManagesBlocks()
+        const dataset = await specGraphs.incompleteManagesBlocks()
 
         // when
         addExplicitStatementsInferredFromManagesBlock(dataset)

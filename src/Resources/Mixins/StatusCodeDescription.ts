@@ -1,18 +1,24 @@
-import { Core } from '../../Constants'
-import { IStatusCodeDescription } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
-export function Mixin <TBase extends Constructor> (Base: TBase) {
-    return class StatusCodeDescription extends Base implements IStatusCodeDescription {
-        public get code () {
-            return this.getNumber(Core.Vocab('code'))
-        }
-
-        public get description (): string {
-            return this.getString(Core.Vocab('description')) || ''
-        }
-    }
+export interface StatusCodeDescription {
+    code: number | null;
+    description: string;
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('StatusCodeDescription'))
+export function StatusCodeDescriptionMixin <TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
+    class StatusCodeDescriptionClass extends Base implements StatusCodeDescription {
+        @property.literal({
+            type: Number,
+        })
+        public code!: number
+
+        @property.literal({ initial: '' })
+        public description!: string
+    }
+
+    return StatusCodeDescriptionClass
+}
+
+StatusCodeDescriptionMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.StatusCodeDescription)

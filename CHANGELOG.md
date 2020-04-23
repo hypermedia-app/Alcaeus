@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.16](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2020-04-22)
+
+
+### Features
+
+* **template:** resolve relative templates against immediate parent ([68221d3](https://github.com/wikibus/alcaeus/commit/68221d393c28c1ee94681290992539db32229962))
+
+
+### Bug Fixes
+
+* **templates:** expanding template calls "abstract" method ([7e889fd](https://github.com/wikibus/alcaeus/commit/7e889fd2ec77453b944bbf6cf2755b2f51e601ac))
+
+### [0.10.7](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.10...v0.10.7) (2020-03-17)
+
+
+### Features
+
+* setting base URI to allow relative resource ids ([275664d](https://github.com/wikibus/alcaeus/commit/275664d3cc62709cd00eebbc5f973e5560482069))
+
+### [0.10.6](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.9...v0.10.6) (2020-02-29)
+
+
+### Bug Fixes
+
+* alcaeus had an unlisted dependency ([ed80788](https://github.com/wikibus/alcaeus/commit/ed80788c8d83574906f74ff5ad64814f100e8dc9))
+
 ### [0.10.7](https://github.com/wikibus/alcaeus/compare/v0.10.6...v0.10.7) (2020-03-17)
 
 
@@ -15,6 +41,134 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * alcaeus had an unlisted dependency ([ed80788](https://github.com/wikibus/alcaeus/commit/ed80788c8d83574906f74ff5ad64814f100e8dc9))
+
+## [1.0.0-alpha.15](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2020-04-17)
+
+
+### Bug Fixes
+
+* improve how root is selected by checking graph connections ([2d36689](https://github.com/wikibus/alcaeus/commit/2d36689c38f000eb5454f05ac75df374629b6855)), closes [#161](https://github.com/wikibus/alcaeus/issues/161)
+* operation finder should not traverse graphs ([049f74a](https://github.com/wikibus/alcaeus/commit/049f74a046032e5bf4851b847d087fa22a7102d4))
+
+## [1.0.0-alpha.14](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2020-04-17)
+
+
+### Features
+
+* **node:** add a cjs module exporting client with all parsers ([59f8311](https://github.com/wikibus/alcaeus/commit/59f8311fdc77a58a77c3cd332e337d935b6239d6))
+
+
+### Bug Fixes
+
+* initializing alcaeus with parsers ([afd6e37](https://github.com/wikibus/alcaeus/commit/afd6e37999315a223c409f7af1a0fa000e323d57))
+
+## [1.0.0-alpha.13](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2020-04-15)
+
+## [1.0.0-alpha.12](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2020-04-14)
+
+
+### Bug Fixes
+
+* operations are searched in the resource's graph only ([25d3aba](https://github.com/wikibus/alcaeus/commit/25d3abad0392c800d8909700a8113d02e6cc809a))
+
+## [1.0.0-alpha.11](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2020-04-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* no separate commonjs build may require setting up esm
+
+### Features
+
+* only single es modules build ([76382b6](https://github.com/wikibus/alcaeus/commit/76382b6ab78704b8e3074a5e830c01352a02e3fb))
+
+## [1.0.0-alpha.10](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2020-03-12)
+
+## [1.0.0-alpha.9](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2020-02-04)
+
+
+### Bug Fixes
+
+* **build:** reduce bundle size by updating rdf-transform-to-quad ([fa9cc01](https://github.com/wikibus/alcaeus/commit/fa9cc01899b05da443359bbd3c28ea80fb6de498))
+
+## [1.0.0-alpha.8](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2020-01-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* parsers have to be provided explicitly by the calling application
+* content type is mandatory on operations with body
+
+* remove dependency on JSON-LD parser and simplify rdf handling ([4065aa3](https://github.com/wikibus/alcaeus/commit/4065aa3aa4156544a845f204105c4eda1ddf9b47))
+
+## [1.0.0-alpha.7](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2020-01-28)
+
+## [1.0.0-alpha.6](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2020-01-27)
+
+
+### Features
+
+* make collection generic for nicer runtime typings ([15483e3](https://github.com/wikibus/alcaeus/commit/15483e37ffb7b5404b4d1ad92e9d537345484389))
+
+
+### Bug Fixes
+
+* collection mixin was ot hooked up to factory ([604de05](https://github.com/wikibus/alcaeus/commit/604de05140cec094902be22dd04701809c9ecb5e))
+* required dependency string-to-stream missing ([259bf16](https://github.com/wikibus/alcaeus/commit/259bf1682865e70d073ff4e8fb1b245ab5d3ec50))
+
+## [1.0.0-alpha.5](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2020-01-26)
+
+
+### Bug Fixes
+
+* add NamedNode to inout type foe load methods ([d60a1b0](https://github.com/wikibus/alcaeus/commit/d60a1b0c342e187bad501ed00cc74b80c220cf80))
+
+## [1.0.0-alpha.4](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2020-01-23)
+
+
+### Bug Fixes
+
+* also export Operation from main ([e1e8c44](https://github.com/wikibus/alcaeus/commit/e1e8c44b19dc6d49189e1d9c7a7d9fa7cca164f7))
+* invoked operation does not return the representation object ([2a8a214](https://github.com/wikibus/alcaeus/commit/2a8a214458ac36c5d0de6544685d535e0acfbaf5))
+
+## [1.0.0-alpha.3](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2020-01-19)
+
+
+### Bug Fixes
+
+* change api documentation promise to return instances ([a82bdcd](https://github.com/wikibus/alcaeus/commit/a82bdcda02f2601942a760014c3299d7ea16058e))
+* remove deprecated code ([5a07cff](https://github.com/wikibus/alcaeus/commit/5a07cffe149d9bef451e936584abdf78a1ca4dad))
+* rename and reorganize interfaces ([46c3d73](https://github.com/wikibus/alcaeus/commit/46c3d73b837d5ef8af50fdbba996c145c75be38f))
+
+## [1.0.0-alpha.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2020-01-17)
+
+
+### Bug Fixes
+
+* **resource:** getArray should only return resources ([aa1f860](https://github.com/wikibus/alcaeus/commit/aa1f86034193ef2ca29bbc7e4a6214f4798d14f3))
+
+## [1.0.0-alpha.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2020-01-17)
+
+
+### Features
+
+* load method to allow named node param ([1e4cf66](https://github.com/wikibus/alcaeus/commit/1e4cf66b4443417148b0d19e21d5d62a133e80aa))
+
+## [1.0.0-alpha.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.0...v1.0.0-alpha.2) (2020-01-17)
+
+
+### Features
+
+* load method to allow named node param ([74f37e7](https://github.com/wikibus/alcaeus/commit/74f37e75be4d111278b44a25b179406fde9cd28d))
+
+## [1.0.0-alpha.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2020-01-17)
+
+
+### Features
+
+* load method to allow named node param ([dc165d7](https://github.com/wikibus/alcaeus/commit/dc165d7733fbf06d6399b3aaaa02349d02735e38))
+
+## [1.0.0-alpha.0](https://github.com/wikibus/alcaeus/compare/v0.10.5...v1.0.0-alpha.0) (2020-01-17)
 
 ### [0.10.5](https://github.com/wikibus/alcaeus/compare/v0.10.4...v0.10.5) (2019-12-07)
 

@@ -1,1 +1,12 @@
-dist/types
+docs/
+gitbook/
+src/
+*.config.js
+.idea/
+.github/
+tests/
+*.json
+.travis.yml
+.editorconfig
+*ignore
+coverage/

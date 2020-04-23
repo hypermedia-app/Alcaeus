@@ -1,34 +1,42 @@
-import { Vocab } from '../../src'
-import { IHydraResponse } from '../../src/HydraResponse'
-import { IResourceGraph } from '../../src/ResourceGraph'
-import { IHydraResource } from '../../src/Resources'
-import { IResponseWrapper } from '../../src/ResponseWrapper'
+import $rdf from 'rdf-ext'
+import cf from 'clownface'
+import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
+import { Resource } from '../Resources/_TestResource'
+import { RootSelector } from '../../src/RootSelectors'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { HydraResponse } from '../../src/HydraResponse'
+import { HydraResource } from '../../src/Resources'
+import { ResponseWrapper } from '../../src/ResponseWrapper'
 import PartialCollectionViewSelector from '../../src/RootSelectors/PartialCollectionViewSelector'
-import TypeCollection from '../../src/TypeCollection'
+
+class View extends PartialCollectionViewMixin(Resource) {}
 
 describe('PartialCollectionViewSelector', () => {
     it('should return the collection if resource is collection view', () => {
         // given
-        const collection = {} as IHydraResource
-        const view = {
-            collection,
-            types: TypeCollection.create(Vocab('PartialCollectionView')),
-        }
-        const resources = {
-            id: view,
-        }
+        const dataset = $rdf.dataset()
+        const view = new View({
+            dataset,
+            term: $rdf.namedNode('view'),
+        })
+        view.types.add(hydra.PartialCollectionView)
+        cf({ dataset })
+            .namedNode('collection').addOut(hydra.view, view._selfGraph)
+
+        const resources = new Map<string, HydraResource>()
+        resources.set('id', view as any)
         const response = {
             requestedUri: 'id',
-        } as IHydraResponse & IResponseWrapper
+        } as HydraResponse & ResponseWrapper
         const innerSelector = {
-            selectRoot: () => view,
-        } as any
+            selectRoot: () => view as any,
+        } as RootSelector
 
         // when
         const root = PartialCollectionViewSelector(innerSelector)
-            .selectRoot(resources as any as IResourceGraph, response)
+            .selectRoot(resources, response)
 
         // then
-        expect(Object.is(root, collection)).toBeTruthy()
+        expect(root!.id.value).toBe('collection')
     })
 })

@@ -1,12 +1,37 @@
-import { IHydraClient } from '../alcaeus'
-import { HydraResource, IOperation, SupportedOperation } from './index'
+import { HydraClient } from '../alcaeus'
+import nonenumerable from '../helpers/nonenumerable'
+import { HydraResponse } from '../HydraResponse'
+import { Class, HydraResource } from './index'
+import { SupportedOperation } from './Mixins/SupportedOperation'
 
-const supportedOperations = new WeakMap<Operation, SupportedOperation>()
-const resources = new WeakMap<Operation, HydraResource>()
-const clients = new WeakMap<Operation, IHydraClient>()
+export interface Operation {
+    /**
+     * Gets the title of the operation
+     */
+    title: string;
+    description: string;
+    method: string;
+    expects: Class;
+    returns: Class;
+    requiresInput: boolean;
+    invoke(body?: BodyInit, headers?: HeadersInit): Promise<HydraResponse>;
+    supportedOperation: SupportedOperation;
 
-export class Operation implements IOperation {
-    public constructor (supportedOperation: SupportedOperation, alcaeus: IHydraClient, resource: HydraResource) {
+    /**
+     * Gets the resource on which the operation will be invoked
+     */
+    target: HydraResource;
+}
+
+export default class implements Operation {
+    public readonly supportedOperation: SupportedOperation
+
+    public readonly target: HydraResource
+
+    @nonenumerable
+    private readonly __client: HydraClient
+
+    public constructor (supportedOperation: SupportedOperation, alcaeus: HydraClient, resource: HydraResource) {
         if (!supportedOperation) {
             throw new Error('Missing supportedOperation parameter')
         }
@@ -17,9 +42,9 @@ export class Operation implements IOperation {
             throw new Error('Missing resource parameter')
         }
 
-        supportedOperations.set(this, supportedOperation)
-        resources.set(this, resource)
-        clients.set(this, alcaeus)
+        this.supportedOperation = supportedOperation
+        this.__client = alcaeus
+        this.target = resource
     }
 
     public get method (): string {
@@ -46,31 +71,11 @@ export class Operation implements IOperation {
         return this.supportedOperation.description
     }
 
-    public get supportedOperation () {
-        const supportedOperation = supportedOperations.get(this)
-
-        if (!supportedOperation) {
-            throw new Error('Supported operation was not found for operation')
+    public invoke (body?: BodyInit, headers?: HeadersInit): Promise<HydraResponse> {
+        if (body !== null && typeof body !== 'undefined' && headers !== null && typeof headers !== 'undefined') {
+            return this.__client.invokeOperation(this, headers, body)
         }
 
-        return supportedOperation
-    }
-
-    public get target () {
-        const resource = resources.get(this)
-
-        if (resource) {
-            return resource
-        }
-
-        throw new Error('Could not determine the target of the operation')
-    }
-
-    public invoke (body?: BodyInit, headers: string | HeadersInit = { }) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const alcaeus = clients.get(this)!
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return alcaeus.invokeOperation(this, this.target.id, body, headers)
+        return this.__client.invokeOperation(this)
     }
 }

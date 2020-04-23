@@ -1,16 +1,27 @@
+import { ResourceFactory } from '@tpluscode/rdfine'
+import { Clownface } from 'clownface'
 import { HydraResource } from './Resources'
-import { IResource } from './Resources/Resource'
 
-export interface IResourceGraph {
-    get(uri: string): HydraResource;
+export interface ResourceGraph {
+    get(uri: string): HydraResource | undefined;
 }
 
-export class ResourceGraph implements IResourceGraph {
-    public get (uri: string): HydraResource {
-        return this[uri] || this[decodeURI(uri)]
+export default class implements ResourceGraph {
+    private __graph: Clownface
+    private __factory: ResourceFactory
+
+    public constructor (graph: Clownface, factory: ResourceFactory) {
+        this.__graph = graph
+        this.__factory = factory
     }
 
-    public add (resource: IResource) {
-        this[resource.id] = resource
+    public get (uri: string): HydraResource | undefined {
+        const nodes = this.__graph.dataset.match(this.__graph.namedNode(decodeURI(uri)).term)
+
+        if (nodes.size === 0) {
+            return undefined
+        }
+
+        return this.__factory.createEntity<HydraResource>(this.__graph.namedNode(decodeURI(uri)))
     }
 }

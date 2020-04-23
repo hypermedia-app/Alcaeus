@@ -1,6 +1,5 @@
-import * as _ from 'lodash'
-import { Core, JsonLd, MediaTypes } from '../src/Constants'
-import { IResponseWrapper } from '../src/ResponseWrapper'
+import { MediaTypes } from './Constants'
+import { ResponseWrapper } from '../src/ResponseWrapper'
 import 'isomorphic-fetch'
 import stringToStream from 'string-to-stream'
 import rdf from 'rdf-ext'
@@ -9,40 +8,9 @@ import { prefixes } from '@zazuko/rdf-vocabularies'
 
 const parser = new Parser()
 
-function addPredicateGetter (this: any, prop: string, pred: string, wrapArray: boolean = true) {
-    Object.defineProperty(this, prop, {
-        get: () => {
-            const ret = this[pred]
-            if (Array.isArray(ret) === false && wrapArray) {
-                return [ret]
-            }
-
-            return ret
-        },
-    })
-}
-
-export function fakeAlcaeusResources (obj: object) {
-    if (!obj || typeof obj !== 'object') {
-        return {}
-    }
-
-    const addGetter = addPredicateGetter.bind(obj)
-
-    addGetter('id', JsonLd.Id, false)
-    addGetter('types', JsonLd.Type, false)
-    addGetter('supportedProperties', Core.Vocab('supportedProperty'))
-    addGetter('supportedOperations', Core.Vocab('supportedOperation'))
-    addGetter('property', Core.Vocab('property'), false)
-
-    _.forOwn(obj, fakeAlcaeusResources)
-
-    return obj
-}
-
-export function responseBuilder (): any {
+export function responseBuilder () {
     let statusCode = 200
-    let responseBody = '{}'
+    let responseBody: any
     let responseUri
     const headers = {
         'Content-Type': MediaTypes.jsonLd,
@@ -52,9 +20,9 @@ export function responseBuilder (): any {
 
         body (body: string | object, contentType = MediaTypes.jsonLd) {
             if (typeof body === 'object') {
-                responseBody = JSON.stringify(body)
+                responseBody = stringToStream(JSON.stringify(body))
             } else {
-                responseBody = body as string
+                responseBody = stringToStream(body)
             }
             headers['Content-Type'] = contentType
             return this
@@ -114,7 +82,7 @@ export function responseBuilder (): any {
     }
 }
 
-export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): Promise<IResponseWrapper> {
+export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): Promise<ResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
     const xhr = await xhrBuilder.build()
 
@@ -128,7 +96,7 @@ export async function mockedResponse ({ includeDocsLink = true, xhrBuilder }): P
         get: () => xhr.clone(),
     })
 
-    return response as IResponseWrapper
+    return response as ResponseWrapper
 }
 
 export function createGraph (ntriples: string) {
@@ -142,6 +110,6 @@ export function createGraph (ntriples: string) {
     PREFIX hydra: <${prefixes.hydra}>
 
     ${ntriples}`)
-        return dataset.import(await parser.import(stream))
+        return dataset.import(parser.import(stream as any))
     }
 }

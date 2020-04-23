@@ -1,5 +1,4 @@
-import { Core } from '../../src/Constants'
-import { owl, rdf, xsd } from '../../src/Vocabs'
+import { xsd } from '@tpluscode/rdf-ns-builders'
 import Context from '../test-objects/Context'
 
 export const Bodies = {
@@ -72,7 +71,7 @@ export const Bodies = {
     typedNumericLiteral: {
         '@id': 'http://example.com/resource',
         'http://schema.org/age': {
-            '@type': xsd.integer,
+            '@type': xsd.integer.value,
             '@value': 21,
         },
     },
@@ -98,18 +97,6 @@ export const Bodies = {
                 },
             },
         },
-    },
-
-    withHydraCollections: {
-        [Core.Vocab('collection')]: [{
-            '@id': 'http://example.com/collection1',
-        }, {
-            '@id': 'http://example.com/collection2',
-        }, {
-            '@id': 'http://example.com/collection3',
-        }, {
-            '@id': 'http://example.com/collection4',
-        }],
     },
 
     ntriples: `
@@ -150,16 +137,16 @@ export const Bodies = {
             '@type': 'http://www.w3.org/ns/hydra/core#PartialCollectionView',
             'http://www.w3.org/ns/hydra/core#totalItems': 10,
             'http://www.w3.org/ns/hydra/core#first': {
-                id: 'http://example.com/resource?page=1',
+                '@id': 'http://example.com/resource?page=1',
             },
             'http://www.w3.org/ns/hydra/core#previous': {
-                id: 'http://example.com/resource?page=2',
+                '@id': 'http://example.com/resource?page=2',
             },
             'http://www.w3.org/ns/hydra/core#next': {
-                id: 'http://example.com/resource?page=4',
+                '@id': 'http://example.com/resource?page=4',
             },
             'http://www.w3.org/ns/hydra/core#last': {
-                id: 'http://example.com/resource?page=58',
+                '@id': 'http://example.com/resource?page=58',
             },
         },
     },
@@ -178,68 +165,5 @@ export const Bodies = {
                 'http://example.com/item2',
             ],
         }
-    },
-}
-
-export const Documentations = {
-    classWithOperation: {
-        '@id': 'http://api.example.com/doc/',
-        '@type': Core.Vocab('ApiDocumentation'),
-        '@context': Context,
-        'entrypoint': 'http://example.com/home',
-        'supportedClass': [
-            {
-                '@id': 'http://example.com/api#Class',
-                '@type': 'hydra:Class',
-                'supportedOperation': [
-                    {
-                        description: 'Gets the api#Class',
-                        expects: 'owl:Nothing',
-                        method: 'GET',
-                        returns: 'http://example.com/api#Class',
-                    },
-                ],
-                'supportedProperty': [
-                    {
-                        title: 'The very important name',
-                        description: 'A short description thereof',
-                        readable: true,
-                        writable: false,
-                        required: false,
-                        property: {
-                            '@id': 'http://purl.org/dc/elements/1.1/partOf',
-                            '@type': rdf.Property,
-                            'range': xsd.string,
-                            'supportedOperation': [
-                                {
-                                    description: 'Update this property',
-                                    expects: xsd.string,
-                                    method: 'POST',
-                                    returns: owl.Nothing,
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        title: 'The less important name',
-                        description: 'A pretty much longer description test',
-                        readable: true,
-                        writable: false,
-                        required: true,
-                        property: {
-                            '@id': 'http://schema.org/name',
-                            '@type': rdf.Property,
-                            'range': xsd.string,
-                        },
-                    },
-                ],
-            },
-        ],
-    },
-
-    untyped: {
-        '@context': Context,
-        '@id': 'http://api.example.com/doc/',
-        'entrypoint': 'http://example.com/home',
     },
 }

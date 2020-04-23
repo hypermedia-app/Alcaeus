@@ -1,57 +1,87 @@
-import { Maybe } from 'tsmonad'
-import { Core } from '../../Constants'
-import { IAsObject } from '../../internals'
-import { rdf } from '../../Vocabs'
-import { Class, IManagesBlock, ManagesBlockPattern, RdfProperty } from '../index'
-import { HydraConstructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import { SafeClownface } from 'clownface'
+import { NamedNode } from 'rdf-js'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import { HydraResource } from '../index'
+import { Class } from './Class'
+import { RdfProperty } from './RdfProperty'
 
-export function Mixin<TBase extends HydraConstructor> (Base: TBase) {
-    abstract class ManagesBlock extends Base implements IManagesBlock {
-        public get subject () {
-            return this.get<IResource>(Core.Vocab('subject'))
-        }
+export interface ManagesBlockPattern {
+    subject?: string | RdfResource | NamedNode;
+    predicate?: string | RdfProperty | NamedNode;
+    object?: string | Class | NamedNode;
+}
 
-        public get property () {
-            return this.get<RdfProperty>(Core.Vocab('property'))
-        }
+/**
+ * Represents the "manages block"
+ */
+export interface ManagesBlock {
+    /**
+     * Gets the subject resource from the manages block
+     */
+    subject: HydraResource | null;
+    /**
+     * Gets the predicate from the manages block
+     */
+    property: RdfProperty | null;
+    /**
+     * Gets the object class from the manages block
+     */
+    object: Class | null;
 
-        public get object () {
-            const maybeClass = Maybe.maybe(this.get<Class>(Core.Vocab('object')))
-            const classId = maybeClass.bind(c => Maybe.maybe(c.id))
+    /**
+     * Checks if the current manages block matches the given pattern
+     * @param filter {ManagesBlockPattern}
+     */
+    matches(filter: ManagesBlockPattern): boolean;
+}
 
-            const getClass = this.apiDocumentation.map((doc) => doc.getClass.bind(doc))
+function getUri (factory: SafeClownface, resource: string | RdfResource | NamedNode): ResourceIdentifier {
+    if (typeof resource === 'string') {
+        return factory.namedNode(resource).term
+    }
 
-            return classId
-                .chain(id => getClass.bind(fun => Maybe.maybe(fun(id))))
-                .caseOf({
-                    just: c => c,
-                    nothing: () => maybeClass.valueOr(null as any),
-                })
-        }
+    if ('id' in resource) {
+        return resource.id
+    }
+
+    return resource
+}
+
+export function ManagesBlockMixin<TBase extends Constructor> (Base: TBase) {
+    @namespace(hydra)
+    class ManagesBlockClass extends Base implements ManagesBlock {
+        @property.resource()
+        public subject!: HydraResource
+
+        @property.resource()
+        public property!: RdfProperty
+
+        @property.resource()
+        public object!: Class
 
         public matches ({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
-            const predicateId = typeof predicate === 'string' ? predicate : predicate.id
-            const objectId = typeof object === 'string' ? object : object.id
-            const subjectId = typeof subject === 'string' ? subject : subject.id
+            const predicateId = getUri(this._selfGraph, predicate)
+            const objectId = getUri(this._selfGraph, object)
+            const subjectId = getUri(this._selfGraph, subject)
 
             if (object && this.object && this.property) {
-                const predicateIsRdfType = predicateId === rdf.type
+                const predicateIsRdfType = rdf.type.equals(predicateId)
 
-                return predicateIsRdfType && this.object.id === objectId && this.property.id === predicateId
+                return predicateIsRdfType && objectId.equals(this.object.id) && predicateId.equals(this.property.id)
             }
 
             if (subject && predicate && this.subject && this.property) {
-                return this.subject.id === subjectId && this.property.id === predicateId
+                return subjectId.equals(this.subject.id) && predicateId.equals(this.property.id)
             }
 
             return false
         }
     }
 
-    return ManagesBlock
+    return ManagesBlockClass
 }
 
-export const shouldApply = (res: IAsObject) => {
-    return res._reverseLinks.filter((link) => link.predicate === Core.Vocab('manages')).length > 0
+ManagesBlockMixin.shouldApply = (res: RdfResource) => {
+    return res._selfGraph.in(hydra.manages).terms.length > 0
 }

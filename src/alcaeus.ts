@@ -1,127 +1,161 @@
-// tslint:disable no-console
-import { Core } from './Constants'
+import { EventEmitter } from 'events'
+import Parsers, { SinkMap } from '@rdfjs/sink-map'
+import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
+import createDataset from 'rdf-dataset-indexed'
+import $rdf from '@rdfjs/data-model'
+import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import { DatasetCore, NamedNode, Stream } from 'rdf-js'
+import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import * as FetchUtil from './FetchUtil'
+import { patchResponseBody } from './helpers/fetchToStream'
 import { merge } from './helpers/MergeHeaders'
-import { IHydraResponse, create } from './HydraResponse'
-import { IMediaTypeProcessor } from './MediaTypeProcessors/RdfProcessor'
-import { ApiDocumentation, IOperation } from './Resources'
-import { IResponseWrapper } from './ResponseWrapper'
-import { IRootSelector } from './RootSelectors'
+import { HydraResponse, create } from './HydraResponse'
+import RdfProcessor from './RdfProcessor'
+import { ApiDocumentation, HydraResource } from './Resources'
+import { Operation } from './Resources/Operation'
+import { ResponseWrapper } from './ResponseWrapper'
+import { RootSelector } from './RootSelectors'
 
-export interface IHydraClient {
-    rootSelectors: IRootSelector[];
-    mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
-    loadResource(uri: string, headers?: HeadersInit): Promise<IHydraResponse>;
-    invokeOperation(operation: IOperation, uri: string, body?: BodyInit, headers?: string | HeadersInit): Promise<IHydraResponse>;
+type InvokedOperation = Pick<Operation, 'method'> & {
+    target: Pick<HydraResource, 'id'>;
+}
+
+export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
+    baseUri?: string;
+    rootSelectors: RootSelector[];
+    parsers: SinkMap<EventEmitter, Stream>;
+    loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>;
+    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation | null>;
+    invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>;
     defaultHeaders: HeadersInit | (() => HeadersInit);
+    dataset: D;
+    factory: ResourceFactory;
+    apiDocumentations: ApiDocumentation[];
 }
 
-const getHydraResponse = async (
-    alcaeus: IHydraClient,
-    response: IResponseWrapper,
-    uri: string,
-    apiDocumentation?: ApiDocumentation): Promise<IHydraResponse> => {
-    const suitableProcessor = Object.values(alcaeus.mediaTypeProcessors)
-        .find((processor) => processor.canProcess(response.mediaType))
+function stripContentTypeParameters (mediaType: string) {
+    return mediaType.split(';').shift() || ''
+}
 
-    if (suitableProcessor) {
-        const graph = await suitableProcessor.process(alcaeus, uri, response, apiDocumentation)
-        return create(uri, response, graph, alcaeus.rootSelectors)
+async function parseResponse (uri: string, alcaeus: HydraClient, response: ResponseWrapper): Promise<Stream | null> {
+    const quadStream = alcaeus.parsers.import(stripContentTypeParameters(response.mediaType), patchResponseBody(response.xhr))
+    if (quadStream == null) {
+        console.warn(`No parser found for media type ${response.mediaType}`)
+        return null
     }
 
-    console.warn(`No processor found for media type ${response.mediaType}`)
-
-    return create(uri, response)
+    const graph = $rdf.namedNode(uri)
+    const parsedTriples = await RdfProcessor.process(quadStream)
+    return parsedTriples.pipe(new TripleToQuadTransform(graph))
 }
 
-function getApiDocumentation (this: Alcaeus, response: IResponseWrapper, headers): Promise<ApiDocumentation | null> {
-    if (response.apiDocumentationLink) {
-        return this.loadDocumentation(response.apiDocumentationLink, headers)
-    } else {
-        console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
+const addOrReplaceGraph = async (
+    alcaeus: HydraClient,
+    response: ResponseWrapper,
+    uri: string): Promise<void> => {
+    const graph = $rdf.namedNode(uri)
+    const parsedTriples = await parseResponse(uri, alcaeus, response)
 
-        return Promise.resolve(null)
-    }
+    if (!parsedTriples) return
+
+    await alcaeus.dataset
+        .removeMatches(undefined, undefined, undefined, graph)
+        .import(parsedTriples)
 }
 
-export class Alcaeus implements IHydraClient {
-    public baseUri?: string = undefined
+interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> {
+    rootSelectors: RootSelector[];
+    factory: ResourceFactory<DatasetCore, R>;
+    dataset: D;
+}
 
-    public rootSelectors: IRootSelector[];
+export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
+    public baseUri?: string = undefined;
 
-    public mediaTypeProcessors: { [name: string]: IMediaTypeProcessor };
+    public rootSelectors: RootSelector[];
+
+    public parsers = new Parsers<EventEmitter, Stream>();
 
     public defaultHeaders: HeadersInit | (() => HeadersInit) = {}
 
-    public constructor (rootSelectors: IRootSelector[], mediaTypeProcessors: { [name: string]: IMediaTypeProcessor }) {
+    public readonly dataset: D
+
+    public readonly factory: ResourceFactory<DatasetCore, R>
+
+    private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
+
+    public constructor ({ rootSelectors, factory, dataset }: AlcaeusInit) {
         this.rootSelectors = rootSelectors
-        this.mediaTypeProcessors = mediaTypeProcessors
+        this.factory = factory
+        this.dataset = dataset || createDataset() as any
     }
 
-    public async loadResource (uri: string, headers: HeadersInit = {}): Promise<IHydraResponse> {
-        const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)), this.baseUri)
-
-        const apiDocumentation = await getApiDocumentation.call(this, response, headers)
-
-        if (apiDocumentation) {
-            return getHydraResponse(this, response, uri, apiDocumentation)
-        }
-
-        return getHydraResponse(this, response, uri)
+    public get apiDocumentations () {
+        return [...this.__apiDocumentations.values()]
     }
 
-    public async loadDocumentation (uri: string, headers: HeadersInit = {}) {
-        try {
-            const response = await FetchUtil.fetchResource(uri, this.__mergeHeaders(new Headers(headers)), this.baseUri)
-            const representation = await getHydraResponse(this, response, uri)
-            const resource = representation.root
-            if (!resource) {
-                console.warn('Could not determine root resource')
-                return null
-            }
-            const resourceType = resource['@type']
+    public async loadResource <T extends RdfResource> (id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<T>> {
+        const uri = typeof id === 'string' ? id : id.value
 
-            let resourceHasApiDocType
-
-            if (Array.isArray(resourceType)) {
-                resourceHasApiDocType = resourceType.includes(Core.Vocab('ApiDocumentation'))
-            } else {
-                resourceHasApiDocType = resourceType === Core.Vocab('ApiDocumentation')
-            }
-
-            if (resourceHasApiDocType === false) {
-                console.warn(`The resource ${uri} does not appear to be an API Documentation`)
-            }
-
-            return resource as any as ApiDocumentation
-        } catch (e) {
-            console.warn(`Failed to load ApiDocumentation from ${uri}`)
-            console.warn(e)
-            console.warn(e.stack)
-            return null
+        const response = await FetchUtil.fetchResource(uri, {
+            parsers: this.parsers,
+            baseUri: this.baseUri,
+            headers: this.__mergeHeaders(new Headers(headers)),
+        })
+        await addOrReplaceGraph(this, response, uri)
+        if (dereferenceApiDocumentation) {
+            await this.__getApiDocumentation(response, headers)
         }
+
+        return create(uri, response, this.dataset, this.factory, this)
     }
 
-    public async invokeOperation (operation: IOperation, uri: string, body?: BodyInit, headers: string | HeadersInit = {}): Promise<IHydraResponse> {
-        if (typeof headers === 'string') {
-            headers = {
-                'content-type': headers,
-            }
+    public async loadDocumentation (id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation | null> {
+        const uri: string = typeof id === 'string' ? id : id.value
 
-            // TODO: remove in 1.0
-            console.warn('DEPRECATION NOTICE: passing content type as string will be removed in version 1.0')
+        const response = await this.loadResource<ApiDocumentation>(uri, headers, false)
+        const apiDocs = response.root
+        if (apiDocs && 'classes' in apiDocs) {
+            this.__apiDocumentations.set(uri, apiDocs)
+            return apiDocs
         }
 
+        return null
+    }
+
+    public async invokeOperation (operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse> {
         const mergedHeaders = this.__mergeHeaders(new Headers(headers))
+        const uri = operation.target.id.value
 
-        const response = await FetchUtil.invokeOperation(operation.method, uri, body, mergedHeaders, this.baseUri)
-        const apiDocumentation = await getApiDocumentation.call(this, response, mergedHeaders)
+        const response = await FetchUtil.invokeOperation(operation.method, uri, {
+            parsers: this.parsers,
+            headers: mergedHeaders,
+            body,
+            baseUri: this.baseUri,
+        })
+        await this.__getApiDocumentation(response, headers)
 
-        if (apiDocumentation) {
-            return getHydraResponse(this, response, uri, apiDocumentation)
+        if (operation.method.toUpperCase() === 'GET') {
+            await addOrReplaceGraph(this, response, uri)
+            return create(uri, response, this.dataset, this.factory, this)
         }
 
-        return getHydraResponse(this, response, uri)
+        const parsedResponse = await parseResponse(uri, this, response)
+        if (!parsedResponse) {
+            return create(uri, response, this.dataset, this.factory, this)
+        }
+
+        const dataset = await this.dataset.clone().import(parsedResponse)
+        return create(uri, response, dataset, this.factory, this)
+    }
+
+    private async __getApiDocumentation (response: ResponseWrapper, headers: HeadersInit): Promise<void> {
+        if (!response.apiDocumentationLink) {
+            console.warn(`Resource ${response.requestedUri} does not expose API Documentation link`)
+            return
+        }
+
+        await this.loadDocumentation(response.apiDocumentationLink, headers)
     }
 
     private __mergeHeaders (headers: Headers): Headers {

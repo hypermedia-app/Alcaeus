@@ -1,31 +1,14 @@
-import * as ApiDocumentation from './Resources/Mixins/ApiDocumentation'
-import * as BasicRepresentationExpansion from './Resources/Mixins/BasicRepresentationExpansion'
-import * as Class from './Resources/Mixins/Class'
-import * as Collection from './Resources/Mixins/Collection'
-import * as DocumentedResource from './Resources/Mixins/DocumentedResource'
-import * as ExplicitRepresentationExpansion from './Resources/Mixins/ExplicitRepresentationExpansion'
-import * as IriTemplate from './Resources/Mixins/IriTemplate'
-import * as IriTemplateMapping from './Resources/Mixins/IriTemplateMapping'
-import * as ManagesBlock from './Resources/Mixins/ManagesBlock'
-import * as PartialCollectionView from './Resources/Mixins/PartialCollectionView'
-import * as RdfProperty from './Resources/Mixins/RdfProperty'
-import * as StatusCodeDescription from './Resources/Mixins/StatusCodeDescription'
-import * as SupportedOperation from './Resources/Mixins/SupportedOperation'
-import * as SupportedProperty from './Resources/Mixins/SupportedProperty'
-
-export default [
-    ApiDocumentation,
-    Collection,
-    PartialCollectionView,
-    SupportedProperty,
-    SupportedOperation,
-    StatusCodeDescription,
-    RdfProperty,
-    Class,
-    BasicRepresentationExpansion,
-    ExplicitRepresentationExpansion,
-    IriTemplate,
-    IriTemplateMapping,
-    DocumentedResource,
-    ManagesBlock,
-]
+export { ApiDocumentationMixin } from './Resources/Mixins/ApiDocumentation'
+export { BasicRepresentationExpansionMixin } from './Resources/Mixins/BasicRepresentationExpansion'
+export { ClassMixin } from './Resources/Mixins/Class'
+export { CollectionMixin } from './Resources/Mixins/Collection'
+export { DocumentedResourceMixin } from './Resources/Mixins/DocumentedResource'
+export { ExplicitRepresentationExpansionMixin } from './Resources/Mixins/ExplicitRepresentationExpansion'
+export { IriTemplateMixin } from './Resources/Mixins/IriTemplate'
+export { IriTemplateMappingMixin } from './Resources/Mixins/IriTemplateMapping'
+export { ManagesBlockMixin } from './Resources/Mixins/ManagesBlock'
+export { PartialCollectionViewMixin } from './Resources/Mixins/PartialCollectionView'
+export { RdfPropertyMixin } from './Resources/Mixins/RdfProperty'
+export { StatusCodeDescriptionMixin } from './Resources/Mixins/StatusCodeDescription'
+export { SupportedOperationMixin } from './Resources/Mixins/SupportedOperation'
+export { SupportedPropertyMixin } from './Resources/Mixins/SupportedProperty'

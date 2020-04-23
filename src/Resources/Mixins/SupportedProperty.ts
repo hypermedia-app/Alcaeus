@@ -1,42 +1,58 @@
-import { Core } from '../../Constants'
-import { ISupportedProperty, RdfProperty } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { HydraResource } from '../index'
+import { DocumentedResourceMixin, DocumentedResource } from './DocumentedResource'
+import { RdfProperty, RdfPropertyMixin } from './RdfProperty'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    return class SupportedProperty extends Base implements ISupportedProperty {
-        public get readable () {
-            const readable = this.get(Core.Vocab('readable'))
-            if (typeof readable === 'boolean') {
-                return readable
-            }
-
-            return true
-        }
-
-        public get writable () {
-            const writable = this.get(Core.Vocab('writeable'))
-            if (typeof writable === 'boolean') {
-                return writable
-            }
-
-            return true
-        }
-
-        public get required () {
-            const required = this.get(Core.Vocab('required'))
-            if (typeof required === 'boolean') {
-                return required
-            }
-
-            return false
-        }
-
-        public get property () {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.get<RdfProperty>(Core.Vocab('property'), { strict: true })!
-        }
-    }
+export interface SupportedProperty extends DocumentedResource {
+    /**
+     * Gets the value indicating if the property can be read from responses
+     */
+    readable: boolean;
+    /**
+     * Gets the value indicating if the property can be written by requests
+     */
+    writable: boolean;
+    /**
+     * Gets the value indicating if the property in required in request payload
+     */
+    required: boolean;
+    /**
+     * The actual RDF predicate to use in representations
+     */
+    property: RdfProperty;
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('SupportedProperty'))
+export function SupportedPropertyMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    @namespace(hydra)
+    class SupportedPropertyClass extends DocumentedResourceMixin(Base) implements SupportedProperty {
+        @property.literal({
+            type: Boolean,
+            initial: true,
+        })
+        public readable!: boolean
+
+        @property.literal({
+            type: Boolean,
+            path: hydra.writeable,
+            initial: true,
+        })
+        public writable!: boolean
+
+        @property.literal({
+            type: Boolean,
+            initial: false,
+        })
+        public required!: boolean
+
+        @property.resource({
+            strict: true,
+            as: [RdfPropertyMixin],
+        })
+        public property!: RdfProperty
+    }
+
+    return SupportedPropertyClass
+}
+
+SupportedPropertyMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.SupportedProperty)

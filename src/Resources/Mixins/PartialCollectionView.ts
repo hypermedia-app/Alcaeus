@@ -1,44 +1,60 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
-import { IAsObject, IIncomingLink } from '../../internals'
-import { HydraResource, IPartialCollectionView, IView } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import { SingleContextClownface } from 'clownface'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { Collection, HydraResource, View } from '../index'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    class PartialCollectionView extends Base implements IPartialCollectionView, IView {
-        @nonenumerable
-        public get first () {
-            return this.get<HydraResource>(Core.Vocab('first'))
-        }
+export interface PartialCollectionView extends View {
+    /**
+     * Gets the first page resource of a collection
+     */
+    readonly first: HydraResource | undefined;
+    /**
+     * Gets the previous page resource of a collection
+     */
+    readonly previous: HydraResource | undefined;
+    /**
+     * Gets the next page resource of a collection
+     */
+    readonly next: HydraResource | undefined;
+    /**
+     * Gets the last page resource of a collection
+     */
+    readonly last: HydraResource | undefined;
+}
 
-        @nonenumerable
-        public get previous () {
-            return this.get<HydraResource>(Core.Vocab('previous'))
-        }
+export function PartialCollectionViewMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    @namespace(hydra)
+    class PartialCollectionViewClass extends Base implements PartialCollectionView {
+        @property.resource()
+        public first!: HydraResource
 
-        @nonenumerable
-        public get next () {
-            return this.get<HydraResource>(Core.Vocab('next'))
-        }
+        @property.resource()
+        public previous!: HydraResource
 
-        @nonenumerable
-        public get last () {
-            return this.get<HydraResource>(Core.Vocab('last'))
-        }
+        @property.resource()
+        public next!: HydraResource
 
-        @nonenumerable
+        @property.resource()
+        public last!: HydraResource
+
         public get collection () {
-            const reverseLinks = (this as any as IAsObject)._reverseLinks
-            const collectionLink = reverseLinks.find((linkArray: IIncomingLink) => {
-                return linkArray.predicate === Core.Vocab('view')
-            })
+            const collection = this._selfGraph.in(hydra.view)
 
-            return collectionLink ? collectionLink.subject : null
+            return collection.toArray()
+                .reduce((namedNodes, node) => {
+                    if (node.term.termType === 'BlankNode' || node.term.termType === 'NamedNode') {
+                        namedNodes.push(node as any)
+                    }
+
+                    return namedNodes
+                }, [] as SingleContextClownface<ResourceIdentifier>[])
+                .map(collectionNode => {
+                    return this._create<Collection>(collectionNode)
+                })[0] || null
         }
     }
 
-    return PartialCollectionView
+    return PartialCollectionViewClass
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('PartialCollectionView'))
+PartialCollectionViewMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.PartialCollectionView)

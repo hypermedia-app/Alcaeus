@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hydra loadDocumentation should replace its representation in the dataset when loading twice 1`] = `
+"<http://api.example.com/doc/2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#ApiDocumentation> <http://api.example.com/doc/> .
+"
+`;
+
+exports[`Hydra loadDocumentation should store its representation in the dataset 1`] = `
+"<http://api.example.com/doc/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#ApiDocumentation> <http://api.example.com/doc/> .
+"
+`;

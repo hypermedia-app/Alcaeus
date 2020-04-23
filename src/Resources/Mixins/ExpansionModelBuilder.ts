@@ -1,29 +1,35 @@
+import { Constructor } from '@tpluscode/rdfine'
 import URITemplate from 'es6-url-template'
-import { IIriTemplate, IIriTemplateMapping } from '../index'
-import { Constructor } from '../Mixin'
+import url from 'url'
+import { IriTemplate } from './IriTemplate'
+import { IriTemplateMapping } from './IriTemplateMapping'
 
-export interface IExpandedValue {
+export interface ExpandedValue {
     ['@value']: string;
     ['@language']: string;
     ['@id']: string;
     ['@type']: string;
 }
 
-export default function <TBase extends Constructor> (Base: TBase) {
+export default function <TBase extends Constructor<IriTemplate>> (Base: TBase) {
     abstract class Builder extends Base {
         public expand (model): string {
-            const thisTemplate = this as any as IIriTemplate
-            const uriTemplate = new URITemplate(thisTemplate.template)
+            const uriTemplate = new URITemplate(this.template)
 
-            const variables = this.buildExpansionModel(thisTemplate.mappings, model)
+            const variables = this.buildExpansionModel(this.mappings, model)
+            const expanded = uriTemplate.expand(variables)
 
-            return uriTemplate.expand(variables)
+            if (this._parent && !this._parent.isAnonymous) {
+                return url.resolve(this._parent.id.value, expanded)
+            }
+
+            return expanded
         }
 
-        public buildExpansionModel (mappings: IIriTemplateMapping[], model: object) {
-            return mappings.map((mapping: IIriTemplateMapping) => {
+        public buildExpansionModel (mappings: IriTemplateMapping[], model: object) {
+            return mappings.map((mapping: IriTemplateMapping) => {
                 return {
-                    value: model[mapping.property.id],
+                    value: model[mapping.property.id.value],
                     variable: mapping.variable,
                 }
             }).reduce((result, mapping) => {
@@ -41,7 +47,7 @@ export default function <TBase extends Constructor> (Base: TBase) {
 
         public abstract mapShorthandValue(value: string);
 
-        public abstract mapExpandedValue(value: IExpandedValue);
+        public abstract mapExpandedValue(value: ExpandedValue);
     }
 
     return Builder

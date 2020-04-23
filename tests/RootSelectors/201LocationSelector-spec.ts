@@ -1,4 +1,3 @@
-import { ResourceGraph } from '../../src/ResourceGraph'
 import { HydraResource } from '../../src/Resources'
 import LocationSelector from '../../src/RootSelectors/201LocationSelector'
 import 'isomorphic-fetch'
@@ -7,8 +6,8 @@ describe('201LocationSelector', () => {
     it('should select the resource with id matching location header', () => {
         // given
         const expectedRoot = {} as HydraResource
-        const resources = new ResourceGraph()
-        resources['the-real-id'] = expectedRoot
+        const resources = new Map<string, HydraResource>()
+        resources.set('the-real-id', expectedRoot)
         const response = {
             xhr: {
                 status: 201,
@@ -30,8 +29,8 @@ describe('201LocationSelector', () => {
     it('should select the resource with id matching relative location header', () => {
         // given
         const expectedRoot = {} as HydraResource
-        const resources = new ResourceGraph()
-        resources['the-real-id'] = expectedRoot
+        const resources = new Map<string, HydraResource>()
+        resources.set('the-real-id', expectedRoot)
         const response = {
             xhr: {
                 status: 201,
@@ -51,7 +50,7 @@ describe('201LocationSelector', () => {
 
     it('should not select the resource when status is not 201', () => {
         // given
-        const resources = new ResourceGraph()
+        const resources = new Map<string, HydraResource>()
         const response = {
             xhr: {
                 status: 301,
@@ -66,12 +65,12 @@ describe('201LocationSelector', () => {
         const root = LocationSelector.selectRoot(resources, response)
 
         // then
-        expect(root).toBeNull()
+        expect(root).toBeUndefined()
     })
 
-    it('should return null if resource is not found', () => {
+    it('should return not select if resource is not found', () => {
         // given
-        const resources = new ResourceGraph()
+        const resources = new Map<string, HydraResource>()
         const response = {
             xhr: {
                 status: 201,
@@ -87,6 +86,6 @@ describe('201LocationSelector', () => {
         const root = LocationSelector.selectRoot(resources, response)
 
         // then
-        expect(root).toBeNull()
+        expect(root).toBeUndefined()
     })
 })

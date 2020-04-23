@@ -1,15 +1,20 @@
-import { IResourceGraph, ResourceGraph } from './ResourceGraph'
+import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
+import { NamedNode } from 'rdf-js'
+import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { HydraClient } from './alcaeus'
+import ResourceGraph from './ResourceGraph'
 import { HydraResource } from './Resources'
-import { IResource } from './Resources/Resource'
-import { IResponseWrapper, ResponseWrapper } from './ResponseWrapper'
-import { IRootSelector } from './RootSelectors'
+import ResponseWrapperImpl, { ResponseWrapper } from './ResponseWrapper'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
-export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrapper {
+export interface HydraResponse<T extends RdfResource = HydraResource> extends Iterable<HydraResource>, ResponseWrapper {
 
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
-    root: HydraResource | null;
+    root: HydraResource | (HydraResource & T) | null;
 
     /**
      * Gets the number of resource within this representation
@@ -19,55 +24,75 @@ export interface IHydraResponse extends Iterable<HydraResource>, IResponseWrappe
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    get(uri: string): HydraResource;
+    get(uri: string): HydraResource | undefined;
 
     /**
      * Gets all resources of given RDF type from the representation
      * @param {string} classId RDF class identifier
      * @returns {Array<HydraResource>}
      */
-    ofType(classId: string): IResource[];
+    ofType(classId: string | NamedNode): HydraResource[];
 }
 
-export function create (
+export function create <D extends DatasetIndexed> (
     uri: string,
-    response: IResponseWrapper,
-    resources?: IResourceGraph,
-    rootSelectors?: IRootSelector[]): IHydraResponse {
-    const safeResources = resources || new ResourceGraph()
-    const safeSelectors = rootSelectors || []
+    response: ResponseWrapper,
+    dataset: D,
+    factory: ResourceFactory,
+    alcaeus: Pick<HydraClient, 'rootSelectors'>): HydraResponse {
+    const representationGraph = cf({ dataset, graph: $rdf.namedNode(uri) })
+    const resources = new ResourceGraph(representationGraph, factory)
 
-    class HydraResponse extends ResponseWrapper implements IHydraResponse {
+    function createEntity (node: SingleContextClownface) {
+        return factory.createEntity<HydraResource>(cf({
+            dataset,
+            term: node.term,
+        }))
+    }
+
+    function byInProperties (left: HydraResource, right: HydraResource) {
+        return left._selfGraph.in().terms.length - right._selfGraph.in().terms.length
+    }
+
+    class HydraResponseWrapper extends ResponseWrapperImpl implements HydraResponse {
         public constructor (requestedUri: string) {
             super(requestedUri, response.xhr)
         }
 
         public get (identifier: string) {
-            return safeResources.get(identifier)
+            return resources.get(identifier)
         }
 
         public get root () {
-            return safeSelectors.reduce((resource: HydraResource | null, selector) => {
-                if (!resource) {
-                    resource = selector.selectRoot(safeResources, this)
+            const potentialRoots = alcaeus.rootSelectors.reduceRight<HydraResource[]>((candidates, selector) => {
+                const candidate = selector.selectRoot(resources, this)
+                if (candidate) {
+                    return [...candidates, candidate]
                 }
 
-                return resource
-            }, null)
+                return candidates
+            }, [])
+
+            // selects the resource which is object of least relations in graph
+            return potentialRoots.sort(byInProperties)[0] || null
         }
 
         public get length (): number {
-            return Object.keys(safeResources).length
+            return representationGraph.in().terms.length
         }
 
-        public ofType (classId: string) {
-            return Object.values(safeResources).filter((res) => res.types.contains(classId))
+        public ofType (classId: string | NamedNode) {
+            const type = typeof classId === 'string' ? $rdf.namedNode(classId) : classId
+
+            return representationGraph.has(rdf.type, type)
+                .map(createEntity)
         }
 
         public [Symbol.iterator] () {
-            return Object.values(safeResources)[Symbol.iterator]()
+            return representationGraph.in()
+                .map(createEntity)[Symbol.iterator]()
         }
     }
 
-    return new HydraResponse(uri)
+    return new HydraResponseWrapper(uri)
 }

@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "outDir": ".",
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": false,
     "declaration": true,
-    "declarationDir": "types",
+    "declarationDir": ".",
+    "declarationMap": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "lib": [
@@ -18,8 +22,8 @@
     ],
     "esModuleInterop": true
   },
-  "include": [
-    "src/**/*.ts"
+  "files": [
+    "src/index.ts"
   ],
   "exclude": [
     "node_modules"

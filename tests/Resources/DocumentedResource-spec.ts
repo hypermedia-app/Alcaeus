@@ -1,24 +1,27 @@
-import { promises as jsonld } from 'jsonld'
-import { Mixin } from '../../src/Resources/Mixins/DocumentedResource'
-import Resource from '../../src/Resources/Resource'
-import Context from '../test-objects/Context'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { NamedNode } from 'rdf-js'
+import { DocumentedResourceMixin } from '../../src/Resources/Mixins/DocumentedResource'
+import { Resource } from './_TestResource'
+import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 
-class DocumentedResource extends Mixin(Resource) {}
+class DocumentedResource extends DocumentedResourceMixin(Resource) {}
 
 describe('DocumentedResource', () => {
-    const hydraDescriptionJsonLd = {
-        '@context': Context,
-        'description': 'The longer description',
-        'http://some/custom/property': 'The value',
-        'title': 'The title',
-    }
+    let node: SingleContextClownface<NamedNode>
 
-    it('should use hydra:title for title property', async () => {
+    beforeEach(() => {
+        node = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#Resource')
+        node.addOut(node.namedNode('http://some/custom/property'), 'The value')
+    })
+
+    it('should use hydra:title for title property', () => {
         // given
-        const compacted = await jsonld.compact(hydraDescriptionJsonLd, {})
+        node.addOut(hydra.title, 'The title')
 
         // when
-        const op = new DocumentedResource(compacted)
+        const op = new DocumentedResource(node)
 
         // then
         expect(op.title).toBe('The title')
@@ -26,44 +29,56 @@ describe('DocumentedResource', () => {
 
     it('should use hydra:description for title property', async () => {
         // given
-        const compacted = await jsonld.compact(hydraDescriptionJsonLd, {})
+        node.addOut(hydra.description, 'The longer description')
 
         // when
-        const op = new DocumentedResource(compacted)
+        const op = new DocumentedResource(node)
 
         // then
         expect(op.description).toBe('The longer description')
     })
 
     it('should use rdfs:label for title property as fallback', () => {
-        const op = new DocumentedResource({
-            'http://www.w3.org/2000/01/rdf-schema#label': 'The title with rdfs',
-        })
+        // given
+        node.addOut(rdfs.label, 'The title with rdfs')
 
+        // when
+        const op = new DocumentedResource(node)
+
+        // then
         expect(op.title).toBe('The title with rdfs')
     })
 
     it('should use schema:title for title property as fallback', () => {
-        const op = new DocumentedResource({
-            'http://schema.org/title': 'The title with schema',
-        })
+        // given
+        node.addOut(schema.title, 'The title with schema')
 
+        // when
+        const op = new DocumentedResource(node)
+
+        // then
         expect(op.title).toBe('The title with schema')
     })
 
     it('should use rdfs:comment for description property as fallback', () => {
-        const op = new DocumentedResource({
-            'http://www.w3.org/2000/01/rdf-schema#comment': 'The title descr with rdfs',
-        })
+        // given
+        node.addOut(rdfs.comment, 'The title descr with rdfs')
 
+        // when
+        const op = new DocumentedResource(node)
+
+        // then
         expect(op.description).toBe('The title descr with rdfs')
     })
 
     it('should use schema:label for title property as fallback', () => {
-        const op = new DocumentedResource({
-            'http://schema.org/description': 'The title descr with schema',
-        })
+        // given
+        node.addOut(schema.description, 'The title descr with schema')
 
+        // when
+        const op = new DocumentedResource(node)
+
+        // then
         expect(op.description).toBe('The title descr with schema')
     })
 })

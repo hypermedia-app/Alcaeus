@@ -1,16 +1,17 @@
-import { Vocab } from '../index'
-import { IHydraResponse } from '../HydraResponse'
-import { IResourceGraph } from '../ResourceGraph'
-import { IResponseWrapper } from '../ResponseWrapper'
-import { IRootSelector } from './index'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { HydraResponse } from '../HydraResponse'
+import { ResourceGraph } from '../ResourceGraph'
+import { View } from '../Resources'
+import { ResponseWrapper } from '../ResponseWrapper'
+import { RootSelector } from './index'
 
-export default function (selector: IRootSelector): IRootSelector {
+export default function (selector: RootSelector): RootSelector {
     return {
-        selectRoot (resources: IResourceGraph, response: IResponseWrapper & IHydraResponse) {
-            const maybeView = selector.selectRoot(resources, response) as any
+        selectRoot (resources: ResourceGraph, response: ResponseWrapper & HydraResponse) {
+            const maybeView = selector.selectRoot(resources, response) as View | undefined
 
-            if (maybeView && maybeView.types.contains(Vocab('PartialCollectionView'))) {
-                return maybeView.collection
+            if (maybeView && maybeView.types.has(hydra.PartialCollectionView)) {
+                return maybeView.collection || undefined
             }
 
             return maybeView

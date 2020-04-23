@@ -73,7 +73,7 @@ const rep = await client.loadResource('https://sources.test.wikibus.org/book/133
 
 const example = {
   types: rep.root.types,
-  isBook: rep.root.types.contains('http://schema.org/Book')
+  isBook: rep.root.hasType('http://schema.org/Book')
 }
 {% endrunkit %}
 

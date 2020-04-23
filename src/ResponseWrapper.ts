@@ -1,8 +1,11 @@
 import li from 'parse-link-header'
 import * as Constants from './Constants'
 import nonenumerable from './helpers/nonenumerable'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
-export interface IResponseWrapper {
+const apiDocumentationRel = hydra.apiDocumentation.value
+
+export interface ResponseWrapper {
     /**
      * Gets the URI used to perform the request
      */
@@ -38,7 +41,7 @@ export interface IResponseWrapper {
     resolveUri(uri: string): string;
 }
 
-export class ResponseWrapper implements IResponseWrapper {
+export default class implements ResponseWrapper {
     public readonly requestedUri: string;
 
     @nonenumerable
@@ -59,8 +62,8 @@ export class ResponseWrapper implements IResponseWrapper {
             const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
             const links = li(linkHeaders)
 
-            if (links[Constants.Core.Vocab('apiDocumentation')]) {
-                const linkUrl = links[Constants.Core.Vocab('apiDocumentation')].url
+            if (links[apiDocumentationRel]) {
+                const linkUrl = links[apiDocumentationRel].url
 
                 return this.resolveUri(linkUrl)
             }
@@ -70,7 +73,7 @@ export class ResponseWrapper implements IResponseWrapper {
     }
 
     public get mediaType (): string {
-        return this.xhr.headers.get(Constants.Headers.ContentType) || Constants.MediaTypes.jsonLd
+        return this.xhr.headers.get(Constants.Headers.ContentType) || ''
     }
 
     public get redirectUrl () {

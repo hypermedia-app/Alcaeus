@@ -1,20 +1,32 @@
-import { Core } from '../../src/Constants'
-import { Mixin } from '../../src/Resources/Mixins/Collection'
-import Resource from '../../src/Resources/Resource'
+import cf, { SingleContextClownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import { NamedNode } from 'rdf-js'
+import { CollectionMixin } from '../../src/Resources/Mixins/Collection'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import { Resource } from './_TestResource'
 
-class Collection extends Mixin(Resource) {}
+class Collection extends CollectionMixin(Resource) {}
 
 describe('Collection', () => {
+    let collectionNode: SingleContextClownface<NamedNode>
+
+    beforeEach(() => {
+        collectionNode = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#Collection')
+    })
+
     describe('members', () => {
         it('should return array even for one member', () => {
             // given
-            const collectionBody = {}
-            collectionBody[Core.Vocab('member')] = { text: 'hello' }
-            const collection = new Collection(collectionBody)
+            collectionNode
+                .addOut(hydra.member, m => {
+                    m.addOut(collectionNode.namedNode('http://example.com/text'), 'hello')
+                })
+            const collection = new Collection(collectionNode) as any
 
             // then
             expect(Array.isArray(collection.members)).toBe(true)
-            expect((collection.members[0] as any).text).toBe('hello')
+            expect(collection.members[0]['http://example.com/text'].value).toBe('hello')
         })
 
         it('should be non-enumerable', () => {
@@ -26,19 +38,7 @@ describe('Collection', () => {
     describe('views', () => {
         it('should return empty array when views are missing', () => {
             // given
-            const collectionBody = {}
-            const collection = new Collection(collectionBody)
-
-            // then
-            expect(Array.isArray(collection.views)).toBe(true)
-            expect(collection.views.length).toBe(0)
-        })
-
-        it('should return empty array when views is null', () => {
-            // given
-            const collectionBody = {}
-            collectionBody[Core.Vocab('view')] = null
-            const collection = new Collection(collectionBody)
+            const collection = new Collection(collectionNode)
 
             // then
             expect(Array.isArray(collection.views)).toBe(true)
@@ -54,9 +54,8 @@ describe('Collection', () => {
     describe('manages', () => {
         it('should return array even for one element', () => {
             // given
-            const collectionBody = {}
-            collectionBody[Core.Vocab('manages')] = { }
-            const collection = new Collection(collectionBody)
+            collectionNode.addOut(hydra.manages, collectionNode.blankNode())
+            const collection = new Collection(collectionNode)
 
             // then
             expect(Array.isArray(collection.manages)).toBe(true)
@@ -71,12 +70,34 @@ describe('Collection', () => {
     describe('totalItems', () => {
         it('returns the value of the hydra property', () => {
             // given
-            const collectionBody = {}
-            collectionBody[Core.Vocab('totalItems')] = 167
-            const collection = new Collection(collectionBody)
+            collectionNode.addOut(hydra.totalItems, 167)
+            const collection = new Collection(collectionNode)
 
             // then
             expect(collection.totalItems).toBe(167)
         })
+    })
+})
+
+describe('CollectionMixin', () => {
+    let collectionNode: SingleContextClownface<NamedNode>
+
+    beforeEach(() => {
+        collectionNode = cf({ dataset: $rdf.dataset() })
+            .namedNode('http://example.com/vocab#Collection')
+    })
+
+    it('should apply to hydra:Collection', () => {
+        // given
+        collectionNode.addOut(rdf.type, hydra.Collection)
+        const collection = new Resource(collectionNode)
+
+        // then
+        expect(CollectionMixin.shouldApply(collection)).toBe(true)
+    })
+
+    it('should be non-enumerable', () => {
+        expect(Collection.prototype.propertyIsEnumerable('members'))
+            .toBe(false)
     })
 })

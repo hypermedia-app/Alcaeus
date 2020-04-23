@@ -1,32 +1,45 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
-import { IIriTemplate, IIriTemplateMapping, VariableRepresentation } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { HydraResource } from '../index'
+import { IriTemplateMapping, IriTemplateMappingMixin } from './IriTemplateMapping'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    abstract class IriTemplate extends Base implements IIriTemplate {
-        @nonenumerable
-        public get template (): string {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.getString(Core.Vocab('template'), { strict: true })!
-        }
-
-        @nonenumerable
-        public get mappings () {
-            return this.getArray<IIriTemplateMapping>(Core.Vocab('mapping'))
-        }
-
-        @nonenumerable
-        public get variableRepresentation () {
-            return this.get<VariableRepresentation>(Core.Vocab('variableRepresentation')) ||
-                Core.Vocab('BasicRepresentation') as VariableRepresentation
-        }
-
-        public abstract expand(): string;
-    }
-
-    return IriTemplate
+export interface IriTemplate extends HydraResource {
+    template: string;
+    mappings: IriTemplateMapping[];
+    variableRepresentation: HydraResource;
+    expand(model: any): string;
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('IriTemplate'))
+// temporary fix to avoid combining abstract classes with decorators
+// see babel/babel#10514
+function AbstractExpander<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    abstract class AbstractExpanderClass extends Base {
+        public abstract expand (model: any): string
+    }
+
+    return AbstractExpanderClass
+}
+
+export function IriTemplateMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    @namespace(hydra)
+    abstract class IriTemplateClass extends AbstractExpander(Base) implements IriTemplate {
+        @property.literal()
+        public template!: string
+
+        @property.resource({
+            path: hydra.mapping,
+            values: 'array',
+            as: [IriTemplateMappingMixin],
+        })
+        public mappings!: IriTemplateMapping[]
+
+        @property({
+            initial: hydra.BasicRepresentation,
+        })
+        public variableRepresentation!: HydraResource
+    }
+
+    return IriTemplateClass
+}
+
+IriTemplateMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.IriTemplate)

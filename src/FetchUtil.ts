@@ -1,18 +1,24 @@
-import * as Constants from './Constants'
-import { ResponseWrapper } from './ResponseWrapper'
+import SinkMap from '@rdfjs/sink-map'
+import { EventEmitter } from 'events'
+import { Stream } from 'rdf-js'
+import url from 'url'
+import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
 
-// tslint:disable:max-line-length
-const requestAcceptHeaders = Constants.MediaTypes.jsonLd + ', ' + Constants.MediaTypes.ntriples + ', ' + Constants.MediaTypes.nquads
+type Parsers = SinkMap<EventEmitter, Stream>
 
-async function getResponse (uri, { method, headers = {}, body, baseUri }: { method: string; headers?: HeadersInit; body?: BodyInit; baseUri?: string }) {
+function requestAcceptHeaders (sinkMap: Parsers) {
+    return [...sinkMap.keys()].join(', ')
+}
+
+async function getResponse (uri, { method, headers = {}, body, baseUri, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; baseUri?: string; parsers: Parsers }) {
     let effectiveUri = uri
     if (uri.match(/^https?:\/\//) === null && baseUri) {
-        effectiveUri = new URL(uri, baseUri).toString()
+        effectiveUri = url.resolve(baseUri, uri)
     }
 
     const defaultHeaders: HeadersInit = {
-        accept: requestAcceptHeaders,
+        accept: requestAcceptHeaders(parsers),
     }
 
     const requestInit: RequestInit = {
@@ -20,10 +26,6 @@ async function getResponse (uri, { method, headers = {}, body, baseUri }: { meth
     }
 
     if (method.toLowerCase() !== 'get') {
-        if (!(body instanceof FormData)) {
-            defaultHeaders['content-type'] = Constants.MediaTypes.jsonLd
-        }
-
         requestInit.body = body
     }
 
@@ -34,19 +36,16 @@ async function getResponse (uri, { method, headers = {}, body, baseUri }: { meth
     return new ResponseWrapper(effectiveUri, res)
 }
 
-export function fetchResource (uri: string, headers: HeadersInit, baseUri?: string): Promise<ResponseWrapper> {
+export function fetchResource (uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit; baseUri?: string }): Promise<ResponseWrapper> {
     return getResponse(uri, {
         method: 'get',
-        headers,
-        baseUri,
+        ...requestInit,
     })
 }
 
 export function invokeOperation (
     method: string,
     uri: string,
-    body?: BodyInit,
-    headers?: HeadersInit,
-    baseUri?: string): Promise<ResponseWrapper> {
-    return getResponse(uri, { method, headers, body, baseUri })
+    requestInit: { parsers: Parsers; headers?: HeadersInit; body?: BodyInit; baseUri?: string }): Promise<ResponseWrapper> {
+    return getResponse(uri, { method, ...requestInit })
 }

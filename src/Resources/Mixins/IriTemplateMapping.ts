@@ -1,30 +1,37 @@
-import { nonenumerable } from 'core-decorators'
-import { Core } from '../../Constants'
-import { IIriTemplateMapping, RdfProperty } from '../index'
-import { Constructor } from '../Mixin'
-import { IResource } from '../Resource'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import { HydraResource } from '../index'
+import { RdfProperty, RdfPropertyMixin } from './RdfProperty'
 
-export function Mixin<TBase extends Constructor> (Base: TBase) {
-    class IriTemplateMapping extends Base implements IIriTemplateMapping {
-        @nonenumerable
-        public get variable () {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.getString(Core.Vocab('variable'), { strict: true })!
-        }
-
-        @nonenumerable
-        public get property () {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.get<RdfProperty>(Core.Vocab('property'), { strict: true })!
-        }
-
-        @nonenumerable
-        public get required () {
-            return this.getBoolean(Core.Vocab('required'))
-        }
-    }
-
-    return IriTemplateMapping
+export interface IriTemplateMapping extends RdfResource {
+    property: RdfProperty;
+    variable: string;
+    required: boolean;
 }
 
-export const shouldApply = (res: IResource) => res.types.contains(Core.Vocab('IriTemplateMapping'))
+export function IriTemplateMappingMixin<TBase extends Constructor<HydraResource>> (Base: TBase) {
+    @namespace(hydra)
+    class IriTemplateMappingClass extends Base implements IriTemplateMapping {
+        @property.literal({
+            strict: true,
+        })
+        public variable!: string
+
+        @property.resource({
+            strict: true,
+            as: [RdfPropertyMixin],
+        })
+        public property!: RdfProperty
+
+        @property.literal({
+            strict: true,
+            type: Boolean,
+            initial: false,
+        })
+        public required!: boolean
+    }
+
+    return IriTemplateMappingClass
+}
+
+IriTemplateMappingMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.IriTemplateMapping)

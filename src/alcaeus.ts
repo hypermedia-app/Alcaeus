@@ -13,7 +13,7 @@ import RdfProcessor from './RdfProcessor'
 import { ApiDocumentation, HydraResource } from './Resources'
 import { Operation } from './Resources/Operation'
 import { ResponseWrapper } from './ResponseWrapper'
-import { RootSelector } from './RootSelectors'
+import { RootSelector, wrappedViewSelector } from './RootSelectors'
 
 type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<HydraResource, 'id'>
@@ -22,7 +22,7 @@ type InvokedOperation = Pick<Operation, 'method'> & {
 export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     log: (msg: string) => void
     baseUri?: string
-    rootSelectors: RootSelector[]
+    rootSelectors: [string, RootSelector][]
     parsers: SinkMap<EventEmitter, Stream>
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation | null>
@@ -64,7 +64,7 @@ const addOrReplaceGraph = async (
 }
 
 interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> {
-    rootSelectors: RootSelector[]
+    rootSelectors: [string, RootSelector][]
     factory: ResourceFactory<DatasetCore, R>
     dataset: D
 }
@@ -72,7 +72,7 @@ interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed 
 export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
     public baseUri?: string = undefined;
 
-    public rootSelectors: RootSelector[];
+    public rootSelectors: [string, RootSelector][];
 
     public parsers = new Parsers<EventEmitter, Stream>();
 
@@ -87,7 +87,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
     private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
 
     public constructor({ rootSelectors, factory, dataset }: AlcaeusInit<R, D>) {
-        this.rootSelectors = rootSelectors
+        this.rootSelectors = rootSelectors.map(([name, selector]) => [name, wrappedViewSelector(selector)])
         this.factory = factory
         this.dataset = dataset
     }

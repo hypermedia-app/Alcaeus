@@ -2,6 +2,7 @@ import { SinkMap } from '@rdfjs/sink-map'
 import { EventEmitter } from 'events'
 import RdfResource from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
+import createDataset from 'rdf-dataset-indexed'
 import { DatasetCore, Stream } from 'rdf-js'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus, HydraClient } from './alcaeus'
@@ -31,7 +32,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>({ rootSelecto
     const alcaeus = new Alcaeus({
         rootSelectors: rootSelectors || Object.values(defaultSelectors),
         factory,
-        dataset,
+        dataset: dataset || createDataset() as D,
     })
 
     if (parsers) {

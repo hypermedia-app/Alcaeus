@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events'
 import Parsers, { SinkMap } from '@rdfjs/sink-map'
 import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
-import createDataset from 'rdf-dataset-indexed'
 import $rdf from '@rdfjs/data-model'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { DatasetCore, NamedNode, Stream } from 'rdf-js'
@@ -87,10 +86,10 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
 
     private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
 
-    public constructor({ rootSelectors, factory, dataset }: AlcaeusInit) {
+    public constructor({ rootSelectors, factory, dataset }: AlcaeusInit<R, D>) {
         this.rootSelectors = rootSelectors
         this.factory = factory
-        this.dataset = dataset || createDataset() as any
+        this.dataset = dataset
     }
 
     public get apiDocumentations() {

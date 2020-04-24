@@ -12,14 +12,13 @@ class View extends PartialCollectionViewMixin(Resource) {}
 
 describe('RootSelector', () => {
     describe('viewSelector', () => {
-        it('should return the collection if resource is collection view', () => {
+        it('should return the collection if resource is its hydra:view', () => {
         // given
             const dataset = $rdf.dataset()
             const view = new View({
                 dataset,
                 term: $rdf.namedNode('view'),
             })
-            view.types.add(hydra.PartialCollectionView)
             cf({ dataset })
                 .namedNode('collection').addOut(hydra.view, view._selfGraph)
 

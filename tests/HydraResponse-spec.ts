@@ -54,21 +54,19 @@ describe('HydraResponse', () => {
             const xhr = {
                 xhr: {} as Response,
             } as ResponseWrapper
-            const selector = {
-                selectRoot: sinon.stub(),
-            }
-            selector.selectRoot.returns({
+            const selector = sinon.stub()
+            selector.returns({
                 id: 'urn:other:resource',
             })
             const dataset = $rdf.dataset()
 
             // when
-            const response = HydraResponse('urn:some:resource', xhr, dataset, factory, { rootSelectors: [ selector ] })
+            const response = HydraResponse('urn:some:resource', xhr, dataset, factory, { rootSelectors: [ ['', selector] ] })
             const root = response.root
 
             // then
             expect(root!.id).toEqual('urn:other:resource')
-            expect(selector.selectRoot.called).toBeTruthy()
+            expect(selector.called).toBeTruthy()
         })
     })
 

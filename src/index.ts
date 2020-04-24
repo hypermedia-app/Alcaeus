@@ -15,7 +15,7 @@ export * from './Resources/index'
 export { Operation } from './Resources/Operation'
 
 interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
-    rootSelectors?: RootSelector[]
+    rootSelectors?: [string, RootSelector][]
     parsers?: SinkMap<EventEmitter, Stream>
     dataset?: D
 }
@@ -30,7 +30,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>({ rootSelecto
 
     factory = new ResourceFactory(HydraResource)
     const alcaeus = new Alcaeus({
-        rootSelectors: rootSelectors || Object.values(defaultSelectors),
+        rootSelectors: Object.entries(rootSelectors || defaultSelectors),
         factory,
         dataset: dataset || createDataset() as D,
     })

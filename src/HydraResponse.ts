@@ -65,7 +65,7 @@ export function create <D extends DatasetIndexed>(
 
         public get root() {
             const potentialRoots = alcaeus.rootSelectors.reduceRight<HydraResource[]>((candidates, selector) => {
-                const candidate = selector.selectRoot(resources, this)
+                const candidate = selector[1](resources, this)
                 if (candidate) {
                     return [...candidates, candidate]
                 }

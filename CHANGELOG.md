@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.3](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2020-04-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* root selectors are now simple functions, initialized through an array of [string, func]
+
+### Bug Fixes
+
+* getting links failed if any object was Literal ([38ce61a](https://github.com/wikibus/alcaeus/commit/38ce61a62fec49a83caad02979d4014f0be2d4f4))
+* selecting root only work for hydra:PartialCollectionView ([18d637a](https://github.com/wikibus/alcaeus/commit/18d637aae1ad3c60d5bdf6cc55467ad62c36a8a4))
+
 ## [1.0.0-beta.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2020-04-24)
 
 ## [1.0.0-beta.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2020-04-23)

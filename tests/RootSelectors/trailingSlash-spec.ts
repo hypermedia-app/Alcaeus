@@ -1,43 +1,32 @@
-import { HydraResponse } from '../../src/HydraResponse'
-import { HydraResource } from '../../src/Resources'
+import { ResponseWrapper } from '../../src/ResponseWrapper'
 import { trailingSlash } from '../../src/RootSelectors/trailingSlash'
 
 describe('RootSelector', () => {
     describe('TrailingSlashSelector', () => {
-        describe('when requested id has a trailing slash but representation does not', () => {
-            it('should return the correct one', () => {
-                // given
-                const expectedRoot = {} as HydraResource
-                const resources = new Map<string, HydraResource>()
-                resources.set('http://some/id', expectedRoot)
-                const response = {
-                    requestedUri: 'http://some/id/',
-                } as HydraResponse
+        it('adds trailing slash if needed', () => {
+            // given
+            const response = {
+                requestedUri: 'http://some/id',
+            } as ResponseWrapper
 
-                // when
-                const root = trailingSlash(resources, response)
+            // when
+            const root = trailingSlash(response)
 
-                // then
-                expect(Object.is(root, expectedRoot)).toBeTruthy()
-            })
+            // then
+            expect(root!.value).toEqual('http://some/id/')
         })
 
-        describe('when representation has a trailing slash but requested id does not', () => {
-            it('should return the correct one', () => {
-                // given
-                const expectedRoot = {} as HydraResource
-                const resources = new Map<string, HydraResource>()
-                resources.set('http://some/id/', expectedRoot)
-                const response = {
-                    requestedUri: 'http://some/id',
-                } as HydraResponse
+        it('removes trailing slash if ends in one', () => {
+            // given
+            const response = {
+                requestedUri: 'http://some/id/',
+            } as ResponseWrapper
 
-                // when
-                const root = trailingSlash(resources, response)
+            // when
+            const root = trailingSlash(response)
 
-                // then
-                expect(Object.is(root, expectedRoot)).toBeTruthy()
-            })
+            // then
+            expect(root!.value).toEqual('http://some/id')
         })
     })
 })

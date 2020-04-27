@@ -1,4 +1,4 @@
-import { createGraph } from '../../test-utils'
+import { createGraph } from '../test-utils'
 
 const managesWithTypeGraph = `
     <collection> 

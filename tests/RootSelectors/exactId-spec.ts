@@ -1,24 +1,20 @@
 import $rdf from 'rdf-ext'
-import { HydraResponse } from '../../src/HydraResponse'
-import { HydraResource } from '../../src/Resources'
+import { ResponseWrapper } from '../../src/ResponseWrapper'
 import { exactId } from '../../src/RootSelectors/exactId'
 
 describe('RootSelector', () => {
     describe('exactId', () => {
         it('when resource is in response should select the redirect target', () => {
             // given
-            const expectedRoot = { id: $rdf.namedNode('id') } as Partial<HydraResource>
-            const resources = new Map<string, HydraResource>()
-            resources.set('id', expectedRoot as any)
             const response = {
-                requestedUri: 'id',
-            } as HydraResponse
+                resourceUri: 'id',
+            } as ResponseWrapper
 
             // when
-            const root = exactId(resources, response)
+            const root = exactId(response)
 
             // then
-            expect(Object.is(root, expectedRoot)).toBeTruthy()
+            expect(root).toEqual($rdf.namedNode('id'))
         })
     })
 })

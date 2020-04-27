@@ -27,11 +27,13 @@ const parsers = new SinkMap([
 
 describe('Hydra loadDocumentation', () => {
     let client: HydraClient<DatasetExt>
+    let dataset: DatasetExt
 
     beforeEach(() => {
+        dataset = $rdf.dataset()
         client = create({
             parsers,
-            dataset: $rdf.dataset(),
+            dataset,
         })
     })
 
@@ -41,7 +43,7 @@ describe('Hydra loadDocumentation', () => {
             '@id': 'http://api.example.com/doc/',
             '@type': hydra.ApiDocumentation.value,
         }
-        fetchResource.mockResolvedValueOnce(mockedResponse({
+        fetchResource.mockImplementationOnce(mockedResponse({
             xhrBuilder: responseBuilder().body(body),
         }))
 
@@ -49,7 +51,7 @@ describe('Hydra loadDocumentation', () => {
         await client.loadDocumentation('http://api.example.com/doc/')
 
         // then
-        expect(client.dataset.toCanonical()).toMatchSnapshot()
+        expect(dataset.toCanonical()).toMatchSnapshot()
     })
 
     it('should replace its representation in the dataset when loading twice', async () => {
@@ -58,10 +60,10 @@ describe('Hydra loadDocumentation', () => {
             '@id': 'http://api.example.com/doc/' + suffix,
             '@type': hydra.ApiDocumentation.value,
         })
-        fetchResource.mockResolvedValueOnce(mockedResponse({
+        fetchResource.mockImplementationOnce(mockedResponse({
             xhrBuilder: responseBuilder().body(body('1')),
         }))
-        fetchResource.mockResolvedValueOnce(mockedResponse({
+        fetchResource.mockImplementationOnce(mockedResponse({
             xhrBuilder: responseBuilder().body(body('2')),
         }))
 
@@ -70,12 +72,12 @@ describe('Hydra loadDocumentation', () => {
         await client.loadDocumentation('http://api.example.com/doc/')
 
         // then
-        expect(client.dataset.toCanonical()).toMatchSnapshot()
+        expect(dataset.toCanonical()).toMatchSnapshot()
     })
 
     it(`passes base URI to fetch`, async () => {
         // given
-        fetchResource.mockResolvedValueOnce(mockedResponse({
+        fetchResource.mockImplementationOnce(mockedResponse({
             xhrBuilder: responseBuilder().body(''),
         }))
         client.baseUri = 'http://example.com/foo/'
@@ -96,10 +98,13 @@ describe('Hydra loadDocumentation', () => {
 describe('Hydra', () => {
     let loadDocumentation: jest.Mock
     let client: HydraClient
+    let dataset: DatasetExt
 
     beforeEach(() => {
+        dataset = $rdf.dataset()
         client = create({
             parsers,
+            dataset,
         })
         loadDocumentation = (client.loadDocumentation = jest.fn().mockResolvedValue({}))
     })
@@ -109,13 +114,13 @@ describe('Hydra', () => {
             // given
             const unescaped = 'http://example.com/biała gęś'
             const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
             }))
 
             // when
             const hydraRes = await client.loadResource(id)
-            const res = hydraRes.get(id)
+            const res = hydraRes.representation?.get(id)
 
             // then
             expect(res!.id.value).toBe(unescaped)
@@ -124,34 +129,21 @@ describe('Hydra', () => {
         it('should return object with matching @id when selected with unescaped uri', async () => {
             // given
             const id = 'http://example.com/biała gęś'
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
             }))
 
             // when
             const hydraRes = await client.loadResource(id)
-            const res = hydraRes.get(id)
+            const res = hydraRes.representation?.get(id)
 
             // then
             expect(res!.id.value).toBe(id)
         })
 
-        it('should parse json-ld response when media type has additional parameters', async () => {
-            // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
-                xhrBuilder: responseBuilder().body(Bodies.someJsonLd, 'application/ld+json; charset=utf-8'),
-            }))
-
-            // when
-            const hydraRes = await client.loadResource('http://example.com/resource')
-
-            // then
-            expect(hydraRes.length).toBeGreaterThan(0)
-        })
-
         it('should load documentation', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
             }))
 
@@ -164,7 +156,7 @@ describe('Hydra', () => {
 
         it('should not load documentation in absence of Link header', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 includeDocsLink: false,
                 xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
             }))
@@ -178,13 +170,13 @@ describe('Hydra', () => {
 
         it('should load parent of collection view as Resource', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.hydraCollectionWithView),
             }))
 
             // when
             const hydraRes = await client.loadResource('http://example.com/resource?page=3')
-            const res = hydraRes.get('http://example.com/resource?page=3') as PartialCollectionView
+            const res = hydraRes.representation?.get('http://example.com/resource?page=3') as PartialCollectionView
 
             // then
             expect(res.collection).toBeDefined()
@@ -193,13 +185,13 @@ describe('Hydra', () => {
 
         it('should load resource with deep blank node structure', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.deepBlankNodes),
             }))
 
             // when
             const hydraRes = await client.loadResource('http://example.com/root')
-            const res = hydraRes.get('http://example.com/root') as any
+            const res = hydraRes.representation?.get('http://example.com/root') as any
 
             // then
             const p = 'http://example.com/prop'
@@ -210,13 +202,13 @@ describe('Hydra', () => {
 
         it('should return typed string literals as their values', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
             }))
 
             // when
             const hydraRes = await client.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource') as any
+            const res = hydraRes.representation?.get('http://example.com/resource') as any
 
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'].value)
@@ -225,13 +217,13 @@ describe('Hydra', () => {
 
         it.skip('should return typed numeric literals as their values', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.typedNumericLiteral),
             }))
 
             // when
             const hydraRes = await client.loadResource('http://example.com/resource')
-            const res = hydraRes.get('http://example.com/resource')
+            const res = hydraRes.representation?.get('http://example.com/resource')
 
             // then
             expect(res!['http://schema.org/age']).toBe(21)
@@ -246,15 +238,15 @@ describe('Hydra', () => {
     describe('default root selectors', () => {
         it('should select by exact id if exists', async () => {
             // given
-            fetchResource.mockResolvedValueOnce(mockedResponse({
+            fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
             }))
 
             // when
-            const res = await client.loadResource('http://example.com/resource')
+            const { representation } = await client.loadResource('http://example.com/resource')
 
             // then
-            expect(res.root!.id.value).toBe('http://example.com/resource')
+            expect(representation?.root!.id.value).toBe('http://example.com/resource')
         })
 
         it.skip('should select resource with redirected id if original is not present', async () => {
@@ -262,27 +254,13 @@ describe('Hydra', () => {
             const redirectUri = 'http://example.com/resource'
 
             const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).redirect(redirectUri)
-            fetchResource.mockResolvedValueOnce(mockedResponse({ xhrBuilder }))
+            fetchResource.mockImplementationOnce(mockedResponse({ xhrBuilder }))
 
             // when
-            const res = await client.loadResource('http://example.com/not-there')
+            const { representation } = await client.loadResource('http://example.com/not-there')
 
             // then
-            expect(res.root!.id).toBe('http://example.com/resource')
-        })
-
-        it('should select resource with canonical id if original is not present', async () => {
-            // given
-            const redirectUri = 'http://example.com/resource'
-
-            const xhrBuilder = responseBuilder().body(Bodies.someJsonLd).canonical(redirectUri)
-            fetchResource.mockResolvedValueOnce(mockedResponse({ xhrBuilder }))
-
-            // when
-            const res = await client.loadResource('http://example.com/not-there')
-
-            // then
-            expect(res.root!.id.value).toBe('http://example.com/resource')
+            expect(representation?.root!.id).toBe('http://example.com/resource')
         })
     })
 
@@ -290,7 +268,7 @@ describe('Hydra', () => {
         describe('POST method', () => {
             it('does not store response in dataset', async () => {
                 // given
-                invokeOperation.mockResolvedValueOnce(mockedResponse({
+                invokeOperation.mockImplementationOnce(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
                 }))
                 const operation = {
@@ -304,12 +282,12 @@ describe('Hydra', () => {
                 await client.invokeOperation(operation)
 
                 // then
-                expect(client.dataset).toHaveLength(0)
+                expect(dataset).toHaveLength(0)
             })
 
             it('returns data from the response', async () => {
                 // given
-                invokeOperation.mockResolvedValueOnce(mockedResponse({
+                invokeOperation.mockImplementationOnce(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
                 }))
                 const operation = {
@@ -320,17 +298,17 @@ describe('Hydra', () => {
                 }
 
                 // when
-                const response = await client.invokeOperation(operation)
+                const { representation } = await client.invokeOperation(operation)
 
                 // then
-                expect(response.length).toBeGreaterThan(0)
+                expect(representation?.length).toBeGreaterThan(0)
             })
         })
 
         describe('GET method', () => {
             it('stores response in dataset', async () => {
                 // given
-                invokeOperation.mockResolvedValueOnce(mockedResponse({
+                invokeOperation.mockImplementationOnce(mockedResponse({
                     xhrBuilder: responseBuilder().body(Bodies.typedLiteral),
                 }))
                 const operation = {
@@ -344,7 +322,7 @@ describe('Hydra', () => {
                 await client.invokeOperation(operation)
 
                 // then
-                expect(client.dataset.length).toBeGreaterThan(0)
+                expect(dataset.length).toBeGreaterThan(0)
             })
         })
     })
@@ -354,10 +332,10 @@ describe('Hydra', () => {
 
         beforeEach(() => {
             client = create()
-            fetchResource.mockResolvedValue(mockedResponse({
+            fetchResource.mockImplementation(mockedResponse({
                 xhrBuilder: responseBuilder().body(''),
             }))
-            invokeOperation.mockResolvedValueOnce(mockedResponse({
+            invokeOperation.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(''),
             }))
         })

@@ -5,6 +5,7 @@ import stringToStream from 'string-to-stream'
 import rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-n3'
 import { prefixes } from '@zazuko/rdf-vocabularies'
+import { parsers } from '@rdfjs/formats-common'
 
 const parser = new Parser()
 
@@ -24,8 +25,7 @@ export function responseBuilder() {
             } else {
                 responseBody = stringToStream(body)
             }
-            headers['Content-Type'] = contentType
-            return this
+            return this.header('Content-Type', contentType)
         },
 
         redirect(redirectUri: string) {
@@ -34,17 +34,20 @@ export function responseBuilder() {
         },
 
         contentLocation(headerValue: string) {
-            headers['Content-Location'] = headerValue
-            return this
+            return this.header('Content-Location', headerValue)
         },
 
         link(href: string, rel: string) {
-            headers.Link = `<${href}>; rel=${rel}`
-            return this
+            return this.header('Link', `<${href}>; rel=${rel}`)
         },
 
         canonical(href: string) {
             return this.link(href, 'canonical')
+        },
+
+        header(name: string, value: string) {
+            headers[name] = value
+            return this
         },
 
         statusCode(status: number) {
@@ -82,21 +85,33 @@ export function responseBuilder() {
     }
 }
 
-export async function mockedResponse({ includeDocsLink = true, xhrBuilder }): Promise<ResponseWrapper> {
+export function mockedResponse({ includeDocsLink = true, xhrBuilder }): (uri: string) => Promise<ResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
-    const xhr = await xhrBuilder.build()
 
-    const response = {
-        apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
-        mediaType: xhr.headers.get('Content-Type'),
-        redirectUrl: null,
+    return async (requestedUri: string) => {
+        const xhr = await xhrBuilder.build()
+
+        const response: Omit<ResponseWrapper, 'xhr'> = {
+            apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
+            mediaType: xhr.headers.get('Content-Type'),
+            redirectUrl: null,
+            quadStream() {
+                return parsers.import(this.mediaType, xhr.body)
+            },
+            requestedUri,
+            resourceUri: requestedUri,
+            effectiveUri: requestedUri,
+            resolveUri(uri: string): string {
+                return uri
+            },
+        }
+
+        Object.defineProperty(response, 'xhr', {
+            get: () => xhr.clone(),
+        })
+
+        return response as ResponseWrapper
     }
-
-    Object.defineProperty(response, 'xhr', {
-        get: () => xhr.clone(),
-    })
-
-    return response as ResponseWrapper
 }
 
 export function createGraph(ntriples: string) {

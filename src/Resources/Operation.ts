@@ -1,6 +1,5 @@
-import { HydraClient } from '../alcaeus'
+import { HydraClient, HydraResponse } from '../alcaeus'
 import nonenumerable from '../helpers/nonenumerable'
-import { HydraResponse } from '../HydraResponse'
 import { Class, HydraResource } from './index'
 import { SupportedOperation } from './Mixins/SupportedOperation'
 

@@ -1,78 +1,55 @@
+import cf, { SingleContextClownface } from 'clownface'
 import { EventEmitter } from 'events'
 import Parsers, { SinkMap } from '@rdfjs/sink-map'
-import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
-import $rdf from '@rdfjs/data-model'
+import TermSet from '@rdfjs/term-set'
+import { RdfResource } from '@tpluscode/rdfine'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
-import { DatasetCore, NamedNode, Stream } from 'rdf-js'
-import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
+import { NamedNode, Stream } from 'rdf-js'
 import * as FetchUtil from './FetchUtil'
-import { patchResponseBody } from './helpers/fetchToStream'
 import { merge } from './helpers/MergeHeaders'
-import { HydraResponse, create } from './HydraResponse'
-import RdfProcessor from './RdfProcessor'
+import { ResourceRepresentation } from './ResourceRepresentation'
 import { ApiDocumentation, HydraResource } from './Resources'
 import { Operation } from './Resources/Operation'
+import { ResourceStore } from './ResourceStore'
 import { ResponseWrapper } from './ResponseWrapper'
-import { RootSelector, wrappedViewSelector } from './RootSelectors'
+import { RootNodeCandidate } from './RootSelectors'
 
 type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<HydraResource, 'id'>
 }
 
+export interface HydraResponse<T extends RdfResource = HydraResource> {
+    representation?: ResourceRepresentation<T>
+    response?: ResponseWrapper
+}
+
+function byInProperties(left: SingleContextClownface, right: SingleContextClownface) {
+    return left.in().terms.length - right.in().terms.length
+}
+
 export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     log: (msg: string) => void
     baseUri?: string
-    rootSelectors: [string, RootSelector][]
+    rootSelectors: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation | null>
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>
     defaultHeaders: HeadersInit | (() => HeadersInit)
-    dataset: D
-    factory: ResourceFactory
+    resources: ResourceStore<D>
     apiDocumentations: ApiDocumentation[]
 }
 
-function stripContentTypeParameters(mediaType: string) {
-    return mediaType.split(';').shift() || ''
-}
-
-async function parseResponse(uri: string, alcaeus: HydraClient, response: ResponseWrapper): Promise<Stream | null> {
-    const quadStream = alcaeus.parsers.import(stripContentTypeParameters(response.mediaType), patchResponseBody(response.xhr))
-    if (quadStream == null) {
-        alcaeus.log(`No parser found for media type ${response.mediaType}`)
-        return null
-    }
-
-    const graph = $rdf.namedNode(uri)
-    const parsedTriples = await RdfProcessor.process(quadStream)
-    return parsedTriples.pipe(new TripleToQuadTransform(graph))
-}
-
-const addOrReplaceGraph = async (
-    alcaeus: HydraClient,
-    response: ResponseWrapper,
-    uri: string): Promise<void> => {
-    const graph = $rdf.namedNode(uri)
-    const parsedTriples = await parseResponse(uri, alcaeus, response)
-
-    if (!parsedTriples) return
-
-    await alcaeus.dataset
-        .removeMatches(undefined, undefined, undefined, graph)
-        .import(parsedTriples)
-}
-
 interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> {
-    rootSelectors: [string, RootSelector][]
-    factory: ResourceFactory<DatasetCore, R>
-    dataset: D
+    rootSelectors: [string, RootNodeCandidate][]
+    resources: ResourceStore<D>
+    datasetFactory: () => D
 }
 
 export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
     public baseUri?: string = undefined;
 
-    public rootSelectors: [string, RootSelector][];
+    public rootSelectors: [string, RootNodeCandidate][];
 
     public parsers = new Parsers<EventEmitter, Stream>();
 
@@ -80,16 +57,16 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
 
     public log: (msg: string) => void = () => {}
 
-    public readonly dataset: D
-
-    public readonly factory: ResourceFactory<DatasetCore, R>
+    public readonly resources: ResourceStore<D>
 
     private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
 
-    public constructor({ rootSelectors, factory, dataset }: AlcaeusInit<R, D>) {
-        this.rootSelectors = rootSelectors.map(([name, selector]) => [name, wrappedViewSelector(selector)])
-        this.factory = factory
-        this.dataset = dataset
+    private readonly datasetFactory: () => D;
+
+    public constructor({ resources, datasetFactory, rootSelectors }: AlcaeusInit<R, D>) {
+        this.rootSelectors = rootSelectors
+        this.resources = resources
+        this.datasetFactory = datasetFactory
     }
 
     public get apiDocumentations() {
@@ -104,19 +81,29 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
             baseUri: this.baseUri,
             headers: this.__mergeHeaders(new Headers(headers)),
         })
-        await addOrReplaceGraph(this, response, uri)
-        if (dereferenceApiDocumentation) {
-            await this.__getApiDocumentation(response, headers)
+
+        const stream = await response.quadStream()
+        if (stream) {
+            const dataset = await this.datasetFactory().import(stream)
+            const rootResource = this.__findRootResource(dataset, response)
+            await this.resources.set(response.resourceUri, dataset, rootResource)
+
+            if (dereferenceApiDocumentation) {
+                await this.__getApiDocumentation(response, headers)
+            }
         }
 
-        return create(uri, response, this.dataset, this.factory, this)
+        return {
+            representation: this.resources.get(response.resourceUri),
+            response,
+        }
     }
 
     public async loadDocumentation(id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation | null> {
         const uri: string = typeof id === 'string' ? id : id.value
 
         const response = await this.loadResource<ApiDocumentation>(uri, headers, false)
-        const apiDocs = response.root
+        const apiDocs = response.representation?.root
         if (apiDocs && 'classes' in apiDocs) {
             this.__apiDocumentations.set(uri, apiDocs)
             return apiDocs
@@ -137,18 +124,26 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
         })
         await this.__getApiDocumentation(response, headers)
 
-        if (operation.method.toUpperCase() === 'GET') {
-            await addOrReplaceGraph(this, response, uri)
-            return create(uri, response, this.dataset, this.factory, this)
+        const responseStream = await response.quadStream()
+
+        if (responseStream) {
+            const dataset = await this.datasetFactory().import(responseStream)
+            const rootResource = this.__findRootResource(dataset, response)
+            let resources = this.resources
+            if (operation.method.toUpperCase() !== 'GET') {
+                resources = this.resources.clone()
+            }
+
+            await resources.set(response.resourceUri, dataset, rootResource)
+            return {
+                response,
+                representation: resources.get(response.resourceUri),
+            }
         }
 
-        const parsedResponse = await parseResponse(uri, this, response)
-        if (!parsedResponse) {
-            return create(uri, response, this.dataset, this.factory, this)
+        return {
+            response,
         }
-
-        const dataset = await this.dataset.clone().import(parsedResponse)
-        return create(uri, response, dataset, this.factory, this)
     }
 
     private async __getApiDocumentation(response: ResponseWrapper, headers: HeadersInit): Promise<void> {
@@ -164,5 +159,24 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
         const defaultHeaders = typeof this.defaultHeaders === 'function' ? this.defaultHeaders() : this.defaultHeaders
 
         return merge(new Headers(defaultHeaders), headers)
+    }
+
+    private __findRootResource(dataset: D, response: ResponseWrapper): NamedNode | undefined {
+        const candidateNodes = this.rootSelectors.reduce((candidates, [, getCandidate]) => {
+            const candidate = getCandidate(response)
+            if (candidate && dataset.match(candidate).length) {
+                candidates.add(candidate)
+            }
+
+            return candidates
+        }, new TermSet<NamedNode>())
+
+        if (!candidateNodes.size) {
+            return undefined
+        }
+
+        const candidates = [...candidateNodes].map(term => cf({ dataset, term }))
+
+        return candidates.sort(byInProperties)[0].term
     }
 }

@@ -1,5 +1,5 @@
 import { Constructor, property, namespace, RdfResource } from '@tpluscode/rdfine'
-import { HydraResponse } from '../../HydraResponse'
+import { HydraResponse } from '../../alcaeus'
 import { Class, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 

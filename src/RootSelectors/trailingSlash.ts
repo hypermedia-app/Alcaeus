@@ -1,8 +1,9 @@
-import { HydraResponse } from '../HydraResponse'
-import { ResourceGraph } from '../ResourceGraph'
+import $rdf from '@rdfjs/data-model'
+import { NamedNode } from 'rdf-js'
+import { ResponseWrapper } from '../ResponseWrapper'
 
-export function trailingSlash(resources: ResourceGraph, response: HydraResponse) {
-    let id
+export function trailingSlash(response: ResponseWrapper): NamedNode | undefined {
+    let id: string
 
     if (response.requestedUri.endsWith('/')) {
         id = response.requestedUri.substr(0, response.requestedUri.length - 1)
@@ -10,5 +11,5 @@ export function trailingSlash(resources: ResourceGraph, response: HydraResponse)
         id = response.requestedUri + '/'
     }
 
-    return resources.get(id)
+    return $rdf.namedNode(id)
 }

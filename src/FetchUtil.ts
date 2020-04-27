@@ -33,7 +33,7 @@ async function getResponse(uri, { method, headers = {}, body, baseUri, parsers }
 
     const res = await fetch(effectiveUri, requestInit)
 
-    return new ResponseWrapper(effectiveUri, res)
+    return new ResponseWrapper(effectiveUri, res, parsers)
 }
 
 export function fetchResource(uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit; baseUri?: string }): Promise<ResponseWrapper> {

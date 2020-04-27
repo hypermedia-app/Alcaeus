@@ -1,5 +1,5 @@
 import { RdfResource } from '@tpluscode/rdfine'
-import { HydraResponse } from '../HydraResponse'
+import { HydraResponse } from '../alcaeus'
 import { OperationFinder } from './CoreMixins/OperationFinder'
 import { ManagesBlockPattern } from './Mixins/ManagesBlock'
 import { Operation } from './Operation'

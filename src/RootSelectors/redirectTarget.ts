@@ -1,6 +1,11 @@
-import { ResourceGraph } from '../ResourceGraph'
+import { NamedNode } from 'rdf-js'
+import $rdf from '@rdfjs/data-model'
 import { ResponseWrapper } from '../ResponseWrapper'
 
-export function redirectTarget(resources: ResourceGraph, response: ResponseWrapper) {
-    return resources.get(response.xhr.url)
+export function redirectTarget(response: ResponseWrapper): NamedNode | undefined {
+    if (response.redirectUrl != null) {
+        return $rdf.namedNode(response.redirectUrl)
+    }
+
+    return undefined
 }

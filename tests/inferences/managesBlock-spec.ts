@@ -1,4 +1,4 @@
-import { addExplicitStatementsInferredFromManagesBlock } from '../../../src/RdfProcessor/inferences'
+import { addExplicitStatementsInferredFromManagesBlock } from '../../src/inferences'
 import * as specGraphs from './managesBlock-spec-graphs'
 
 describe('manages block inference', () => {

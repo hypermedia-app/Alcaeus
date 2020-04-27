@@ -6,7 +6,7 @@ import datasetIndexed from 'rdf-dataset-indexed'
 import { DatasetCore, Stream } from 'rdf-js'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus, HydraClient } from './alcaeus'
-import * as inferences from './RdfProcessor/inferences'
+import * as inferences from './inferences'
 import * as coreMixins from './Resources/CoreMixins'
 import * as mixins from './ResourceFactoryDefaults'
 import ResourceStoreImpl from './ResourceStore'
@@ -38,7 +38,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
         datasetFactory,
         rootSelectors: Object.entries(init.rootSelectors || defaultSelectors),
         resources: new ResourceStoreImpl({
-            dataset: datasetFactory(),
+            dataset: init.dataset || datasetFactory(),
             inferences: Object.values(inferences),
             factory,
         }),

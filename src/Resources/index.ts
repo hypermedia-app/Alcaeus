@@ -1,11 +1,12 @@
 import { RdfResource } from '@tpluscode/rdfine'
+import { DatasetCore } from 'rdf-js'
 import { HydraResponse } from '../alcaeus'
 import { OperationFinder } from './CoreMixins/OperationFinder'
 import { ManagesBlockPattern } from './Mixins/ManagesBlock'
 import { Operation } from './Operation'
 import { SupportedProperty } from './Mixins/SupportedProperty'
 
-export interface HydraResource extends RdfResource, OperationFinder {
+export interface HydraResource<D extends DatasetCore = DatasetCore> extends RdfResource<D>, OperationFinder {
     /**
      * Gets the operations which can be performed on this resource
      */

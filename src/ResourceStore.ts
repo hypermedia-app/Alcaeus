@@ -5,8 +5,10 @@ import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from '@rdfjs/data-model'
 import ResourceRepresentationImpl, { ResourceRepresentation } from './ResourceRepresentation'
+import { HydraResource } from './Resources'
 
 export interface ResourceStore<D extends DatasetIndexed> {
+    factory: ResourceFactory<D, HydraResource<D>>
     get<T extends RdfResource = RdfResource>(uri: string | NamedNode): ResourceRepresentation<T>
     set(uri: string | NamedNode, dataset: D, rootResource?: NamedNode): Promise<void>
     clone(): ResourceStore<D>
@@ -19,13 +21,13 @@ interface RepresentationInference {
 interface ResourceStoreInit<D extends DatasetIndexed = DatasetIndexed> {
     dataset: D
     inferences: RepresentationInference[]
-    factory: ResourceFactory
+    factory: ResourceFactory<D, HydraResource<D>>
 }
 
 export default class ResourceStoreImpl<D extends DatasetIndexed = DatasetIndexed> implements ResourceStore<D> {
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
-    private readonly factory: ResourceFactory
+    public readonly factory: ResourceFactory<D, HydraResource<D>>
     private readonly rootNodes: Map<string, NamedNode> = new Map<string, NamedNode>()
 
     public constructor({ dataset, inferences, factory }: ResourceStoreInit<D>) {

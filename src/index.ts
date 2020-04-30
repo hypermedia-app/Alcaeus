@@ -15,6 +15,7 @@ import { defaultSelectors, RootNodeCandidate } from './RootSelectors'
 export { ResourceIdentifier, ResourceIndexer } from '@tpluscode/rdfine'
 export * from './Resources/index'
 export { Operation } from './Resources/Operation'
+export { HydraResponse } from './alcaeus'
 
 interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
     rootSelectors?: [string, RootNodeCandidate][]

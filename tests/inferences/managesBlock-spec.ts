@@ -7,7 +7,7 @@ describe('manages block inference', () => {
         const dataset = await specGraphs.managesWithType()
 
         // when
-        addExplicitStatementsInferredFromManagesBlock(dataset)
+        dataset.addAll([...addExplicitStatementsInferredFromManagesBlock(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()
@@ -18,7 +18,7 @@ describe('manages block inference', () => {
         const dataset = await specGraphs.multipleManagesBlocks()
 
         // when
-        addExplicitStatementsInferredFromManagesBlock(dataset)
+        dataset.addAll([...addExplicitStatementsInferredFromManagesBlock(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()
@@ -29,7 +29,7 @@ describe('manages block inference', () => {
         const dataset = await specGraphs.incompleteManagesBlocks()
 
         // when
-        addExplicitStatementsInferredFromManagesBlock(dataset)
+        dataset.addAll([...addExplicitStatementsInferredFromManagesBlock(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()

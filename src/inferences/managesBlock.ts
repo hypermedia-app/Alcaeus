@@ -1,19 +1,14 @@
-import cf, { Clownface } from 'clownface'
-import { DatasetCore } from 'rdf-js'
+import cf from 'clownface'
+import RDF from '@rdfjs/data-model'
+import { BaseQuad, DatasetCore } from 'rdf-js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
-interface ManagesBlockAssertion {
-    subject: Clownface
-    predicate: Clownface
-    object: Clownface
-}
+export function * addExplicitStatementsInferredFromManagesBlock(dataset: DatasetCore): Iterable<BaseQuad> {
+    for (const collection of cf({ dataset }).has(hydra.manages).toArray()) {
+        const managesBlocks = collection.out(hydra.manages).toArray()
 
-export function addExplicitStatementsInferredFromManagesBlock(dataset: DatasetCore) {
-    cf({ dataset }).has(hydra.manages).forEach(collection => {
-        const managesBlocks = collection.out(hydra.manages)
-
-        collection.out(hydra.member).forEach(member => {
-            managesBlocks.forEach(managesBlock => {
+        for (const member of collection.out(hydra.member).toArray()) {
+            for (const managesBlock of managesBlocks) {
                 let blanks = 0
 
                 let subject = managesBlock.out(hydra.subject)
@@ -36,9 +31,15 @@ export function addExplicitStatementsInferredFromManagesBlock(dataset: DatasetCo
                 }
 
                 if (blanks === 1) {
-                    subject.addOut(predicate, object)
+                    for (const s of subject.terms) {
+                        for (const p of predicate.terms) {
+                            for (const o of object.terms) {
+                                yield RDF.quad<BaseQuad>(s, p, o)
+                            }
+                        }
+                    }
                 }
-            })
-        })
-    })
+            }
+        }
+    }
 }

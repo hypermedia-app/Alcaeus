@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResourceStore set add inferred triples to same graph 1`] = `
+"<http://example.com/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/bar> <http://example.com/foo> .
+<http://example.com/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/baz> <http://example.com/foo> .
+"
+`;
+
+exports[`ResourceStore set add resource triples to graph as subject 1`] = `
+"<http://example.com/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/bar> <http://example.com/foo> .
+"
+`;

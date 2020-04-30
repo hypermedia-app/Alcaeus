@@ -7,7 +7,7 @@ describe('property types inference', () => {
         const dataset = await specGraphs.managesWithType()
 
         // when
-        inferTypesFromPropertyRanges(dataset)
+        dataset.addAll([...inferTypesFromPropertyRanges(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()

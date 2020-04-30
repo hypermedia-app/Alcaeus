@@ -1,5 +1,6 @@
 import cf from 'clownface'
-import { DatasetCore } from 'rdf-js'
+import RDF from '@rdfjs/data-model'
+import { BaseQuad, DatasetCore } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 const propertyRangeMappings = [
@@ -14,10 +15,15 @@ const propertyRangeMappings = [
     [hydra.mapping, hydra.IriTemplateMapping],
 ]
 
-export function inferTypesFromPropertyRanges(dataset: DatasetCore) {
+export function * inferTypesFromPropertyRanges(dataset: DatasetCore): Iterable<BaseQuad> {
     const node = cf({ dataset })
 
-    propertyRangeMappings.map(([ property, type ]) => {
-        node.out(property).addOut(rdf.type, type)
-    })
+    for (const mapping of propertyRangeMappings) {
+        const [ property, type ] = mapping
+        const subjects = node.out(property)
+
+        for (const subject of subjects.terms) {
+            yield RDF.quad<BaseQuad>(subject, rdf.type, type)
+        }
+    }
 }

@@ -42,6 +42,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
             dataset: init.dataset || datasetFactory(),
             inferences: Object.values(inferences),
             factory,
+            datasetFactory,
         }),
     })
 

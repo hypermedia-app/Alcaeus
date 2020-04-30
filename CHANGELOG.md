@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.4](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2020-04-30)
+
+
+### Features
+
+* added a resource store, changed how bodies are processed ([94d46ba](https://github.com/wikibus/alcaeus/commit/94d46baedcc63544703a15e51d02e69f7cc2d34f))
+
+
+### Bug Fixes
+
+* re-export HydraResponse from main module ([c932dbb](https://github.com/wikibus/alcaeus/commit/c932dbbc602783f6e2ace05390f547ea5badfe83))
+
 ## [1.0.0-beta.3](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2020-04-25)
 
 

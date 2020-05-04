@@ -4,7 +4,6 @@ import li from 'parse-link-header'
 import { Stream } from 'rdf-js'
 import * as Constants from './Constants'
 import { patchResponseBody } from './helpers/fetchToStream'
-import nonenumerable from './helpers/nonenumerable'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 const apiDocumentationRel = hydra.apiDocumentation.value
@@ -58,7 +57,6 @@ function stripContentTypeParameters(mediaType: string) {
 export default class implements ResponseWrapper {
     public readonly requestedUri: string;
 
-    @nonenumerable
     public readonly xhr: Response;
 
     private parsers: SinkMap<EventEmitter, Stream>

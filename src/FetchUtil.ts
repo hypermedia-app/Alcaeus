@@ -2,8 +2,11 @@ import SinkMap from '@rdfjs/sink-map'
 import { EventEmitter } from 'events'
 import { Stream } from 'rdf-js'
 import url from 'url'
+import fetchPony from 'fetch-ponyfill'
 import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
+
+const { fetch, Headers } = fetchPony()
 
 type Parsers = SinkMap<EventEmitter, Stream>
 

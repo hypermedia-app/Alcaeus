@@ -3,6 +3,7 @@ import { EventEmitter } from 'events'
 import Parsers, { SinkMap } from '@rdfjs/sink-map'
 import TermSet from '@rdfjs/term-set'
 import { RdfResource } from '@tpluscode/rdfine'
+import fetchPony from 'fetch-ponyfill'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { NamedNode, Stream } from 'rdf-js'
 import * as FetchUtil from './FetchUtil'
@@ -13,6 +14,8 @@ import { Operation } from './Resources/Operation'
 import { ResourceStore } from './ResourceStore'
 import { ResponseWrapper } from './ResponseWrapper'
 import { RootNodeCandidate } from './RootSelectors'
+
+const { Headers } = fetchPony()
 
 type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<HydraResource, 'id'>

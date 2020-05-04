@@ -22,9 +22,10 @@ interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
     parsers?: SinkMap<EventEmitter, Stream>
     datasetFactory?: () => D
     dataset?: D
+    fetch?: typeof fetch
 }
 
-export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D> = {}): HydraClient<D> {
+export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D> = { }): HydraClient<D> {
     let factory: ResourceFactory<DatasetCore, HydraResource>
     class HydraResource extends RdfResource {
         public static get factory() {

@@ -1,3 +1,7 @@
+import fetchPony from 'fetch-ponyfill'
+
+const { Headers } = fetchPony()
+
 export function merge(headers: Headers, overrides: Headers): Headers {
     const merged = new Headers(headers)
 

@@ -1,4 +1,4 @@
-import 'isomorphic-fetch'
+import fetchPony from 'fetch-ponyfill'
 import * as sinon from 'sinon'
 import { EventEmitter } from 'events'
 import SinkMap from '@rdfjs/sink-map'
@@ -6,6 +6,8 @@ import { Stream } from 'rdf-js'
 import ResponseWrapper from '../src/ResponseWrapper'
 import { Bodies } from './test-objects'
 import { responseBuilder } from './test-utils'
+
+const { Response } = fetchPony()
 
 describe('ResponseWrapper', () => {
     let parsers: SinkMap<EventEmitter, Stream>

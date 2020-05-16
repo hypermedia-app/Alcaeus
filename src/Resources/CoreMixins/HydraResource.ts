@@ -1,16 +1,20 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { HydraClient } from '../../alcaeus'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import { HydraResource } from '../index'
+import { HydraResource, Class, SupportedProperty, SupportedOperation } from '../index'
 import { Collection, CollectionMixin } from '../Mixins/Collection'
 import { ManagesBlockPattern } from '../Mixins/ManagesBlock'
-import { Class, SupportedProperty, SupportedOperation } from '..'
 import Operation from '../Operation'
 
 export function createHydraResourceMixin(alcaeus: HydraClient) {
     function getSupportedClasses(resource: RdfResource) {
         return alcaeus.apiDocumentations
-            .reduce<Class[]>((classes, docs) => [...classes, ...docs.classes.filter(c => resource.types.has(c))], [])
+            .reduce<Class[]>((classes, representation) => {
+            const docs = representation.root
+            if (!docs || !('classes' in docs)) return classes
+
+            return [...classes, ...docs.classes.filter(c => resource.types.has(c))]
+        }, [])
     }
 
     function HydraResourceMixin<Base extends Constructor<HydraResource>>(base: Base) {

@@ -38,7 +38,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>
     defaultHeaders: HeadersInit | (() => HeadersInit)
     resources: ResourceStore<D>
-    apiDocumentations: ApiDocumentation[]
+    apiDocumentations: ResourceRepresentation<ApiDocumentation>[]
 }
 
 interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> {
@@ -60,7 +60,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
 
     public readonly resources: ResourceStore<D>
 
-    private readonly __apiDocumentations: Map<string, ApiDocumentation> = new Map()
+    private readonly __apiDocumentations: Map<string, ResourceRepresentation<ApiDocumentation>> = new Map()
 
     private readonly datasetFactory: () => D;
 
@@ -103,11 +103,13 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
     public async loadDocumentation(id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation | null> {
         const uri: string = typeof id === 'string' ? id : id.value
 
-        const response = await this.loadResource<ApiDocumentation>(uri, headers, false)
-        const apiDocs = response.representation?.root
-        if (apiDocs && 'classes' in apiDocs) {
-            this.__apiDocumentations.set(uri, apiDocs)
-            return apiDocs
+        const { representation } = await this.loadResource<ApiDocumentation>(uri, headers, false)
+        if (representation) {
+            this.__apiDocumentations.set(uri, representation)
+            const apiDocs = representation.root
+            if (apiDocs && 'classes' in apiDocs) {
+                return apiDocs
+            }
         }
 
         return null

@@ -9,6 +9,7 @@ import { Literal, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { HydraClient } from '../../../src/alcaeus'
 import * as mixins from '../../../src/ResourceFactoryDefaults'
+import { ResourceRepresentation } from '../../../src/ResourceRepresentation'
 import { ApiDocumentation, Class } from '../../../src/Resources'
 import { createHydraResourceMixin, OperationFinderMixin } from '../../../src/Resources/CoreMixins'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
@@ -24,11 +25,17 @@ function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 
-const apiDocumentations: ApiDocumentation[] = []
+const apiDocumentations: ResourceRepresentation<ApiDocumentation>[] = []
 let client = {
     apiDocumentations,
 } as HydraClient
 class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin(client)(Resource)) {
+}
+
+function pushApiDocumentation(root: ApiDocumentation) {
+    apiDocumentations.push({
+        root,
+    } as ResourceRepresentation<ApiDocumentation>)
 }
 
 TestOperationFinder.factory = new ResourceFactory(TestOperationFinder)
@@ -55,7 +62,7 @@ describe('OperationFinder', () => {
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -82,7 +89,7 @@ describe('OperationFinder', () => {
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -109,7 +116,7 @@ describe('OperationFinder', () => {
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -136,7 +143,7 @@ describe('OperationFinder', () => {
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -165,7 +172,7 @@ describe('OperationFinder', () => {
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -204,7 +211,7 @@ describe('OperationFinder', () => {
                         ${hydra.method} "GET"
                     ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -236,7 +243,7 @@ describe('OperationFinder', () => {
                         ${hydra.method} "GET"
                     ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -273,7 +280,7 @@ describe('OperationFinder', () => {
                         ${hydra.method} "POST"
                     ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -317,7 +324,7 @@ describe('OperationFinder', () => {
                         ${hydra.expects} ${ex.Person}
                     ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -351,7 +358,7 @@ describe('OperationFinder', () => {
                     ${hydra.returns} ${ex.Bar} ;
                     ${hydra.method} "GET" .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -391,7 +398,7 @@ describe('OperationFinder', () => {
                         ${hydra.expects} ${ex.Person}
                     ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -433,7 +440,7 @@ describe('OperationFinder', () => {
                         ${hydra.expects} ${ex.Person}
                     ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -468,7 +475,7 @@ describe('OperationFinder', () => {
                 ${ex.PostOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
                 ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -499,7 +506,7 @@ describe('OperationFinder', () => {
                     [ a ${hydra.SupportedOperation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
                 ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -529,7 +536,7 @@ describe('OperationFinder', () => {
                 ${ex.OperationB} a ${hydra.SupportedOperation} ; ${ex.custom} 'B' .
                 ${ex.OperationC} a ${hydra.SupportedOperation} ; ${ex.custom} 'C' .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -569,7 +576,7 @@ describe('OperationFinder', () => {
                 ${ex.ClassWithPost} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "POST" ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -599,7 +606,7 @@ describe('OperationFinder', () => {
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -633,7 +640,7 @@ describe('OperationFinder', () => {
                         [ a ${hydra.SupportedOperation} ; ${hydra.method} "GET" ] ,
                         [ a ${hydra.SupportedOperation} ; ${hydra.method} "POST" ].
             `)
-            apiDocumentations.push(TestOperationFinder.factory.createEntity(cf({
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))

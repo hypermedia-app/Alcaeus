@@ -3,7 +3,7 @@ import cf from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
-import $rdf from '@rdfjs/data-model'
+import * as $rdf from '@rdf-esm/data-model'
 import ResourceRepresentationImpl, { ResourceRepresentation } from './ResourceRepresentation'
 import { HydraResource } from './Resources'
 

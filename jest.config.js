@@ -4,6 +4,6 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
     transformIgnorePatterns: [
-        'node_modules/(?!(@tpluscode/rdfine)/)',
+        'node_modules/(?!(@tpluscode/rdfine|@rdf-esm)/)',
     ],
 }

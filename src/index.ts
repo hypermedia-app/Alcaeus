@@ -1,4 +1,5 @@
-import { SinkMap } from '@rdfjs/sink-map'
+import { parsers } from '@rdf-esm/formats-common'
+import { SinkMap } from '@rdf-esm/sink-map'
 import { EventEmitter } from 'events'
 import RdfResource from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
@@ -39,6 +40,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
     const alcaeus = new Alcaeus({
         datasetFactory,
         rootSelectors: Object.entries(init.rootSelectors || defaultSelectors),
+        parsers: init.parsers || parsers,
         resources: new ResourceStoreImpl({
             dataset: init.dataset || datasetFactory(),
             inferences: Object.values(inferences),
@@ -46,10 +48,6 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
             datasetFactory,
         }),
     })
-
-    if (init.parsers) {
-        init.parsers.forEach((parser, mediaType) => alcaeus.parsers.set(mediaType, parser))
-    }
 
     factory.addMixin(coreMixins.createResourceLoaderMixin(alcaeus))
     factory.addMixin(coreMixins.createHydraResourceMixin(alcaeus))

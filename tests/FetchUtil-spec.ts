@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import SinkMap from '@rdfjs/sink-map'
+import { SinkMap } from '@rdf-esm/sink-map'
 import { Sink, Stream } from 'rdf-js'
 import fetchPony from 'fetch-ponyfill'
 import * as fetchUtil from '../src/FetchUtil'

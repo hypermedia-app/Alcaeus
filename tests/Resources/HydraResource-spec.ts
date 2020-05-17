@@ -1,4 +1,4 @@
-import { namedNode } from '@rdfjs/data-model'
+import { namedNode } from '@rdf-esm/data-model'
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
 import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'

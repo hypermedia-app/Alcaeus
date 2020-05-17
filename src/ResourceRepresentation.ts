@@ -1,4 +1,4 @@
-import $rdf from '@rdfjs/data-model'
+import * as $rdf from '@rdf-esm/data-model'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
 import { RdfResource, ResourceFactory, ResourceIdentifier } from '@tpluscode/rdfine'
 import { Clownface, SingleContextClownface } from 'clownface'

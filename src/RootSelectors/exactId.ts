@@ -1,4 +1,4 @@
-import $rdf from '@rdfjs/data-model'
+import * as $rdf from '@rdf-esm/data-model'
 import { NamedNode } from 'rdf-js'
 import { ResponseWrapper } from '../ResponseWrapper'
 

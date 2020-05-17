@@ -1,4 +1,4 @@
-# Alcaeus [![npm version](https://badge.fury.io/js/alcaeus.svg)](https://badge.fury.io/js/alcaeus) [![Build Status](https://travis-ci.org/wikibus/Alcaeus.svg?branch=master)](https://travis-ci.org/wikibus/Alcaeus) [![Code coverage](https://codecov.io/gh/wikibus/alcaeus/branch/master/graph/badge.svg)](https://codecov.io/gh/wikibus/alcaeus)
+# Alcaeus [![npm version](https://badge.fury.io/js/alcaeus.svg)](https://badge.fury.io/js/alcaeus) ![](https://github.com/wikibus/Alcaeus/workflows/Test/badge.svg) [![Code coverage](https://codecov.io/gh/wikibus/alcaeus/branch/master/graph/badge.svg)](https://codecov.io/gh/wikibus/alcaeus)
 
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript

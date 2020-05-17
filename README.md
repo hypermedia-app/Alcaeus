@@ -23,9 +23,6 @@ import Parser from '@rdfjs/parser-n3';
 
 Hydra.parsers.set('text/turtle', Parser);
 
-// Alternatively, use an import which loads @rdfjs/parsers-common
-// import Hydra from 'alcaeus/with-parsers'
-
 const representation = await Hydra.loadResource('http://example.com/resource');
 const rootResource = representation.root;
 

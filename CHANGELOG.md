@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.6](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2020-05-18)
+
+
+### Features
+
+* use esm of formats-common to have access to parsers by default ([9baca32](https://github.com/wikibus/alcaeus/commit/9baca32c4989eb9068165f7f2c23248e42c3597b))
+
+
+### Bug Fixes
+
+* bogus headers were sent due to qubyte/fetch-ponyfill[#248](https://github.com/wikibus/alcaeus/issues/248) ([14e2247](https://github.com/wikibus/alcaeus/commit/14e2247243884d67f03a03514925f2a6173ee268))
+
 ## [1.0.0-beta.5](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2020-05-04)
 
 

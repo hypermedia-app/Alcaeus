@@ -45,7 +45,7 @@ interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed 
     rootSelectors: [string, RootNodeCandidate][]
     resources: ResourceStore<D>
     datasetFactory: () => D
-    parsers: SinkMap<EventEmitter, Stream>
+    parsers?: SinkMap<EventEmitter, Stream>
 }
 
 export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
@@ -66,6 +66,8 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
     private readonly datasetFactory: () => D;
 
     public constructor({ resources, datasetFactory, rootSelectors, parsers }: AlcaeusInit<R, D>) {
+        if (!parsers) throw new Error('No parsers provided. Consider @rdfjs/formats-common or @rdf-esm/formats-common packages')
+
         this.rootSelectors = rootSelectors
         this.resources = resources
         this.datasetFactory = datasetFactory

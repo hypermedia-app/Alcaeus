@@ -1,4 +1,4 @@
-import { SinkMap } from '@rdf-esm/sink-map'
+import SinkMap from '@rdfjs/sink-map'
 import { Stream } from 'rdf-js'
 import { EventEmitter } from 'events'
 import { create } from '../src'

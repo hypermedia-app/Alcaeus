@@ -2,7 +2,7 @@ import 'core-js/es6/array'
 import 'core-js/es6/object'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
-import { SinkMap } from '@rdf-esm/sink-map'
+import SinkMap from '@rdfjs/sink-map'
 import fetchPony from 'fetch-ponyfill'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
@@ -333,7 +333,7 @@ describe('Hydra', () => {
         let client: HydraClient
 
         beforeEach(() => {
-            client = create()
+            client = create({ parsers })
             fetchResource.mockImplementation(mockedResponse({
                 xhrBuilder: responseBuilder().body(''),
             }))

@@ -1,4 +1,3 @@
-import { parsers } from '@rdf-esm/formats-common'
 import { SinkMap } from '@rdf-esm/sink-map'
 import { EventEmitter } from 'events'
 import RdfResource from '@tpluscode/rdfine'
@@ -40,7 +39,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
     const alcaeus = new Alcaeus({
         datasetFactory,
         rootSelectors: Object.entries(init.rootSelectors || defaultSelectors),
-        parsers: init.parsers || parsers,
+        parsers: init.parsers,
         resources: new ResourceStoreImpl({
             dataset: init.dataset || datasetFactory(),
             inferences: Object.values(inferences),
@@ -56,5 +55,3 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
 
     return alcaeus
 }
-
-export default create()

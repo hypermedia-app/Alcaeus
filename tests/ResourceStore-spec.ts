@@ -2,7 +2,7 @@ import { rdf } from '@tpluscode/rdf-ns-builders'
 import RdfResource from '@tpluscode/rdfine'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
-import * as RDF from '@rdf-esm/data-model'
+import RDF from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import ResourceStore, { RepresentationInference } from '../src/ResourceStore'
 

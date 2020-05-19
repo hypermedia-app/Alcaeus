@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.7](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2020-05-19)
+
+
+### Bug Fixes
+
+* revert modules deps to support commonjs ([f679111](https://github.com/wikibus/alcaeus/commit/f6791117c1cf74eb006dff93611280ad2135a996))
+
 ## [1.0.0-beta.6](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2020-05-18)
 
 

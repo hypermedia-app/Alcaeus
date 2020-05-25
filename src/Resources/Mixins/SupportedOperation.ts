@@ -1,4 +1,4 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
 import { Class } from './Class'
@@ -42,4 +42,4 @@ export function SupportedOperationMixin<TBase extends Constructor<HydraResource>
     return SupportedOperationClass
 }
 
-SupportedOperationMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Operation)
+SupportedOperationMixin.appliesTo = hydra.Operation

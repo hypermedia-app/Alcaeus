@@ -1,4 +1,4 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export interface StatusCodeDescription {
@@ -21,4 +21,4 @@ export function StatusCodeDescriptionMixin <TBase extends Constructor>(Base: TBa
     return StatusCodeDescriptionClass
 }
 
-StatusCodeDescriptionMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.StatusCodeDescription)
+StatusCodeDescriptionMixin.appliesTo = hydra.StatusCodeDescription

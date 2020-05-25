@@ -1,4 +1,4 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { View, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { ManagesBlock, ManagesBlockMixin } from './ManagesBlock'
@@ -52,4 +52,4 @@ export function CollectionMixin <TBase extends Constructor<HydraResource>>(Base:
     return CollectionClass
 }
 
-CollectionMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.Collection)
+CollectionMixin.appliesTo = hydra.Collection

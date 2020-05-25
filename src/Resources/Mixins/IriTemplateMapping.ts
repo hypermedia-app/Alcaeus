@@ -34,4 +34,4 @@ export function IriTemplateMappingMixin<TBase extends Constructor<HydraResource>
     return IriTemplateMappingClass
 }
 
-IriTemplateMappingMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.IriTemplateMapping)
+IriTemplateMappingMixin.appliesTo = hydra.IriTemplateMapping

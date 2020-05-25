@@ -1,4 +1,4 @@
-import { Constructor, property, namespace, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, property, namespace } from '@tpluscode/rdfine'
 import { HydraResponse } from '../../alcaeus'
 import { Class, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
@@ -39,4 +39,4 @@ export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>>(
     return ApiDocumentationClass
 }
 
-ApiDocumentationMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.ApiDocumentation)
+ApiDocumentationMixin.appliesTo = hydra.ApiDocumentation

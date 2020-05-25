@@ -1,4 +1,4 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
 import { IriTemplateMapping, IriTemplateMappingMixin } from './IriTemplateMapping'
@@ -42,4 +42,4 @@ export function IriTemplateMixin<TBase extends Constructor<HydraResource>>(Base:
     return IriTemplateClass
 }
 
-IriTemplateMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.IriTemplate)
+IriTemplateMixin.appliesTo = hydra.IriTemplate

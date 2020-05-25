@@ -1,4 +1,4 @@
-import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { SingleContextClownface } from 'clownface'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Collection, HydraResource, View } from '../index'
@@ -57,4 +57,4 @@ export function PartialCollectionViewMixin<TBase extends Constructor<HydraResour
     return PartialCollectionViewClass
 }
 
-PartialCollectionViewMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.PartialCollectionView)
+PartialCollectionViewMixin.appliesTo = hydra.PartialCollectionView

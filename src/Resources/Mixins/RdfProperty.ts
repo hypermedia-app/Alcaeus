@@ -1,4 +1,4 @@
-import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, property } from '@tpluscode/rdfine'
 import { hydra, rdf, rdfs } from '@tpluscode/rdf-ns-builders'
 import { Class, HydraResource, SupportedOperation } from '../index'
 import { ClassMixin } from './Class'
@@ -53,4 +53,4 @@ export function RdfPropertyMixin<TBase extends Constructor<HydraResource>>(Base:
     return RdfPropertyClass
 }
 
-RdfPropertyMixin.shouldApply = (res: RdfResource) => res.hasType(rdf.Property)
+RdfPropertyMixin.appliesTo = rdf.Property

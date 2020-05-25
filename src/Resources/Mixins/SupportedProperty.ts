@@ -1,4 +1,4 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
 import { DocumentedResourceMixin, DocumentedResource } from './DocumentedResource'
@@ -55,4 +55,4 @@ export function SupportedPropertyMixin<TBase extends Constructor<HydraResource>>
     return SupportedPropertyClass
 }
 
-SupportedPropertyMixin.shouldApply = (res: RdfResource) => res.hasType(hydra.SupportedProperty)
+SupportedPropertyMixin.appliesTo = hydra.SupportedProperty

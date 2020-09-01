@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.8](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2020-09-01)
+
+
+### Features
+
+* defaultHeaders should allow async function ([d6f89b5](https://github.com/wikibus/alcaeus/commit/d6f89b507f6f6e9eb0c2cb89c7d82054c19174bd))
+
 ## [1.0.0-beta.7](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2020-05-19)
 
 

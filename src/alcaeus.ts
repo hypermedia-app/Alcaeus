@@ -1,7 +1,7 @@
 import cf, { SingleContextClownface } from 'clownface'
 import { EventEmitter } from 'events'
 import { SinkMap } from '@rdf-esm/sink-map'
-import TermSet from '@rdfjs/term-set'
+import TermSet from '@rdf-esm/term-set'
 import { RdfResource } from '@tpluscode/rdfine'
 import { Headers } from './fetch'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
@@ -41,14 +41,14 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     apiDocumentations: ResourceRepresentation<ApiDocumentation>[]
 }
 
-interface AlcaeusInit<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> {
+interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
     rootSelectors: [string, RootNodeCandidate][]
     resources: ResourceStore<D>
     datasetFactory: () => D
     parsers?: SinkMap<EventEmitter, Stream>
 }
 
-export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
+export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
     public baseUri?: string = undefined;
 
     public rootSelectors: [string, RootNodeCandidate][];
@@ -57,6 +57,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
 
     public defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>) = {}
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     public log: (msg: string) => void = () => {}
 
     public readonly resources: ResourceStore<D>
@@ -65,7 +66,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
 
     private readonly datasetFactory: () => D;
 
-    public constructor({ resources, datasetFactory, rootSelectors, parsers }: AlcaeusInit<R, D>) {
+    public constructor({ resources, datasetFactory, rootSelectors, parsers }: AlcaeusInit<D>) {
         if (!parsers) throw new Error('No parsers provided. Consider @rdfjs/formats-common or @rdf-esm/formats-common packages')
 
         this.rootSelectors = rootSelectors

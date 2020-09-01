@@ -1,5 +1,6 @@
 coverage/
 *.js
+*.mjs
 !.config.js
 !main.js
 *.d.ts

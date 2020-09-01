@@ -1,22 +1,38 @@
 {
-  "presets": [
-    "@babel/preset-typescript"
-  ],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "node": "current"
+            }
+          }
+        ],
+        "@babel/preset-typescript"
+      ]
+    },
+    "modules": {
+      "presets": [
+        "@babel/preset-typescript"
+      ],
+      "plugins": [
+        [
+          "babel-plugin-add-import-extension",
+          {
+            "extension": "mjs"
+          }
+        ]
+      ]
+    }
+  },
   "plugins": [
+    "@babel/proposal-class-properties",
     [
       "@babel/plugin-proposal-decorators",
       {
         "decoratorsBeforeExport": true
-      }
-    ],
-    [
-      "@babel/proposal-class-properties"
-    ],
-    "@babel/proposal-object-rest-spread",
-    [
-      "babel-plugin-add-import-extension",
-      {
-        "extension": "mjs"
       }
     ]
   ]

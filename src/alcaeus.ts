@@ -36,7 +36,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     loadResource<T extends RdfResource = HydraResource>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation | null>
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse>
-    defaultHeaders: HeadersInit | (() => HeadersInit)
+    defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
     resources: ResourceStore<D>
     apiDocumentations: ResourceRepresentation<ApiDocumentation>[]
 }
@@ -55,7 +55,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
 
     public parsers: SinkMap<EventEmitter, Stream>;
 
-    public defaultHeaders: HeadersInit | (() => HeadersInit) = {}
+    public defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>) = {}
 
     public log: (msg: string) => void = () => {}
 
@@ -84,7 +84,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
         const response = await FetchUtil.fetchResource(uri, {
             parsers: this.parsers,
             baseUri: this.baseUri,
-            headers: this.__mergeHeaders(new Headers(headers)),
+            headers: await this.__mergeHeaders(new Headers(headers)),
         })
 
         const stream = await response.quadStream()
@@ -120,7 +120,7 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
     }
 
     public async invokeOperation(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse> {
-        const mergedHeaders = this.__mergeHeaders(new Headers(headers))
+        const mergedHeaders = await this.__mergeHeaders(new Headers(headers))
         const uri = operation.target.id.value
 
         const response = await FetchUtil.invokeOperation(operation.method, uri, {
@@ -162,8 +162,8 @@ export class Alcaeus<R extends HydraResource = never, D extends DatasetIndexed =
         await this.loadDocumentation(response.apiDocumentationLink, headers)
     }
 
-    private __mergeHeaders(headers: Headers): Headers {
-        const defaultHeaders = typeof this.defaultHeaders === 'function' ? this.defaultHeaders() : this.defaultHeaders
+    private async __mergeHeaders(headers: Headers): Promise<Headers> {
+        const defaultHeaders = typeof this.defaultHeaders === 'function' ? await this.defaultHeaders() : this.defaultHeaders
 
         return merge(new Headers(defaultHeaders), headers)
     }

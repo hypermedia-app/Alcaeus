@@ -343,14 +343,14 @@ describe('Hydra', () => {
         })
 
         describe('as HeadersInit object', () => {
-            it('passes them to loadResource', () => {
+            it('passes them to loadResource', async () => {
                 // given
                 client.defaultHeaders = {
                     Authorization: 'Bearer foobar',
                 }
 
                 // when
-                client.loadResource('uri')
+                await client.loadResource('uri')
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
@@ -360,7 +360,7 @@ describe('Hydra', () => {
                     }) }))
             })
 
-            it('passes them to invokeOperation', () => {
+            it('passes them to invokeOperation', async () => {
                 // given
                 client.defaultHeaders = {
                     Authorization: 'Bearer foobar',
@@ -373,7 +373,7 @@ describe('Hydra', () => {
                 }
 
                 // when
-                client.invokeOperation(operation)
+                await client.invokeOperation(operation)
 
                 // then
                 expect(invokeOperation)
@@ -387,14 +387,14 @@ describe('Hydra', () => {
                         }))
             })
 
-            it('passes them to loadDocumentation', () => {
+            it('passes them to loadDocumentation', async () => {
                 // given
                 client.defaultHeaders = {
                     Authorization: 'Bearer foobar',
                 }
 
                 // when
-                client.loadDocumentation('doc')
+                await client.loadDocumentation('doc')
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
@@ -407,14 +407,14 @@ describe('Hydra', () => {
         })
 
         describe('as HeadersInit function', () => {
-            it('passes them to loadResource', () => {
+            it('passes them to loadResource', async () => {
                 // given
                 client.defaultHeaders = () => ({
                     Authorization: 'Token xyz',
                 })
 
                 // when
-                client.loadResource('uri')
+                await client.loadResource('uri')
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
@@ -423,14 +423,14 @@ describe('Hydra', () => {
                     }) }))
             })
 
-            it('passes them to loadDocumentation', () => {
+            it('passes them to loadDocumentation', async () => {
                 // given
                 client.defaultHeaders = () => ({
                     Authorization: 'Token xyz',
                 })
 
                 // when
-                client.loadDocumentation('doc')
+                await client.loadDocumentation('doc')
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
@@ -441,7 +441,7 @@ describe('Hydra', () => {
                     }))
             })
 
-            it('passes them to invokeOperation', () => {
+            it('passes them to invokeOperation', async () => {
                 // given
                 client.defaultHeaders = () => ({
                     Authorization: 'Token xyz',
@@ -454,7 +454,70 @@ describe('Hydra', () => {
                 }
 
                 // when
-                client.invokeOperation(operation)
+                await client.invokeOperation(operation)
+
+                // then
+                expect(invokeOperation)
+                    .toHaveBeenCalledWith(
+                        'post',
+                        ex.uri.value,
+                        expect.objectContaining({
+                            headers: new Headers({
+                                'Authorization': 'Token xyz',
+                            }),
+                        }))
+            })
+        })
+
+        describe('as async HeadersInit function', () => {
+            it('passes them to loadResource', async () => {
+                // given
+                client.defaultHeaders = async () => ({
+                    Authorization: 'Token xyz',
+                })
+
+                // when
+                await client.loadResource('uri')
+
+                // then
+                expect(fetchResource).toHaveBeenCalledWith(
+                    'uri', expect.objectContaining({ headers: new Headers({
+                        'Authorization': 'Token xyz',
+                    }) }))
+            })
+
+            it('passes them to loadDocumentation', async () => {
+                // given
+                client.defaultHeaders = async () => ({
+                    Authorization: 'Token xyz',
+                })
+
+                // when
+                await client.loadDocumentation('doc')
+
+                // then
+                expect(fetchResource).toHaveBeenCalledWith(
+                    'doc', expect.objectContaining({
+                        headers: new Headers({
+                            'Authorization': 'Token xyz',
+                        }),
+                    }))
+            })
+
+            it('passes them to invokeOperation', async () => {
+                // given
+                client.defaultHeaders = async () => ({
+                    Authorization: 'Token xyz',
+                })
+                const operation = {
+                    method: 'post',
+                    target: {
+                        id: ex.uri,
+                    },
+                }
+
+                // when
+                await client.invokeOperation(operation)
 
                 // then
                 expect(invokeOperation)

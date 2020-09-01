@@ -5,8 +5,6 @@ import { ManagesBlockPattern } from '../../src/Resources/Mixins/ManagesBlock'
 import { Operation } from '../../src/Resources/Operation'
 
 export class Resource extends RdfResource implements HydraResource {
-    [prop: string]: unknown | unknown[];
-
     public get operations(): Operation[] {
         return []
     }

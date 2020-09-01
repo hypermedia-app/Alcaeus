@@ -21,7 +21,7 @@ export function responseBuilder() {
 
     return {
 
-        body(body: string | object, contentType = MediaTypes.jsonLd) {
+        body(body: string | Record<any, any>, contentType = MediaTypes.jsonLd) {
             if (typeof body === 'object') {
                 responseBody = stringToStream(JSON.stringify(body))
             } else {
@@ -65,7 +65,7 @@ export function responseBuilder() {
             return this.statusCode(500)
         },
 
-        apiDocumentation(docUri: string = 'http://api.example.com/doc/') {
+        apiDocumentation(docUri = 'http://api.example.com/doc/') {
             return this.link(docUri, 'http://www.w3.org/ns/hydra/core#apiDocumentation')
         },
 

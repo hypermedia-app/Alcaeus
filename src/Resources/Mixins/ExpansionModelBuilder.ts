@@ -26,7 +26,7 @@ export default function <TBase extends Constructor<IriTemplate>> (Base: TBase) {
             return expanded
         }
 
-        public buildExpansionModel(mappings: IriTemplateMapping[], model: object) {
+        public buildExpansionModel(mappings: IriTemplateMapping[], model: Record<string, any>) {
             return mappings.map((mapping: IriTemplateMapping) => {
                 return {
                     value: model[mapping.property.id.value],

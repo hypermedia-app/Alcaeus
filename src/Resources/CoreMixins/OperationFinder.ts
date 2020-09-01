@@ -197,7 +197,7 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>>(B
         }
 
         public __filterOperations(operations: Operation[], criteria: Criteria[] = []) {
-            let actualCriteria = [...criteria]
+            const actualCriteria = [...criteria]
             if (actualCriteria.length === 0) {
                 actualCriteria.push({})
             }

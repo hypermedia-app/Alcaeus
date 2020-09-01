@@ -59,7 +59,7 @@ describe('Class', () => {
             // then
             expect(clas.supportedOperations.length).toBe(2)
             expect(clas.supportedOperations.map(so => so.title)).toEqual(
-                expect.arrayContaining(['Operation 1', 'Operation 2'])
+                expect.arrayContaining(['Operation 1', 'Operation 2']),
             )
         })
 
@@ -155,7 +155,7 @@ describe('Class', () => {
                     vocab.DraftIssue.value,
                     vocab.Issue.value,
                     vocab.BaseClass.value,
-                ])
+                ]),
             )
         })
     })

@@ -3,7 +3,7 @@ import { EventEmitter } from 'events'
 import RdfResource from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import datasetIndexed from 'rdf-dataset-indexed'
-import { DatasetCore, Stream } from 'rdf-js'
+import { Stream } from 'rdf-js'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus, HydraClient } from './alcaeus'
 import * as inferences from './inferences'
@@ -26,16 +26,15 @@ interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
 }
 
 export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D> = { }): HydraClient<D> {
-    let factory: ResourceFactory<DatasetCore, HydraResource>
     class HydraResource extends RdfResource {
         public static get factory() {
-            return factory
+            return factory as any
         }
     }
 
     const datasetFactory = init.datasetFactory || datasetIndexed
 
-    factory = new ResourceFactory(HydraResource)
+    const factory = new ResourceFactory<any>(HydraResource)
     const alcaeus = new Alcaeus({
         datasetFactory,
         rootSelectors: Object.entries(init.rootSelectors || defaultSelectors),

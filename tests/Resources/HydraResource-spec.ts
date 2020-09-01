@@ -19,7 +19,7 @@ const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
 
 const apiDocumentations: ResourceRepresentation<ApiDocumentation>[] = []
-let client = {
+const client = {
     apiDocumentations,
 } as HydraClient
 const HydraResource = createHydraResourceMixin(client)(Resource)

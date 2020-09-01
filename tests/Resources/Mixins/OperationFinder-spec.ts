@@ -26,7 +26,7 @@ function parse(triples: TurtleTemplateResult): Stream {
 }
 
 const apiDocumentations: ResourceRepresentation<ApiDocumentation>[] = []
-let client = {
+const client = {
     apiDocumentations,
 } as HydraClient
 class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin(client)(Resource)) {
@@ -415,7 +415,7 @@ describe('OperationFinder', () => {
             // then
             expect(operations).toHaveLength(2)
             expect(operations.map(o => o.expects.id.value)).toEqual(
-                expect.arrayContaining([owl.Nothing.value])
+                expect.arrayContaining([owl.Nothing.value]),
             )
         })
 
@@ -459,7 +459,7 @@ describe('OperationFinder', () => {
             // then
             expect(operations).toHaveLength(2)
             expect(operations.map(o => o.method)).toEqual(
-                expect.arrayContaining(['POST', 'PUT'])
+                expect.arrayContaining(['POST', 'PUT']),
             )
         })
 
@@ -557,7 +557,7 @@ describe('OperationFinder', () => {
             // then
             expect(operations).toHaveLength(2)
             expect(operations.map(o => o.supportedOperation.id.value)).toEqual(
-                expect.arrayContaining([ex.OperationA.value, ex.OperationC.value])
+                expect.arrayContaining([ex.OperationA.value, ex.OperationC.value]),
             )
         })
     })
@@ -593,7 +593,7 @@ describe('OperationFinder', () => {
             // then
             expect(operations).toHaveLength(2)
             expect(operations.map(o => o.method)).not.toEqual(
-                expect.arrayContaining(['GET'])
+                expect.arrayContaining(['GET']),
             )
         })
 
@@ -625,7 +625,7 @@ describe('OperationFinder', () => {
             // then
             expect(operations).toHaveLength(1)
             expect(operations.map(o => o.target.id.value)).toEqual(
-                expect.arrayContaining(['http://example.com/'])
+                expect.arrayContaining(['http://example.com/']),
             )
         })
 
@@ -659,7 +659,7 @@ describe('OperationFinder', () => {
             // then
             expect(operations).toHaveLength(3)
             expect(operations.map(o => o.method)).toEqual(
-                expect.arrayContaining(['GET'])
+                expect.arrayContaining(['GET']),
             )
         })
     })

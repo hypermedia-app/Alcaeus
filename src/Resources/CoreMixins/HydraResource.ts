@@ -6,6 +6,16 @@ import { Collection, CollectionMixin } from '../Mixins/Collection'
 import { ManagesBlockPattern } from '../Mixins/ManagesBlock'
 import Operation from '../Operation'
 
+// TODO: inline class babel/babel#8559 is fixed
+function CollectionPropertyMixin<Base extends Constructor>(base: Base) {
+    class CollectionPropertyMixinClass extends base {
+        @property.resource({ path: hydra.collection, values: 'array', as: [CollectionMixin] })
+        public collections!: Collection[]
+    }
+
+    return CollectionPropertyMixinClass
+}
+
 export function createHydraResourceMixin(alcaeus: HydraClient) {
     function getSupportedClasses(resource: RdfResource) {
         return alcaeus.apiDocumentations
@@ -18,7 +28,7 @@ export function createHydraResourceMixin(alcaeus: HydraClient) {
     }
 
     function HydraResourceMixin<Base extends Constructor<HydraResource>>(base: Base) {
-        class HydraResourceClass extends base implements HydraResource {
+        return class extends CollectionPropertyMixin(base) implements HydraResource {
             public get operations() {
                 const classOperations = getSupportedClasses(this)
                     .reduce<SupportedOperation[]>((operations, clas: Class) => [...operations, ...clas.supportedOperations], [])
@@ -56,7 +66,7 @@ export function createHydraResourceMixin(alcaeus: HydraClient) {
                 return [...operations.values()]
             }
 
-            public getLinks(includeMissing: boolean = false) {
+            public getLinks(includeMissing = false) {
                 return this.getProperties()
                     .filter((tuple) => tuple.supportedProperty.property.isLink)
                     .filter((tuple) => tuple.objects.length > 0 || includeMissing)
@@ -84,9 +94,6 @@ export function createHydraResourceMixin(alcaeus: HydraClient) {
                 }, [] as { supportedProperty: SupportedProperty; objects: any[] }[])
             }
 
-            @property.resource({ path: hydra.collection, values: 'array', as: [CollectionMixin] })
-            public collections!: Collection[]
-
             public getCollections(filter?: ManagesBlockPattern) {
                 if (filter) {
                     return this.collections.filter((c) => c.manages &&
@@ -96,8 +103,6 @@ export function createHydraResourceMixin(alcaeus: HydraClient) {
                 return this.collections
             }
         }
-
-        return HydraResourceClass
     }
 
     HydraResourceMixin.shouldApply = true

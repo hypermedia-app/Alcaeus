@@ -77,7 +77,7 @@ describe('Hydra loadDocumentation', () => {
         expect(dataset.toCanonical()).toMatchSnapshot()
     })
 
-    it(`passes base URI to fetch`, async () => {
+    it('passes base URI to fetch', async () => {
         // given
         fetchResource.mockImplementationOnce(mockedResponse({
             xhrBuilder: responseBuilder().body(''),
@@ -355,9 +355,11 @@ describe('Hydra', () => {
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
                     'uri',
-                    expect.objectContaining({ headers: new Headers({
-                        'Authorization': 'Bearer foobar',
-                    }) }))
+                    expect.objectContaining({
+                        headers: new Headers({
+                            Authorization: 'Bearer foobar',
+                        }),
+                    }))
             })
 
             it('passes them to invokeOperation', async () => {
@@ -382,7 +384,7 @@ describe('Hydra', () => {
                         ex.uri.value,
                         expect.objectContaining({
                             headers: new Headers({
-                                'Authorization': 'Bearer foobar',
+                                Authorization: 'Bearer foobar',
                             }),
                         }))
             })
@@ -400,7 +402,7 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', expect.objectContaining({
                         headers: new Headers({
-                            'Authorization': 'Bearer foobar',
+                            Authorization: 'Bearer foobar',
                         }),
                     }))
             })
@@ -418,9 +420,11 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', expect.objectContaining({ headers: new Headers({
-                        'Authorization': 'Token xyz',
-                    }) }))
+                    'uri', expect.objectContaining({
+                        headers: new Headers({
+                            Authorization: 'Token xyz',
+                        }),
+                    }))
             })
 
             it('passes them to loadDocumentation', async () => {
@@ -436,7 +440,7 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', expect.objectContaining({
                         headers: new Headers({
-                            'Authorization': 'Token xyz',
+                            Authorization: 'Token xyz',
                         }),
                     }))
             })
@@ -463,7 +467,7 @@ describe('Hydra', () => {
                         ex.uri.value,
                         expect.objectContaining({
                             headers: new Headers({
-                                'Authorization': 'Token xyz',
+                                Authorization: 'Token xyz',
                             }),
                         }))
             })
@@ -481,9 +485,11 @@ describe('Hydra', () => {
 
                 // then
                 expect(fetchResource).toHaveBeenCalledWith(
-                    'uri', expect.objectContaining({ headers: new Headers({
-                        'Authorization': 'Token xyz',
-                    }) }))
+                    'uri', expect.objectContaining({
+                        headers: new Headers({
+                            Authorization: 'Token xyz',
+                        }),
+                    }))
             })
 
             it('passes them to loadDocumentation', async () => {
@@ -499,7 +505,7 @@ describe('Hydra', () => {
                 expect(fetchResource).toHaveBeenCalledWith(
                     'doc', expect.objectContaining({
                         headers: new Headers({
-                            'Authorization': 'Token xyz',
+                            Authorization: 'Token xyz',
                         }),
                     }))
             })
@@ -526,7 +532,7 @@ describe('Hydra', () => {
                         ex.uri.value,
                         expect.objectContaining({
                             headers: new Headers({
-                                'Authorization': 'Token xyz',
+                                Authorization: 'Token xyz',
                             }),
                         }))
             })

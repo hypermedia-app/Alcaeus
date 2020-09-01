@@ -19,7 +19,7 @@ export function * inferTypesFromPropertyRanges(dataset: DatasetCore): Iterable<B
     const node = cf({ dataset })
 
     for (const mapping of propertyRangeMappings) {
-        const [ property, type ] = mapping
+        const [property, type] = mapping
         const subjects = node.out(property)
 
         for (const subject of subjects.terms) {

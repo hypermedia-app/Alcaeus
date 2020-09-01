@@ -15,7 +15,7 @@ function requestAcceptHeaders(sinkMap: Parsers) {
 async function getResponse(uri, { method, headers = {}, body, baseUri, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; baseUri?: string; parsers: Parsers }) {
     let effectiveUri = uri
     if (uri.match(/^https?:\/\//) === null && baseUri) {
-        effectiveUri = url.resolve(baseUri, uri)
+        effectiveUri = new url.URL(uri, baseUri).toString()
     }
 
     const defaultHeaders: HeadersInit = {

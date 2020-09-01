@@ -20,7 +20,7 @@ export default function <TBase extends Constructor<IriTemplate>> (Base: TBase) {
             const expanded = uriTemplate.expand(variables)
 
             if (this._parent && !this._parent.isAnonymous) {
-                return url.resolve(this._parent.id.value, expanded)
+                return new url.URL(expanded, this._parent.id.value).toString()
             }
 
             return expanded

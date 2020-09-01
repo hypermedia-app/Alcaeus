@@ -41,7 +41,7 @@ describe('FetchUtil', () => {
             expect(mockFetch)
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
-                        'accept': 'application/ld+json, application/n-triples, application/n-quads',
+                        accept: 'application/ld+json, application/n-triples, application/n-quads',
                     }),
                 }))
         })
@@ -63,7 +63,7 @@ describe('FetchUtil', () => {
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
                         'x-foo': 'bar',
-                        'accept': 'application/ld+json, application/n-triples, application/n-quads',
+                        accept: 'application/ld+json, application/n-triples, application/n-quads',
                     }),
                 }))
         })
@@ -73,16 +73,18 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', { parsers,
+            await fetchUtil.fetchResource('http://example.com/resource', {
+                parsers,
                 headers: {
                     'x-foo': 'bar',
-                } })
+                },
+            })
 
             // then
             expect(mockFetch)
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
-                        'accept': 'application/ld+json, application/n-triples, application/n-quads',
+                        accept: 'application/ld+json, application/n-triples, application/n-quads',
                     }),
                 }))
         })
@@ -92,16 +94,18 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', { parsers,
+            await fetchUtil.fetchResource('http://example.com/resource', {
+                parsers,
                 headers: {
-                    'accept': 'application/vnd.custom+rdf',
-                } })
+                    accept: 'application/vnd.custom+rdf',
+                },
+            })
 
             // then
             expect(mockFetch)
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
-                        'accept': 'application/vnd.custom+rdf',
+                        accept: 'application/vnd.custom+rdf',
                     }),
                 }))
         })
@@ -138,17 +142,19 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', { parsers,
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', {
+                parsers,
                 headers: {
                     'x-foo': 'bar',
-                } })
+                },
+            })
 
             // then
             expect(mockFetch)
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
                         'x-foo': 'bar',
-                        'accept': 'application/ld+json, application/n-triples, application/n-quads',
+                        accept: 'application/ld+json, application/n-triples, application/n-quads',
                     }),
                 }))
         })
@@ -158,16 +164,18 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', { parsers,
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', {
+                parsers,
                 headers: {
                     'x-foo': 'bar',
-                } })
+                },
+            })
 
             // then
             expect(mockFetch)
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
-                        'accept': 'application/ld+json, application/n-triples, application/n-quads',
+                        accept: 'application/ld+json, application/n-triples, application/n-quads',
                     }),
                 }))
         })
@@ -177,16 +185,18 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', { parsers,
+            await fetchUtil.invokeOperation('get', 'http://example.com/resource', {
+                parsers,
                 headers: {
-                    'accept': 'application/vnd.custom+rdf',
-                } })
+                    accept: 'application/vnd.custom+rdf',
+                },
+            })
 
             // then
             expect(mockFetch)
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
-                        'accept': 'application/vnd.custom+rdf',
+                        accept: 'application/vnd.custom+rdf',
                     }),
                 }))
         })

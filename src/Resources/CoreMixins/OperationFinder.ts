@@ -193,7 +193,7 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>>(B
                 return this.__filterOperations(this.getOperationsDeep(stopConditionOrCriteria), moreCriteria)
             }
 
-            return this.__filterOperations(this.getOperationsDeep(), [ stopConditionOrCriteria, ...moreCriteria ])
+            return this.__filterOperations(this.getOperationsDeep(), [stopConditionOrCriteria, ...moreCriteria])
         }
 
         public __filterOperations(operations: Operation[], criteria: Criteria[] = []) {

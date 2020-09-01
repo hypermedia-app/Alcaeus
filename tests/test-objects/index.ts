@@ -8,13 +8,13 @@ export const Bodies = {
         },
         '@id': 'http://example.com/resource',
         '@type': 'Resource',
-        'prop': {
+        prop: {
             '@value': 'some textual value',
         },
-        'other': {
+        other: {
             '@id': 'http://example.com/linked',
         },
-        'other_yet': {
+        other_yet: {
             '@id': 'http://example.com/linked',
         },
     },
@@ -122,7 +122,7 @@ export const Bodies = {
     hydraCollectionWithView: {
         '@id': 'http://example.com/resource',
         '@context': Context,
-        'member': [
+        member: [
             { '@id': 'http://example.com/element/1' },
             { '@id': 'http://example.com/element/2' },
             { '@id': 'http://example.com/element/3' },

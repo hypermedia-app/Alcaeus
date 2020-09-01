@@ -100,7 +100,7 @@ describe('ExplicitRepresentationExpansion', () => {
             it('expands decimal value', () => {
                 // when
                 const expanded = resource.expand({
-                    [valueProperty]: { '@value': `5.5`, '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
+                    [valueProperty]: { '@value': '5.5', '@type': 'http://www.w3.org/2001/XMLSchema#decimal' },
                 })
 
                 // then
@@ -110,7 +110,7 @@ describe('ExplicitRepresentationExpansion', () => {
             it('expands language tagged string', () => {
                 // when
                 const expanded = resource.expand({
-                    [valueProperty]: { '@value': `A simple string`, '@language': 'en' },
+                    [valueProperty]: { '@value': 'A simple string', '@language': 'en' },
                 })
 
                 // then

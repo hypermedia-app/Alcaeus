@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.10](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2020-09-02)
+
+
+### Bug Fixes
+
+* exports must begin with dot ([76e802b](https://github.com/wikibus/alcaeus/commit/76e802bd500266a408684f3bc1bcd842507a9423))
+
 ## [1.0.0-beta.9](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2020-09-02)
 
 ## [1.0.0-beta.8](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2020-09-01)

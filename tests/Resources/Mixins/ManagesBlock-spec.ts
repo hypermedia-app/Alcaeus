@@ -1,5 +1,5 @@
 import Resource, { RdfResource } from '@tpluscode/rdfine'
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
 import { RdfProperty } from '../../../src/Resources/Mixins/RdfProperty'
@@ -10,7 +10,7 @@ class ManagesBlock extends ManagesBlockMixin(Resource) {}
 
 describe('ManagesBlock', () => {
     let dataset: DatasetCore
-    let node: SingleContextClownface<BlankNode>
+    let node: GraphPointer<BlankNode>
     let managesBlock: ManagesBlock
 
     beforeEach(() => {

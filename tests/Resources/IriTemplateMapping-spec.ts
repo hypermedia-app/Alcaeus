@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
@@ -9,7 +9,7 @@ import { hydra } from '@tpluscode/rdf-ns-builders'
 class IriTemplateMapping extends IriTemplateMappingMixin(Resource) {}
 
 describe('IriTemplateMapping', () => {
-    let node: SingleContextClownface<NamedNode, DatasetExt>
+    let node: GraphPointer<NamedNode, DatasetExt>
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() })

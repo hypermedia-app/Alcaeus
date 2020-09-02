@@ -1,7 +1,6 @@
 import { SinkMap } from '@rdf-esm/sink-map'
 import { EventEmitter } from 'events'
-import RdfResource from '@tpluscode/rdfine'
-import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
+import RdfResource, { ResourceFactory } from '@tpluscode/rdfine'
 import datasetIndexed from 'rdf-dataset-indexed'
 import { Stream } from 'rdf-js'
 import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
@@ -12,7 +11,7 @@ import * as mixins from './ResourceFactoryDefaults'
 import ResourceStoreImpl from './ResourceStore'
 import { defaultSelectors, RootNodeCandidate } from './RootSelectors'
 
-export { ResourceIdentifier, ResourceIndexer } from '@tpluscode/rdfine'
+export { ResourceIdentifier, ResourceIndexer, ResourceFactory } from '@tpluscode/rdfine'
 export * from './Resources/index'
 export { Operation } from './Resources/Operation'
 export { HydraResponse } from './alcaeus'
@@ -34,7 +33,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
 
     const datasetFactory = init.datasetFactory || datasetIndexed
 
-    const factory = new ResourceFactory<any>(HydraResource)
+    const factory = new ResourceFactory(HydraResource)
     const alcaeus = new Alcaeus({
         datasetFactory,
         rootSelectors: Object.entries(init.rootSelectors || defaultSelectors),

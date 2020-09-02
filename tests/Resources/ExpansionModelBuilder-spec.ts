@@ -1,5 +1,5 @@
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
@@ -20,7 +20,7 @@ class ExpansionModelBuilder extends ExpansionModelBuilderMixin(IriTemplateMixin(
 }
 
 describe('ExpansionModelBuilder', () => {
-    let node: SingleContextClownface<BlankNode>
+    let node: GraphPointer<BlankNode>
     let builder: ExpansionModelBuilder
 
     beforeEach(() => {

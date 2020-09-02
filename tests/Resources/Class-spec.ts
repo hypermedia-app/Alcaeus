@@ -1,5 +1,5 @@
 import { turtle } from '@tpluscode/rdf-string'
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
@@ -16,7 +16,7 @@ const vocab = namespace('http://example.com/vocab#')
 class Class extends ClassMixin(Resource) {}
 
 describe('Class', () => {
-    let hydraClassNode: SingleContextClownface<NamedNode>
+    let hydraClassNode: GraphPointer<NamedNode>
     let dataset
 
     beforeEach(() => {

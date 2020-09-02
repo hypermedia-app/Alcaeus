@@ -1,5 +1,5 @@
 import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
-import { SingleContextClownface } from 'clownface'
+import { GraphPointer } from 'clownface'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Collection, HydraResource, View } from '../index'
 
@@ -38,7 +38,7 @@ export function PartialCollectionViewMixin<TBase extends Constructor<HydraResour
         public last!: HydraResource
 
         public get collection() {
-            const collection = this._selfGraph.in(hydra.view)
+            const collection = this.pointer.in(hydra.view)
 
             return collection.toArray()
                 .reduce((namedNodes, node) => {
@@ -47,7 +47,7 @@ export function PartialCollectionViewMixin<TBase extends Constructor<HydraResour
                     }
 
                     return namedNodes
-                }, [] as SingleContextClownface<ResourceIdentifier>[])
+                }, [] as GraphPointer<ResourceIdentifier>[])
                 .map(collectionNode => {
                     return this._create<Collection>(collectionNode)
                 })[0] || null

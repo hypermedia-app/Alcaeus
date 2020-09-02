@@ -1481,16 +1481,16 @@
     "@tpluscode/rdf-ns-builders" "^0.3.6"
     "@zazuko/rdf-vocabularies" "^2020.6.29"
 
-"@tpluscode/rdfine@^0.4.24":
-  version "0.4.24"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.4.24.tgz#b8eea9fcab52c0a672a46f409cbb87b2ac255ecc"
-  integrity sha512-IvMlz9NS/jXAetIHHC6oF7kQCdJ3mzzLctncH8HDuCyGNqRB6mUFDI5c7tTQeLScXu9duJSuVnPHETMuLMjZKQ==
+"@tpluscode/rdfine@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.1.tgz#c55849cc370265616fd0e9db0553ee2f21ccf080"
+  integrity sha512-TKmT9lmw1uAxn7zVZNuqitZPnDt8Pi6AP0p1n/GlbjOJ+mh/4e0hGzw61KgC9u5zJuOZGtnnkxtwsLZL8fuXhw==
   dependencies:
-    "@rdfjs/data-model" "^1.1.2"
-    "@rdfjs/namespace" "^1.1.0"
-    "@rdfjs/term-set" "^1.0.1"
+    "@rdf-esm/data-model" "^0.5.3"
+    "@rdf-esm/namespace" "^0.5.1"
+    "@rdf-esm/term-set" "^0.5.0"
     "@tpluscode/rdf-ns-builders" "^0.3.6"
-    clownface "^0.12.3"
+    clownface "^1"
     once "^1.4.0"
 
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
@@ -1526,10 +1526,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/clownface@^0.12.13":
-  version "0.12.15"
-  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-0.12.15.tgz#1b26ac58ce071d854c8daf01ba56e9f32e23e5a3"
-  integrity sha512-7JTN/PZcgnkGp/6x0xi33NsWAR4Y19HC83MRJ/GvdYuheva9BLfrbwXqHrN9xWpwmLi7UeZbwxeEj3CORwyxrg==
+"@types/clownface@^1":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.0.tgz#e73483c15477b7f1d8e238dcc3edc872516b93e1"
+  integrity sha512-mSb1tpiRYzIDRl3bubv0uVDxk0cb5Q80wT1ns7GbQ4sZ8QRNnyb/K4PnDEo2bKlBDFB1zgTa3/UQtRP32b5v0g==
   dependencies:
     "@types/rdf-js" "*"
 
@@ -2956,10 +2956,10 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-clownface@^0.12.3:
-  version "0.12.4"
-  resolved "https://registry.yarnpkg.com/clownface/-/clownface-0.12.4.tgz#32b835453a0b86ab74a78a3bd4622da79d7e8265"
-  integrity sha512-Y2SSy8pME3gg79sDoIj1AYUlrQNoq19DfEfiu7S4wv3R6P+wlXXhDmq7I78SOnYglwJudqhh7FgLbMMx//+ryw==
+clownface@^1:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/clownface/-/clownface-1.0.0.tgz#77c8937241f02c08a49ac0370cb8628cde324e91"
+  integrity sha512-8gAAqdD5ueYt62FHE9Zd4OTrcYEfiyQlxV/5NYxzKY5uO/HZbTv1+jhFHgYa3XD7BC+mkg+LFR9Mh168wj9aQQ==
   dependencies:
     "@rdfjs/data-model" "^1.1.0"
     "@rdfjs/namespace" "^1.0.0"

@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { RdfPropertyMixin } from '../../src/Resources/Mixins/RdfProperty'
@@ -8,7 +8,7 @@ import { hydra, owl, rdf, rdfs, xsd } from '@tpluscode/rdf-ns-builders'
 class RdfProperty extends RdfPropertyMixin(Resource) {}
 
 describe('RdfProperty', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
     let property: RdfProperty
 
     beforeEach(() => {

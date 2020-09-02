@@ -32,7 +32,7 @@ export function ExplicitRepresentationExpansionMixin<TBase extends Constructor<I
 ExplicitRepresentationExpansionMixin.shouldApply = function (resource: RdfResource) {
     const isTemplate = resource.hasType(hydra.IriTemplate)
 
-    const isExplicitRepresentation = resource._selfGraph.out(hydra.variableRepresentation)
+    const isExplicitRepresentation = resource.pointer.out(hydra.variableRepresentation)
         .values.includes(hydra.ExplicitRepresentation.value)
 
     return isTemplate && isExplicitRepresentation

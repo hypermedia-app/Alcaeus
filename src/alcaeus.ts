@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import { EventEmitter } from 'events'
 import { SinkMap } from '@rdf-esm/sink-map'
 import TermSet from '@rdf-esm/term-set'
@@ -24,7 +24,7 @@ export interface HydraResponse<T extends RdfResource = HydraResource> {
     response?: ResponseWrapper
 }
 
-function byInProperties(left: SingleContextClownface, right: SingleContextClownface) {
+function byInProperties(left: GraphPointer, right: GraphPointer) {
     return left.in().terms.length - right.in().terms.length
 }
 

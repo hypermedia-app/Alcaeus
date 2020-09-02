@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.11](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2020-09-02)
+
+
+### Bug Fixes
+
+* **declarations:** avoid this outside of interface ([b498527](https://github.com/wikibus/alcaeus/commit/b498527b53283c671bd0a7f3a16ee8b1482814c6))
+
 ## [1.0.0-beta.10](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2020-09-02)
 
 

@@ -17,8 +17,13 @@ export interface Class extends HydraResource {
     supportedProperties: SupportedProperty[]
 }
 
-export function ClassMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
-    class ClassClass extends Base implements Class {
+interface RuntimeClass extends Class {
+    subClassOf: this[]
+    getTypeHierarchy(): Generator<this>
+}
+
+export function ClassMixin<TBase extends Constructor<HydraResource>>(Base: TBase): Constructor<RuntimeClass> {
+    class ClassClass extends Base implements RuntimeClass {
         @property.resource({
             path: rdfs.subClassOf,
             values: 'array',

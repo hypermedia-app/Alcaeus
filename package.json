@@ -47,7 +47,7 @@
     "@rdf-esm/term-set": "^0.5.0",
     "@rdf-esm/sink-map": "^0.5.0",
     "@tpluscode/rdf-ns-builders": "^0.3.7",
-    "@tpluscode/rdfine": "^0.5.1",
+    "@tpluscode/rdfine": "^0.5.2",
     "clownface": "^1",
     "es6-url-template": "^1.0.3",
     "fetch-ponyfill": "^6.1.0",

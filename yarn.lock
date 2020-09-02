@@ -1481,10 +1481,10 @@
     "@tpluscode/rdf-ns-builders" "^0.3.6"
     "@zazuko/rdf-vocabularies" "^2020.6.29"
 
-"@tpluscode/rdfine@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.1.tgz#c55849cc370265616fd0e9db0553ee2f21ccf080"
-  integrity sha512-TKmT9lmw1uAxn7zVZNuqitZPnDt8Pi6AP0p1n/GlbjOJ+mh/4e0hGzw61KgC9u5zJuOZGtnnkxtwsLZL8fuXhw==
+"@tpluscode/rdfine@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.2.tgz#8ccfa92199457fc933835d1c4954ff25de200e73"
+  integrity sha512-70ldCaYfg9iYZ/1oY+PwLuBkUJt8/U1AD4/Zz4EPmh48GTQsp5k8flBmUI5Pti+FlUTh+TGzrVcOUinbNAlVlQ==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/namespace" "^0.5.1"

@@ -27,7 +27,7 @@ interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
 export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D> = { }): HydraClient<D> {
     class HydraResource extends RdfResource {
         public static get factory() {
-            return factory as any
+            return factory
         }
     }
 

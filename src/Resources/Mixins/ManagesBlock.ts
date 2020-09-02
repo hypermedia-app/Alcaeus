@@ -1,5 +1,5 @@
 import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
-import { SafeClownface } from 'clownface'
+import { MultiPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { HydraResource } from '../index'
@@ -36,7 +36,7 @@ export interface ManagesBlock {
     matches(filter: ManagesBlockPattern): boolean
 }
 
-function getUri(factory: SafeClownface, resource: string | RdfResource | NamedNode): ResourceIdentifier {
+function getUri(factory: MultiPointer, resource: string | RdfResource | NamedNode): ResourceIdentifier {
     if (typeof resource === 'string') {
         return factory.namedNode(resource).term
     }
@@ -61,9 +61,9 @@ export function ManagesBlockMixin<TBase extends Constructor>(Base: TBase) {
         public object!: Class
 
         public matches({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
-            const predicateId = getUri(this._selfGraph, predicate)
-            const objectId = getUri(this._selfGraph, object)
-            const subjectId = getUri(this._selfGraph, subject)
+            const predicateId = getUri(this.pointer, predicate)
+            const objectId = getUri(this.pointer, object)
+            const subjectId = getUri(this.pointer, subject)
 
             if (object && this.object && this.property) {
                 const predicateIsRdfType = rdf.type.equals(predicateId)
@@ -83,5 +83,5 @@ export function ManagesBlockMixin<TBase extends Constructor>(Base: TBase) {
 }
 
 ManagesBlockMixin.shouldApply = (res: RdfResource) => {
-    return res._selfGraph.in(hydra.manages).terms.length > 0
+    return res.pointer.in(hydra.manages).terms.length > 0
 }

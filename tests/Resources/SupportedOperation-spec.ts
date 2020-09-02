@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
@@ -8,7 +8,7 @@ import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 class SupportedOperation extends SupportedOperationMixin(Resource) {}
 
 describe('SupportedOperation', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
     let operation: SupportedOperation
 
     beforeEach(() => {

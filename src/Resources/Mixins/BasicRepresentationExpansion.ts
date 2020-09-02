@@ -20,7 +20,7 @@ export function BasicRepresentationExpansionMixin<TBase extends Constructor<IriT
 BasicRepresentationExpansionMixin.shouldApply = function (resource: RdfResource) {
     const isTemplate = resource.hasType(hydra.IriTemplate)
 
-    const variableRepresentation = resource._selfGraph.out(hydra.variableRepresentation)
+    const variableRepresentation = resource.pointer.out(hydra.variableRepresentation)
     const isUndefined = variableRepresentation.terms.length === 0
 
     const isExactMatch = variableRepresentation.values.includes(hydra.BasicRepresentation.value)

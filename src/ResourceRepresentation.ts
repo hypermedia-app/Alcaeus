@@ -1,7 +1,7 @@
 import * as $rdf from '@rdf-esm/data-model'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
 import { RdfResource, ResourceFactory, ResourceIdentifier } from '@tpluscode/rdfine'
-import { Clownface, SingleContextClownface } from 'clownface'
+import { AnyPointer, GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { HydraResource } from './Resources'
 
@@ -32,11 +32,11 @@ export interface ResourceRepresentation<T extends RdfResource = HydraResource> e
 }
 
 export default class <T extends RdfResource> implements ResourceRepresentation<T> {
-    private __graph: Clownface
+    private __graph: AnyPointer
     private __factory: ResourceFactory
-    private readonly rootNode: SingleContextClownface<ResourceIdentifier>
+    private readonly rootNode: GraphPointer<ResourceIdentifier>
 
-    public constructor(graph: Clownface, factory: ResourceFactory, rootResource: NamedNode) {
+    public constructor(graph: AnyPointer, factory: ResourceFactory, rootResource: NamedNode) {
         this.__graph = graph
         this.__factory = factory
         this.rootNode = graph.node(rootResource)
@@ -55,7 +55,7 @@ export default class <T extends RdfResource> implements ResourceRepresentation<T
     public get root() {
         const collectionNode = this.rootNode.in(hydra.view)
         if (collectionNode.term) {
-            return this.__factory.createEntity<MaybeExtendedResource<T>>(collectionNode as SingleContextClownface)
+            return this.__factory.createEntity<MaybeExtendedResource<T>>(collectionNode as GraphPointer<ResourceIdentifier>)
         }
 
         return this.__factory.createEntity<MaybeExtendedResource<T>>(this.rootNode)
@@ -76,7 +76,7 @@ export default class <T extends RdfResource> implements ResourceRepresentation<T
             .map(this._createEntity.bind(this))[Symbol.iterator]()
     }
 
-    private _createEntity(node: SingleContextClownface) {
+    private _createEntity(node: GraphPointer<ResourceIdentifier>) {
         return this.__factory.createEntity<HydraResource>(node)
     }
 }

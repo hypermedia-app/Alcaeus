@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-jsonld'
 import { NamedNode, Stream } from 'rdf-js'
@@ -12,7 +12,7 @@ const parser = new Parser()
 class PartialCollectionView extends PartialCollectionViewMixin(Resource) {}
 
 describe('PartialCollectionView', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
 
     beforeEach(async () => {
         const dataset = $rdf.dataset()

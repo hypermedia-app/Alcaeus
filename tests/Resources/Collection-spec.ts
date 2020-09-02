@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { CollectionMixin } from '../../src/Resources/Mixins/Collection'
@@ -8,7 +8,7 @@ import { Resource } from './_TestResource'
 class Collection extends CollectionMixin(Resource) {}
 
 describe('Collection', () => {
-    let collectionNode: SingleContextClownface<NamedNode>
+    let collectionNode: GraphPointer<NamedNode>
 
     beforeEach(() => {
         collectionNode = cf({ dataset: $rdf.dataset() })

@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { StatusCodeDescriptionMixin } from '../../src/Resources/Mixins/StatusCodeDescription'
@@ -8,7 +8,7 @@ import { hydra } from '@tpluscode/rdf-ns-builders'
 class StatusCodeDescription extends StatusCodeDescriptionMixin(Resource) {}
 
 describe('StatusCodeDescription', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
     let statusCodeDescription: StatusCodeDescription
 
     beforeEach(() => {

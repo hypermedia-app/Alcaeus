@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { IriTemplateMixin } from '../../src/Resources/Mixins/IriTemplate'
@@ -12,7 +12,7 @@ class IriTemplate extends IriTemplateMixin(Resource) {
 }
 
 describe('IriTemplate', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() })

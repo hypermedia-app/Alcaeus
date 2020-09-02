@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { SupportedPropertyMixin } from '../../src/Resources/Mixins/SupportedProperty'
@@ -9,7 +9,7 @@ class SupportedProperty extends SupportedPropertyMixin(Resource) {
 }
 
 describe('SupportedProperty', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
     let prop: SupportedProperty
 
     beforeEach(() => {

@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { DocumentedResourceMixin } from '../../src/Resources/Mixins/DocumentedResource'
@@ -8,7 +8,7 @@ import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 class DocumentedResource extends DocumentedResourceMixin(Resource) {}
 
 describe('DocumentedResource', () => {
-    let node: SingleContextClownface<NamedNode>
+    let node: GraphPointer<NamedNode>
 
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() })

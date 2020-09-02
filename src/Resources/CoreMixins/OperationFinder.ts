@@ -151,7 +151,7 @@ const excludedProperties = (stopConditions: RecursiveStopConditions) => {
 function toResourceNodes <T extends RdfResource>(self: RdfResource, mixins) {
     return (nodes: T[], quad: Quad): T[] => {
         if (quad.object.termType === 'NamedNode' || quad.object.termType === 'BlankNode') {
-            return [...nodes, self._create<T>(self._selfGraph.node(quad.object), mixins)]
+            return [...nodes, self._create<T>(self.pointer.node(quad.object), mixins)]
         }
 
         return nodes
@@ -163,7 +163,7 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>>(B
         public getOperationsDeep(
             stopConditions: RecursiveStopConditions = { excludedProperties: [hydra.member, rdf.type] },
             previousResources: this[] = []) {
-            const childResources = [...this._selfGraph.dataset.match(this.id, null, null, this._graphId)]
+            const childResources = [...this.pointer.dataset.match(this.id, null, null, this._graphId)]
                 .filter(excludedProperties(stopConditions))
                 .reduce<this[]>(toResourceNodes(this, [OperationFinderMixin]), [])
 

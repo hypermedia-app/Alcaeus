@@ -1,4 +1,4 @@
-import cf, { SingleContextClownface } from 'clownface'
+import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode } from 'rdf-js'
 import { JsonLd } from '../../Constants'
@@ -10,7 +10,7 @@ import { Resource } from '../_TestResource'
 class BasicRepresentationExpansion extends BasicRepresentationExpansionMixin(IriTemplateMixin(Resource)) {}
 
 describe('BasicRepresentationExpansion', () => {
-    let node: SingleContextClownface<BlankNode>
+    let node: GraphPointer<BlankNode>
     let resource: BasicRepresentationExpansion
 
     beforeEach(() => {

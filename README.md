@@ -3,7 +3,7 @@
 
 ## [Hydra Core](http://www.hydra-cg.com/spec/latest/core/) library for JavaScript
 
-Alcaeus (pronounced <code>AL-SEE-UHS</code>) is a Promise-based library for consuming Hydra APIs.
+Alcaeus (pronounced <code>AL-SEE-UHS</code>) is a Node.js/browser library for consuming Hydra APIs.
 
 Alcaeus is the birth name of Heracles. The demigod who defeated Hydra.
 

@@ -67,7 +67,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
-    "@rdfjs/data-model": "^1.1.2",
+    "@rdfjs/data-model": "^1.2",
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/parser-jsonld": "^1.2.0",
@@ -121,9 +121,6 @@
     "ts-node": "^8.8.2",
     "typescript": "^4.0.2",
     "whatwg-fetch": "^3.0.0"
-  },
-  "resolutions": {
-    "@types/rdf-js": "4.0.0"
   },
   "lint-staged": {
     "*.{js,ts}": [

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.12](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2020-09-16)
+
+
+### Bug Fixes
+
+* **esm:** remove typescript interfaces from imports in mjs build ([17d6966](https://github.com/wikibus/alcaeus/commit/17d696679300f6dc2262c97c4923e98288985bd5))
+
 ## [1.0.0-beta.11](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2020-09-02)
 
 

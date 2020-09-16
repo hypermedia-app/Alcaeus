@@ -1,6 +1,7 @@
-import { Constructor, property, namespace } from '@tpluscode/rdfine'
-import { HydraResponse } from '../../alcaeus'
-import { Class, HydraResource } from '../index'
+import type { Constructor } from '@tpluscode/rdfine'
+import { property, namespace } from '@tpluscode/rdfine'
+import type { HydraResponse } from '../../alcaeus'
+import type { Class, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export interface ApiDocumentation extends HydraResource {

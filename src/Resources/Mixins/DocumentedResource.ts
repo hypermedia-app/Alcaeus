@@ -1,6 +1,7 @@
-import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import { property, RdfResource } from '@tpluscode/rdfine'
+import type { Constructor } from '@tpluscode/rdfine'
 import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { HydraResource } from '../index'
+import type { HydraResource } from '../index'
 
 export interface DocumentedResource extends HydraResource {
     /**

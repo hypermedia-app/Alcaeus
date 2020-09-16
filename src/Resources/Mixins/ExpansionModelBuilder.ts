@@ -1,8 +1,8 @@
-import { Constructor } from '@tpluscode/rdfine'
+import type { Constructor } from '@tpluscode/rdfine'
 import URITemplate from 'es6-url-template'
 import url from 'url'
-import { IriTemplate } from './IriTemplate'
-import { IriTemplateMapping } from './IriTemplateMapping'
+import type { IriTemplate } from './IriTemplate'
+import type { IriTemplateMapping } from './IriTemplateMapping'
 
 export interface ExpandedValue {
     ['@value']: string

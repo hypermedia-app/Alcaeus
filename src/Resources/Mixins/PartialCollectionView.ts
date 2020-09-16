@@ -1,7 +1,8 @@
-import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
-import { GraphPointer } from 'clownface'
+import { namespace, property } from '@tpluscode/rdfine'
+import type { Constructor, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { GraphPointer } from 'clownface'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import { Collection, HydraResource, View } from '../index'
+import type { Collection, HydraResource, View } from '../index'
 
 export interface PartialCollectionView extends View {
     /**

@@ -1,7 +1,8 @@
-import { Constructor, property } from '@tpluscode/rdfine'
+import { property } from '@tpluscode/rdfine'
+import type { Constructor } from '@tpluscode/rdfine'
 import TypeCollection from '@tpluscode/rdfine/lib/TypeCollection'
 import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
-import { HydraResource, SupportedOperation, SupportedProperty } from '../index'
+import type { HydraResource, SupportedOperation, SupportedProperty } from '../index'
 import { SupportedOperationMixin } from './SupportedOperation'
 import { SupportedPropertyMixin } from './SupportedProperty'
 
@@ -17,7 +18,7 @@ export interface Class extends HydraResource {
     supportedProperties: SupportedProperty[]
 }
 
-interface RuntimeClass extends Class {
+export interface RuntimeClass extends Class {
     subClassOf: this[]
     getTypeHierarchy(): Generator<this>
 }

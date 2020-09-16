@@ -1,5 +1,5 @@
-import { NamedNode } from 'rdf-js'
-import { ResponseWrapper } from '../ResponseWrapper'
+import type { NamedNode } from 'rdf-js'
+import type { ResponseWrapper } from '../ResponseWrapper'
 import { exactId } from './exactId'
 import { redirectTarget } from './redirectTarget'
 import { trailingSlash } from './trailingSlash'

@@ -1,7 +1,8 @@
-import { Constructor, RdfResource } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import ExpansionModelBuilder, { ExpandedValue } from './ExpansionModelBuilder'
-import { IriTemplate } from './IriTemplate'
+import ExpansionModelBuilder from './ExpansionModelBuilder'
+import type { ExpandedValue } from './ExpansionModelBuilder'
+import type { IriTemplate } from './IriTemplate'
 
 export function BasicRepresentationExpansionMixin<TBase extends Constructor<IriTemplate>>(Base: TBase) {
     class BasicRepresentationExpansion extends Base {

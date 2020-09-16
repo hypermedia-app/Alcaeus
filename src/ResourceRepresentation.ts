@@ -1,9 +1,9 @@
 import * as $rdf from '@rdf-esm/data-model'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
-import { RdfResource, ResourceFactory, ResourceIdentifier } from '@tpluscode/rdfine'
-import { AnyPointer, GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
-import { HydraResource } from './Resources'
+import type { RdfResource, ResourceFactory, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { AnyPointer, GraphPointer } from 'clownface'
+import type { NamedNode } from 'rdf-js'
+import type { HydraResource } from './Resources'
 
 type MaybeExtendedResource<T extends RdfResource> = HydraResource | (HydraResource & T) | null
 

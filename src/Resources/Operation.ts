@@ -1,7 +1,7 @@
-import { HydraClient, HydraResponse } from '../alcaeus'
+import type { HydraClient, HydraResponse } from '../alcaeus'
 import nonenumerable from '../helpers/nonenumerable'
-import { Class, HydraResource } from './index'
-import { SupportedOperation } from './Mixins/SupportedOperation'
+import type { Class, HydraResource } from './index'
+import type { SupportedOperation } from './Mixins/SupportedOperation'
 
 export interface Operation {
     /**

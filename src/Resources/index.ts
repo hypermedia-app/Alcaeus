@@ -1,10 +1,10 @@
-import { RdfResource } from '@tpluscode/rdfine'
-import { DatasetCore } from 'rdf-js'
-import { HydraResponse } from '../alcaeus'
-import { OperationFinder } from './CoreMixins/OperationFinder'
-import { ManagesBlockPattern } from './Mixins/ManagesBlock'
-import { Operation } from './Operation'
-import { SupportedProperty } from './Mixins/SupportedProperty'
+import type { RdfResource } from '@tpluscode/rdfine'
+import type { DatasetCore } from 'rdf-js'
+import type { HydraResponse } from '../alcaeus'
+import type { OperationFinder } from './CoreMixins/OperationFinder'
+import type { ManagesBlockPattern } from './Mixins/ManagesBlock'
+import type { Operation } from './Operation'
+import type { SupportedProperty } from './Mixins/SupportedProperty'
 
 export interface HydraResource<D extends DatasetCore = DatasetCore> extends RdfResource<D>, OperationFinder {
     /**
@@ -42,10 +42,10 @@ export interface View extends HydraResource {
     readonly collection: HydraResource | null
 }
 
-export { DocumentedResource } from './Mixins/DocumentedResource'
-export { Class } from './Mixins/Class'
-export { SupportedOperation } from './Mixins/SupportedOperation'
-export { SupportedProperty } from './Mixins/SupportedProperty'
-export { Collection } from './Mixins/Collection'
-export { PartialCollectionView } from './Mixins/PartialCollectionView'
-export { ApiDocumentation } from './Mixins/ApiDocumentation'
+export type { DocumentedResource } from './Mixins/DocumentedResource'
+export type { Class } from './Mixins/Class'
+export type { SupportedOperation } from './Mixins/SupportedOperation'
+export type { SupportedProperty } from './Mixins/SupportedProperty'
+export type { Collection } from './Mixins/Collection'
+export type { PartialCollectionView } from './Mixins/PartialCollectionView'
+export type { ApiDocumentation } from './Mixins/ApiDocumentation'

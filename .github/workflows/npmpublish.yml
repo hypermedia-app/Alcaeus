@@ -16,6 +16,7 @@ jobs:
           node-version: 14
       - run: yarn
       - run: yarn test
+      - run: yarn build
       - run: yarn eslint . --ext .mjs --fix --quiet
 
   publish-npm:

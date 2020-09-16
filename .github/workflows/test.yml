@@ -26,7 +26,7 @@ jobs:
           node-version: '14'
       - run: yarn
       - run: yarn build
-      - run: yarn eslint --ext .mjs --fix --quiet
+      - run: yarn eslint .  --ext .mjs --fix --quiet
 
   lint:
     runs-on: ubuntu-latest

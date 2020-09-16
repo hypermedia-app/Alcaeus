@@ -1,7 +1,9 @@
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { namespace, property } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import { HydraResource } from '../index'
-import { RdfProperty, RdfPropertyMixin } from './RdfProperty'
+import type { HydraResource } from '../index'
+import type { RdfProperty } from './RdfProperty'
+import { RdfPropertyMixin } from './RdfProperty'
 
 export interface IriTemplateMapping extends RdfResource {
     property: RdfProperty

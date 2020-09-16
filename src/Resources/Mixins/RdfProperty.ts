@@ -1,8 +1,10 @@
-import { Constructor, property } from '@tpluscode/rdfine'
+import { property } from '@tpluscode/rdfine'
+import type { Constructor } from '@tpluscode/rdfine'
 import { hydra, rdf, rdfs } from '@tpluscode/rdf-ns-builders'
-import { Class, HydraResource, SupportedOperation } from '../index'
+import type { Class, HydraResource, SupportedOperation } from '../index'
 import { ClassMixin } from './Class'
-import { DocumentedResource, DocumentedResourceMixin } from './DocumentedResource'
+import type { DocumentedResource } from './DocumentedResource'
+import { DocumentedResourceMixin } from './DocumentedResource'
 import { SupportedOperationMixin } from './SupportedOperation'
 
 export interface RdfProperty extends DocumentedResource {

@@ -1,7 +1,7 @@
-import { Readable } from 'readable-stream'
+import * as stream from 'readable-stream'
 
 // from https://github.com/bergos/nodeify-fetch/blob/master/lib/WhatwgReadable.js
-class WhatwgReadable extends Readable {
+class WhatwgReadable extends stream.Readable {
     public constructor(stream) {
         super({
             read: () => {
@@ -19,7 +19,7 @@ class WhatwgReadable extends Readable {
     }
 }
 
-class ArrayBufferReadable extends Readable {
+class ArrayBufferReadable extends stream.Readable {
     public constructor(callback) {
         let done = false
 

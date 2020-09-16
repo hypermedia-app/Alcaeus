@@ -1,9 +1,10 @@
-import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
-import { HydraClient } from '../../alcaeus'
+import { property } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource } from '@tpluscode/rdfine'
+import type { HydraClient } from '../../alcaeus'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import { HydraResource, Class, SupportedProperty, SupportedOperation } from '../index'
-import { Collection, CollectionMixin } from '../Mixins/Collection'
-import { ManagesBlockPattern } from '../Mixins/ManagesBlock'
+import type { HydraResource, Class, SupportedProperty, SupportedOperation, Collection } from '../index'
+import { CollectionMixin } from '../Mixins/Collection'
+import type { ManagesBlockPattern } from '../Mixins/ManagesBlock'
 import Operation from '../Operation'
 
 // TODO: inline class babel/babel#8559 is fixed

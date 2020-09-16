@@ -1,4 +1,5 @@
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import type { Constructor } from '@tpluscode/rdfine'
+import { namespace, property } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export interface StatusCodeDescription {

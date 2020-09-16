@@ -1,6 +1,6 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
-import { ResponseWrapper } from '../ResponseWrapper'
+import type { ResponseWrapper } from '../ResponseWrapper'
 
 export function redirectTarget(response: ResponseWrapper): NamedNode | undefined {
     if (response.redirectUrl != null) {

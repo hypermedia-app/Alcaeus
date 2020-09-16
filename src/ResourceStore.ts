@@ -1,11 +1,12 @@
-import { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
+import type { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
 import cf from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
-import { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
-import { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
+import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import type { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
-import ResourceRepresentationImpl, { ResourceRepresentation } from './ResourceRepresentation'
-import { HydraResource } from './Resources'
+import type { ResourceRepresentation } from './ResourceRepresentation'
+import ResourceRepresentationImpl from './ResourceRepresentation'
+import type { HydraResource } from './Resources'
 
 export interface ResourceStore<D extends DatasetIndexed> {
     factory: ResourceFactory<D, HydraResource<D>>

@@ -1,8 +1,8 @@
-import { Constructor, RdfResource } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { owl } from '@tpluscode/rdf-ns-builders'
-import { HydraResource } from './index'
+import type { HydraResource } from './index'
 import { ClassMixin } from './Mixins/Class'
-import { DocumentedResource } from './Mixins/DocumentedResource'
+import type { DocumentedResource } from './Mixins/DocumentedResource'
 
 export function NothingMixin<Base extends Constructor<HydraResource>>(base: Base) {
     class Nothing extends base implements DocumentedResource {

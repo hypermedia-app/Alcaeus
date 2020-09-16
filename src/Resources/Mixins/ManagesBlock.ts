@@ -1,10 +1,11 @@
-import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
-import { MultiPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import { namespace, property } from '@tpluscode/rdfine'
+import type { MultiPointer } from 'clownface'
+import type { NamedNode } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import { HydraResource } from '../index'
-import { Class } from './Class'
-import { RdfProperty } from './RdfProperty'
+import type { HydraResource } from '../index'
+import type { Class } from './Class'
+import type { RdfProperty } from './RdfProperty'
 
 export interface ManagesBlockPattern {
     subject?: string | RdfResource | NamedNode

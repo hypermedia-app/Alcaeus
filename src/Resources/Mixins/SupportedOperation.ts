@@ -1,8 +1,10 @@
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import type { Constructor } from '@tpluscode/rdfine'
+import { namespace, property } from '@tpluscode/rdfine'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
-import { HydraResource } from '../index'
-import { Class } from './Class'
-import { DocumentedResourceMixin, DocumentedResource } from './DocumentedResource'
+import type { HydraResource } from '../index'
+import type { Class } from './Class'
+import { DocumentedResourceMixin } from './DocumentedResource'
+import type { DocumentedResource } from './DocumentedResource'
 
 export interface SupportedOperation extends DocumentedResource {
     method: string

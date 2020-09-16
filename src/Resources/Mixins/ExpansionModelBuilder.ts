@@ -1,6 +1,6 @@
 import type { Constructor } from '@tpluscode/rdfine'
 import URITemplate from 'es6-url-template'
-import * as url from 'url'
+import url from 'url'
 import type { IriTemplate } from './IriTemplate'
 import type { IriTemplateMapping } from './IriTemplateMapping'
 

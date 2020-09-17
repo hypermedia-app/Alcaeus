@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.14](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2020-09-17)
+
+
+### Features
+
+* create separate entrypoints for node/web ([a0efc1a](https://github.com/wikibus/alcaeus/commit/a0efc1a7e6ef7d1c0d099a4fc0dbe44d39b00759))
+
 ## [1.0.0-beta.13](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2020-09-16)
 
 

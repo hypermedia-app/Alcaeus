@@ -20,13 +20,14 @@ export type { HydraResponse } from './alcaeus'
 
 interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
     rootSelectors?: [string, RootNodeCandidate][]
-    parsers?: SinkMap<EventEmitter, Stream>
+    parsers: SinkMap<EventEmitter, Stream>
     datasetFactory?: () => D
     dataset?: D
-    fetch?: typeof fetch
+    fetch: typeof fetch
+    Headers: typeof Headers
 }
 
-export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D> = { }): HydraClient<D> {
+export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D>): HydraClient<D> {
     class HydraResource extends RdfResource {
         public static get factory() {
             return factory
@@ -46,6 +47,8 @@ export function create <D extends DatasetIndexed = DatasetIndexed>(init: Alcaeus
             factory,
             datasetFactory,
         }),
+        fetch: init.fetch,
+        Headers: init.Headers,
     })
 
     factory.addMixin(coreMixins.createResourceLoaderMixin(alcaeus))

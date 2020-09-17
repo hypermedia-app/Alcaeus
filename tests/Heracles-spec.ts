@@ -7,9 +7,9 @@ import fetchPony from 'fetch-ponyfill'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import * as Constants from './Constants'
-import { create } from '../src'
+import { create } from '../src/node'
 import { HydraClient } from '../src/alcaeus'
-import * as FetchUtil from '../src/FetchUtil'
+import FetchUtil from '../src/FetchUtil'
 import { PartialCollectionView } from '../src/Resources'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Bodies } from './test-objects'
@@ -20,8 +20,13 @@ const { Headers } = fetchPony()
 
 const ex = namespace('http://example.com/')
 
-const fetchResource = (FetchUtil.fetchResource as jest.Mock).mockResolvedValue({})
-const invokeOperation = (FetchUtil.invokeOperation as jest.Mock).mockResolvedValue({})
+const fetchResource = jest.fn().mockResolvedValue({})
+const invokeOperation = jest.fn().mockResolvedValue({})
+
+;(FetchUtil as jest.Mock).mockReturnValue({
+    resource: fetchResource,
+    operation: invokeOperation,
+})
 
 const parsers = new SinkMap([
     [Constants.MediaTypes.jsonLd, new JsonLdParser()],
@@ -37,6 +42,9 @@ describe('Hydra loadDocumentation', () => {
             parsers,
             dataset,
         })
+
+        fetchResource.mockReset()
+        invokeOperation.mockReset()
     })
 
     it('should store its representation in the dataset', async () => {
@@ -109,6 +117,8 @@ describe('Hydra', () => {
             dataset,
         })
         loadDocumentation = (client.loadDocumentation = jest.fn().mockResolvedValue({}))
+        fetchResource.mockReset()
+        invokeOperation.mockReset()
     })
 
     describe('loadResource', () => {

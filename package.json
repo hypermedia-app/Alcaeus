@@ -9,6 +9,14 @@
     ".": {
       "require": "./index.js",
       "import": "./index.mjs"
+    },
+    "./web": {
+      "require": "./web.js",
+      "import": "./web.mjs"
+    },
+    "./node": {
+      "require": "./node.js",
+      "import": "./node.mjs"
     }
   },
   "directories": {
@@ -44,6 +52,7 @@
   "homepage": "https://alcaeus.hydra.how",
   "dependencies": {
     "@rdf-esm/data-model": "^0.5.3",
+    "@rdf-esm/formats-common": "^0.5.3",
     "@rdf-esm/term-set": "^0.5.0",
     "@rdf-esm/sink-map": "^0.5.0",
     "@tpluscode/rdf-ns-builders": "^0.3.7",

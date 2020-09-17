@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import SinkMap from '@rdfjs/sink-map'
 import { Sink, Stream } from 'rdf-js'
 import fetchPony from 'fetch-ponyfill'
-import * as fetchUtil from '../src/FetchUtil'
+import FetchUtil from '../src/FetchUtil'
 import { Bodies } from './test-objects'
 import { responseBuilder } from './test-utils'
 
@@ -19,6 +19,7 @@ const { fetch, Headers } = fetchPony()
 const mockFetch = fetch as jest.Mock
 
 describe('FetchUtil', () => {
+    const fetchUtil = FetchUtil(fetch, Headers)
     const parsers = new SinkMap<EventEmitter, Stream>()
 
     beforeAll(() => {
@@ -35,7 +36,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', { parsers })
+            await fetchUtil.resource('http://example.com/resource', { parsers })
 
             // then
             expect(mockFetch)
@@ -51,7 +52,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {
+            await fetchUtil.resource('http://example.com/resource', {
                 parsers,
                 headers: {
                     'x-foo': 'bar',
@@ -73,7 +74,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {
+            await fetchUtil.resource('http://example.com/resource', {
                 parsers,
                 headers: {
                     'x-foo': 'bar',
@@ -94,7 +95,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('http://example.com/resource', {
+            await fetchUtil.resource('http://example.com/resource', {
                 parsers,
                 headers: {
                     accept: 'application/vnd.custom+rdf',
@@ -115,7 +116,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.fetchResource('resource', { parsers, baseUri: 'http://example.com/foo/' })
+            await fetchUtil.resource('resource', { parsers, baseUri: 'http://example.com/foo/' })
 
             // then
             expect(mockFetch).toBeCalledWith('http://example.com/foo/resource', expect.anything())
@@ -128,7 +129,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', { parsers, body: 'foo' })
+            await fetchUtil.operation('get', 'http://example.com/resource', { parsers, body: 'foo' })
 
             // then
             expect(mockFetch)
@@ -142,7 +143,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', {
+            await fetchUtil.operation('get', 'http://example.com/resource', {
                 parsers,
                 headers: {
                     'x-foo': 'bar',
@@ -164,7 +165,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', {
+            await fetchUtil.operation('get', 'http://example.com/resource', {
                 parsers,
                 headers: {
                     'x-foo': 'bar',
@@ -185,7 +186,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'http://example.com/resource', {
+            await fetchUtil.operation('get', 'http://example.com/resource', {
                 parsers,
                 headers: {
                     accept: 'application/vnd.custom+rdf',
@@ -206,7 +207,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('post', 'http://example.com/resource', { parsers, body: new FormData() })
+            await fetchUtil.operation('post', 'http://example.com/resource', { parsers, body: new FormData() })
 
             // then
             expect(mockFetch)
@@ -222,7 +223,7 @@ describe('FetchUtil', () => {
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
 
             // when
-            await fetchUtil.invokeOperation('get', 'resource', { parsers, body: 'foo', baseUri: 'http://example.com/foo/' })
+            await fetchUtil.operation('get', 'resource', { parsers, body: 'foo', baseUri: 'http://example.com/foo/' })
 
             // then
             expect(mockFetch)

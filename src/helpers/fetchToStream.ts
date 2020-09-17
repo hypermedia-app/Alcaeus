@@ -1,4 +1,5 @@
 import stream from 'readable-stream'
+import buffer from 'buffer'
 
 // from https://github.com/bergos/nodeify-fetch/blob/master/lib/WhatwgReadable.js
 class WhatwgReadable extends stream.Readable {
@@ -9,7 +10,7 @@ class WhatwgReadable extends stream.Readable {
                     if (chunk.done) {
                         this.push(null)
                     } else {
-                        this.push(Buffer.from(chunk.value))
+                        this.push(buffer.Buffer.from(chunk.value))
                     }
                 }).catch((err) => {
                     this.emit('error', err)
@@ -32,7 +33,7 @@ class ArrayBufferReadable extends stream.Readable {
                 done = true
 
                 callback().then((arrayBuffer) => {
-                    this.push(Buffer.from(arrayBuffer))
+                    this.push(buffer.Buffer.from(arrayBuffer))
                     this.push(null)
                 })
             },

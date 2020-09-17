@@ -1,7 +1,6 @@
 import type { SinkMap } from '@rdf-esm/sink-map'
 import type { EventEmitter } from 'events'
 import type { Stream } from 'rdf-js'
-import url from 'url'
 import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
 
@@ -15,7 +14,7 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
     async function getResponse(uri, { method, headers = {}, body, baseUri, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; baseUri?: string; parsers: Parsers }) {
         let effectiveUri = uri
         if (uri.match(/^https?:\/\//) === null && baseUri) {
-            effectiveUri = new url.URL(uri, baseUri).toString()
+            effectiveUri = new URL(uri, baseUri).toString()
         }
 
         const defaultHeaders: HeadersInit = {

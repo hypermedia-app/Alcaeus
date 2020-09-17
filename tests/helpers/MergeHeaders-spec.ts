@@ -14,7 +14,7 @@ describe('merge', () => {
         })
 
         // when
-        const headers = merge(defaultHeaders, overrides)
+        const headers = merge(defaultHeaders, overrides, Headers)
 
         // then
         expect(headers).toStrictEqual(new Headers({
@@ -29,7 +29,7 @@ describe('merge', () => {
         })
 
         // when
-        const headers = merge(new Headers(), overrides)
+        const headers = merge(new Headers(), overrides, Headers)
 
         // then
         expect(headers).toStrictEqual(new Headers({
@@ -44,7 +44,7 @@ describe('merge', () => {
         })
 
         // when
-        const headers = merge(originals, new Headers())
+        const headers = merge(originals, new Headers(), Headers)
 
         // then
         expect(headers).toStrictEqual(new Headers({

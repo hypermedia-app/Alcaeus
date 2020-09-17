@@ -4,10 +4,9 @@ import type { EventEmitter } from 'events'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import TermSet from '@rdf-esm/term-set'
 import type { RdfResource } from '@tpluscode/rdfine'
-import { Headers } from './fetch'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { NamedNode, Stream } from 'rdf-js'
-import * as FetchUtil from './FetchUtil'
+import FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import type { ResourceRepresentation } from './ResourceRepresentation'
 import type { ApiDocumentation, HydraResource } from './Resources'
@@ -47,6 +46,8 @@ interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
     resources: ResourceStore<D>
     datasetFactory: () => D
     parsers?: SinkMap<EventEmitter, Stream>
+    fetch: typeof fetch
+    Headers: typeof Headers
 }
 
 export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements HydraClient<D> {
@@ -67,13 +68,21 @@ export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements Hydra
 
     private readonly datasetFactory: () => D;
 
-    public constructor({ resources, datasetFactory, rootSelectors, parsers }: AlcaeusInit<D>) {
+    private readonly _fetch: ReturnType<typeof FetchUtil>
+
+    private readonly _headers: typeof Headers
+
+    public constructor(init: AlcaeusInit<D>) {
+        const { resources, datasetFactory, rootSelectors, parsers, fetch } = init
+
         if (!parsers) throw new Error('No parsers provided. Consider @rdfjs/formats-common or @rdf-esm/formats-common packages')
 
         this.rootSelectors = rootSelectors
         this.resources = resources
         this.datasetFactory = datasetFactory
         this.parsers = parsers
+        this._headers = init.Headers
+        this._fetch = FetchUtil(fetch, this._headers)
     }
 
     public get apiDocumentations() {
@@ -83,7 +92,7 @@ export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements Hydra
     public async loadResource <T extends RdfResource>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<T>> {
         const uri = typeof id === 'string' ? id : id.value
 
-        const response = await FetchUtil.fetchResource(uri, {
+        const response = await this._fetch.resource(uri, {
             parsers: this.parsers,
             baseUri: this.baseUri,
             headers: await this.__mergeHeaders(new Headers(headers)),
@@ -125,7 +134,7 @@ export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements Hydra
         const mergedHeaders = await this.__mergeHeaders(new Headers(headers))
         const uri = operation.target.id.value
 
-        const response = await FetchUtil.invokeOperation(operation.method, uri, {
+        const response = await this._fetch.operation(operation.method, uri, {
             parsers: this.parsers,
             headers: mergedHeaders,
             body,
@@ -167,7 +176,7 @@ export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements Hydra
     private async __mergeHeaders(headers: Headers): Promise<Headers> {
         const defaultHeaders = typeof this.defaultHeaders === 'function' ? await this.defaultHeaders() : this.defaultHeaders
 
-        return merge(new Headers(defaultHeaders), headers)
+        return merge(new this._headers(defaultHeaders), headers, this._headers)
     }
 
     private __findRootResource(dataset: D, response: ResponseWrapper): NamedNode | undefined {

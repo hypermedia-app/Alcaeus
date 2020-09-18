@@ -1,4 +1,4 @@
-import { parsers } from '@rdf-esm/formats-common'
+import { parsers } from '@rdfjs/formats-common'
 import fetchPony from 'fetch-ponyfill'
 import * as Alcaeus from './index'
 

@@ -95,7 +95,7 @@ export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements Hydra
         const response = await this._fetch.resource(uri, {
             parsers: this.parsers,
             baseUri: this.baseUri,
-            headers: await this.__mergeHeaders(new Headers(headers)),
+            headers: await this.__mergeHeaders(new this._headers(headers)),
         })
 
         const stream = await response.quadStream()
@@ -131,7 +131,7 @@ export class Alcaeus<D extends DatasetIndexed = DatasetIndexed> implements Hydra
     }
 
     public async invokeOperation(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse> {
-        const mergedHeaders = await this.__mergeHeaders(new Headers(headers))
+        const mergedHeaders = await this.__mergeHeaders(new this._headers(headers))
         const uri = operation.target.id.value
 
         const response = await this._fetch.operation(operation.method, uri, {

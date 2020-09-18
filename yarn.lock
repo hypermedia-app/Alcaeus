@@ -1357,7 +1357,7 @@
   dependencies:
     "@types/rdf-js" "*"
 
-"@rdfjs/formats-common@^2.1.0":
+"@rdfjs/formats-common@^2.1":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/formats-common/-/formats-common-2.1.0.tgz#5521684bb8757a49f0b057e2175a2a929e98ddd3"
   integrity sha512-DVsQsMwSf+bNelIocDe35Wq/POkC+puXYd0BRwP76A3tzYKjIHwBHQFfq7wXMUaBe3jQq80x4DaFpxPaI7sPKA==
@@ -1492,32 +1492,32 @@
   resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.0.tgz#c768e289229ae512e6b897ed5b1e6613717ca21f"
   integrity sha512-y5CgQPRVpNLTRo+KmQ7IBD48W/W+xugwHdPzV8mZk7zAQMZTywsatkMfzRBHIXxWIu6G0uAsIyQmzw9zPy6GrA==
 
-"@tpluscode/rdf-ns-builders@^0.3.6", "@tpluscode/rdf-ns-builders@^0.3.7":
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.3.7.tgz#78067888fb622c97cc54222082634437fc291e52"
-  integrity sha512-WyLjL2RNtHgipOwHbyA042KUYeVfF5X1Wz+SL+3QQODXCmqsDOAwVatthkJRD7uAs26SiyBmlejFSYV9PD0AVw==
+"@tpluscode/rdf-ns-builders@^0.4":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.4.0.tgz#338ffc6aac3fafad3708c35ef69138196534ec3a"
+  integrity sha512-q1m16FJCqGI6E+uqSo9NvEja4l5oJvB3UEtjEZ5yutGx6kaHihaPMBpF3E8k7NY8HHWyMuRKdl9XymrvDEtEng==
   dependencies:
     "@rdf-esm/namespace" "^0.5.1"
 
-"@tpluscode/rdf-string@^0.2.10":
-  version "0.2.18"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.18.tgz#5b410abea6d9ad4d3c0895e8b9160769d5b2cf70"
-  integrity sha512-Pk7jGqZpay/wmTxtvqDRH+h+rFRXO5fzx+/WsQnSqvLJXkNu208IP52+GhRHrgsxMHPqnsYRdkRg1rY2OWQwcg==
+"@tpluscode/rdf-string@^0.2.20":
+  version "0.2.20"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.20.tgz#f026c67f09d8c7ea67be8b0c4f993874a00894d7"
+  integrity sha512-3CY/nWge3EwNPoApQRP/HMlWlLyn6G+ePHvb/OOhhBd2/k08cWK4X2tCfMKU0weuLTtsDyBduMu7tsjxfQu9Fw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/term-map" "^0.5.0"
-    "@tpluscode/rdf-ns-builders" "^0.3.6"
+    "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.6.29"
 
-"@tpluscode/rdfine@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.2.tgz#8ccfa92199457fc933835d1c4954ff25de200e73"
-  integrity sha512-70ldCaYfg9iYZ/1oY+PwLuBkUJt8/U1AD4/Zz4EPmh48GTQsp5k8flBmUI5Pti+FlUTh+TGzrVcOUinbNAlVlQ==
+"@tpluscode/rdfine@^0.5.5":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.5.tgz#2de778dd390b05deb9903b46807e713e0586cf30"
+  integrity sha512-ln2TFN6dllD3Dfcid7p7k9AMfJZgc3QZojTNwFUQjrnow4fvWpALD9oE5rhU07MlFxe4MOym2WiABet33dCUrg==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/namespace" "^0.5.1"
     "@rdf-esm/term-set" "^0.5.0"
-    "@tpluscode/rdf-ns-builders" "^0.3.6"
+    "@tpluscode/rdf-ns-builders" "^0.4"
     clownface "^1"
     once "^1.4.0"
 

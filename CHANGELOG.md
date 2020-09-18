@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.16](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.15...v1.0.0-beta.16) (2020-09-18)
+
+
+### Bug Fixes
+
+* built-in Headers was still used in code ([cab40e5](https://github.com/wikibus/alcaeus/commit/cab40e5c9ec8ebdaf6dee00657ad02da005682bc))
+
 ## [1.0.0-beta.15](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2020-09-17)
 
 

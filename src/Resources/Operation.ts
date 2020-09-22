@@ -1,3 +1,4 @@
+import type { RdfResource } from '@tpluscode/rdfine'
 import type { HydraClient, HydraResponse } from '../alcaeus'
 import nonenumerable from '../helpers/nonenumerable'
 import type { Class, HydraResource } from './index'
@@ -10,7 +11,7 @@ export interface Operation {
     title: string
     description: string
     method: string
-    expects: Class
+    expects: Array<Class | RdfResource>
     returns: Class
     requiresInput: boolean
     invoke(body?: BodyInit, headers?: HeadersInit): Promise<HydraResponse>

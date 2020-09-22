@@ -1,8 +1,9 @@
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
 import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'
+import type { RdfResource } from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
-import cf, { Clownface } from 'clownface'
+import cf, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { Literal, Stream } from 'rdf-js'
@@ -45,7 +46,7 @@ TestOperationFinder.factory.addMixin(mixins.SupportedPropertyMixin)
 TestOperationFinder.factory.addMixin(mixins.SupportedOperationMixin)
 
 describe('OperationFinder', () => {
-    let graph: Clownface<any, DatasetExt>
+    let graph: AnyPointer<AnyContext, DatasetExt>
 
     beforeEach(() => {
         apiDocumentations.splice(0, apiDocumentations.length)
@@ -414,7 +415,7 @@ describe('OperationFinder', () => {
 
             // then
             expect(operations).toHaveLength(2)
-            expect(operations.map(o => o.expects.id.value)).toEqual(
+            expect(operations.map(o => o.expects[0].id.value)).toEqual(
                 expect.arrayContaining([owl.Nothing.value]),
             )
         })
@@ -451,7 +452,7 @@ describe('OperationFinder', () => {
 
             // when
             const operations = resource.findOperations({
-                expecting: (clas: Class) => {
+                expecting: (clas: RdfResource) => {
                     return clas.id.value.startsWith('http://example.com/')
                 },
             })

@@ -1,7 +1,7 @@
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { NamedNode, Quad } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import type { Class, HydraResource, SupportedOperation } from '..'
+import type { HydraResource, SupportedOperation } from '..'
 import type { Operation } from '../Operation'
 
 type Constraint<TExactMatch, TFuncMatch = TExactMatch> = (string | TExactMatch) | ((value: TFuncMatch) => boolean)
@@ -16,13 +16,13 @@ export interface Criteria {
      * Filters operations by exactly matching the hydra:expects annotation or via a custom check function.
      * The exact match can be ether a `Class` object or identifier
      */
-    expecting?: Constraint<Class | NamedNode, Class>
+    expecting?: Constraint<RdfResource | NamedNode, RdfResource>
 
     /**
      * Filters operations by exactly matching the hydra:returns annotation or via a custom check function.
      * The exact match can be ether a `Class` object or identifier
      */
-    returning?: Constraint<Class | NamedNode, Class>
+    returning?: Constraint<RdfResource | NamedNode, RdfResource>
 
     /**
      * Filters operations by exactly matching supported operation's id or types, or by
@@ -78,7 +78,7 @@ function satisfiesMethod(criteria: Criteria, operation: Operation) {
     })
 }
 
-function matchClass(expected: Constraint<Class | NamedNode, Class>, actual: Class) {
+function matchClass(expected: Constraint<RdfResource | NamedNode, RdfResource>, actual: RdfResource) {
     if (typeof expected === 'string') {
         return actual.id.value === expected
     }
@@ -95,7 +95,7 @@ function matchClass(expected: Constraint<Class | NamedNode, Class>, actual: Clas
 }
 
 function satisfiesExpects(criteria: Criteria, operation: Operation) {
-    return satisfies(criteria.expecting, operation.expects, matchClass)
+    return operation.expects.some(expects => satisfies(criteria.expecting, expects, matchClass))
 }
 
 function satisfiesReturns(criteria: Criteria, operation: Operation) {

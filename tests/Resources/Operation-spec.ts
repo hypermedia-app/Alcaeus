@@ -34,7 +34,7 @@ describe('Operation', () => {
         })
 
         it('expects should delegate to operation', () => {
-            expect(operation.expects.id.value).toBe(ex.Expected.value)
+            expect(operation.expects[0].id.value).toBe(ex.Expected.value)
         })
 
         it('returns should delegate to operation', () => {

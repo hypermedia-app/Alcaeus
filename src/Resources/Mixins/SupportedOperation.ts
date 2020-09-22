@@ -1,4 +1,4 @@
-import type { Constructor } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { namespace, property } from '@tpluscode/rdfine'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 import type { HydraResource } from '../index'
@@ -8,7 +8,7 @@ import type { DocumentedResource } from './DocumentedResource'
 
 export interface SupportedOperation extends DocumentedResource {
     method: string
-    expects: Class
+    expects: Array<Class | RdfResource>
     returns: Class
     requiresInput: boolean
 }
@@ -23,8 +23,9 @@ export function SupportedOperationMixin<TBase extends Constructor<HydraResource>
 
         @property.resource({
             initial: () => owl.Nothing,
+            values: 'array',
         })
-        public expects!: Class
+        public expects!: Array<Class | RdfResource>
 
         @property.resource({
             initial: () => owl.Nothing,
@@ -35,7 +36,7 @@ export function SupportedOperationMixin<TBase extends Constructor<HydraResource>
             const method = this.method || ''
             const methodExpectsBody = method.toUpperCase() !== 'GET' && this.method.toUpperCase() !== 'DELETE'
 
-            const operationExpectsBody = !!this.expects && !owl.Nothing.equals(this.expects.id)
+            const operationExpectsBody = this.expects.length > 0 && !this.expects.some(expects => expects.equals(owl.Nothing))
 
             return methodExpectsBody || operationExpectsBody
         }

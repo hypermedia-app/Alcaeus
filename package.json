@@ -60,7 +60,7 @@
     "@tpluscode/rdfine": "^0.5.5",
     "clownface": "^1",
     "es6-url-template": "^1.0.3",
-    "fetch-ponyfill": "^6.1.0",
+    "isomorphic-fetch": "^2.2.1",
     "isomorphic-form-data": "^2.0.0",
     "parse-link-header": "^1.0.1",
     "rdf-dataset-indexed": "^0.4.0",

@@ -1,26 +1,20 @@
 import { EventEmitter } from 'events'
 import SinkMap from '@rdfjs/sink-map'
 import { Sink, Stream } from 'rdf-js'
-import fetchPony from 'fetch-ponyfill'
 import FetchUtil from '../src/FetchUtil'
 import { Bodies } from './test-objects'
 import { responseBuilder } from './test-utils'
-
-jest.mock('fetch-ponyfill', () => {
-    const fetch = ({
-        ...require('node-fetch'),
-        fetch: jest.fn(),
-    })
-
-    return jest.fn(() => fetch)
-})
-
-const { fetch, Headers } = fetchPony()
-const mockFetch = fetch as jest.Mock
+import 'isomorphic-fetch'
 
 describe('FetchUtil', () => {
-    const fetchUtil = FetchUtil(fetch, Headers)
+    let mockFetch
+    let fetchUtil
     const parsers = new SinkMap<EventEmitter, Stream>()
+
+    beforeEach(() => {
+        mockFetch = jest.fn()
+        fetchUtil = FetchUtil(mockFetch, Headers)
+    })
 
     beforeAll(() => {
         const dummyParser: Sink<EventEmitter, Stream> = {} as any
@@ -86,6 +80,7 @@ describe('FetchUtil', () => {
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
                         accept: 'application/ld+json, application/n-triples, application/n-quads',
+                        'x-foo': 'bar',
                     }),
                 }))
         })
@@ -177,6 +172,7 @@ describe('FetchUtil', () => {
                 .toBeCalledWith(expect.anything(), expect.objectContaining({
                     headers: new Headers({
                         accept: 'application/ld+json, application/n-triples, application/n-quads',
+                        'x-foo': 'bar',
                     }),
                 }))
         })

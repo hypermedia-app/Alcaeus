@@ -3,7 +3,6 @@ import 'core-js/es6/object'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
 import SinkMap from '@rdfjs/sink-map'
-import fetchPony from 'fetch-ponyfill'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import * as Constants from './Constants'
@@ -14,9 +13,9 @@ import { PartialCollectionView } from '../src/Resources'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Bodies } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
+import 'isomorphic-fetch'
 
 jest.mock('../src/FetchUtil')
-const { Headers } = fetchPony()
 
 const ex = namespace('http://example.com/')
 

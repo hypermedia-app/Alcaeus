@@ -1,7 +1,5 @@
-import fetchPony from 'fetch-ponyfill'
 import { merge } from '../../src/helpers/MergeHeaders'
-
-const { Headers } = fetchPony()
+import 'isomorphic-fetch'
 
 describe('merge', () => {
     it('merges same header when casing does not match', () => {

@@ -32,7 +32,7 @@ describe('SupportedOperation', () => {
 
     it('should expose expected class id', async () => {
         // then
-        expect(operation.expects!.id).toEqual(owl.Nothing)
+        expect(operation.expects.map(e => e.id)).toEqual([owl.Nothing])
     })
 
     it('should expose returned class id', async () => {

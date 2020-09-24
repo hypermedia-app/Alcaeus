@@ -18,7 +18,7 @@ npm i -S alcaeus
 ## Usage
 
 ``` js
-import { Hydra } from 'alcaeus/web' # (or 'alcaeus/node')
+import { Hydra } from 'alcaeus/web' // (or 'alcaeus/node')
 
 const { response, representation } = await Hydra.loadResource('http://example.com/resource');
 const rootResource = representation.root;

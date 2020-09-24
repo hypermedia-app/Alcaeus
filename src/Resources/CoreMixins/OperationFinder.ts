@@ -109,7 +109,7 @@ function satisfiesTypeOrId(criteria: Criteria, operation: Operation) {
         }
 
         if ('termType' in expected) {
-            return expected.equals(actual.id)
+            return actual.equals(expected) || actual.hasType(expected)
         }
 
         return expected(actual)

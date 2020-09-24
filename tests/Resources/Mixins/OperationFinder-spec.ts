@@ -1,5 +1,6 @@
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
+import { namedNode } from '@rdf-esm/data-model'
 import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'
 import type { RdfResource } from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
@@ -519,6 +520,37 @@ describe('OperationFinder', () => {
             // when
             const operations = resource.findOperations({
                 bySupportedOperation: 'http://example.com/vocab#DeleteOp',
+            })
+
+            // then
+            expect(operations).toHaveLength(1)
+            expect(operations[0].supportedOperation.types.has(ex.DeleteOp)).toBe(true)
+        })
+
+        it('includes by exact type of supported operation using named node', async () => {
+            // given
+            const apiGraph = parse(turtle`
+                ${ex.api} a ${hydra.ApiDocumentation} ;
+                    ${hydra.supportedClass} ${ex.Class} .
+                    
+                ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} 
+                    [ a ${hydra.SupportedOperation} , ${ex.DeleteOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.SupportedOperation} , ${ex.PostOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.SupportedOperation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
+                ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+            `)
+            pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            await graph.dataset.import(parse(turtle`
+                <http://example.com/> a ${ex.Class} .
+            `))
+            const resource = new TestOperationFinder(graph.namedNode('http://example.com/'))
+
+            // when
+            const operations = resource.findOperations({
+                bySupportedOperation: namedNode('http://example.com/vocab#DeleteOp'),
             })
 
             // then

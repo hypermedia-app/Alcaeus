@@ -18,12 +18,9 @@ npm i -S alcaeus
 ## Usage
 
 ``` js
-import Hydra from 'alcaeus';
-import Parser from '@rdfjs/parser-n3';
+import { Hydra } from 'alcaeus/web' # (or 'alcaeus/node')
 
-Hydra.parsers.set('text/turtle', Parser);
-
-const representation = await Hydra.loadResource('http://example.com/resource');
+const { response, representation } = await Hydra.loadResource('http://example.com/resource');
 const rootResource = representation.root;
 
 // contains supported classes, operations, etc.

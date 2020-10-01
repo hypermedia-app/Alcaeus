@@ -3,15 +3,22 @@ import cf from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
-import * as $rdf from '@rdf-esm/data-model'
-import type { ResourceRepresentation } from './ResourceRepresentation'
+import TermMap from '@rdf-esm/term-map'
+import type { HydraResponse } from './alcaeus'
 import ResourceRepresentationImpl from './ResourceRepresentation'
 import type { HydraResource } from './Resources'
+import type ResponseWrapper from './ResponseWrapper'
+
+interface ResourceStoreEntry<D extends DatasetCore> {
+    response: ResponseWrapper
+    dataset: D
+    rootResource?: NamedNode
+}
 
 export interface ResourceStore<D extends DatasetIndexed> {
     factory: ResourceFactory<D, HydraResource<D>>
-    get<T extends RdfResource = RdfResource>(uri: string | NamedNode): ResourceRepresentation<T> | undefined
-    set(uri: string | NamedNode, dataset: D, rootResource?: NamedNode): Promise<void>
+    get<T extends RdfResource<D> = RdfResource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
+    set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
     clone(): ResourceStore<D>
 }
 
@@ -19,18 +26,19 @@ export interface RepresentationInference {
     (dataset: DatasetCore): Iterable<BaseQuad>
 }
 
-interface ResourceStoreInit<D extends DatasetIndexed = DatasetIndexed> {
+interface ResourceStoreInit<D extends DatasetIndexed> {
     dataset: D
     datasetFactory: () => D
     inferences: RepresentationInference[]
     factory: ResourceFactory<D, HydraResource<D>>
 }
 
-export default class ResourceStoreImpl<D extends DatasetIndexed = DatasetIndexed> implements ResourceStore<D> {
+export default class ResourceStoreImpl<D extends DatasetIndexed> implements ResourceStore<D> {
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
     public readonly factory: ResourceFactory<D, HydraResource<D>>
-    private readonly rootNodes: Map<string, NamedNode> = new Map<string, NamedNode>()
+    private readonly rootNodes = new TermMap<NamedNode, NamedNode>()
+    private readonly responses = new TermMap<NamedNode, ResponseWrapper>()
     private readonly datasetFactory: () => D;
 
     public constructor({ dataset, inferences, factory, datasetFactory }: ResourceStoreInit<D>) {
@@ -49,19 +57,22 @@ export default class ResourceStoreImpl<D extends DatasetIndexed = DatasetIndexed
         })
     }
 
-    public get<T extends RdfResource>(uri: string | NamedNode): ResourceRepresentation<T> | undefined {
-        const graph = typeof uri === 'string' ? $rdf.namedNode(uri) : uri
+    public get<T extends RdfResource<D>>(graph: NamedNode): Required<HydraResponse<D, T>> | undefined {
         const node = cf({ dataset: this.dataset, graph })
+        const response = this.responses.get(graph)
 
-        if (!node.out().values.length) {
+        if (!node.out().values.length || !response) {
             return undefined
         }
 
-        return new ResourceRepresentationImpl<T>(node, this.factory, this.rootNodes.get(graph.value) || graph)
+        const rootNode = this.rootNodes.get(graph) || graph
+        return {
+            response,
+            representation: new ResourceRepresentationImpl<D, T>(node, this.factory, rootNode),
+        }
     }
 
-    public async set(uri: string | NamedNode, dataset: D, rootResource?: NamedNode): Promise<void> {
-        const graph = typeof uri === 'string' ? $rdf.namedNode(uri) : uri
+    public async set(graph: NamedNode, { response, dataset, rootResource }: ResourceStoreEntry<D>): Promise<void> {
         const inferredQuads = this.datasetFactory()
 
         this.inferences.forEach(inferenceOver => inferredQuads.addAll([...inferenceOver(dataset)]))
@@ -71,8 +82,10 @@ export default class ResourceStoreImpl<D extends DatasetIndexed = DatasetIndexed
             .import(dataset.toStream().pipe(new TripleToQuadTransform(graph)))
         await this.dataset.import(inferredQuads.toStream().pipe(new TripleToQuadTransform(graph)))
 
+        this.responses.set(graph, response)
+
         if (rootResource) {
-            this.rootNodes.set(graph.value, rootResource)
+            this.rootNodes.set(graph, rootResource)
         }
     }
 }

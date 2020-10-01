@@ -1,7 +1,6 @@
 import type { SinkMap } from '@rdf-esm/sink-map'
 import type { EventEmitter } from 'events'
 import RdfResource, { ResourceFactory } from '@tpluscode/rdfine'
-import datasetIndexed from 'rdf-dataset-indexed'
 import type { Stream } from 'rdf-js'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus } from './alcaeus'
@@ -18,37 +17,35 @@ export * from './Resources/index'
 export type { Operation } from './Resources/Operation'
 export type { HydraResponse } from './alcaeus'
 
-interface AlcaeusInit<D extends DatasetIndexed = DatasetIndexed> {
+interface AlcaeusInit<D extends DatasetIndexed> {
     rootSelectors?: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    datasetFactory?: () => D
+    datasetFactory: () => D
     dataset?: D
     fetch: typeof fetch
     Headers: typeof Headers
 }
 
-export function create <D extends DatasetIndexed = DatasetIndexed>(init: AlcaeusInit<D>): HydraClient<D> {
+export function create <D extends DatasetIndexed = DatasetIndexed>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: AlcaeusInit<D>): HydraClient<D> {
     class HydraResource extends RdfResource {
         public static get factory() {
             return factory
         }
     }
 
-    const datasetFactory = init.datasetFactory || datasetIndexed
-
     const factory = new ResourceFactory(HydraResource)
-    const alcaeus = new Alcaeus({
+    const alcaeus = new Alcaeus<D>({
         datasetFactory,
-        rootSelectors: Object.entries(init.rootSelectors || defaultSelectors),
-        parsers: init.parsers,
-        resources: new ResourceStoreImpl({
-            dataset: init.dataset || datasetFactory(),
+        rootSelectors: Object.entries(rootSelectors || defaultSelectors),
+        parsers: parsers,
+        resources: new ResourceStoreImpl<D>({
+            dataset: dataset || datasetFactory(),
             inferences: Object.values(inferences),
             factory,
             datasetFactory,
         }),
-        fetch: init.fetch,
-        Headers: init.Headers,
+        fetch,
+        Headers,
     })
 
     factory.addMixin(coreMixins.createResourceLoaderMixin(alcaeus))

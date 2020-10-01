@@ -32,7 +32,7 @@ const parsers = new SinkMap([
 ])
 
 describe('Hydra loadDocumentation', () => {
-    let client: HydraClient<DatasetExt>
+    let client: HydraClient
     let dataset: DatasetExt
 
     beforeEach(() => {
@@ -187,11 +187,11 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await client.loadResource('http://example.com/resource?page=3')
-            const res = hydraRes.representation?.get('http://example.com/resource?page=3') as PartialCollectionView
+            const res = hydraRes.representation?.get<PartialCollectionView>('http://example.com/resource?page=3')
 
             // then
-            expect(res.collection).toBeDefined()
-            expect(res.collection).not.toBeNull()
+            expect(res?.collection).toBeDefined()
+            expect(res?.collection).not.toBeNull()
         })
 
         it('should load resource with deep blank node structure', async () => {

@@ -32,7 +32,7 @@ export interface HydraResource<D extends DatasetCore = DatasetCore> extends RdfR
     /**
      * Dereferences the resource
      */
-    load?(): Promise<HydraResponse<this>>
+    load?(): Promise<HydraResponse<D, this>>
 }
 
 export interface View extends HydraResource {

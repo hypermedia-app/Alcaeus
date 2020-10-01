@@ -104,17 +104,19 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         if (stream) {
             const dataset = await this.datasetFactory().import(stream)
             const rootResource = this.__findRootResource(dataset, response)
-            await this.resources.set(namedNode(response.resourceUri), {
-                response,
-                dataset,
-                rootResource,
-            })
 
             if (dereferenceApiDocumentation) {
                 await this.__getApiDocumentation(response, headers)
             }
 
-            return this.resources.get(term)!
+            const resources = response.xhr.ok ? this.resources : this.resources.clone()
+            await resources.set(namedNode(response.resourceUri), {
+                response,
+                dataset,
+                rootResource,
+            })
+
+            return resources.get(term)!
         }
 
         return {

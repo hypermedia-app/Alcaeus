@@ -1,5 +1,6 @@
 import 'core-js/es6/array'
 import 'core-js/es6/object'
+import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
 import SinkMap from '@rdfjs/sink-map'
@@ -10,7 +11,7 @@ import { create } from '../src/node'
 import { HydraClient } from '../src/alcaeus'
 import FetchUtil from '../src/FetchUtil'
 import { PartialCollectionView } from '../src/Resources'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
 import { Bodies } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
 import 'isomorphic-fetch'
@@ -224,6 +225,37 @@ describe('Hydra', () => {
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'].value)
                 .toBe('http://wikibus-test.gear.host/book/1936/image')
+        })
+
+        it('should return only response when is cannot be parsed', async () => {
+            // given
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder().notFound(),
+            }))
+
+            // when
+            const hydraRes = await client.loadResource('http://example.com/resource')
+
+            // then
+            expect(hydraRes.representation).toBeUndefined()
+        })
+
+        it('should not add representation to store if status is not success', async () => {
+            // given
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder()
+                    .notFound()
+                    .body({
+                        '@id': 'http://example.com/Foo',
+                        [rdfs.label.value]: 'Bar',
+                    }),
+            }))
+
+            // when
+            await client.loadResource('http://example.com/resource')
+
+            // then
+            expect(client.resources.get(namedNode('http://example.com/resource'))).toBeUndefined()
         })
 
         it.skip('should return typed numeric literals as their values', async () => {

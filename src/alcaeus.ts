@@ -133,7 +133,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
             }
 
             const resources = response.xhr.ok ? this.resources : this.resources.clone()
-            await resources.set(namedNode(response.resourceUri), {
+            await resources.set(term, {
                 response,
                 dataset,
                 rootResource,

@@ -5,7 +5,7 @@ import type { HydraResponse } from '../../alcaeus'
 import type { Class, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
-export interface ApiDocumentation<D extends DatasetCore> extends HydraResource<D> {
+export interface ApiDocumentation<D extends DatasetCore = DatasetCore> extends HydraResource<D> {
     classes: Class[]
 
     loadEntrypoint(): Promise<HydraResponse>
@@ -13,7 +13,7 @@ export interface ApiDocumentation<D extends DatasetCore> extends HydraResource<D
 
 export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     @namespace(hydra)
-    class ApiDocumentationClass extends Base implements ApiDocumentation<DatasetCore> {
+    class ApiDocumentationClass extends Base implements ApiDocumentation {
         @property.resource({
             path: 'supportedClass',
             values: 'array',

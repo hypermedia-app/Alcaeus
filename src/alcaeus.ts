@@ -67,7 +67,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public log: (msg: string) => void = () => {}
 
-    public cacheStrategy: ResourceCacheStrategy = DefaultCacheStrategy
+    public cacheStrategy: ResourceCacheStrategy = { ...DefaultCacheStrategy }
 
     public readonly resources: ResourceStore<D>
 

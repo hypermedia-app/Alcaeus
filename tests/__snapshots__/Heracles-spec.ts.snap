@@ -9,3 +9,11 @@ exports[`Hydra loadDocumentation should store its representation in the dataset 
 "<http://api.example.com/doc/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#ApiDocumentation> <http://api.example.com/doc/> .
 "
 `;
+
+exports[`Hydra loadResource + cache strategy should replace cached resource when cache strategy returns true 1`] = `
+"<http://example.com/resource> <http://example.com/vocab#other> <http://example.com/linked> <http://example.com/resource> .
+<http://example.com/resource> <http://example.com/vocab#other_yet> <http://example.com/linked> <http://example.com/resource> .
+<http://example.com/resource> <http://example.com/vocab#prop> \\"some textual value\\" <http://example.com/resource> .
+<http://example.com/resource> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/vocab#Resource> <http://example.com/resource> .
+"
+`;

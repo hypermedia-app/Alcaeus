@@ -1,10 +1,11 @@
 import type { Constructor } from '@tpluscode/rdfine'
 import { property, namespace } from '@tpluscode/rdfine'
+import { DatasetCore } from 'rdf-js'
 import type { HydraResponse } from '../../alcaeus'
 import type { Class, HydraResource } from '../index'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
-export interface ApiDocumentation extends HydraResource {
+export interface ApiDocumentation<D extends DatasetCore = DatasetCore> extends HydraResource<D> {
     classes: Class[]
 
     loadEntrypoint(): Promise<HydraResponse>

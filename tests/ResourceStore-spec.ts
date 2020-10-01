@@ -5,6 +5,7 @@ import $rdf from 'rdf-ext'
 import RDF from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import ResourceStore, { RepresentationInference } from '../src/ResourceStore'
+import ResponseWrapper from '../src/ResponseWrapper'
 
 const ex = namespace('http://example.com/')
 
@@ -38,6 +39,8 @@ describe('ResourceStore', () => {
     })
 
     describe('set', () => {
+        const response: ResponseWrapper = <any> {}
+
         it('add inferred triples to same graph', async () => {
             // given
             const addTypeInference = () => {
@@ -56,7 +59,10 @@ describe('ResourceStore', () => {
             ])
 
             // when
-            await store.set(ex.foo, resourceDataset)
+            await store.set(ex.foo, {
+                dataset: resourceDataset,
+                response,
+            })
 
             // then
             expect(dataset.toCanonical()).toMatchSnapshot()
@@ -75,7 +81,10 @@ describe('ResourceStore', () => {
             ])
 
             // when
-            await store.set(ex.foo, resourceDataset)
+            await store.set(ex.foo, {
+                dataset: resourceDataset,
+                response,
+            })
 
             // then
             expect(dataset.toCanonical()).toMatchSnapshot()

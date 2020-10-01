@@ -96,6 +96,10 @@ export function mockedResponse({ includeDocsLink = true, xhrBuilder }): (uri: st
             mediaType: xhr.headers.get('Content-Type'),
             redirectUrl: null,
             quadStream() {
+                if (!xhr.body) {
+                    return null
+                }
+
                 return parsers.import(this.mediaType, xhr.body)
             },
             requestedUri,

@@ -1,8 +1,10 @@
 import 'core-js/es6/array'
 import 'core-js/es6/object'
+import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
 import SinkMap from '@rdfjs/sink-map'
+import clownface from 'clownface'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import * as Constants from './Constants'
@@ -10,7 +12,7 @@ import { create } from '../src/node'
 import { HydraClient } from '../src/alcaeus'
 import FetchUtil from '../src/FetchUtil'
 import { PartialCollectionView } from '../src/Resources'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
 import { Bodies } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
 import 'isomorphic-fetch'
@@ -32,7 +34,7 @@ const parsers = new SinkMap([
 ])
 
 describe('Hydra loadDocumentation', () => {
-    let client: HydraClient<DatasetExt>
+    let client: HydraClient
     let dataset: DatasetExt
 
     beforeEach(() => {
@@ -187,11 +189,11 @@ describe('Hydra', () => {
 
             // when
             const hydraRes = await client.loadResource('http://example.com/resource?page=3')
-            const res = hydraRes.representation?.get('http://example.com/resource?page=3') as PartialCollectionView
+            const res = hydraRes.representation?.get<PartialCollectionView>('http://example.com/resource?page=3')
 
             // then
-            expect(res.collection).toBeDefined()
-            expect(res.collection).not.toBeNull()
+            expect(res?.collection).toBeDefined()
+            expect(res?.collection).not.toBeNull()
         })
 
         it('should load resource with deep blank node structure', async () => {
@@ -224,6 +226,37 @@ describe('Hydra', () => {
             // then
             expect(res['http://schema.org/image']['http://schema.org/contentUrl'].value)
                 .toBe('http://wikibus-test.gear.host/book/1936/image')
+        })
+
+        it('should return only response when is cannot be parsed', async () => {
+            // given
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder().notFound(),
+            }))
+
+            // when
+            const hydraRes = await client.loadResource('http://example.com/resource')
+
+            // then
+            expect(hydraRes.representation).toBeUndefined()
+        })
+
+        it('should not add representation to store if status is not success', async () => {
+            // given
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder()
+                    .notFound()
+                    .body({
+                        '@id': 'http://example.com/Foo',
+                        [rdfs.label.value]: 'Bar',
+                    }),
+            }))
+
+            // when
+            await client.loadResource('http://example.com/resource')
+
+            // then
+            expect(client.resources.get(namedNode('http://example.com/resource'))).toBeUndefined()
         })
 
         it.skip('should return typed numeric literals as their values', async () => {
@@ -545,6 +578,102 @@ describe('Hydra', () => {
                             }),
                         }))
             })
+        })
+    })
+
+    describe('loadResource + cache strategy', () => {
+        const id = 'http://example.com/resource'
+
+        it('should not do a request when resource is used from store', async () => {
+            // given
+            const responseMock = mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })
+            fetchResource.mockImplementationOnce(responseMock)
+            client.cacheStrategy.shouldLoad = () => false
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: await responseMock(id),
+                dataset,
+            })
+
+            // when
+            await client.loadResource(id)
+
+            // then
+            expect(fetchResource).not.toBeCalled()
+        })
+
+        it('should reuse previous representation when server responds with 304', async () => {
+            // given
+            const previousResponse = await mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })(id)
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder().statusCode(304),
+            }))
+            client.cacheStrategy.shouldLoad = () => true
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: previousResponse,
+                dataset,
+            })
+
+            // when
+            const res = await client.loadResource(id)
+
+            // then
+            expect(res.representation).toBeDefined()
+            expect(res.response).toBe(previousResponse)
+        })
+
+        it('should set caching request headers provided by cache strategy', async () => {
+            // given
+            const previousResponse = mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })
+            fetchResource.mockImplementationOnce(previousResponse)
+            client.cacheStrategy.shouldLoad = () => true
+            client.cacheStrategy.requestCacheHeaders = () => ({
+                'if-none-match': 'foo',
+            })
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: await previousResponse(id),
+                dataset,
+            })
+
+            // when
+            await client.loadResource(id)
+
+            // then
+            expect(fetchResource).toBeCalledWith(
+                id,
+                expect.objectContaining({
+                    headers: new Headers({ 'if-none-match': 'foo' }),
+                }))
+        })
+
+        it('should replace cached resource when cache strategy returns true', async () => {
+            // given
+            const responseMock = mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })
+            fetchResource.mockImplementationOnce(responseMock)
+            client.cacheStrategy.shouldLoad = () => true
+            const term = namedNode(id)
+            clownface({ dataset, graph: term, term }).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: await responseMock(id),
+                dataset,
+            })
+
+            // when
+            await client.loadResource(id)
+
+            // then
+            expect(fetchResource).toBeCalled()
+            expect(dataset.toCanonical()).toMatchSnapshot()
         })
     })
 })

@@ -1,16 +1,21 @@
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import RdfResource from '@tpluscode/rdfine'
+import { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
+import clownface from 'clownface'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import RDF from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
+import CachedResourceFactoryImpl from '../src/Resources/ResourceFactory'
 import ResourceStore, { RepresentationInference } from '../src/ResourceStore'
 import ResponseWrapper from '../src/ResponseWrapper'
 
 const ex = namespace('http://example.com/')
 
 describe('ResourceStore', () => {
-    const factory = RdfResource.factory
+    const factory: ResourceFactory<any, any> = {
+        addMixin: jest.fn(),
+        createEntity: jest.fn(),
+    }
     const datasetFactory = $rdf.dataset
     let dataset: DatasetExt
     let inferences: RepresentationInference[]
@@ -18,6 +23,57 @@ describe('ResourceStore', () => {
     beforeEach(() => {
         dataset = $rdf.dataset()
         inferences = []
+    })
+
+    describe('constructor', () => {
+        it('wraps resource factory in cached instance', () => {
+            // when
+            const store = new ResourceStore({
+                dataset,
+                inferences,
+                factory,
+                datasetFactory,
+            })
+
+            // then
+            expect(store.factory).toBeInstanceOf(CachedResourceFactoryImpl)
+        })
+
+        it('does not wrap existing instance of cached factory', () => {
+            // given
+            const cachedFactory = new CachedResourceFactoryImpl(factory)
+
+            // when
+            const store = new ResourceStore({
+                dataset,
+                inferences,
+                factory: cachedFactory,
+                datasetFactory,
+            })
+
+            // then
+            expect(store.factory).toBe(cachedFactory)
+        })
+    })
+
+    describe('clone', () => {
+        it('creates a new instance of cached resource store', () => {
+            // given
+            const cachedFactory = new CachedResourceFactoryImpl(factory)
+            const store = new ResourceStore({
+                dataset,
+                inferences,
+                factory: cachedFactory,
+                datasetFactory,
+            })
+
+            // when
+            const clone = store.clone()
+
+            // then
+            expect(clone.factory).toBeInstanceOf(CachedResourceFactoryImpl)
+            expect(clone.factory).not.toBe(store.factory)
+        })
     })
 
     describe('get', () => {
@@ -88,6 +144,27 @@ describe('ResourceStore', () => {
 
             // then
             expect(dataset.toCanonical()).toMatchSnapshot()
+        })
+
+        it('removes cached instances for graph', async () => {
+            // given
+            const cachedFactory = new CachedResourceFactoryImpl(factory)
+            cachedFactory.createEntity(clownface({ dataset: $rdf.dataset(), graph: ex.foo }).node(ex.foo))
+            const store = new ResourceStore({
+                dataset,
+                inferences,
+                factory: cachedFactory,
+                datasetFactory,
+            })
+
+            // when
+            await store.set(ex.foo, {
+                dataset: $rdf.dataset(),
+                response,
+            })
+
+            // then
+            expect(cachedFactory.__cache.size).toEqual(0)
         })
     })
 })

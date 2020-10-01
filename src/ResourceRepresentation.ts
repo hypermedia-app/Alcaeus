@@ -1,6 +1,7 @@
 import * as $rdf from '@rdf-esm/data-model'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
-import type { RdfResource, ResourceFactory, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import type { DatasetCore, NamedNode } from 'rdf-js'
 import type { HydraResource } from './Resources'

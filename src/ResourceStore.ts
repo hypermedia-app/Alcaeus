@@ -1,4 +1,5 @@
-import type { RdfResource, ResourceFactory } from '@tpluscode/rdfine'
+import type { RdfResource } from '@tpluscode/rdfine'
+import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
@@ -7,6 +8,8 @@ import TermMap from '@rdf-esm/term-map'
 import type { HydraResponse } from './alcaeus'
 import ResourceRepresentationImpl from './ResourceRepresentation'
 import type { HydraResource } from './Resources'
+import CachedResourceFactoryImpl from './Resources/ResourceFactory'
+import type { CachedResourceFactory } from './Resources/ResourceFactory'
 import type { ResponseWrapper } from './ResponseWrapper'
 
 interface ResourceStoreEntry<D extends DatasetCore> {
@@ -36,7 +39,7 @@ interface ResourceStoreInit<D extends DatasetIndexed> {
 export default class ResourceStoreImpl<D extends DatasetIndexed> implements ResourceStore<D> {
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
-    public readonly factory: ResourceFactory<D, HydraResource<D>>
+    public readonly factory: CachedResourceFactory<D, HydraResource<D>>
     private readonly rootNodes = new TermMap<NamedNode, NamedNode>()
     private readonly responses = new TermMap<NamedNode, ResponseWrapper>()
     private readonly datasetFactory: () => D;
@@ -44,7 +47,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
     public constructor({ dataset, inferences, factory, datasetFactory }: ResourceStoreInit<D>) {
         this.dataset = dataset
         this.inferences = inferences
-        this.factory = factory
+        this.factory = factory instanceof CachedResourceFactoryImpl ? factory : new CachedResourceFactoryImpl(factory)
         this.datasetFactory = datasetFactory
     }
 
@@ -52,7 +55,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
         return new ResourceStoreImpl({
             inferences: this.inferences,
             dataset: this.dataset.clone(),
-            factory: this.factory,
+            factory: this.factory.clone(),
             datasetFactory: this.datasetFactory,
         })
     }
@@ -73,6 +76,8 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
     }
 
     public async set(graph: NamedNode, { response, dataset, rootResource }: ResourceStoreEntry<D>): Promise<void> {
+        this.factory.removeCache(graph)
+
         const inferredQuads = this.datasetFactory()
 
         this.inferences.forEach(inferenceOver => inferredQuads.addAll([...inferenceOver(dataset)]))

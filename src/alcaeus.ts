@@ -10,6 +10,8 @@ import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { DatasetCore, NamedNode, Stream } from 'rdf-js'
 import FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
+import * as DefaultCacheStrategy from './ResourceCacheStrategy'
+import type { ResourceCacheStrategy } from './ResourceCacheStrategy'
 import type { ResourceRepresentation } from './ResourceRepresentation'
 import type { ApiDocumentation, HydraResource } from './Resources'
 import type { Operation } from './Resources/Operation'
@@ -41,6 +43,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
     resources: ResourceStore<D>
     apiDocumentations: ResourceRepresentation<D, ApiDocumentation<D>>[]
+    cacheStrategy: ResourceCacheStrategy
 }
 
 interface AlcaeusInit<D extends DatasetIndexed> {
@@ -63,6 +66,8 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public log: (msg: string) => void = () => {}
+
+    public cacheStrategy: ResourceCacheStrategy = DefaultCacheStrategy
 
     public readonly resources: ResourceStore<D>
 
@@ -93,12 +98,30 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
 
     public async loadResource <T extends RdfResource<D>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
         const term = typeof id === 'string' ? namedNode(id) : id
+        let requestHeaders = new this._headers(headers)
+
+        const previousResource = this.resources.get(term)
+        if (previousResource) {
+            if (!this.cacheStrategy.shouldLoad(previousResource)) {
+                return previousResource
+            }
+
+            const cacheHeadersInit = this.cacheStrategy.requestCacheHeaders(previousResource)
+            if (cacheHeadersInit) {
+                const cacheHeaders = new this._headers(cacheHeadersInit)
+                requestHeaders = merge(requestHeaders, cacheHeaders, this._headers)
+            }
+        }
 
         const response = await this._fetch.resource(term.value, {
             parsers: this.parsers,
             baseUri: this.baseUri,
-            headers: await this.__mergeHeaders(new this._headers(headers)),
+            headers: await this.__mergeHeaders(requestHeaders),
         })
+
+        if (previousResource && response.xhr.status === 304) {
+            return previousResource
+        }
 
         const stream = await response.quadStream()
         if (stream) {

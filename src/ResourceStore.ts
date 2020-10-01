@@ -7,7 +7,7 @@ import TermMap from '@rdf-esm/term-map'
 import type { HydraResponse } from './alcaeus'
 import ResourceRepresentationImpl from './ResourceRepresentation'
 import type { HydraResource } from './Resources'
-import type ResponseWrapper from './ResponseWrapper'
+import type { ResponseWrapper } from './ResponseWrapper'
 
 interface ResourceStoreEntry<D extends DatasetCore> {
     response: ResponseWrapper

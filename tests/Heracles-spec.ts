@@ -4,6 +4,7 @@ import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import JsonLdParser from '@rdfjs/parser-jsonld'
 import SinkMap from '@rdfjs/sink-map'
+import clownface from 'clownface'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import * as Constants from './Constants'
@@ -577,6 +578,102 @@ describe('Hydra', () => {
                             }),
                         }))
             })
+        })
+    })
+
+    describe('loadResource + cache strategy', () => {
+        const id = 'http://example.com/resource'
+
+        it('should not do a request when resource is used from store', async () => {
+            // given
+            const responseMock = mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })
+            fetchResource.mockImplementationOnce(responseMock)
+            client.cacheStrategy.shouldLoad = () => false
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: await responseMock(id),
+                dataset,
+            })
+
+            // when
+            await client.loadResource(id)
+
+            // then
+            expect(fetchResource).not.toBeCalled()
+        })
+
+        it('should reuse previous representation when server responds with 304', async () => {
+            // given
+            const previousResponse = await mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })(id)
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder().statusCode(304),
+            }))
+            client.cacheStrategy.shouldLoad = () => true
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: previousResponse,
+                dataset,
+            })
+
+            // when
+            const res = await client.loadResource(id)
+
+            // then
+            expect(res.representation).toBeDefined()
+            expect(res.response).toBe(previousResponse)
+        })
+
+        it('should set caching request headers provided by cache strategy', async () => {
+            // given
+            const previousResponse = mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })
+            fetchResource.mockImplementationOnce(previousResponse)
+            client.cacheStrategy.shouldLoad = () => true
+            client.cacheStrategy.requestCacheHeaders = () => ({
+                'if-none-match': 'foo',
+            })
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: await previousResponse(id),
+                dataset,
+            })
+
+            // when
+            await client.loadResource(id)
+
+            // then
+            expect(fetchResource).toBeCalledWith(
+                id,
+                expect.objectContaining({
+                    headers: new Headers({ 'if-none-match': 'foo' }),
+                }))
+        })
+
+        it('should replace cached resource when cache strategy returns true', async () => {
+            // given
+            const responseMock = mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd),
+            })
+            fetchResource.mockImplementationOnce(responseMock)
+            client.cacheStrategy.shouldLoad = () => true
+            const term = namedNode(id)
+            clownface({ dataset, graph: term, term }).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: await responseMock(id),
+                dataset,
+            })
+
+            // when
+            await client.loadResource(id)
+
+            // then
+            expect(fetchResource).toBeCalled()
+            expect(dataset.toCanonical()).toMatchSnapshot()
         })
     })
 })

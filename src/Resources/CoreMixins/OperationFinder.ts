@@ -1,6 +1,6 @@
+import type { NamespaceBuilder } from '@rdfjs/namespace'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { NamedNode, Quad } from 'rdf-js'
-import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { HydraResource, SupportedOperation } from '..'
 import type { Operation } from '../Operation'
 
@@ -32,7 +32,8 @@ export interface Criteria {
 }
 
 export interface RecursiveStopConditions {
-    excludedProperties: (string | NamedNode | RdfResource)[]
+    excludedProperties?: (string | NamedNode | RdfResource)[]
+    namespaces: (string | NamespaceBuilder)[]
 }
 
 /**
@@ -57,7 +58,6 @@ export interface OperationFinder {
      * @param moreCriteria zero or more criteria objects which filter out unwanted operations
      */
     findOperationsDeep (stopCondition: RecursiveStopConditions, ...moreCriteria: Criteria[]): Operation[]
-    findOperationsDeep (...criteria: Criteria[]): Operation[]
 }
 
 function satisfies<T, TValue>(criteria: T | undefined, value: TValue, actualCheck: (expected: T, actual: TValue) => boolean) {
@@ -129,8 +129,14 @@ function createMatcher(operation: Operation) {
     }
 }
 
-const excludedProperties = (stopConditions: RecursiveStopConditions) => {
-    const propertiesToExclude = stopConditions.excludedProperties.map(ex => {
+const onlyExplicitNamespaces = ({ namespaces = [] }: RecursiveStopConditions) => {
+    const namespaceUris = namespaces.map(ns => typeof ns === 'string' ? ns : ns().value)
+
+    return (quad: Quad) => namespaceUris.some(ns => quad.predicate.value.startsWith(ns))
+}
+
+const excludedProperties = ({ excludedProperties = [] }: RecursiveStopConditions) => {
+    const propertiesToExclude = excludedProperties.map(ex => {
         if (typeof ex === 'string') {
             return ex
         }
@@ -160,9 +166,10 @@ function toResourceNodes <T extends RdfResource>(self: RdfResource, mixins) {
 export function OperationFinderMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
     return class OperationFinderClass extends Base implements OperationFinder {
         public getOperationsDeep(
-            stopConditions: RecursiveStopConditions = { excludedProperties: [hydra.member, rdf.type] },
+            stopConditions: RecursiveStopConditions = { namespaces: [] },
             previousResources: this[] = []) {
             const childResources = [...this.pointer.dataset.match(this.id, null, null, this._graphId)]
+                .filter(onlyExplicitNamespaces(stopConditions))
                 .filter(excludedProperties(stopConditions))
                 .reduce<this[]>(toResourceNodes(this, [OperationFinderMixin]), [])
 
@@ -183,16 +190,8 @@ export function OperationFinderMixin<TBase extends Constructor<HydraResource>>(B
             return this.__filterOperations(this.operations, criteria)
         }
 
-        public findOperationsDeep(stopConditionOrCriteria?: Criteria | RecursiveStopConditions, ...moreCriteria: Criteria[]) {
-            if (!stopConditionOrCriteria) {
-                return this.__filterOperations(this.getOperationsDeep())
-            }
-
-            if ('excludedProperties' in stopConditionOrCriteria) {
-                return this.__filterOperations(this.getOperationsDeep(stopConditionOrCriteria), moreCriteria)
-            }
-
-            return this.__filterOperations(this.getOperationsDeep(), [stopConditionOrCriteria, ...moreCriteria])
+        public findOperationsDeep(stopCondition: RecursiveStopConditions & Criteria, ...moreCriteria: Criteria[]) {
+            return this.__filterOperations(this.getOperationsDeep(stopCondition), [stopCondition, ...moreCriteria])
         }
 
         public __filterOperations(operations: Operation[], criteria: Criteria[] = []) {

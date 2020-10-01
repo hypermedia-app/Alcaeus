@@ -76,7 +76,9 @@ describe('OperationFinder', () => {
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
             // when
-            const operations = topLevel.getOperationsDeep()
+            const operations = topLevel.getOperationsDeep({
+                namespaces: [ex],
+            })
 
             // then
             expect(operations).toHaveLength(3)
@@ -103,13 +105,15 @@ describe('OperationFinder', () => {
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
             // when
-            const operations = topLevel.getOperationsDeep()
+            const operations = topLevel.getOperationsDeep({
+                namespaces: [ex],
+            })
 
             // then
             expect(operations).toHaveLength(3)
         })
 
-        it('excludes objects of hydra:member property by default', async () => {
+        it('does not descend properties from namespaces not included', async () => {
             // given
             const apiGraph = parse(turtle`
                 ${ex.api} a ${hydra.ApiDocumentation} ;
@@ -159,6 +163,7 @@ describe('OperationFinder', () => {
             // when
             const operations = topLevel.getOperationsDeep({
                 excludedProperties: [],
+                namespaces: [ex, hydra],
             })
 
             // then
@@ -190,6 +195,7 @@ describe('OperationFinder', () => {
             // when
             const operations = topLevel.getOperationsDeep({
                 excludedProperties: ['http://example.com/vocab#hasChild', ex.hasSibling],
+                namespaces: [ex],
             })
 
             // then
@@ -621,7 +627,9 @@ describe('OperationFinder', () => {
             const topLevel = new TestOperationFinder(graph.namedNode('http://example.com/'))
 
             // when
-            const operations = topLevel.findOperationsDeep()
+            const operations = topLevel.findOperationsDeep({
+                namespaces: [ex],
+            })
 
             // then
             expect(operations).toHaveLength(2)
@@ -653,6 +661,7 @@ describe('OperationFinder', () => {
             // when
             const operations = topLevel.findOperationsDeep({
                 excludedProperties: [ex.hasChild],
+                namespaces: [ex],
             })
 
             // then
@@ -686,6 +695,7 @@ describe('OperationFinder', () => {
 
             // when
             const operations = topLevel.findOperationsDeep({
+                namespaces: [ex],
                 byMethod: 'get',
             })
 

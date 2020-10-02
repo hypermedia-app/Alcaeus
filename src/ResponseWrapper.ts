@@ -69,7 +69,10 @@ export default class implements ResponseWrapper {
     }
 
     public quadStream(): Stream | null {
-        const quadStream = this.parsers.import(stripContentTypeParameters(this.mediaType), patchResponseBody(this.xhr))
+        const quadStream = this.parsers.import(
+            stripContentTypeParameters(this.mediaType),
+            patchResponseBody(this.xhr),
+            { baseIRI: this.effectiveUri })
         if (quadStream == null) {
             return null
         }

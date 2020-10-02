@@ -151,6 +151,58 @@ describe('ResponseWrapper', () => {
             // then
             expect(parser.import.calledOnce).toBeTruthy()
         })
+
+        it('should apply effectiveUri as baseIRI parser option', async () => {
+            // given
+            const xhrResponse = {
+                headers: new Headers({
+                    'content-type': 'application/ld+json',
+                }),
+            } as Response
+            const parser = {
+                import: jest.fn(),
+            }
+            parsers.set('application/ld+json', parser)
+            const response = new ResponseWrapper('http://example.com/res', xhrResponse, parsers)
+
+            // when
+            await response.quadStream()
+
+            // then
+            expect(parser.import).toBeCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    baseIRI: 'http://example.com/res',
+                }),
+            )
+        })
+
+        it('should apply redirected Uri as baseIRI parser option', async () => {
+            // given
+            const xhrResponse = {
+                redirected: true,
+                url: 'http://example.com/redir',
+                headers: new Headers({
+                    'content-type': 'application/ld+json',
+                }),
+            } as Response
+            const parser = {
+                import: jest.fn(),
+            }
+            parsers.set('application/ld+json', parser)
+            const response = new ResponseWrapper('', xhrResponse, parsers)
+
+            // when
+            await response.quadStream()
+
+            // then
+            expect(parser.import).toBeCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    baseIRI: 'http://example.com/redir',
+                }),
+            )
+        })
     })
 
     describe('resourceUri', () => {

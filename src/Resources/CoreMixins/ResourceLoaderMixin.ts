@@ -1,17 +1,18 @@
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
+import type { DatasetCore } from 'rdf-js'
 import type { HydraClient, HydraResponse } from '../../alcaeus'
 
-declare module '@rdfine/hydra' {
-    export interface Resource {
-        load(): Promise<HydraResponse>
+declare module '@tpluscode/rdfine' {
+    export interface RdfResource<D extends DatasetCore = DatasetCore> {
+        load?<T extends RdfResource<D>>(): Promise<HydraResponse<D, T>>
     }
 }
 
 export function createResourceLoaderMixin(alcaeus: HydraClient) {
     function ResourceLoaderMixin<Base extends Constructor>(base: Base) {
         return class extends base {
-            public load() {
-                return alcaeus.loadResource(this.id.value)
+            public load<T extends RdfResource<any>>() {
+                return alcaeus.loadResource<T>(this.id.value)
             }
         }
     }

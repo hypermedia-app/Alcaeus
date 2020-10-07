@@ -1,13 +1,12 @@
 import { property } from '@tpluscode/rdfine'
 import type { Constructor } from '@tpluscode/rdfine'
 import { hydra, rdf, rdfs } from '@tpluscode/rdf-ns-builders'
-import type { Class, HydraResource, SupportedOperation } from '../index'
+import type { Class, Operation } from '@rdfine/hydra'
+import type { Property } from '@rdfine/rdf'
 import { ClassMixin } from './Class'
-import type { DocumentedResource } from './DocumentedResource'
-import { DocumentedResourceMixin } from './DocumentedResource'
-import { SupportedOperationMixin } from './SupportedOperation'
+import { OperationMixin } from './Operation'
 
-export interface RdfProperty extends DocumentedResource {
+interface PropertyEx {
     /**
      * Gets the rdfs:range of a property
      */
@@ -19,15 +18,21 @@ export interface RdfProperty extends DocumentedResource {
     /**
      * Gets the property's supported operations
      */
-    supportedOperations: SupportedOperation[]
+    supportedOperations: Operation[]
     /**
      * Gets a value indicating whether the property is a hydra:Link
      */
     isLink: boolean
 }
 
-export function RdfPropertyMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
-    abstract class RdfPropertyClass extends DocumentedResourceMixin(Base) implements RdfProperty {
+declare module '@rdfine/rdf' {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    export interface Property extends PropertyEx {
+    }
+}
+
+export function RdfPropertyMixin<TBase extends Constructor<Omit<Property, keyof PropertyEx>>>(Base: TBase) {
+    abstract class RdfPropertyClass extends Base implements Property {
         @property.resource({
             path: rdfs.range,
             as: [ClassMixin],
@@ -43,9 +48,9 @@ export function RdfPropertyMixin<TBase extends Constructor<HydraResource>>(Base:
         @property.resource({
             path: hydra.supportedOperation,
             values: 'array',
-            as: [SupportedOperationMixin],
+            as: [OperationMixin],
         })
-        public supportedOperations!: SupportedOperation[]
+        public supportedOperations!: Operation[]
 
         public get isLink() {
             return this.hasType(hydra.Link)

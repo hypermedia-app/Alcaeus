@@ -1,58 +1,25 @@
+import type { SupportedProperty } from '@rdfine/hydra'
 import type { Constructor } from '@tpluscode/rdfine'
-import { namespace, property } from '@tpluscode/rdfine'
+import { namespace } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import type { HydraResource } from '../index'
-import type { DocumentedResource } from './DocumentedResource'
-import { DocumentedResourceMixin } from './DocumentedResource'
-import type { RdfProperty } from './RdfProperty'
-import { RdfPropertyMixin } from './RdfProperty'
 
-export interface SupportedProperty extends DocumentedResource {
-    /**
-     * Gets the value indicating if the property can be read from responses
-     */
-    readable: boolean
-    /**
-     * Gets the value indicating if the property can be written by requests
-     */
-    writable: boolean
-    /**
-     * Gets the value indicating if the property in required in request payload
-     */
-    required: boolean
-    /**
-     * The actual RDF predicate to use in representations
-     */
-    property: RdfProperty
+declare module '@rdfine/hydra' {
+    export interface SupportedProperty {
+        /**
+         * Gets the value indicating if the property can be written by requests
+         */
+        writable: boolean | undefined
+    }
 }
 
-export function SupportedPropertyMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
+export type { SupportedProperty } from '@rdfine/hydra'
+
+export function SupportedPropertyMixin<TBase extends Constructor<Omit<SupportedProperty, 'writable'>>>(Base: TBase) {
     @namespace(hydra)
-    class SupportedPropertyClass extends DocumentedResourceMixin(Base) implements SupportedProperty {
-        @property.literal({
-            type: Boolean,
-            initial: true,
-        })
-        public readable!: boolean
-
-        @property.literal({
-            type: Boolean,
-            path: hydra.writeable,
-            initial: true,
-        })
-        public writable!: boolean
-
-        @property.literal({
-            type: Boolean,
-            initial: false,
-        })
-        public required!: boolean
-
-        @property.resource({
-            strict: true,
-            as: [RdfPropertyMixin],
-        })
-        public property!: RdfProperty
+    class SupportedPropertyClass extends Base implements SupportedProperty {
+        public get writable() {
+            return this.writeable
+        }
     }
 
     return SupportedPropertyClass

@@ -7,7 +7,7 @@ const propertyRangeMappings = [
     [hydra.supportedClass, hydra.Class],
     [hydra.expects, hydra.Class],
     [hydra.returns, hydra.Class],
-    [hydra.supportedOperation, hydra.SupportedOperation],
+    [hydra.supportedOperation, hydra.Operation],
     [hydra.operation, hydra.Operation],
     [hydra.supportedProperty, hydra.SupportedProperty],
     [hydra.statusCodes, hydra.StatusCodeDescription],

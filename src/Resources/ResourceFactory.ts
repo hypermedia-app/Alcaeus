@@ -27,7 +27,7 @@ export default class CachedResourceFactoryImpl<D extends DatasetCore, R extends 
         return new CachedResourceFactoryImpl(this.__inner)
     }
 
-    createEntity<S>(pointer: GraphPointer<NamedNode, D>, typeAndMixins?: Mixin<AnyFunction>[] | [Constructor, ...Mixin<AnyFunction>[]], options?: ResourceCreationOptions<D, R & S>): R & S & ResourceIndexer<D, R> {
+    createEntity<S>(pointer: GraphPointer<NamedNode, D>, typeAndMixins?: Mixin<AnyFunction>[] | [Constructor, ...Mixin<AnyFunction>[]], options?: ResourceCreationOptions<D, R & S>): R & S & ResourceIndexer<R> {
         const graph = pointer._context[0].graph || defaultGraphInstance
         if (!this.__cache.has(graph)) {
             this.__cache.set(graph, new TermMap())

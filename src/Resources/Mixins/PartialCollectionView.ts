@@ -1,50 +1,27 @@
-import { namespace, property } from '@tpluscode/rdfine'
+import type { PartialCollectionView, Collection } from '@rdfine/hydra'
+import { namespace } from '@tpluscode/rdfine'
 import type { Constructor, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import type { Collection, HydraResource, View } from '../index'
 
-export interface PartialCollectionView extends View {
-    /**
-     * Gets the first page resource of a collection
-     */
-    readonly first: HydraResource | undefined
-    /**
-     * Gets the previous page resource of a collection
-     */
-    readonly previous: HydraResource | undefined
-    /**
-     * Gets the next page resource of a collection
-     */
-    readonly next: HydraResource | undefined
-    /**
-     * Gets the last page resource of a collection
-     */
-    readonly last: HydraResource | undefined
+declare module '@rdfine/hydra' {
+    export interface PartialCollectionView {
+        parent: Collection
+    }
 }
 
-export function PartialCollectionViewMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
+export type { PartialCollectionView } from '@rdfine/hydra'
+
+export function PartialCollectionViewMixin<TBase extends Constructor<Omit<PartialCollectionView, 'parent'>>>(Base: TBase) {
     @namespace(hydra)
     class PartialCollectionViewClass extends Base implements PartialCollectionView {
-        @property.resource()
-        public first!: HydraResource
-
-        @property.resource()
-        public previous!: HydraResource
-
-        @property.resource()
-        public next!: HydraResource
-
-        @property.resource()
-        public last!: HydraResource
-
-        public get collection() {
+        public get parent() {
             const collection = this.pointer.in(hydra.view)
 
             return collection.toArray()
                 .reduce((namedNodes, node) => {
                     if (node.term.termType === 'BlankNode' || node.term.termType === 'NamedNode') {
-                        namedNodes.push(node as any)
+                        namedNodes.push(node)
                     }
 
                     return namedNodes

@@ -1,14 +1,14 @@
 import * as $rdf from '@rdf-esm/data-model'
+import * as Hydra from '@rdfine/hydra'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
 import type { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import type { DatasetCore, NamedNode } from 'rdf-js'
-import type { HydraResource } from './Resources'
 
-type MaybeExtendedResource<D extends DatasetCore, T extends RdfResource<D>> = HydraResource<D> | (HydraResource<D> & T) | null
+type MaybeExtendedResource<D extends DatasetCore, T extends RdfResource<D>> = Hydra.Resource<D> | (Hydra.Resource<D> & T) | null
 
-export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T extends RdfResource<D> = HydraResource<D>> extends Iterable<HydraResource<D>> {
+export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T extends RdfResource<D> = Hydra.Resource<D>> extends Iterable<Hydra.Resource<D>> {
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
@@ -22,14 +22,14 @@ export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T e
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    get<T>(uri: string): (T & HydraResource<D>) | undefined
+    get<T>(uri: string): (T & Hydra.Resource<D>) | undefined
 
     /**
      * Gets all resources of given RDF type from the representation
      * @param {string} classId RDF class identifier
-     * @returns {Array<HydraResource>}
+     * @returns {Array<Hydra.Resource>}
      */
-    ofType(classId: string | NamedNode): HydraResource<D>[]
+    ofType(classId: string | NamedNode): Hydra.Resource<D>[]
 }
 
 export default class <D extends DatasetCore, T extends RdfResource<D>> implements ResourceRepresentation<D, T> {
@@ -43,14 +43,14 @@ export default class <D extends DatasetCore, T extends RdfResource<D>> implement
         this.rootNode = graph.node(rootResource)
     }
 
-    public get<T>(uri: string): (T & HydraResource<D>) | undefined {
+    public get<T>(uri: string): (T & Hydra.Resource<D>) | undefined {
         const nodes = this.__graph.dataset.match(this.__graph.namedNode(decodeURI(uri)).term)
 
         if (nodes.size === 0) {
             return undefined
         }
 
-        return this.__factory.createEntity<T & HydraResource<D>>(this.__graph.namedNode(decodeURI(uri)))
+        return this.__factory.createEntity<T & Hydra.Resource<D>>(this.__graph.namedNode(decodeURI(uri)))
     }
 
     public get root() {
@@ -78,6 +78,6 @@ export default class <D extends DatasetCore, T extends RdfResource<D>> implement
     }
 
     private _createEntity(node: GraphPointer<ResourceIdentifier>) {
-        return this.__factory.createEntity<HydraResource<D>>(node)
+        return this.__factory.createEntity<Hydra.Resource<D>>(node)
     }
 }

@@ -1,3 +1,4 @@
+import * as Hydra from '@rdfine/hydra'
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
 import { namedNode } from '@rdf-esm/data-model'
@@ -7,7 +8,7 @@ import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { Literal, Stream } from 'rdf-js'
+import { DatasetCore, Literal, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { HydraClient } from '../../../src/alcaeus'
 import * as mixins from '../../../src/ResourceFactoryDefaults'
@@ -27,7 +28,7 @@ function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 
-const apiDocumentations: ResourceRepresentation<ApiDocumentation>[] = []
+const apiDocumentations: ResourceRepresentation<DatasetCore, ApiDocumentation>[] = []
 const client = {
     apiDocumentations,
 } as HydraClient
@@ -37,14 +38,12 @@ class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin(
 function pushApiDocumentation(root: ApiDocumentation) {
     apiDocumentations.push({
         root,
-    } as ResourceRepresentation<ApiDocumentation>)
+    } as ResourceRepresentation<DatasetCore, ApiDocumentation>)
 }
 
 TestOperationFinder.factory = new ResourceFactory(TestOperationFinder)
-TestOperationFinder.factory.addMixin(mixins.ClassMixin)
-TestOperationFinder.factory.addMixin(mixins.ApiDocumentationMixin)
-TestOperationFinder.factory.addMixin(mixins.SupportedPropertyMixin)
-TestOperationFinder.factory.addMixin(mixins.SupportedOperationMixin)
+TestOperationFinder.factory.addMixin(...Object.values(mixins))
+TestOperationFinder.factory.addMixin(...Object.values(Hydra))
 
 describe('OperationFinder', () => {
     let graph: AnyPointer<AnyContext, DatasetExt>
@@ -62,7 +61,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -91,7 +90,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -120,7 +119,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -147,7 +146,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -177,7 +176,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -212,10 +211,10 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "DELETE"
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "GET"
                     ] .
             `)
@@ -244,10 +243,10 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "DELETE"
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "GET"
                     ] .
             `)
@@ -278,13 +277,13 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "DELETE"
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "GET"
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "POST"
                     ] .
             `)
@@ -319,15 +318,15 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "DELETE" ;
                         ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "GET" ;
                         ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "POST" ;
                         ${hydra.expects} ${ex.Person}
                     ] .
@@ -361,7 +360,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedOperation} ${ex.Action} .
                     
                 ${ex.Action}
-                    a ${hydra.SupportedOperation} ;
+                    a ${hydra.Operation} ;
                     ${hydra.expects} ${ex.Foo} ;
                     ${hydra.returns} ${ex.Bar} ;
                     ${hydra.method} "GET" .
@@ -396,13 +395,13 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.expects} ${ex.Person}
                     ] .
             `)
@@ -435,15 +434,15 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "DELETE" ;
                         ${hydra.expects} ${owl.Nothing}
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "PUT" ;
                         ${hydra.expects} ${ex.NewPerson}
                     ] , [
-                        a ${hydra.SupportedOperation} ;
+                        a ${hydra.Operation} ;
                         ${hydra.method} "POST" ;
                         ${hydra.expects} ${ex.Person}
                     ] .
@@ -479,9 +478,9 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} ${ex.DeleteOp} , ${ex.PostOp} , ${ex.PutOp} .
                     
-                ${ex.DeleteOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
-                ${ex.PostOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
-                ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+                ${ex.DeleteOp} a ${hydra.Operation} ; ${hydra.method} "DELETE" .
+                ${ex.PostOp} a ${hydra.Operation} ; ${hydra.method} "DELETE" .
+                ${ex.PutOp} a ${hydra.Operation} ; ${hydra.method} "DELETE" .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -509,10 +508,10 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} 
-                    [ a ${hydra.SupportedOperation} , ${ex.DeleteOp} ; ${hydra.method} "DELETE" ] ,
-                    [ a ${hydra.SupportedOperation} , ${ex.PostOp} ; ${hydra.method} "DELETE" ] ,
-                    [ a ${hydra.SupportedOperation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
-                ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+                    [ a ${hydra.Operation} , ${ex.DeleteOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.Operation} , ${ex.PostOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.Operation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
+                ${ex.PutOp} a ${hydra.Operation} ; ${hydra.method} "DELETE" .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -540,10 +539,10 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} 
-                    [ a ${hydra.SupportedOperation} , ${ex.DeleteOp} ; ${hydra.method} "DELETE" ] ,
-                    [ a ${hydra.SupportedOperation} , ${ex.PostOp} ; ${hydra.method} "DELETE" ] ,
-                    [ a ${hydra.SupportedOperation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
-                ${ex.PutOp} a ${hydra.SupportedOperation} ; ${hydra.method} "DELETE" .
+                    [ a ${hydra.Operation} , ${ex.DeleteOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.Operation} , ${ex.PostOp} ; ${hydra.method} "DELETE" ] ,
+                    [ a ${hydra.Operation} , ${ex.PutOp} ; ${hydra.method} "DELETE" ] .
+                ${ex.PutOp} a ${hydra.Operation} ; ${hydra.method} "DELETE" .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -571,9 +570,9 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ; ${hydra.supportedOperation} ${ex.OperationA} , ${ex.OperationB} , ${ex.OperationC} .
-                ${ex.OperationA} a ${hydra.SupportedOperation} ; ${ex.custom} 'A' . 
-                ${ex.OperationB} a ${hydra.SupportedOperation} ; ${ex.custom} 'B' .
-                ${ex.OperationC} a ${hydra.SupportedOperation} ; ${ex.custom} 'C' .
+                ${ex.OperationA} a ${hydra.Operation} ; ${ex.custom} 'A' . 
+                ${ex.OperationB} a ${hydra.Operation} ; ${ex.custom} 'B' .
+                ${ex.OperationC} a ${hydra.Operation} ; ${ex.custom} 'C' .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -609,11 +608,11 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.ClassWithGet}, ${ex.ClassWithPut}, ${ex.ClassWithPost} .
                     
                 ${ex.ClassWithGet} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "GET" ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ; ${hydra.method} "GET" ] .
                 ${ex.ClassWithPut} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "PUT" ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ; ${hydra.method} "PUT" ] .
                 ${ex.ClassWithPost} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ; ${hydra.method} "POST" ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ; ${hydra.method} "POST" ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -645,7 +644,7 @@ describe('OperationFinder', () => {
                     ${hydra.supportedClass} ${ex.Class} .
                     
                 ${ex.Class} a ${hydra.Class} ;
-                    ${hydra.supportedOperation} [ a ${hydra.SupportedOperation} ] .
+                    ${hydra.supportedOperation} [ a ${hydra.Operation} ] .
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
@@ -679,8 +678,8 @@ describe('OperationFinder', () => {
                     
                 ${ex.Class} a ${hydra.Class} ;
                     ${hydra.supportedOperation} 
-                        [ a ${hydra.SupportedOperation} ; ${hydra.method} "GET" ] ,
-                        [ a ${hydra.SupportedOperation} ; ${hydra.method} "POST" ].
+                        [ a ${hydra.Operation} ; ${hydra.method} "GET" ] ,
+                        [ a ${hydra.Operation} ; ${hydra.method} "POST" ].
             `)
             pushApiDocumentation(TestOperationFinder.factory.createEntity(cf({
                 dataset: await $rdf.dataset().import(apiGraph),

@@ -1,11 +1,12 @@
+import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
-import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
 import { Resource } from './_TestResource'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
+import { OperationMixin } from '../../src/Resources/Mixins/Operation'
 
-class SupportedOperation extends SupportedOperationMixin(Resource) {}
+class SupportedOperation extends OperationMixin(Hydra.OperationMixin(Resource)) {}
 
 describe('SupportedOperation', () => {
     let node: GraphPointer<NamedNode>
@@ -32,7 +33,7 @@ describe('SupportedOperation', () => {
 
     it('should expose expected class id', async () => {
         // then
-        expect(operation.expects.map(e => e.id)).toEqual([owl.Nothing])
+        expect(operation.expects?.map(e => e.id)).toEqual([owl.Nothing])
     })
 
     it('should expose returned class id', async () => {

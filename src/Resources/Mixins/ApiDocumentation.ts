@@ -1,28 +1,21 @@
 import type { Constructor } from '@tpluscode/rdfine'
-import { property, namespace } from '@tpluscode/rdfine'
-import { DatasetCore } from 'rdf-js'
-import type { HydraResponse } from '../../alcaeus'
-import type { Class, HydraResource } from '../index'
+import { namespace } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
+import type { ApiDocumentation } from '@rdfine/hydra'
+import type { DatasetCore } from 'rdf-js'
+import type { HydraResponse } from '../../alcaeus'
 
-export interface ApiDocumentation<D extends DatasetCore = DatasetCore> extends HydraResource<D> {
-    classes: Class[]
-
-    loadEntrypoint(): Promise<HydraResponse>
+declare module '@rdfine/hydra' {
+    export interface ApiDocumentation<D extends DatasetCore = DatasetCore> {
+        loadEntryPoint(): Promise<HydraResponse<D>>
+    }
 }
 
-export function ApiDocumentationMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
+export type { ApiDocumentation } from '@rdfine/hydra'
+
+export function ApiDocumentationMixin<TBase extends Constructor<Omit<ApiDocumentation, 'loadEntryPoint'>>>(Base: TBase) {
     @namespace(hydra)
-    class ApiDocumentationClass extends Base implements ApiDocumentation {
-        @property.resource({
-            path: 'supportedClass',
-            values: 'array',
-        })
-        public classes!: Class[]
-
-        @property.resource()
-        public entrypoint!: HydraResource
-
+    class ApiDocumentationClass extends Base implements Partial<ApiDocumentation> {
         public loadEntrypoint() {
             const entrypoint = this.entrypoint
 

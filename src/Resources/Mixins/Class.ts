@@ -1,11 +1,10 @@
 import { SupportedPropertyMixin, OperationMixin } from '@rdfine/hydra'
-import type { Class } from '@rdfine/hydra'
+import type { Class, Operation, SupportedProperty } from '@rdfine/hydra'
 import type { Class as RdfsClass } from '@rdfine/rdfs'
 import { property } from '@tpluscode/rdfine'
 import type { Constructor } from '@tpluscode/rdfine'
 import TypeCollection from '@tpluscode/rdfine/lib/TypeCollection'
 import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
-import type { Operation, SupportedProperty } from '../index'
 
 declare module '@rdfine/hydra' {
     export interface Class {

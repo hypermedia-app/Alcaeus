@@ -1,3 +1,4 @@
+import { Resource } from '@rdfine/hydra'
 import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
@@ -10,20 +11,19 @@ import $rdf from 'rdf-ext'
 import { DatasetCore, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { HydraClient } from '../../src/alcaeus'
-import * as mixins from '../../src/ResourceFactoryDefaults'
+import * as mixins from '../../src/Resources/Mixins'
 import { ResourceRepresentation } from '../../src/ResourceRepresentation'
-import { ApiDocumentation } from '../../src/Resources'
 import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
 
-const apiDocumentations: ResourceRepresentation<DatasetCore, ApiDocumentation>[] = []
+const apiDocumentations: ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>[] = []
 const client = {
     apiDocumentations,
 } as HydraClient
-const HydraResource: Constructor = createHydraResourceMixin(client)(Hydra.ResourceMixin(RdfResourceImpl as any))
+const HydraResource: Constructor<Resource> = createHydraResourceMixin(client)(Hydra.ResourceMixin(RdfResourceImpl as any))
 
 HydraResource.factory = new ResourceFactory(HydraResource)
 HydraResource.factory.addMixin(...Object.values(mixins))
@@ -33,10 +33,10 @@ function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 
-function pushApiDocumentation(root: ApiDocumentation) {
+function pushApiDocumentation(root: Hydra.ApiDocumentation) {
     apiDocumentations.push({
         root,
-    } as ResourceRepresentation<DatasetCore, ApiDocumentation>)
+    } as ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>)
 }
 
 describe('HydraResource', () => {
@@ -66,7 +66,7 @@ describe('HydraResource', () => {
                     ] ;
                     a ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -105,7 +105,7 @@ describe('HydraResource', () => {
                             a ${hydra.Operation}
                         ] .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -155,7 +155,7 @@ describe('HydraResource', () => {
                     ${ex.ResourceB} a ${hydra.Class} ;
                         ${hydra.supportedOperation} ${ex.DeleteOperation}.
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -207,7 +207,7 @@ describe('HydraResource', () => {
                     ${ex.ResourceB} a ${hydra.Class} ;
                         ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -239,7 +239,7 @@ describe('HydraResource', () => {
                     ${ex.Resource} a ${hydra.Class} ;
                         ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -271,7 +271,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link}, ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -305,7 +305,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))
@@ -337,7 +337,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link}, ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<ApiDocumentation>(cf({
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
                 dataset: await $rdf.dataset().import(apiGraph),
                 term: ex.api,
             })))

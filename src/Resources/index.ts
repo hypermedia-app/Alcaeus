@@ -1,5 +1,0 @@
-export type { Class } from './Mixins/Class'
-export type { Operation } from './Mixins/Operation'
-export type { SupportedProperty } from './Mixins/SupportedProperty'
-export type { PartialCollectionView } from './Mixins/PartialCollectionView'
-export type { ApiDocumentation } from './Mixins/ApiDocumentation'

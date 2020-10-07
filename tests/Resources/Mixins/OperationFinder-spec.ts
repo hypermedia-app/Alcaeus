@@ -11,9 +11,8 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { DatasetCore, Literal, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { HydraClient } from '../../../src/alcaeus'
-import * as mixins from '../../../src/ResourceFactoryDefaults'
+import * as mixins from '../../../src/Resources/Mixins'
 import { ResourceRepresentation } from '../../../src/ResourceRepresentation'
-import { ApiDocumentation, Class } from '../../../src/Resources'
 import { createHydraResourceMixin, OperationFinderMixin } from '../../../src/Resources/CoreMixins'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 import { Resource } from '../_TestResource'
@@ -28,17 +27,17 @@ function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 
-const apiDocumentations: ResourceRepresentation<DatasetCore, ApiDocumentation>[] = []
+const apiDocumentations: ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>[] = []
 const client = {
     apiDocumentations,
 } as HydraClient
 class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin(client)(Resource)) {
 }
 
-function pushApiDocumentation(root: ApiDocumentation) {
+function pushApiDocumentation(root: Hydra.ApiDocumentation) {
     apiDocumentations.push({
         root,
-    } as ResourceRepresentation<DatasetCore, ApiDocumentation>)
+    } as ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>)
 }
 
 TestOperationFinder.factory = new ResourceFactory(TestOperationFinder)
@@ -416,7 +415,7 @@ describe('OperationFinder', () => {
 
             // when
             const operations = resource.findOperations({
-                expecting: resource._create<Class>(graph.node(owl.Nothing)),
+                expecting: resource._create<Hydra.Class>(graph.node(owl.Nothing)),
             })
 
             // then

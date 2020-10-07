@@ -1,6 +1,5 @@
 import RdfResource from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
-import { SupportedProperty } from '../../src/Resources'
 import { Criteria, RecursiveStopConditions } from '../../src/Resources/CoreMixins/OperationFinder'
 import { ManagesBlockPattern } from '../../src/Resources/Mixins/ManagesBlock'
 import RuntimeOperation from '../../src/Resources/Operation'
@@ -22,7 +21,7 @@ export class Resource extends RdfResource implements Hydra.Resource {
         return []
     }
 
-    public getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: Resource[] }[] {
+    public getLinks(includeMissing?: boolean): { supportedProperty: Hydra.SupportedProperty; resources: Resource[] }[] {
         return []
     }
 
@@ -30,7 +29,7 @@ export class Resource extends RdfResource implements Hydra.Resource {
         return []
     }
 
-    public getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[] {
+    public getProperties(): { supportedProperty: Hydra.SupportedProperty; objects: any[] }[] {
         return []
     }
 

@@ -1,8 +1,7 @@
-import type { Resource } from '@rdfine/hydra'
+import type { Resource, Operation } from '@rdfine/hydra'
 import type { NamespaceBuilder } from '@rdfjs/namespace'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { NamedNode, Quad } from 'rdf-js'
-import type { Operation } from '..'
 import type { RuntimeOperation } from '../Operation'
 
 type Constraint<TExactMatch, TFuncMatch = TExactMatch> = (string | TExactMatch) | ((value: TFuncMatch) => boolean)

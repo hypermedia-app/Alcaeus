@@ -1,8 +1,0 @@
-export { ApiDocumentationMixin } from './Resources/Mixins/ApiDocumentation'
-export { ClassMixin } from './Resources/Mixins/Class'
-export { DocumentedResourceMixin } from './Resources/Mixins/DocumentedResource'
-export { ManagesBlockMixin } from './Resources/Mixins/ManagesBlock'
-export { PartialCollectionViewMixin } from './Resources/Mixins/PartialCollectionView'
-export { RdfPropertyMixin } from './Resources/Mixins/RdfProperty'
-export { OperationMixin } from './Resources/Mixins/Operation'
-export { SupportedPropertyMixin } from './Resources/Mixins/SupportedProperty'

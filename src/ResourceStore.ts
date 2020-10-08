@@ -1,3 +1,4 @@
+import type { Resource } from '@rdfine/hydra'
 import type { RdfResource } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf from 'clownface'
@@ -19,7 +20,7 @@ interface ResourceStoreEntry<D extends DatasetCore> {
 
 export interface ResourceStore<D extends DatasetIndexed> {
     factory: ResourceFactory<D, RdfResource<D>>
-    get<T extends RdfResource<D> = RdfResource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
+    get<T extends Resource<D> = Resource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
     set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
     clone(): ResourceStore<D>
 }

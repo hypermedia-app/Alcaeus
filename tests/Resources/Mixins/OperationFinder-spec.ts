@@ -28,9 +28,9 @@ function parse(triples: TurtleTemplateResult): Stream {
 }
 
 const apiDocumentations: ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>[] = []
-const client = {
+const client = () => ({
     apiDocumentations,
-} as HydraClient
+} as HydraClient)
 class TestOperationFinder extends OperationFinderMixin(createHydraResourceMixin(client)(Resource)) {
 }
 

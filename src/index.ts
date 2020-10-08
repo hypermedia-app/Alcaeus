@@ -1,4 +1,5 @@
 import type { SinkMap } from '@rdf-esm/sink-map'
+import type { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { EventEmitter } from 'events'
 import RdfResource from '@tpluscode/rdfine'
 import * as rdfine from '@tpluscode/rdfine'
@@ -8,13 +9,12 @@ import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus } from './alcaeus'
 import type { HydraClient } from './alcaeus'
 import * as inferences from './inferences'
-import * as coreMixins from './Resources/CoreMixins'
-import * as mixins from './Resources/Mixins'
+import { OperationFinderMixin, createResourceLoaderMixin, createHydraResourceMixin } from './Resources/CoreMixins'
+import * as Extensions from './Resources/Mixins'
 import ResourceStoreImpl from './ResourceStore'
 import { defaultSelectors } from './RootSelectors'
 import type { RootNodeCandidate } from './RootSelectors'
 import './Resources/Mixins'
-import './Resources/CoreMixins'
 
 export type { ResourceIdentifier, ResourceIndexer, ResourceFactory, RdfResource } from '@tpluscode/rdfine'
 export * from '@rdfine/hydra'
@@ -31,7 +31,14 @@ interface AlcaeusInit<D extends DatasetIndexed> {
 }
 
 export function create <D extends DatasetIndexed = DatasetIndexed>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: AlcaeusInit<D>): HydraClient<D> {
-    const factory = new rdfine.ResourceFactory<D>(RdfResource)
+    const getClient = () => alcaeus
+
+    const coreMixins: Mixin[] = [createResourceLoaderMixin(getClient), createHydraResourceMixin(getClient), OperationFinderMixin]
+    const AlcaeusGenerated = coreMixins.reduce((base, mixin) => mixin(base), RdfResource)
+
+    const factory = new rdfine.ResourceFactory<D>(AlcaeusGenerated)
+    AlcaeusGenerated.factory = factory
+
     const alcaeus = new Alcaeus<D>({
         datasetFactory,
         rootSelectors: Object.entries(rootSelectors || defaultSelectors),
@@ -45,12 +52,8 @@ export function create <D extends DatasetIndexed = DatasetIndexed>({ dataset, fe
         fetch,
         Headers,
     })
-
-    factory.addMixin(coreMixins.createResourceLoaderMixin(alcaeus))
-    factory.addMixin(coreMixins.createHydraResourceMixin(alcaeus))
-    factory.addMixin(coreMixins.OperationFinderMixin)
-    factory.addMixin(...Object.values(mixins))
     factory.addMixin(...Object.values(Hydra))
+    factory.addMixin(...Object.values(Extensions))
 
     return alcaeus
 }

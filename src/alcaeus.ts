@@ -36,7 +36,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     baseUri?: string
     rootSelectors: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    loadResource<T extends RdfResource<D> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
+    loadResource<T extends Resource<D> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<D> | null>
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>>
     defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
@@ -95,11 +95,11 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return [...this.__apiDocumentations.values()]
     }
 
-    public async loadResource <T extends RdfResource<D>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
+    public async loadResource <T extends Resource<D>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
         const term = typeof id === 'string' ? namedNode(id) : id
         let requestHeaders = new this._headers(headers)
 
-        const previousResource = this.resources.get(term)
+        const previousResource = this.resources.get<T>(term)
         if (previousResource) {
             if (!this.cacheStrategy.shouldLoad(previousResource)) {
                 return previousResource
@@ -138,7 +138,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
                 rootResource,
             })
 
-            return resources.get(term)!
+            return resources.get<T>(term)!
         }
 
         return {

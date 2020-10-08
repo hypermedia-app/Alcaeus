@@ -31,9 +31,9 @@ declare module '@tpluscode/rdfine' {
     }
 }
 
-export function createHydraResourceMixin(alcaeus: HydraClient) {
+export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
     function getSupportedClasses(resource: RdfResource) {
-        return alcaeus.apiDocumentations
+        return alcaeus().apiDocumentations
             .reduce<Class[]>((classes, representation) => {
             const docs = representation.root
             if (!docs || !('supportedClass' in docs)) return classes
@@ -72,7 +72,7 @@ export function createHydraResourceMixin(alcaeus: HydraClient) {
                 const supportedOperations: Operation[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
                 const operations = supportedOperations.reduce((map, supportedOperation) => {
                     if (!map.has(supportedOperation.id.value)) {
-                        map.set(supportedOperation.id.value, new RuntimeOperation(supportedOperation, alcaeus, this as any))
+                        map.set(supportedOperation.id.value, new RuntimeOperation(supportedOperation, alcaeus(), this as any))
                     }
 
                     return map

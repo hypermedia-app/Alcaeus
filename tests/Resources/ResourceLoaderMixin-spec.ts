@@ -7,7 +7,7 @@ import Resource from '@tpluscode/rdfine'
 describe('ResourceLoaderMixin', () => {
     describe('shouldApply', () => {
         it('not to blank node resource', () => {
-            const mixin = createResourceLoaderMixin({} as any)
+            const mixin = createResourceLoaderMixin(() => ({} as any))
             const node = cf({ dataset: $rdf.dataset() })
                 .blankNode()
             const self = new Resource(node)
@@ -28,7 +28,7 @@ describe('ResourceLoaderMixin', () => {
             alcaeus = {
                 loadResource: sinon.spy(),
             }
-            HydraResource = class extends createResourceLoaderMixin(alcaeus as any)(Resource) {}
+            HydraResource = class extends createResourceLoaderMixin(() => alcaeus)(Resource) {}
         })
 
         it('uses client to dereference self', () => {

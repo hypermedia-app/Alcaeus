@@ -20,9 +20,9 @@ const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
 
 const apiDocumentations: ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>[] = []
-const client = {
+const client = () => ({
     apiDocumentations,
-} as HydraClient
+} as HydraClient)
 const HydraResource: Constructor<Resource> = createHydraResourceMixin(client)(Hydra.ResourceMixin(RdfResourceImpl as any))
 
 HydraResource.factory = new ResourceFactory(HydraResource)

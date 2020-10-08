@@ -6,13 +6,11 @@ import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import type { DatasetCore, NamedNode } from 'rdf-js'
 
-type MaybeExtendedResource<D extends DatasetCore, T extends RdfResource<D>> = Hydra.Resource<D> | (Hydra.Resource<D> & T) | null
-
 export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T extends RdfResource<D> = Hydra.Resource<D>> extends Iterable<Hydra.Resource<D>> {
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
-    root: MaybeExtendedResource<D, T>
+    root: (Hydra.Resource<D> & T) | null
 
     /**
      * Gets the number of resource within this representation
@@ -56,10 +54,10 @@ export default class <D extends DatasetCore, T extends RdfResource<D>> implement
     public get root() {
         const collectionNode = this.rootNode.in(hydra.view)
         if (collectionNode.term) {
-            return this.__factory.createEntity<MaybeExtendedResource<D, T>>(collectionNode as GraphPointer<ResourceIdentifier>)
+            return this.__factory.createEntity<Hydra.Resource<D> & T>(collectionNode as GraphPointer<ResourceIdentifier>)
         }
 
-        return this.__factory.createEntity<MaybeExtendedResource<D, T>>(this.rootNode)
+        return this.__factory.createEntity<Hydra.Resource<D> & T>(this.rootNode)
     }
 
     public get length(): number {

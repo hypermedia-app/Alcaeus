@@ -1,7 +1,8 @@
 import cf, { GraphPointer } from 'clownface'
+import * as Hydra from '@rdfine/hydra'
 import $rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-jsonld'
-import { NamedNode, Stream } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import stringToStream from 'string-to-stream'
 import { Resource } from './_TestResource'
 import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
@@ -9,14 +10,14 @@ import { Bodies } from '../test-objects'
 
 const parser = new Parser()
 
-class PartialCollectionView extends PartialCollectionViewMixin(Resource) {}
+class PartialCollectionView extends PartialCollectionViewMixin(Hydra.PartialCollectionViewMixin(Resource)) {}
 
 describe('PartialCollectionView', () => {
     let node: GraphPointer<NamedNode>
 
     beforeEach(async () => {
         const dataset = $rdf.dataset()
-        const jsonldStream = stringToStream(JSON.stringify(Bodies.hydraCollectionWithView)) as any as Stream
+        const jsonldStream = stringToStream(JSON.stringify(Bodies.hydraCollectionWithView))
         await dataset.import(parser.import(jsonldStream))
 
         node = cf({ dataset })
@@ -26,7 +27,7 @@ describe('PartialCollectionView', () => {
     it('should link to the collection', async () => {
         const pcv = new PartialCollectionView(node)
 
-        expect(pcv.collection!.id.value).toEqual('http://example.com/resource')
+        expect(pcv.parent?.id.value).toEqual('http://example.com/resource')
     })
 
     it('should contain no links to other pages if missing', () => {
@@ -49,10 +50,10 @@ describe('PartialCollectionView', () => {
         const pcv = new PartialCollectionView(node)
 
         // then
-        expect(pcv.next!.id.value).toBe('http://example.com/resource?page=4')
-        expect(pcv.previous!.id.value).toBe('http://example.com/resource?page=2')
-        expect(pcv.first!.id.value).toBe('http://example.com/resource?page=1')
-        expect(pcv.last!.id.value).toBe('http://example.com/resource?page=58')
+        expect(pcv.next?.id.value).toBe('http://example.com/resource?page=4')
+        expect(pcv.previous?.id.value).toBe('http://example.com/resource?page=2')
+        expect(pcv.first?.id.value).toBe('http://example.com/resource?page=1')
+        expect(pcv.last?.id.value).toBe('http://example.com/resource?page=58')
     })
 
     it('first should be nonenumerable', () => {

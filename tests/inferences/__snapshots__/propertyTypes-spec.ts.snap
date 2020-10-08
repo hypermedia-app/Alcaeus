@@ -7,7 +7,7 @@ exports[`property types inference adds rdf:type assertions for known properties 
 <http://example.com/Class> <http://www.w3.org/ns/hydra/core#supportedProperty> <http://example.com/Property> .
 <http://example.com/ExpectedClass> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Class> .
 <http://example.com/IriTemplateMapping> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#IriTemplateMapping> .
-<http://example.com/Operation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#SupportedOperation> .
+<http://example.com/Operation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Operation> .
 <http://example.com/Operation> <http://www.w3.org/ns/hydra/core#expects> <http://example.com/ExpectedClass> .
 <http://example.com/Operation> <http://www.w3.org/ns/hydra/core#returns> <http://example.com/ReturnedClass> .
 <http://example.com/Operation> <http://www.w3.org/ns/hydra/core#statusCodes> _:c14n0 .

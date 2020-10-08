@@ -192,8 +192,8 @@ describe('Hydra', () => {
             const res = hydraRes.representation?.get<PartialCollectionView>('http://example.com/resource?page=3')
 
             // then
-            expect(res?.collection).toBeDefined()
-            expect(res?.collection).not.toBeNull()
+            expect(res?.parent).toBeDefined()
+            expect(res?.parent).not.toBeNull()
         })
 
         it('should load resource with deep blank node structure', async () => {

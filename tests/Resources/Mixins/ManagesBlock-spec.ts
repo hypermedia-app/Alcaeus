@@ -1,12 +1,13 @@
-import Resource, { RdfResource } from '@tpluscode/rdfine'
+import RdfResourceImpl from '@tpluscode/rdfine'
+import Resource from '@tpluscode/rdfine'
+import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
-import { RdfProperty } from '../../../src/Resources/Mixins/RdfProperty'
 import { ManagesBlockMixin } from '../../../src/Resources/Mixins/ManagesBlock'
 import { foaf, hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
-class ManagesBlock extends ManagesBlockMixin(Resource) {}
+class ManagesBlock extends ManagesBlockMixin(Hydra.ManagesBlockMixin(Resource)) {}
 
 describe('ManagesBlock', () => {
     let dataset: DatasetCore
@@ -43,7 +44,7 @@ describe('ManagesBlock', () => {
                 const obj = managesBlock.object
 
                 // then
-                expect(obj.id.value).toBe('http://vocab/class')
+                expect(obj?.id.value).toBe('http://vocab/class')
             })
         })
 
@@ -56,7 +57,7 @@ describe('ManagesBlock', () => {
                 const obj = managesBlock.subject
 
                 // then
-                expect(obj.id.value).toBe('http://example.org/term')
+                expect(obj?.id.value).toBe('http://example.org/term')
             })
         })
 
@@ -69,7 +70,7 @@ describe('ManagesBlock', () => {
                 const obj = managesBlock.property
 
                 // then
-                expect(obj.id.value).toBe('http://example.org/predicate')
+                expect(obj?.id.value).toBe('http://example.org/predicate')
             })
         })
 
@@ -194,12 +195,8 @@ describe('ManagesBlock', () => {
 
                     // when
                     const isMatch = managesBlock.matches({
-                        predicate: {
-                            id: foaf.knows,
-                        } as any as RdfProperty,
-                        subject: {
-                            id: $rdf.namedNode('http://example.com/person/Tomasz'),
-                        } as any as RdfResource,
+                        predicate: RdfResourceImpl.factory.createEntity(node.namedNode(foaf.knows)),
+                        subject: RdfResourceImpl.factory.createEntity(node.namedNode('http://example.com/person/Tomasz')),
                     })
 
                     // then

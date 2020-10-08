@@ -6,6 +6,7 @@ import type { EventEmitter } from 'events'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import TermSet from '@rdf-esm/term-set'
 import type { RdfResource } from '@tpluscode/rdfine'
+import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { DatasetCore, NamedNode, Stream } from 'rdf-js'
 import FetchUtil from './FetchUtil'
@@ -13,17 +14,15 @@ import { merge } from './helpers/MergeHeaders'
 import * as DefaultCacheStrategy from './ResourceCacheStrategy'
 import type { ResourceCacheStrategy } from './ResourceCacheStrategy'
 import type { ResourceRepresentation } from './ResourceRepresentation'
-import type { ApiDocumentation, HydraResource } from './Resources'
-import type { Operation } from './Resources/Operation'
 import type { ResourceStore } from './ResourceStore'
 import type { ResponseWrapper } from './ResponseWrapper'
 import type { RootNodeCandidate } from './RootSelectors'
 
 type InvokedOperation = Pick<Operation, 'method'> & {
-    target: Pick<HydraResource, 'id'>
+    target: Pick<Resource, 'id'>
 }
 
-export interface HydraResponse<D extends DatasetCore = DatasetCore, T extends RdfResource<D> = HydraResource<D>> {
+export interface HydraResponse<D extends DatasetCore = DatasetCore, T extends RdfResource<D> = Resource<D>> {
     representation?: ResourceRepresentation<D, T>
     response?: ResponseWrapper
 }
@@ -37,7 +36,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     baseUri?: string
     rootSelectors: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    loadResource<T extends RdfResource<D> = HydraResource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
+    loadResource<T extends Resource<D> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<D> | null>
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>>
     defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
@@ -96,11 +95,11 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return [...this.__apiDocumentations.values()]
     }
 
-    public async loadResource <T extends RdfResource<D>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
+    public async loadResource <T extends Resource<D>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
         const term = typeof id === 'string' ? namedNode(id) : id
         let requestHeaders = new this._headers(headers)
 
-        const previousResource = this.resources.get(term)
+        const previousResource = this.resources.get<T>(term)
         if (previousResource) {
             if (!this.cacheStrategy.shouldLoad(previousResource)) {
                 return previousResource
@@ -139,7 +138,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
                 rootResource,
             })
 
-            return resources.get(term)!
+            return resources.get<T>(term)!
         }
 
         return {
@@ -166,6 +165,10 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         const mergedHeaders = await this.__mergeHeaders(new this._headers(headers))
         const uri = operation.target.id.value
 
+        if (!operation.method) {
+            throw new Error('Cannot invoke operation without a hydra:method')
+        }
+
         const response = await this._fetch.operation(operation.method, uri, {
             parsers: this.parsers,
             headers: mergedHeaders,
@@ -180,7 +183,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
             const dataset = await this.datasetFactory().import(responseStream)
             const rootResource = this.__findRootResource(dataset, response)
             let resources = this.resources
-            if (operation.method.toUpperCase() !== 'GET') {
+            if (operation.method?.toUpperCase() !== 'GET') {
                 resources = this.resources.clone()
             }
 

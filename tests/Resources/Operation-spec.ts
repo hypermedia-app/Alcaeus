@@ -1,17 +1,17 @@
 import { RdfResource } from '@tpluscode/rdfine'
+import * as Hydra from '@rdfine/hydra'
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import * as sinon from 'sinon'
 import namespace from '@rdfjs/namespace'
 import { HydraClient } from '../../src/alcaeus'
-import { HydraResource } from '../../src/Resources'
-import { SupportedOperationMixin } from '../../src/Resources/Mixins/SupportedOperation'
+import { OperationMixin } from '../../src/Resources/Mixins/Operation'
 import Operation from '../../src/Resources/Operation'
 import { Resource } from './_TestResource'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 const ex = namespace('http://example.com/')
-class SupportedOperation extends SupportedOperationMixin(Resource) {}
+class SupportedOperation extends OperationMixin(Hydra.OperationMixin(Resource)) {}
 
 describe('Operation', () => {
     describe('property', () => {
@@ -26,7 +26,7 @@ describe('Operation', () => {
                 .addOut(hydra.expects, ex.Expected)
                 .addOut(hydra.returns, ex.Returned)
 
-            operation = new Operation(new SupportedOperation(node), {} as HydraClient, {} as HydraResource)
+            operation = new Operation(new SupportedOperation(node), {} as HydraClient, {} as RdfResource)
         })
 
         it('method should delegate to operation', () => {
@@ -38,7 +38,7 @@ describe('Operation', () => {
         })
 
         it('returns should delegate to operation', () => {
-            expect(operation.returns.id.value).toBe(ex.Returned.value)
+            expect(operation.returns?.id.value).toBe(ex.Returned.value)
         })
 
         it('description should delegate to operation', () => {
@@ -78,22 +78,22 @@ describe('Operation', () => {
 
     describe('constructor', () => {
         it('throws if supported operation is missing', () => {
-            expect(() => new Operation(null as unknown as SupportedOperation, {} as HydraClient, {} as HydraResource)).toThrow()
+            expect(() => new Operation(null as unknown as SupportedOperation, {} as HydraClient, {} as RdfResource)).toThrow()
         })
 
         it('throws if resource is missing', () => {
-            expect(() => new Operation({} as SupportedOperation, null as unknown as HydraClient, {} as HydraResource)).toThrow()
+            expect(() => new Operation({} as SupportedOperation, null as unknown as HydraClient, {} as RdfResource)).toThrow()
         })
 
         it('throws if client is missing', () => {
-            expect(() => new Operation({} as SupportedOperation, {} as HydraClient, null as unknown as HydraResource)).toThrow()
+            expect(() => new Operation({} as SupportedOperation, {} as HydraClient, null as unknown as RdfResource)).toThrow()
         })
     })
 
     describe('target', () => {
         it('returns the underlying resource', () => {
             // given
-            const resource = {} as HydraResource
+            const resource = {} as RdfResource
             const operation = new Operation({} as SupportedOperation, {} as HydraClient, resource)
 
             // when

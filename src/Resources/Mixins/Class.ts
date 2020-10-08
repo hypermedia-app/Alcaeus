@@ -1,44 +1,36 @@
+import { SupportedPropertyMixin, OperationMixin } from '@rdfine/hydra'
+import type { Class, Operation, SupportedProperty } from '@rdfine/hydra'
+import type { Class as RdfsClass } from '@rdfine/rdfs'
 import { property } from '@tpluscode/rdfine'
 import type { Constructor } from '@tpluscode/rdfine'
 import TypeCollection from '@tpluscode/rdfine/lib/TypeCollection'
 import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
-import type { HydraResource, SupportedOperation, SupportedProperty } from '../index'
-import { SupportedOperationMixin } from './SupportedOperation'
-import { SupportedPropertyMixin } from './SupportedProperty'
 
-export interface Class extends HydraResource {
-    /**
-     * Gets the operations supported by this class
-     */
-    supportedOperations: SupportedOperation[]
-
-    /**
-     * Gets the properties supported by this class
-     */
-    supportedProperties: SupportedProperty[]
+declare module '@rdfine/hydra' {
+    export interface Class {
+        getTypeHierarchy(): Generator<this>
+    }
 }
 
-export interface RuntimeClass extends Class {
-    subClassOf: this[]
-    getTypeHierarchy(): Generator<this>
-}
+export type { Class } from '@rdfine/hydra'
 
-export function ClassMixin<TBase extends Constructor<HydraResource>>(Base: TBase): Constructor<RuntimeClass> {
-    class ClassClass extends Base implements RuntimeClass {
+export function ClassMixin<TBase extends Constructor<Class>>(Base: TBase): Constructor<Class> {
+    class ClassClass extends Base implements Class {
         @property.resource({
             path: rdfs.subClassOf,
             values: 'array',
             as: [ClassMixin],
+            implicitTypes: [rdfs.Class, hydra.Class],
         })
-        public subClassOf!: this[]
+        public __subClassOf!: Array<RdfsClass & Class>
 
         @property.resource({
             path: hydra.supportedOperation,
             values: 'array',
-            as: [SupportedOperationMixin],
+            as: [OperationMixin],
             subjectFromAllGraphs: true,
         })
-        public __supportedOperations!: SupportedOperation[]
+        public __allSupportedOperations!: Operation[]
 
         @property.resource({
             path: hydra.supportedProperty,
@@ -46,28 +38,28 @@ export function ClassMixin<TBase extends Constructor<HydraResource>>(Base: TBase
             as: [SupportedPropertyMixin],
             subjectFromAllGraphs: true,
         })
-        public __supportedProperties!: SupportedProperty[]
+        public __allSupportedProperties!: SupportedProperty[]
 
         public get types() {
             return new TypeCollection(this, true)
         }
 
-        public get supportedOperations(): SupportedOperation[] {
+        public get supportedOperation(): Operation[] {
             return [...this.getTypeHierarchy()].reduce((operations, type) => {
-                return type.__supportedOperations.reduce((operations, operation) => {
-                    if (operations.find(current => current.id.equals(operation.id))) {
+                return type.__allSupportedOperations.reduce((operations, operation) => {
+                    if (operations.find(current => current.equals(operation))) {
                         return operations
                     }
 
                     return [...operations, operation]
                 }, operations)
-            }, [] as SupportedOperation[])
+            }, [] as Operation[])
         }
 
-        public get supportedProperties(): SupportedProperty[] {
+        public get supportedProperty(): SupportedProperty[] {
             return [...this.getTypeHierarchy()].reduce((properties, type) => {
-                return type.__supportedProperties.reduce((properties, property) => {
-                    if (properties.find(current => current.property.id.equals(property.property.id))) {
+                return type.__allSupportedProperties.reduce((properties, property) => {
+                    if (properties.find(current => current.property?.equals(property.property))) {
                         return properties
                     }
 
@@ -79,9 +71,9 @@ export function ClassMixin<TBase extends Constructor<HydraResource>>(Base: TBase
         public * getTypeHierarchy(): Generator<this> {
             yield this
 
-            for (const superclass of this.subClassOf) {
+            for (const superclass of this.__subClassOf) {
                 for (const type of superclass.getTypeHierarchy()) {
-                    yield type
+                    yield type as any
                 }
             }
         }

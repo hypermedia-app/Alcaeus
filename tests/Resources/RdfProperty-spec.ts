@@ -1,11 +1,12 @@
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
+import * as Rdf from '@rdfine/rdf'
 import { RdfPropertyMixin } from '../../src/Resources/Mixins/RdfProperty'
 import { Resource } from './_TestResource'
 import { hydra, owl, rdf, rdfs, xsd } from '@tpluscode/rdf-ns-builders'
 
-class RdfProperty extends RdfPropertyMixin(Resource) {}
+class RdfProperty extends RdfPropertyMixin(Rdf.PropertyMixin(Resource)) {}
 
 describe('RdfProperty', () => {
     let node: GraphPointer<NamedNode>

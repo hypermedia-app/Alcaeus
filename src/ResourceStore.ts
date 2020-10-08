@@ -1,3 +1,4 @@
+import type { Resource } from '@rdfine/hydra'
 import type { RdfResource } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf from 'clownface'
@@ -7,7 +8,6 @@ import type { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import type { HydraResponse } from './alcaeus'
 import ResourceRepresentationImpl from './ResourceRepresentation'
-import type { HydraResource } from './Resources'
 import CachedResourceFactoryImpl from './Resources/ResourceFactory'
 import type { CachedResourceFactory } from './Resources/ResourceFactory'
 import type { ResponseWrapper } from './ResponseWrapper'
@@ -19,8 +19,8 @@ interface ResourceStoreEntry<D extends DatasetCore> {
 }
 
 export interface ResourceStore<D extends DatasetIndexed> {
-    factory: ResourceFactory<D, HydraResource<D>>
-    get<T extends RdfResource<D> = RdfResource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
+    factory: ResourceFactory<D, RdfResource<D>>
+    get<T extends Resource<D> = Resource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
     set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
     clone(): ResourceStore<D>
 }
@@ -33,13 +33,13 @@ interface ResourceStoreInit<D extends DatasetIndexed> {
     dataset: D
     datasetFactory: () => D
     inferences: RepresentationInference[]
-    factory: ResourceFactory<D, HydraResource<D>>
+    factory: ResourceFactory<D, RdfResource<D>>
 }
 
 export default class ResourceStoreImpl<D extends DatasetIndexed> implements ResourceStore<D> {
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
-    public readonly factory: CachedResourceFactory<D, HydraResource<D>>
+    public readonly factory: CachedResourceFactory<D, RdfResource<D>>
     private readonly rootNodes = new TermMap<NamedNode, NamedNode>()
     private readonly responses = new TermMap<NamedNode, ResponseWrapper>()
     private readonly datasetFactory: () => D;

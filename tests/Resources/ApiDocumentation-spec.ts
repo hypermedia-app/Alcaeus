@@ -1,6 +1,6 @@
 import 'core-js/es6/array'
 import { Constructor } from '@tpluscode/rdfine'
-import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
+import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode } from 'rdf-js'
@@ -8,7 +8,7 @@ import { ApiDocumentationMixin } from '../../src/Resources/Mixins/ApiDocumentati
 import { Resource } from './_TestResource'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
-class ApiDocumentation extends ApiDocumentationMixin(Resource) { }
+class ApiDocumentation extends ApiDocumentationMixin(Hydra.ApiDocumentationMixin(Resource)) {}
 function MockLoad(loadFunc) {
     function Mixin<Base extends Constructor>(base: Base) {
         return class extends base {
@@ -29,8 +29,6 @@ describe('ApiDocumentation', () => {
     beforeEach(() => {
         node = cf({ dataset: $rdf.dataset() }).blankNode()
         load = jest.fn()
-
-        ApiDocumentation.factory = new ResourceFactory(Resource)
     })
 
     describe('getting entrypoint', () => {

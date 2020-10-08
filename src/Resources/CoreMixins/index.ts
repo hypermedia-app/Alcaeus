@@ -1,3 +1,6 @@
+import './HydraResource'
+import './OperationFinder'
+import './ResourceLoaderMixin'
 export { createHydraResourceMixin } from './HydraResource'
 export { OperationFinderMixin } from './OperationFinder'
 export { createResourceLoaderMixin } from './ResourceLoaderMixin'

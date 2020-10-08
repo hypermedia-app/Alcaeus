@@ -1,4 +1,5 @@
 import { turtle } from '@tpluscode/rdf-string'
+import * as HydraClass from '@rdfine/hydra/Class'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
@@ -13,7 +14,7 @@ import * as graphs from './Class-spec-graphs'
 const parser = new Parser()
 const vocab = namespace('http://example.com/vocab#')
 
-class Class extends ClassMixin(Resource) {}
+class Class extends ClassMixin(HydraClass.ClassMixin(Resource)) {}
 
 describe('Class', () => {
     let hydraClassNode: GraphPointer<NamedNode>
@@ -34,7 +35,7 @@ describe('Class', () => {
             const clas = new Class(hydraClassNode)
 
             // then
-            expect(clas.supportedOperations.length).toBe(1)
+            expect(clas.supportedOperation.length).toBe(1)
         })
 
         it('should return from every graph', async () => {
@@ -57,8 +58,8 @@ describe('Class', () => {
             const clas = new Class(hydraClassNode)
 
             // then
-            expect(clas.supportedOperations.length).toBe(2)
-            expect(clas.supportedOperations.map(so => so.title)).toEqual(
+            expect(clas.supportedOperation.length).toBe(2)
+            expect(clas.supportedOperation.map(so => so.title)).toEqual(
                 expect.arrayContaining(['Operation 1', 'Operation 2']),
             )
         })
@@ -68,7 +69,7 @@ describe('Class', () => {
             const clas = new Class(hydraClassNode)
 
             // then
-            expect(clas.supportedOperations.length).toBe(0)
+            expect(clas.supportedOperation.length).toBe(0)
         })
 
         it('should combine own operations with inherited operations', async () => {
@@ -77,7 +78,7 @@ describe('Class', () => {
             const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
 
             // when
-            const properties = clas.supportedOperations
+            const properties = clas.supportedOperation
 
             // then
             expect(properties).toHaveLength(3)
@@ -89,7 +90,7 @@ describe('Class', () => {
             const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
 
             // when
-            const operations = clas.supportedOperations
+            const operations = clas.supportedOperation
 
             // then
             expect(operations).toHaveLength(1)
@@ -105,13 +106,13 @@ describe('Class', () => {
             const clas = new Class(hydraClassNode)
 
             // then
-            expect(clas.supportedProperties.length).toBe(1)
+            expect(clas.supportedProperty.length).toBe(1)
         })
 
         it('should return empty array if property is missing', () => {
             const clas = new Class(hydraClassNode)
 
-            expect(clas.supportedProperties.length).toBe(0)
+            expect(clas.supportedProperty.length).toBe(0)
         })
 
         it('should combine own properties with inherited properties', async () => {
@@ -120,7 +121,7 @@ describe('Class', () => {
             const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
 
             // when
-            const properties = clas.supportedProperties
+            const properties = clas.supportedProperty
 
             // then
             expect(properties).toHaveLength(4)
@@ -132,7 +133,7 @@ describe('Class', () => {
             const clas = new Class(cf({ dataset }).namedNode(vocab.DraftIssue))
 
             // when
-            const properties = clas.supportedProperties
+            const properties = clas.supportedProperty
 
             // then
             expect(properties).toHaveLength(1)

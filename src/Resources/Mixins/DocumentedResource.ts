@@ -1,33 +1,23 @@
-import { property, RdfResource } from '@tpluscode/rdfine'
+import { property } from '@tpluscode/rdfine'
 import type { Constructor } from '@tpluscode/rdfine'
+import type { Resource } from '@rdfine/hydra'
 import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import type { HydraResource } from '../index'
 
-export interface DocumentedResource extends HydraResource {
-    /**
-     * Gets the value of either hydra:title or schema:title or rdfs:label property
-     */
-    title: string
-    /**
-     * Gets the value of either hydra:description or schema:description or rdfs:comment property
-     */
-    description: string
+declare module '@rdfine/hydra' {
+    export interface Resource {
+        /**
+         * Gets the value of either hydra:title or schema:title or rdfs:label property
+         */
+        title: string | undefined
+        /**
+         * Gets the value of either hydra:description or schema:description or rdfs:comment property
+         */
+        description: string | undefined
+    }
 }
 
-function getTitle(res: RdfResource) {
-    return res.pointer.out([
-        hydra.title, rdfs.label, schema.title,
-    ])
-}
-
-function getDescription(res: RdfResource) {
-    return res.pointer.out([
-        hydra.description, rdfs.comment, schema.description,
-    ])
-}
-
-export function DocumentedResourceMixin<TBase extends Constructor<HydraResource>>(Base: TBase) {
-    class DocumentedResourceClass extends Base implements DocumentedResource {
+export function DocumentedResourceMixin<TBase extends Constructor<Resource>>(Base: TBase) {
+    class DocumentedResourceClass extends Base implements Resource {
         @property.literal({ path: hydra.title })
         public __hydraTitle!: string
 
@@ -58,9 +48,4 @@ export function DocumentedResourceMixin<TBase extends Constructor<HydraResource>
     return DocumentedResourceClass
 }
 
-DocumentedResourceMixin.shouldApply = function (res: RdfResource) {
-    const hasDescription = getDescription(res).terms.length > 0
-    const hasTitle = getTitle(res).terms.length > 0
-
-    return hasDescription || hasTitle
-}
+DocumentedResourceMixin.appliesTo = hydra.Resource

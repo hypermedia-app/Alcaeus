@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-RC.0](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.18...v1.0.0-RC.0) (2020-10-08)
+
+
+### Features
+
+* use @rdfine/hydra for most of API model ([d26566b](https://github.com/wikibus/alcaeus/commit/d26566bd30c2e0e88e1ece37eb97d493998f35c8))
+* **perf:** add cache wrapper over ResourceFactory ([497f268](https://github.com/wikibus/alcaeus/commit/497f2680579d01e9c665d819dfd1f92d07383d59))
+* cache request headers added to subsequent requests ([1344d7f](https://github.com/wikibus/alcaeus/commit/1344d7ffc72c3e7bf79ec8486b9a8c62e5d16e4e))
+
+
+### Bug Fixes
+
+* do not add failed responses to store ([1cbd4fd](https://github.com/wikibus/alcaeus/commit/1cbd4fdb5755ffdb6363aa3d27228f5794b0aa2e))
+* ensure type augmentations are picked up ([0606b9b](https://github.com/wikibus/alcaeus/commit/0606b9b19abf285719f5edfc2134d77047ccc8d2))
+* findOperations does not find by type name node ([7f2ce91](https://github.com/wikibus/alcaeus/commit/7f2ce91fa7d6b685f547a53837a43957821e1162))
+* make load generic ([f7e378a](https://github.com/wikibus/alcaeus/commit/f7e378a864963bda2524172e086c98c0b00e6256))
+* requested (or redirected) URI used as base to parse ([02a4fd5](https://github.com/wikibus/alcaeus/commit/02a4fd5dd801a938e2a2a916d1e09cc7267181a1))
+* **perf:** include operations more selectively by namespaces ([07e7aab](https://github.com/wikibus/alcaeus/commit/07e7aabf39b3442fbbd94531c8c2c47ed9080d0d))
+
 ## [1.0.0-beta.18](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.17...v1.0.0-beta.18) (2020-09-22)
 
 ## [1.0.0-beta.17](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.16...v1.0.0-beta.17) (2020-09-22)

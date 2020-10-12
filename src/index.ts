@@ -9,12 +9,13 @@ import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus } from './alcaeus'
 import type { HydraClient } from './alcaeus'
 import * as inferences from './inferences'
-import { OperationFinderMixin, createResourceLoaderMixin, createHydraResourceMixin } from './Resources/CoreMixins'
+import * as CoreMixins from './Resources/CoreMixins'
 import * as Extensions from './Resources/Mixins'
 import ResourceStoreImpl from './ResourceStore'
 import { defaultSelectors } from './RootSelectors'
 import type { RootNodeCandidate } from './RootSelectors'
 import './Resources/Mixins'
+import './Resources/CoreMixins'
 
 export type { ResourceIdentifier, ResourceIndexer, ResourceFactory, RdfResource } from '@tpluscode/rdfine'
 export * from '@rdfine/hydra'
@@ -33,7 +34,11 @@ interface AlcaeusInit<D extends DatasetIndexed> {
 export function create <D extends DatasetIndexed = DatasetIndexed>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: AlcaeusInit<D>): HydraClient<D> {
     const getClient = () => alcaeus
 
-    const coreMixins: Mixin[] = [createResourceLoaderMixin(getClient), createHydraResourceMixin(getClient), OperationFinderMixin]
+    const coreMixins: Mixin[] = [
+        CoreMixins.createResourceLoaderMixin(getClient),
+        CoreMixins.createHydraResourceMixin(getClient),
+        CoreMixins.OperationFinderMixin,
+    ]
     const AlcaeusGenerated = coreMixins.reduce((base, mixin) => mixin(base), RdfResource)
 
     const factory = new rdfine.ResourceFactory<D>(AlcaeusGenerated)

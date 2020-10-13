@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-RC.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-RC.0...v1.0.0-RC.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* ensure types of CoreMixins are exported ([dc1ea74](https://github.com/wikibus/alcaeus/commit/dc1ea746d17f3571e9ee1d2134f2ea8a02315a99))
+
 ## [1.0.0-RC.0](https://github.com/wikibus/alcaeus/compare/v1.0.0-beta.18...v1.0.0-RC.0) (2020-10-08)
 
 

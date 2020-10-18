@@ -6,6 +6,7 @@ import type { EventEmitter } from 'events'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import TermSet from '@rdf-esm/term-set'
 import type { RdfResource } from '@tpluscode/rdfine'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { DatasetCore, NamedNode, Stream } from 'rdf-js'
@@ -152,8 +153,8 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         const resource = await this.loadResource<ApiDocumentation<D>>(term, headers, false)
         if (resource && resource.representation) {
             this.__apiDocumentations.set(term, resource.representation)
-            const apiDocs = resource.representation.root
-            if (apiDocs && 'classes' in apiDocs) {
+            const [apiDocs] = resource.representation.ofType<ApiDocumentation<D>>(hydra.ApiDocumentation)
+            if (apiDocs) {
                 return apiDocs
             }
         }

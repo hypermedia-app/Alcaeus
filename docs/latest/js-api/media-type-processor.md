@@ -5,7 +5,7 @@ to reduce the bundle size when using in a web application by not including
 all the different parsers.
 
 Node applications may not care however, and some may prefer the use of another
-media type, possibly not even RDF.  
+media type, possibly not even RDF.
 
 ## Adding support for other RDF serializations
 
@@ -21,7 +21,7 @@ Hydra.mediaTypeProcessors.RDF.addParsers({
 })
 ```
 
-Check the [request headers](./request-headers.md) page for a live example.
+Check the [request headers](request-headers.md) page for a live example.
 
 [parser]: https://www.npmjs.com/search?q=RDFJS%20parser
 

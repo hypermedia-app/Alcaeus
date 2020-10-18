@@ -1,6 +1,6 @@
 # Finding operations
 
-Clients may ne interested in very specific [operations](./invoking-operations.md), for example
+Clients may ne interested in very specific [operations](invoking-operations.md), for example
 only ones implemented by a `GET` method or expecting a specific type of payload.
 
 Alcaeus resources implement some handy methods which let clients easily find the operations
@@ -34,7 +34,7 @@ return collection.findOperations({
 
 For a single constraints object, all of its criteria must be satisfied for
 an operation to be returned. The method also accepts zero or more such objects,
-which will returns a logical alternative. 
+which will returns a logical alternative.
 For example, to find operation which return `schema:Person` or `schema:Company`
 one would call the method with two parameters:
 
@@ -61,7 +61,7 @@ resource.findOperations({
 It is also possible to find operations across the entire resource graph using
 a similar `findOperationsDeep` method. It also accepts criteria objects as
 seen above.
- 
+
 {% runkit %}
 const { Hydra } = require('alcaeus@{{ book.version }}')
 const { expand } = require('@zazuko/rdf-vocabularies')
@@ -72,11 +72,11 @@ return root.findOperationsDeep({
   expecting: expand('schema:Movie'),
 })
 {% endrunkit %}
- 
+
 The first parameter can optionally be an object which excludes certain
 branches from being traversed. It has a single array property which
 blacklists properties
- 
+
 {% runkit %}
 const { Hydra } = require('alcaeus@{{ book.version }}')
 const { expand } = require('@zazuko/rdf-vocabularies')

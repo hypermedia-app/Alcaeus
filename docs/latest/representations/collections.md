@@ -43,7 +43,7 @@ rep.root;
 Hydra introduces the so-called "manages block" which adds additional metadata to collections. It can serve
 two purposes:
 
-:one: Inform clients about collection members' relation with another resource 
+:one: Inform clients about collection members' relation with another resource
 
 :two: Inform clients about the type of collection elements
 
@@ -59,7 +59,7 @@ In case of member relations, a manages block can look like this (excerpt):
 }
 ```
 
-This tells the client that all members of the `/magazine/Buses/issues` collection are in relation with 
+This tells the client that all members of the `/magazine/Buses/issues` collection are in relation with
 `/magazine/Buses` defined as
 
 ```
@@ -96,7 +96,7 @@ rep.root.manages.find(managesBlock => managesBlock.property.id === rdfType)
 {% endrunkit %}
 
 {% hint style="tip" %}
-Do see the [`hydra:collection` page](./affordances/collection-property.md) for details on discovering
+Do see the [`hydra:collection` page](affordances/collection-property.md) for details on discovering
 collections based on their manages block specifications.
 {% endhint %}
 

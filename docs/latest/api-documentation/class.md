@@ -1,44 +1,27 @@
 # Supported classes
 
-The core concept of Hydra is a class, which defines API-wide description of resource structures and their
-behaviour. In addition to the standard interface of [resource objects][res], classes define a number of handy
-properties:
+The core concept of Hydra is a class, which defines API-wide description of resource structures and their behaviour. In addition to the standard interface of [resource objects][res], classes define properties derived from the Hydra vocabulary
 
-```typescript
-interface IClass {
-    title: string;
-    description: string;
-    supportedOperations: ISupportedOperation[];
-    supportedProperties: ISupportedProperty[];
-}
-```
-
-[res]: ../representations/resource-objects.md
+[res]: representations/resource-objects
 
 ## Getting classes from documentation
 
-First, it is possible to get all classes using a simple getter. It will return an array of all supported
-classes from the documentation resource.
+First, it is possible to get all classes using a simple getter. It will return an array of all supported classes from the documentation resource.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+<run-kit>
 
-const doc = await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
+```typescript
+const client = require("${alcaeus}/node").Hydra
 
-doc.classes;
-{% endrunkit %}
+const doc = await client.loadDocumentation('https://source.wikibus.org/doc')
 
-If you know a specific RDF type you can also get look it up within the API documentation:
+doc.class.map(c => c.toJSON())
+```
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+</run-kit>
 
-const doc = await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
 
-doc.getClass('https://wikibus.org/ontology#Book');
-{% endrunkit %}
-
-## [`rdfs:subClassOf`](https://prefix.zazuko.com/rdfs:subClassOf)
+## rdfs:subClassOf
 
 Alcaeus recognizes subclassing of Supported Classes and will combine the supported
 properties and supported operations from all parents. For example, consider the
@@ -61,5 +44,5 @@ ex:PublishedArticle rdfs:subClassOf ex:Article ;
 
 Alcaeus will combine the definitions of parent classes and "learn" that:
 
-- `ex:PublishedArticle` supports `dcterms:title` inherited from `ex:Article`  
+- `ex:PublishedArticle` supports `dcterms:title` inherited from `ex:Article`
 - `ex:PublishedArticle` and `ex:Article` both support operation `api:GetResource` inherited from `api:DereferencableClass`

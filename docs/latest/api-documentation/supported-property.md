@@ -1,74 +1,29 @@
 # Supported Property
 
 A property is one of key concepts of RDF and, by extension to web links, the Internet at large.
-Properties as [links][link] connect resources, also across APIs. This fact easily makes properties
-the most important element of a APIs design.
+Properties as [links][link] connect resources, also across APIs. This fact easily makes properties the most important element of a APIs design.
 
-[link]: ../representations/affordances/links.md
+[link]: representations/affordances/links
 
-But properties are of course not only links between resource but also simple datatype attributes.
+But, properties are of course not only links between resource but also simple datatype attributes.
 
-Hydra builds on top of plain `rdf:Property` and defines a `SupportedProperty` class which
-extends the raw construct with API-specific information important to the client.
-
-Here's the `SupportedProperty` interface of Alcaeus (excerpt):
-
-```typescript
-interface IDocumentedResource {
-    title: string;
-    description: string;
-}
-
-interface ISupportedProperty {
-    readable: boolean;
-    writable: boolean;
-    required: boolean;
-    property: RdfProperty;
-}
-
-interface IRdfProperty {
-    range: Class;
-    domain: Class;
-    supportedOperations: SupportedOperation[];
-    isLink: boolean;
-}
-
-type RdfProperty = IRdfProperty & IDocumentedResource;
-type SupportedProperty = ISupportedProperty & IDocumentedResource;
-```
-
-Few things to notice here:
-
-1. `SupportedProperty` wraps `rdf:Property` and adds additonal information attributes such as writability
-and human-readable labels
-1. A property can also define supported operations which will apply to all object where that property is used,
-regardless of the type of the resource (learn more [here](operation.md#propertys-supported-operations))
-1. The `isLink` getter is not backed by a property; its value is based on the property type. Learn more [here](../representations/affordances/links.md)
+Hydra builds on top of plain `rdf:Property` and defines a `SupportedProperty` class which extends the raw construct with API-specific information important to the client.
 
 ## Discovering properties from ApiDocumentation
 
-Given a reference to an `ApiDocumentation` and a class URI, it is possible to get all supported properties
-of that class:
+Given a reference to an `ApiDocumentation` and a class URI, it is possible to get all supported properties of that class:
 
-{% runkit %}
-const { Hydra } = require("alcaeus@{{ book.version }}")
+<run-kit>
 
-const doc = await Hydra.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
+```typescript
+const { Hydra } = require("${alcaeus}/node")
+
+const doc = await Hydra.loadDocumentation('https://sources.wikibus.org/doc')
 
 doc.getProperties('https://wikibus.org/ontology#Book')
-{% endrunkit %}
+```
 
-Alternatively, it's possible to reach the same properties from an instance of `Class`:
-
-{% runkit %}
-const { Hydra } = require("alcaeus@{{ book.version }}")
-
-const doc = await Hydra.loadDocumentation('https://wikibus-sources-staging.herokuapp.com/doc')
-
-doc.classes
-    .getClass('https://wikibus.org/ontology#Book')
-    .supportedProperties
-{% endrunkit %}
+</run-kit>
 
 ## Getting properties of an instance
 
@@ -78,20 +33,22 @@ combined set of all types' supported properties as well as their values.
 
 Here's an example which returns a key/value map of property labels and their values:
 
-{% runkit %}
-const { Hydra } = require("alcaeus@{{ book.version }}")
+<run-kit>
 
-const doc = await Hydra.loadResource('https://sources.test.wikibus.org/book/433')
+```typescript
+const { Hydra } = require("${alcaeus}/node")
 
-doc.root.getProperties()
+const { representation } = await Hydra.loadResource('https://sources.wikibus.org/brochure/1300')
+
+representation.root.getProperties()
     .filter(tuple => tuple.objects.length > 0)
     .reduce((obj, tuple) => ({
         ...obj,
-        [tuple.supportedProperty.title]: tuple.objects
+        [tuple.supportedProperty.title]: tuple.objects.map(o => o.toJSON())
     }), {})
-{% endrunkit %}
+```
 
-{% hint style="tip" %}
- `getProperties()` always returns all properties, even if those not used in a given resource.
- They can be filtered as seen above by excluding results with an empty `objects` array.
-{% endhint %}
+</run-kit>
+
+> [!TIP]
+> `getProperties()` always returns all properties, even if those with no values for a given resource. They can be filtered as seen above by excluding results with an empty `objects` array.

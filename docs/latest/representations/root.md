@@ -2,17 +2,19 @@
 
 ## Most common behaviour
 
-Hydra resources are expressed as a graph which can contain one or more related resources. The returned object
-comes with a `root` property which returns a single resource from within the representation graph. In most
-common case it will be the resource identified by the request URI
+Hydra resources are expressed as a graph which can contain one or more related resources. The returned object comes with a `root` property which returns a single resource from within the representation graph. In most common case it will be the resource identified by the request URI.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+<run-kit>
 
-const rep = await client.loadResource('https://sources.test.wikibus.org/book/426');
+```typescript
+const client = require("${alcaeus}/node").Hydra;
 
-rep.root;
-{% endrunkit %}
+const { representation } = await client.loadResource('https://sources.wikibus.org/book/426');
+
+representation.root
+```
+
+</run-kit>
 
 ## Root with different identifier
 
@@ -28,9 +30,7 @@ in the response. When the API does that it will set a `Location` header and stat
 For such responses the client will look for a resource identified by the value of that header.
 However, the `Location` header will be ignored if the status is anything else than `201`.
 
-```http-request
-POST /api/movies
-
+```http
 HTTP/1.1 201 Created
 Location: /api/movie/title
 
@@ -51,9 +51,7 @@ representation of the resource and also includes a
 [`canonical`](http://webconcepts.info/concepts/link-relation/canonical) link relation, thus informing the
 client that the returned payload represents that particular resource instead.
 
-```http-request
-GET /api/data/my-resource.json
-
+```http
 HTTP/1.1 200 OK
 Link: </api/my-resource>; rel="canonical"
 
@@ -62,76 +60,53 @@ Link: </api/my-resource>; rel="canonical"
 }
 ```
 
-Here's a running example showing this in the real.
-
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
-
-const rep = await client.loadResource('https://wikibus-data-test.gear.host/brochures');
-
-rep.root;
-{% endrunkit %}
-
 ### `PartialCollectionView`
 
-Consider a `hydra:Collection` which supports paging. Current design of Hydra makes is that when requesting
-a specific page, the client will still be interested in the collection resource itself. This is to make it
-simple to combine multiple
+Consider a `hydra:Collection` which supports paging. Current design of Hydra makes is that when requesting a specific page, the client will still be interested in the collection resource itself.
 
-{% runkit %}
-const fetch = require("isomorphic-fetch");
+<run-kit>
 
-const rep = await fetch('https://sources.test.wikibus.org/brochures?page=1');
+```typescript
+const client = require("${alcaeus}/node").Hydra;
 
-await rep.json();
-{% endrunkit %}
+const { representation } = await client.loadResource('https://sources.wikibus.org/brochures?page=1')
 
-As you can see above, the requested resource does not really contain the most "interesting" data, the
-collection `member`s.
+representation.get('https://sources.wikibus.org/brochures?page=1').toJSON()
+```
+
+</run-kit>
+
+As you can see above, the requested "page resource" does not really contain the most "interesting" data: the collection `member`s.
 
 ```json
 {
-  "@id": "https://sources.test.wikibus.org/brochures",
-  "member": [ {}, {}, {} ],
-  "view": {
-    "@id": "https://sources.test.wikibus.org/brochures?page=1",
-    "@type": "PartialCollectionView",
-    "next": "",
-    "prev": "",
-    "first": "",
-    "last": ""
-  }
+  "@context": {},
+  "id": "https://sources.test.wikibus.org/brochures?page=1",
+  "type": ["PartialCollectionView"],
+  "next": "",
+  "prev": "",
+  "first": "",
+  "last": ""
 }
 ```
 
-For that reason, whenever a `PartialCollectionView` is returned from the API, the root will actually be the
-collection itself.
+For that reason, whenever a `PartialCollectionView` is returned from the API, the root will actually be the collection itself.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+<run-kit>
 
-const rep = await client.loadResource('https://sources.test.wikibus.org/brochures?page=1');
+```typescript
+const client = require("${alcaeus}/node").Hydra;
 
-rep.root;
-{% endrunkit %}
+const { representation } = await client.loadResource('https://sources.wikibus.org/brochures?page=1')
+
+representation.root.toJSON()
+```
+
+</run-kit>
 
 ### Inconsistent trailing slash
 
-Even though the URI standard clearly states that locators `https://wikibus.org` and `https://wikibus.org/`
-are two distinct resources, some API libraries will treat the as equal and respond with the same representation
-to either, even though only one is explicitly set up in their respective routing table. Alcaeus tries to
-gracefully resolve such inconsistency by looking for either both alternatives.
-
-Below is such an example, where the request tries an URL without the slash but the actual resource is
-identified with the slash included.
-
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
-
-const rep = await client.loadResource('https://wikibus-test.gear.host');
-
-rep.root;
-{% endrunkit %}
+Even though the URI standard clearly states that locators `https://wikibus.org` and `https://wikibus.org/` are two distinct resources, some API libraries will treat the as equal and respond with the same representation to either, even though only one is explicitly set up in their respective routing table. Alcaeus tries to gracefully resolve such inconsistency by looking for either both alternatives.
 
 ### Redirected request
 

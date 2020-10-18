@@ -1,19 +1,16 @@
 # Resource affordances
 
-In addition to the [basic](./resource-objects.md) `types` and `id` properties resource objects will also
-include two properties giving access to hypermedia descriptions coming from the API Documentation.
+In addition to the [basic](representations/resource-objects.md) `types` and `id` properties resource objects will also include two properties giving access to hypermedia descriptions coming from the API Documentation.
 
 ## Getting resource's operations
 
-Resource objects come with an `operations` property which will return an array of [`IOperation`][op]
-instances which represent a combination of
+Resource objects come with an `operations` property which will return an array of [`RuntimeOperation`][op] instances which represent a combination of:
 
 * inline operations
 * supported operations for all of the resource's types
 * supported operations for the supported property, where the resource is an object of said property
 
-Especially the last point can be a bit mind-boggling so here's an example. First, here's excerpt from the API
-Documentation.
+Especially the last point can be a bit mind-boggling so here's an example. First, here's excerpt from the API Documentation.
 
 ```json
 {
@@ -93,20 +90,23 @@ const personOperations = person.operations;
 const addressOperations = person["v:homeAddress"].operations;
 ```
 
-## Accessing entire `ApiDocumentation`
+## Accessing all API Documentations
 
-Additionally every resource object comes provides a `apiDocumentation` getter which returns a tree loaded
-from the linked `ApiDocumentation`.
+The client itself has a property for accessing all documentations which have been fetched over the client's lifetime, keeping in mind that resources can be loaded from multiple APIs and every response can come with multiple API Documentation `Link` headers.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+<run-kit>
 
-const rep = await client.loadResource('https://sources.test.wikibus.org/');
+```typescript
+const client = require("${alcaeus}/node").Hydra
 
-rep.root.apiDocumentation.valueOr(null);
-{% endrunkit %}
+await client.loadResource('https://sources.wikibus.org/')
+
+client.apiDocumentations[0].root.toJSON()
+```
+
+</run-kit>
 
 For more information about the API Documentation please refer to [its dedicated page][doc] and child pages.
 
-[op]: ../api-documentation/operation.md
-[doc]: ../api-documentation/readme.md
+[op]: api-documentation/operation.md
+[doc]: api-documentation/readme.md

@@ -1,18 +1,25 @@
 # Getting arbitrary resource
 
 If you know a specific resource identifier you want to retrieve from a resource representation you can take
-advantage of a handy getter method from `IHydraResource` object comes with which gives access to specific
+advantage of a handy getter method from `ResourceRepresentation` object comes with which gives access to specific
 resources.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+<run-kit>
 
-const rep = await client.loadResource('https://sources.test.wikibus.org/books');
+```js
+const client = require("${alcaeus}/node").Hydra;
 
-rep.get('https://sources.test.wikibus.org/books/5');
-{% endrunkit %}
+const { representation } = await client.loadResource('https://sources.wikibus.org/books');
 
-{% hint style="info" %}
- Note, that the individual resources are "real" JavaScript objects, and hence everything is fully traversable
- by indexing with property names or using the dot notation.
-{% endhint %}
+// find a URI of a collection member
+const collection = representation.root
+const id = collection.member[0].id.value
+
+// get that resource directly from the representation
+representation.get(id).toJSON()
+```
+
+</run-kit>
+
+> [!NOTE]
+> Note, that the individual resources are "real" JavaScript objects, and hence everything is fully traversable by indexing with property names or using the dot notation.

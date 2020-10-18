@@ -1,12 +1,8 @@
 # Working with resource properties
 
-Individual resources can come with properties of different values of properties.
-Because JavaScript is a very loose language, weird problems can go undetected until
-runtime.
+Individual resources can come with properties of different values of properties. Because JavaScript is a very loose language, weird problems can go undetected until runtime.
 
-Alcaeus' base `Resource` class comes with a few handy helper methods which can be used
-to retain some type checking at run time as well as during development time in the
-case of TypeScript.
+Alcaeus' base `Resource` class comes with a few handy helper methods which can be used to retain some type checking at run time as well as during development time in the case of TypeScript.
 
 ## Literal properties
 
@@ -14,47 +10,14 @@ Alcaeus will convert the RDF literals, which are strings, to their respective JS
 representation based on the datatype. By default numeric xsd types and `xsd:boolean`
 are converted.
 
-{% runkit %}
-const { Hydra } = require("alcaeus@{{ book.version }}");
+<run-kit>
+const { Hydra } = require("${alcaeus}/node");
 
-const collection = (await Hydra.loadResource('https://sources.test.wikibus.org/brochures')).root;
+const collection = (await Hydra.loadResource('https://sources.wikibus.org/brochures')).root;
 
 // hydra:totalItems is a "real" number
 Number.isInteger(collection.totalItems)
-{% endrunkit %} 
- 
-It is also possible to add a custom converter:
-
-{% runkit %}
-const { Hydra } = require("alcaeus@{{ book.version }}")
-const { Duration } = require('luxon')
-
-// hook up a converter
-Hydra.mediaTypeProcessors.RDF.literalConverters['http://schema.org/Duration'] = 
-    (value, type) => {
-        // type can be used if a converter
-        // handles multiple datatypes
-    
-        return Duration.fromISO(value)
-    }
-
-// get the operation
-const root = (await Hydra.loadResource('https://hydra-movies.herokuapp.com/')).root;
-const collection = root.getCollections()[0]
-const operation = collection.operations[0]
-
-// invoke (it will echo a Movie with its duration)
-const newMovie = {
-   '@context': 'http://schema.org/',
-   'schema:duration': 'PT115M'
- }
-
-// invoke the operation
-const movie = (await operation.invoke(JSON.stringify(newMovie))).root
-
-// check that the movie's duration property gets converted
-movie.duration.minutes === 115
-{% endrunkit %} 
+</run-kit>
 
 ## `get` and `getArray`
 
@@ -77,6 +40,5 @@ There is a handful of typed methods to get literals:
 
 All of the will throw if the actual value is not of the expected type.
 
-{% hint style="danger" %}
-That includes an array, even if it contain all values of that type.
-{% endhint %}
+> [!WARNING]
+> That includes an array, even if it contain all values of that type.

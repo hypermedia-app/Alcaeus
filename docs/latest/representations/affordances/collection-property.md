@@ -17,13 +17,13 @@ relation every time such link is required.
 
 It can easily be accessed from the resource itself using a dedicated getter method
 
-{% runkit %}
-const { Hydra } = require("alcaeus@{{ book.version }}")
+<run-kit>
+const { Hydra } = require("${alcaeus}")
 
 const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
 
 rep.root.getCollections()
-{% endrunkit %}
+</run-kit>
 
 ## Discovering specific collections
 
@@ -64,5 +64,5 @@ rep.root.getCollections({
 {% hint style="tip" %}
  You may notice in the second snippet that strings are used for `subject`
  and `predicate` parameters. Same is true for `object`; all three parameters can be either
- strings (URI) or resource objects. 
+ strings (URI) or resource objects.
 {% endhint %}

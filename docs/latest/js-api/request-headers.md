@@ -2,57 +2,48 @@
 
 ## Default request headers
 
-It is possible to change the request headers for every request made by the Alcaeus
-client.
+It is possible to change the request headers for every request made by the Alcaeus client.
 
-Especially useful for setting authentication headers, the example below show
-how the `Accept` header can be changed so that Turtle has higher priority over
-JSON-LD.
+Especially useful for setting authentication headers, the example below show how the `Accept` header can be changed so that Turtle has higher priority over JSON-LD.
 
-{% hint style="warning" %}
-Remember to set up a [media type processor]() to parse the resource representation in 
-the accepted content type.
-{% endhint %}
+<run-kit>
 
-{% runkit %}
-const { Hydra } = require('alcaeus@{{ book.version }}')
-const ParserN3 = require('@rdfjs/parser-n3')
+```typescript
+const { Hydra } = require('${alcaeus}/node')
 
 Hydra.defaultHeaders = {
   Accept: 'text/turtle, application/ld+json'
 }
-Hydra.mediaTypeProcessors.RDF.addParsers({
-  'text/turtle': ParserN3
-})
 
-const rep = await Hydra.loadResource('https://sources.test.wikibus.org/')
+const { response } = await Hydra.loadResource('https://sources.wikibus.org/')
 
-rep.xhr.headers.get('content-type')
-{% endrunkit %}
+response.xhr.headers.get('content-type')
+```
 
-Alternatively, a function can be used to dynamically build the default headers
-before each request.
+</run-kit>
 
-`Hydra.defaultHeaders = () => { /* headers */ }`
+Alternatively, a function can be used to dynamically build the default headers before each request.
+
+```typescript
+Hydra.defaultHeaders = async () => { /* headers */ }
+```
 
 ## Setting headers for a single request
 
-Individual calls to `Hydra.loadResource` or `IOperation#invoke` also accept a
-set of headers to be used for the following request.
+Individual calls to `Hydra.loadResource` or `RuntimeOperation#invoke` also accept a set of headers to be used for the following request.
 
 ```typescript
-import { Hydra } from 'alcaeus'
+import { Hydra } from 'alcaeus/node'
 
-const res = await Hydra.loadResource('http://example.org/me', {
+const { representation } = await Hydra.loadResource('http://example.org/me', {
     Authorization: 'Bearer xyz'
 })
 
-res.root.operations[0].invoke(turtleBody, {
+representation.root.operations[0].invoke(turtleBody, {
     Authorization: 'Bearer xyz',
     'Content-Type': 'text/turtle',
 })
 ```
 
-{% hint style="tip" %}
-Also affects the accompanying request for the linked API Documentation.
-{% endhint %}
+> [!NOTE]
+> Also affects the accompanying request for the linked API Documentation.

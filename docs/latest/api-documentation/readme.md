@@ -1,45 +1,29 @@
 # API Documentation
 
-As explained on the [Affordances][a] page, each and every resource object within a Hydra representation comes
-with an `apiDoumentation` getter. This API Documentation is fetched from the web by following the HTTP `Link`
-header as specified by [Hydra][api-doc-spec].
+Every Hydra-compliant response should come with a HTTP `Link` header linking to the machine-readable description of the API's resources.
 
-{% hint style="tip" %}
- The Hydra server needs to give Alcaeus explicit permissions to read the `Link` header if **CORS is enabled**. In order to achieve that `Access-Control-Expose-Headers` has to contain `Link`.
-{% endhint %}
+> [!WARNING]
+> A Hydra server needs to give Alcaeus explicit permissions to read the `Link` header if **CORS is enabled**.
+>
+> In order to achieve that `Access-Control-Expose-Headers` has to contain `Link`.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
-const li = require('parse-link-header');
+As explained on the [Affordances][a] page, all API Documentations discovered by the client are stored and exposed by an `apiDocumentations` property.
 
-const docUri = 'http://www.w3.org/ns/hydra/core#apiDocumentation';
+API Documentation is also an RDF resource and thus it is represented in the exact same way as all other resources returned by Alcaeus. It can even be loaded directly, preferably using a dedicated method:
 
-const rep = await client.loadResource('https://sources.test.wikibus.org/');
+<run-kit>
 
-console.log(`The documentation URI is: '${li(rep.xhr.headers.get('Link'))[docUri].url}'`);
-const apiDoc = rep.root.apiDocumentation.valueOr(null);
-{% endrunkit %}
+```typescript
+const client = require("${alcaeus}/node").Hydra
 
-The getter returns a `Maybe<ApiDocumentation>` object which makes it easier to handle representations
-without it or when it failed to load for some reason.
+const apiDoc = await client.loadDocumentation('https://sources.wikibus.org/doc')
 
-{% hint style="working" %}
- For a
- single representation (in other words a single call to `loadResource`) the documentation will be fetched
- exactly once. However there is no other caching yet.
-{% endhint %}
+apiDoc.toJSON()
+```
 
-The API documentation is a direct JS representation of the Hydra concepts: classes and their descriptions,
-and the entrypoint link. Please see the child pages for more information.
+</run-kit>
 
-It is also possible to load the documentation resource directly using dedicated method. It will return
-a typical resource object. After all the API Documentation is also a JSON-LD resource like any other.
+The API documentation is a direct JS representation of the Hydra concepts: classes and their descriptions, properties, operations, and the entrypoint link. Please see the child pages for more information.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
-
-await client.loadDocumentation('https://wikibus-data-test.gear.host/doc');
-{% endrunkit %}
-
-[a]: ../representations/resource-affordances.md#accessing-entire-apidocumentation
+[a]: representations/resource-affordances.md
 [api-doc-spec]: http://www.hydra-cg.com/spec/latest/core/#discovering-a-hydra-powered-web-api

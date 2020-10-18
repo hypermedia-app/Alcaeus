@@ -2,10 +2,16 @@
 
 Out of the box only absolute URIs will be correctly dereferenced. A base URL can be set to the client to have it resolve relative identifiers passed to `loadResource`, and `invokeOperation` calls.
 
-{% runkit %}
-const client = require("alcaeus@{{ book.version }}").Hydra;
+<run-kit>
 
-client.baseUri = 'https://sources.test.wikibus.org/'
+```typescript
+const client = require("${alcaeus}/node").Hydra;
 
-await client.loadResource('brochure/1331')
-{% endrunkit %}
+client.baseUri = 'https://sources.wikibus.org/'
+
+const { response } = await client.loadResource('brochure/1300')
+
+response.xhr.status
+```
+
+</run-kit>

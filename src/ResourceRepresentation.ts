@@ -20,14 +20,14 @@ export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T e
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    get<T>(uri: string): (T & Hydra.Resource<D>) | undefined
+    get<T = RdfResource>(uri: string): (T & Hydra.Resource<D>) | undefined
 
     /**
      * Gets all resources of given RDF type from the representation
      * @param {string} classId RDF class identifier
      * @returns {Array<Hydra.Resource>}
      */
-    ofType(classId: string | NamedNode): Hydra.Resource<D>[]
+    ofType<T = RdfResource>(classId: string | NamedNode): (T & Hydra.Resource<D>)[]
 }
 
 export default class <D extends DatasetCore, T extends RdfResource<D>> implements ResourceRepresentation<D, T> {
@@ -64,10 +64,10 @@ export default class <D extends DatasetCore, T extends RdfResource<D>> implement
         return this.__graph.in().terms.length
     }
 
-    public ofType(classId: string | NamedNode) {
+    public ofType<T>(classId: string | NamedNode) {
         const type = typeof classId === 'string' ? $rdf.namedNode(classId) : classId
 
-        return this.__graph.has(rdf.type, type).map(this._createEntity.bind(this))
+        return this.__graph.has(rdf.type, type).map(r => this._createEntity<T>(r))
     }
 
     public [Symbol.iterator]() {
@@ -75,7 +75,7 @@ export default class <D extends DatasetCore, T extends RdfResource<D>> implement
             .map(this._createEntity.bind(this))[Symbol.iterator]()
     }
 
-    private _createEntity(node: GraphPointer<ResourceIdentifier>) {
-        return this.__factory.createEntity<Hydra.Resource<D>>(node)
+    private _createEntity<T>(node: GraphPointer<ResourceIdentifier>) {
+        return this.__factory.createEntity<T & Hydra.Resource<D>>(node)
     }
 }

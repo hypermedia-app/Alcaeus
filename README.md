@@ -15,6 +15,13 @@ Use npm or yarn:
 npm i -S alcaeus
 ```
 
+## Requirements
+
+| Environment | Version | Notes |
+| -- | -- | -- |
+| node.js | 12+ | v12 requires `--experimental-modules` flag |
+| TypeScript | 3.8+ | |
+
 ## Usage
 
 ``` js

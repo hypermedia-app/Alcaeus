@@ -1,13 +1,13 @@
 import { namedNode } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
+import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import cf from 'clownface'
 import type { GraphPointer } from 'clownface'
 import type { EventEmitter } from 'events'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import TermSet from '@rdf-esm/term-set'
-import type { RdfResource } from '@tpluscode/rdfine'
-import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { DatasetCore, NamedNode, Stream } from 'rdf-js'
 import FetchUtil from './FetchUtil'
@@ -23,7 +23,7 @@ type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<Resource, 'id'>
 }
 
-export interface HydraResponse<D extends DatasetCore = DatasetCore, T extends RdfResource<D> = Resource<D>> {
+export interface HydraResponse<D extends DatasetCore = DatasetCore, T extends RdfResourceCore<D> = Resource<D>> {
     representation?: ResourceRepresentation<D, T>
     response?: ResponseWrapper
 }
@@ -37,7 +37,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     baseUri?: string
     rootSelectors: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    loadResource<T extends Resource<D> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
+    loadResource<T extends RdfResourceCore<any> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<D> | null>
     invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>>
     defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
@@ -96,7 +96,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return [...this.__apiDocumentations.values()]
     }
 
-    public async loadResource <T extends Resource<D>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
+    public async loadResource <T extends RdfResourceCore<any>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
         const term = typeof id === 'string' ? namedNode(id) : id
         let requestHeaders = new this._headers(headers)
 

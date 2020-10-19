@@ -1,8 +1,8 @@
 import { HydraResponse } from './alcaeus'
 
 export interface ResourceCacheStrategy {
-    shouldLoad(previous: Required<HydraResponse>): boolean
-    requestCacheHeaders(previous: Required<HydraResponse>): HeadersInit | null
+    shouldLoad(previous: Required<HydraResponse<any, any>>): boolean
+    requestCacheHeaders(previous: Required<HydraResponse<any, any>>): HeadersInit | null
 }
 
 export const shouldLoad = () => true

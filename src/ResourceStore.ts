@@ -1,6 +1,7 @@
 import type { Resource } from '@rdfine/hydra'
 import type { RdfResource } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
+import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import cf from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
@@ -20,7 +21,7 @@ interface ResourceStoreEntry<D extends DatasetCore> {
 
 export interface ResourceStore<D extends DatasetIndexed> {
     factory: ResourceFactory<D, RdfResource<D>>
-    get<T extends Resource<D> = Resource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
+    get<T extends RdfResourceCore<any> = Resource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
     set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
     clone(): ResourceStore<D>
 }
@@ -60,7 +61,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
         })
     }
 
-    public get<T extends RdfResource<D>>(graph: NamedNode): Required<HydraResponse<D, T>> | undefined {
+    public get<T extends RdfResourceCore<D>>(graph: NamedNode): Required<HydraResponse<D, T>> | undefined {
         const node = cf({ dataset: this.dataset, graph })
         const response = this.responses.get(graph)
 

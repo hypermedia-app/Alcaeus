@@ -21,14 +21,14 @@ export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T e
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
      */
-    get<T = RdfResource>(uri: string): (T & Hydra.Resource<D>) | undefined
+    get<T = RdfResourceCore>(uri: string): (T & Hydra.Resource<D>) | undefined
 
     /**
      * Gets all resources of given RDF type from the representation
      * @param {string} classId RDF class identifier
      * @returns {Array<Hydra.Resource>}
      */
-    ofType<T = RdfResource>(classId: string | NamedNode): (T & Hydra.Resource<D>)[]
+    ofType<T = RdfResourceCore>(classId: string | NamedNode): (T & Hydra.Resource<D>)[]
 }
 
 export default class <D extends DatasetCore, T extends RdfResourceCore<D>> implements ResourceRepresentation<D, T> {

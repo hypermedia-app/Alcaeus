@@ -623,4 +623,4 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [0.4.0](https://github.com/wikibus/alcaeus/compare/v0.3.0-a1...v0.4.0) (2018-06-17)
 
-Too much to manually back fill. 
+Too much to manually back fill.

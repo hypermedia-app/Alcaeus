@@ -1350,17 +1350,17 @@
   resolved "https://registry.yarnpkg.com/@rdf-esm/to-ntriples/-/to-ntriples-0.5.0.tgz#4a2c294e6d740509571e3b0efde8277c4824b928"
   integrity sha512-VIcqRv68V/s0NS6bFy58CcsHwV0UCM/DHhAc1MYLB/yue1nyhKsX4uyu/SB5gbbY2r4BIH4G6O+arxf59KzgwQ==
 
-"@rdfine/hydra@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.3.tgz#63f21e066efb7c322575b982daf00cdde7467cd5"
-  integrity sha512-cSJQVffrtLafRfM9S0FmkbTEDxjup9wmrQebnxFHRf8A9cWrX2MXeDUb2UkNfjmFovrEvBt30Dn9LXigW4lQTg==
+"@rdfine/hydra@^0.5.5":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.5.tgz#80e74ef361e637c4d65f6d8ddae5a503c403bb6d"
+  integrity sha512-jonKQOdzO79EnvrURpPuyiX6c2IwXASO92M+UpkaaRpvlYxU1cz6qNh3/P45g7sM1Z0qiIfSaldxIsFXd1hswA==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/rdf" "^0.4.1"
     "@rdfine/rdfs" "^0.5.0"
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.10"
-    es6-url-template "^3"
+    es6-url-template "^3.0.2"
 
 "@rdfine/rdf@^0.4.1":
   version "0.4.1"
@@ -3854,10 +3854,10 @@ es6-promisify@^5.0.0:
   dependencies:
     es6-promise "^4.0.3"
 
-es6-url-template@^3:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-3.0.0.tgz#3e5c5e5442baaedc02b8c3b9195901ccd0a5c51a"
-  integrity sha512-090QJpeIb9jIxd3CFO9FruxOtxkI338/uTqkQ77bdcpRjtEB+BTSzEzp9uuVLBaOe0U3LMgubpNcDfrQO/rusg==
+es6-url-template@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-3.0.2.tgz#99632e854cd1c5a88fffaf3e4dca8e2f72d89995"
+  integrity sha512-8ZqWPZ8aa9FoyZlGlC+s/d84VW7glQA3WwvDTl0Ykmwi/fX1aEmd6RWoBprX7QWzwR5zrv8RIokfj6kLmcdYzA==
 
 escalade@^3.0.2:
   version "3.0.2"

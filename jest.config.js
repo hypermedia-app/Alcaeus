@@ -5,8 +5,6 @@ module.exports = {
     collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
     moduleNameMapper: {
         '@rdf-esm/(.*)': '@rdfjs/$1',
+        'es6-url-template': 'es6-url-template/url-template.cjs',
     },
-    transformIgnorePatterns: [
-        'node_modules/(?!(es6-url-template)/)',
-    ],
 }

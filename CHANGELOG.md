@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-RC.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-RC.1...v1.0.0-RC.2) (2020-10-20)
+
+
+### Bug Fixes
+
+* relax generic params to allow any RdfResource ([2d429f8](https://github.com/wikibus/alcaeus/commit/2d429f8db1c3250cff2d2d6d60eb94dc99ff2c7d))
+* standalone loadDocumentation did not work ([392622b](https://github.com/wikibus/alcaeus/commit/392622bfa576f66d7fddd134c220f5c15b20cd44))
+
 ## [1.0.0-RC.1](https://github.com/wikibus/alcaeus/compare/v1.0.0-RC.0...v1.0.0-RC.1) (2020-10-13)
 
 

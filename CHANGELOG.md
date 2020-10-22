@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-RC.3](https://github.com/wikibus/alcaeus/compare/v1.0.0-RC.2...v1.0.0-RC.3) (2020-10-22)
+
+
+### Bug Fixes
+
+* do not consume body until parsing ([5bfebf2](https://github.com/wikibus/alcaeus/commit/5bfebf24f14237f0d51acc5fa6965a427f7e249e))
+
 ## [1.0.0-RC.2](https://github.com/wikibus/alcaeus/compare/v1.0.0-RC.1...v1.0.0-RC.2) (2020-10-20)
 
 

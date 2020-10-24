@@ -4,9 +4,18 @@ import buffer from 'buffer'
 // from https://github.com/bergos/nodeify-fetch/blob/master/lib/WhatwgReadable.js
 class WhatwgReadable extends stream.Readable {
     public constructor(body: ReadableStream) {
+        let reader: ReturnType<ReadableStream['getReader']>
+        function getReader() {
+            if (!reader) {
+                reader = body.getReader()
+            }
+
+            return reader
+        }
+
         super({
             read: () => {
-                body.getReader().read().then((chunk) => {
+                getReader().read().then((chunk) => {
                     if (chunk.done) {
                         this.push(null)
                     } else {

@@ -1,6 +1,6 @@
 import { defaultGraphInstance } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
-import type { Constructor } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { AnyFunction, Mixin, ResourceCreationOptions, ResourceIndexer, ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { RdfResourceCore, ResourceNode } from '@tpluscode/rdfine/RdfResource'
 import type { GraphPointer } from 'clownface'
@@ -28,7 +28,7 @@ export default class CachedResourceFactoryImpl implements CachedResourceFactory 
         return new CachedResourceFactoryImpl(this.__inner)
     }
 
-    createEntity<S, ID extends ResourceNode = ResourceNode>(pointer: GraphPointer, typeAndMixins?: Mixin<AnyFunction>[] | [Constructor, ...Mixin<AnyFunction>[]], options?: ResourceCreationOptions<RdfResourceCore<ID> & S>): RdfResourceCore<ID> & S & ResourceIndexer<RdfResourceCore<ID>> {
+    createEntity<S, ID extends ResourceNode = ResourceNode>(pointer: GraphPointer, typeAndMixins?: Mixin<AnyFunction>[] | [Constructor, ...Mixin<AnyFunction>[]], options?: ResourceCreationOptions<RdfResourceCore<ID> & S>): RdfResourceCore<ID> & S & ResourceIndexer<RdfResource<ID>> {
         const graph = pointer._context[0].graph || defaultGraphInstance
         if (!this.__cache.has(graph)) {
             this.__cache.set(graph, new TermMap())

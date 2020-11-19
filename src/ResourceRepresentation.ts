@@ -3,11 +3,11 @@ import * as Hydra from '@rdfine/hydra'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
 import type { ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
-import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import type { DatasetType, RdfResourceCore, ResourceNode } from '@tpluscode/rdfine/RdfResource'
 import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
-import type { DatasetCore, NamedNode } from 'rdf-js'
+import type { NamedNode } from 'rdf-js'
 
-export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T extends RdfResourceCore<D> = Hydra.Resource<D>> extends Iterable<Hydra.Resource<D>> {
+export interface ResourceRepresentation<D extends ResourceNode = ResourceNode, T extends RdfResourceCore<D> = Hydra.Resource<D>> extends Iterable<Hydra.Resource<D>> {
     /**
      * Gets the root of the representation or undefined if it cannot be determined
      */
@@ -31,12 +31,12 @@ export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T e
     ofType<T = RdfResourceCore>(classId: string | NamedNode): (T & Hydra.Resource<D>)[]
 }
 
-export default class <D extends DatasetCore, T extends RdfResourceCore<D>> implements ResourceRepresentation<D, T> {
-    private __graph: AnyPointer<AnyContext, D>
+export default class <D extends ResourceNode<NamedNode>, T extends RdfResourceCore<D>> implements ResourceRepresentation<D, T> {
+    private __graph: AnyPointer<AnyContext, DatasetType<D>>
     private __factory: ResourceFactory
     private readonly rootNode: GraphPointer<ResourceIdentifier>
 
-    public constructor(graph: AnyPointer<AnyContext, D>, factory: ResourceFactory, rootResource: NamedNode) {
+    public constructor(graph: AnyPointer<AnyContext, DatasetType<D>>, factory: ResourceFactory, rootResource: NamedNode) {
         this.__graph = graph
         this.__factory = factory
         this.rootNode = graph.node(rootResource)

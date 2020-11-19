@@ -2,12 +2,12 @@ import type { Constructor } from '@tpluscode/rdfine'
 import { namespace } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { ApiDocumentation } from '@rdfine/hydra'
-import type { DatasetCore } from 'rdf-js'
+import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
 import type { HydraResponse } from '../../alcaeus'
 
 declare module '@rdfine/hydra' {
-    export interface ApiDocumentation<D extends DatasetCore = DatasetCore> {
-        loadEntryPoint(): Promise<HydraResponse<D>>
+    export interface ApiDocumentation<ID extends ResourceNode = ResourceNode> {
+        loadEntryPoint(): Promise<HydraResponse<ID>>
     }
 }
 

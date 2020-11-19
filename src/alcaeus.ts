@@ -1,6 +1,6 @@
 import { namedNode } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
-import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import type { RdfResourceCore, ResourceNode } from '@tpluscode/rdfine/RdfResource'
 import cf from 'clownface'
 import type { GraphPointer } from 'clownface'
 import type { EventEmitter } from 'events'
@@ -9,7 +9,7 @@ import TermSet from '@rdf-esm/term-set'
 import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
-import type { DatasetCore, NamedNode, Stream } from 'rdf-js'
+import type { NamedNode, Stream } from 'rdf-js'
 import FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import * as DefaultCacheStrategy from './ResourceCacheStrategy'
@@ -23,7 +23,7 @@ type InvokedOperation = Pick<Operation, 'method'> & {
     target: Pick<Resource, 'id'>
 }
 
-export interface HydraResponse<D extends DatasetCore = DatasetCore, T extends RdfResourceCore<D> = Resource<D>> {
+export interface HydraResponse<D extends ResourceNode = ResourceNode, T extends RdfResourceCore<D> = Resource<D>> {
     representation?: ResourceRepresentation<D, T>
     response?: ResponseWrapper
 }
@@ -37,12 +37,12 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     baseUri?: string
     rootSelectors: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    loadResource<T extends RdfResourceCore<any> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
-    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<D> | null>
-    invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>>
+    loadResource<T extends RdfResourceCore<any> = Resource<GraphPointer<NamedNode, D>>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<GraphPointer<NamedNode, D>, T>>
+    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<GraphPointer<NamedNode, D>> | null>
+    invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<GraphPointer<NamedNode, D>>>
     defaultHeaders: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
     resources: ResourceStore<D>
-    apiDocumentations: ResourceRepresentation<D, ApiDocumentation<D>>[]
+    apiDocumentations: ResourceRepresentation<GraphPointer<NamedNode, D>, ApiDocumentation<GraphPointer<NamedNode, D>>>[]
     cacheStrategy: ResourceCacheStrategy
 }
 
@@ -71,7 +71,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
 
     public readonly resources: ResourceStore<D>
 
-    private readonly __apiDocumentations: Map<NamedNode, ResourceRepresentation<D, ApiDocumentation<D>>> = new TermMap()
+    private readonly __apiDocumentations: Map<NamedNode, ResourceRepresentation<GraphPointer<NamedNode, D>, ApiDocumentation<GraphPointer<NamedNode, D>>>> = new TermMap()
 
     private readonly datasetFactory: () => D;
 
@@ -96,7 +96,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return [...this.__apiDocumentations.values()]
     }
 
-    public async loadResource <T extends RdfResourceCore<any>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
+    public async loadResource <T extends RdfResourceCore<any>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<GraphPointer<NamedNode, D>, T>> {
         const term = typeof id === 'string' ? namedNode(id) : id
         let requestHeaders = new this._headers(headers)
 
@@ -147,13 +147,13 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         }
     }
 
-    public async loadDocumentation(id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation<D> | null> {
+    public async loadDocumentation(id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation<GraphPointer<NamedNode, D>> | null> {
         const term = typeof id === 'string' ? namedNode(id) : id
 
-        const resource = await this.loadResource<ApiDocumentation<D>>(term, headers, false)
+        const resource = await this.loadResource<ApiDocumentation<GraphPointer<NamedNode, D>>>(term, headers, false)
         if (resource && resource.representation) {
             this.__apiDocumentations.set(term, resource.representation)
-            const [apiDocs] = resource.representation.ofType<ApiDocumentation<D>>(hydra.ApiDocumentation)
+            const [apiDocs] = resource.representation.ofType<ApiDocumentation<GraphPointer<NamedNode, D>>>(hydra.ApiDocumentation)
             if (apiDocs) {
                 return apiDocs
             }
@@ -162,7 +162,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return null
     }
 
-    public async invokeOperation(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>> {
+    public async invokeOperation(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse<GraphPointer<NamedNode, D>>> {
         const mergedHeaders = await this.__mergeHeaders(new this._headers(headers))
         const uri = operation.target.id.value
 

@@ -1583,10 +1583,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/clownface@^1":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.0.tgz#e73483c15477b7f1d8e238dcc3edc872516b93e1"
-  integrity sha512-mSb1tpiRYzIDRl3bubv0uVDxk0cb5Q80wT1ns7GbQ4sZ8QRNnyb/K4PnDEo2bKlBDFB1zgTa3/UQtRP32b5v0g==
+"@types/clownface@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.3.tgz#8abe4c7e1b3226851a83af33d774f94eb915fdd2"
+  integrity sha512-s2VLKhvwYJbzL/+r12fuv6gu8J/MVcuBk2K6CPsnRygcL5hTwahBPkYS4ROmthKB4+zP1f1oWYTZYAKnNs1ogw==
   dependencies:
     "@types/rdf-js" "*"
 

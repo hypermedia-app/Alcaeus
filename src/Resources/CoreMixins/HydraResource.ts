@@ -1,12 +1,12 @@
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
-import type { Resource, SupportedProperty, Operation } from '@rdfine/hydra'
+import type { Resource, SupportedProperty } from '@rdfine/hydra'
 import type { DatasetCore, Term } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import { GraphPointer } from 'clownface'
 import type { HydraClient } from '../../alcaeus'
 import type { ManagesBlockPattern } from '../Mixins/ManagesBlock'
-import RuntimeOperation from '../Operation'
+import { RuntimeOperation, createMixin } from '../Operation'
 
 declare module '@tpluscode/rdfine' {
     export interface RdfResource<D extends DatasetCore = DatasetCore>{
@@ -72,8 +72,7 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
                 const supportedOperations: GraphPointer[] = Array.prototype.concat.apply([], [...classOperations, ...propertyOperations])
                 const operations = supportedOperations.reduce((map, pointer) => {
                     if (!map.has(pointer.term)) {
-                        const supportedOperation = this._create<Operation>(pointer)
-                        map.set(pointer.term, new RuntimeOperation(supportedOperation, alcaeus(), this))
+                        map.set(pointer.term, this._create<RuntimeOperation>(pointer, [createMixin(alcaeus(), this)]))
                     }
 
                     return map

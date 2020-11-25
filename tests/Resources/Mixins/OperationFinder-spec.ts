@@ -497,7 +497,7 @@ describe('OperationFinder', () => {
 
             // then
             expect(operations).toHaveLength(1)
-            expect(operations[0].supportedOperation.id.value).toEqual(ex.DeleteOp.value)
+            expect(operations[0].id.value).toEqual(ex.DeleteOp.value)
         })
 
         it('includes by exact type of supported operation', async () => {
@@ -528,7 +528,7 @@ describe('OperationFinder', () => {
 
             // then
             expect(operations).toHaveLength(1)
-            expect(operations[0].supportedOperation.types.has(ex.DeleteOp)).toBe(true)
+            expect(operations[0].types.has(ex.DeleteOp)).toBe(true)
         })
 
         it('includes by exact type of supported operation using named node', async () => {
@@ -559,7 +559,7 @@ describe('OperationFinder', () => {
 
             // then
             expect(operations).toHaveLength(1)
-            expect(operations[0].supportedOperation.types.has(ex.DeleteOp)).toBe(true)
+            expect(operations[0].types.has(ex.DeleteOp)).toBe(true)
         })
 
         it('includes callback with ISupportedOperation', async () => {
@@ -593,7 +593,7 @@ describe('OperationFinder', () => {
 
             // then
             expect(operations).toHaveLength(2)
-            expect(operations.map(o => o.supportedOperation.id.value)).toEqual(
+            expect(operations.map(o => o.id.value)).toEqual(
                 expect.arrayContaining([ex.OperationA.value, ex.OperationC.value]),
             )
         })

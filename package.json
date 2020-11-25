@@ -89,7 +89,7 @@
     "@rdfjs/sink-map": "^1.0.1",
     "@tpluscode/eslint-config": "^0.1",
     "@tpluscode/rdf-string": "^0.2.21",
-    "@types/clownface": "^1",
+    "@types/clownface": "^1.0.3",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/jest": "^26.0.15",
     "@types/rdf-dataset-indexed": "^0.4.4",

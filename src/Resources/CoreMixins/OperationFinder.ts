@@ -1,5 +1,7 @@
+import { namedNode } from '@rdf-esm/data-model'
 import type { Resource, Operation } from '@rdfine/hydra'
 import type { NamespaceBuilder } from '@rdfjs/namespace'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { NamedNode, Quad } from 'rdf-js'
 import type { RuntimeOperation } from '../Operation'
@@ -109,13 +111,12 @@ function satisfiesReturns(criteria: Criteria, operation: RuntimeOperation) {
 }
 
 function satisfiesTypeOrId(criteria: Criteria, operation: RuntimeOperation) {
-    return satisfies(criteria.bySupportedOperation, operation.supportedOperation, (expected, actual) => {
-        if (typeof expected === 'string') {
-            return actual.id.value === expected || actual.hasType(expected)
-        }
+    const supportedOperationId = typeof criteria.bySupportedOperation === 'string'
+        ? namedNode(criteria.bySupportedOperation) : criteria.bySupportedOperation
 
+    return satisfies(supportedOperationId, operation, (expected, actual) => {
         if ('termType' in expected) {
-            return actual.equals(expected) || actual.hasType(expected)
+            return actual.equals(expected) || actual.pointer.has(rdf.type, expected).terms.length > 0
         }
 
         return expected(actual)

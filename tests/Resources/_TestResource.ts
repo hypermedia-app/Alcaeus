@@ -2,7 +2,7 @@ import RdfResource from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
 import { Criteria, RecursiveStopConditions } from '../../src/Resources/CoreMixins/OperationFinder'
 import { ManagesBlockPattern } from '../../src/Resources/Mixins/ManagesBlock'
-import RuntimeOperation from '../../src/Resources/Operation'
+import { RuntimeOperation } from '../../src/Resources/Operation'
 
 export class Resource extends RdfResource implements Hydra.Resource {
     public get operations(): RuntimeOperation[] {

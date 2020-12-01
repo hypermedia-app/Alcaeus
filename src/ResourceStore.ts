@@ -1,8 +1,8 @@
 import type { Resource } from '@rdfine/hydra'
-import type { RdfResource } from '@tpluscode/rdfine'
+import type { ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
-import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import cf from 'clownface'
+import type { RdfResourceCore, ResourceNode } from '@tpluscode/rdfine/RdfResource'
+import cf, { GraphPointer } from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import type { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
@@ -20,8 +20,8 @@ interface ResourceStoreEntry<D extends DatasetCore> {
 }
 
 export interface ResourceStore<D extends DatasetIndexed> {
-    factory: ResourceFactory<D, RdfResource<D>>
-    get<T extends RdfResourceCore<any> = Resource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
+    factory: ResourceFactory
+    get<T extends RdfResourceCore<any> = Resource<ResourceNode<NamedNode, D>>>(uri: NamedNode): Required<HydraResponse<GraphPointer<NamedNode, D>, T>> | undefined
     set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
     clone(): ResourceStore<D>
 }
@@ -34,13 +34,13 @@ interface ResourceStoreInit<D extends DatasetIndexed> {
     dataset: D
     datasetFactory: () => D
     inferences: RepresentationInference[]
-    factory: ResourceFactory<D, RdfResource<D>>
+    factory: ResourceFactory
 }
 
 export default class ResourceStoreImpl<D extends DatasetIndexed> implements ResourceStore<D> {
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
-    public readonly factory: CachedResourceFactory<D, RdfResource<D>>
+    public readonly factory: CachedResourceFactory
     private readonly rootNodes = new TermMap<NamedNode, NamedNode>()
     private readonly responses = new TermMap<NamedNode, ResponseWrapper>()
     private readonly datasetFactory: () => D;
@@ -61,7 +61,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
         })
     }
 
-    public get<T extends RdfResourceCore<D>>(graph: NamedNode): Required<HydraResponse<D, T>> | undefined {
+    public get<T extends RdfResourceCore<any> = Resource<ResourceNode<ResourceIdentifier, D>>>(graph: NamedNode): Required<HydraResponse<GraphPointer<NamedNode, D>, T>> | undefined {
         const node = cf({ dataset: this.dataset, graph })
         const response = this.responses.get(graph)
 
@@ -72,7 +72,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
         const rootNode = this.rootNodes.get(graph) || graph
         return {
             response,
-            representation: new ResourceRepresentationImpl<D, T>(node, this.factory, rootNode),
+            representation: new ResourceRepresentationImpl<ResourceNode<NamedNode, D>, T>(node, this.factory, rootNode),
         }
     }
 

@@ -50,17 +50,20 @@
     "url": "https://github.com/wikibus/alcaeus/issues"
   },
   "homepage": "https://alcaeus.hydra.how",
+  "resolutions": {
+    "@tpluscode/rdfine": "0.6.0-next.1"
+  },
   "dependencies": {
     "@rdf-esm/data-model": "^0.5.3",
     "@rdf-esm/formats-common": "^0.5.3",
     "@rdf-esm/sink-map": "^0.5.0",
     "@rdf-esm/term-map": "^0.5.0",
     "@rdf-esm/term-set": "^0.5.0",
-    "@rdfine/hydra": "^0.5.5",
-    "@rdfine/rdf": "^0.4.1",
+    "@rdfine/hydra": "next",
+    "@rdfine/rdf": "next",
     "@rdfjs/formats-common": "^2.1",
     "@tpluscode/rdf-ns-builders": "^0.4",
-    "@tpluscode/rdfine": "^0.5.10",
+    "@tpluscode/rdfine": "^0.6.0-next.1",
     "clownface": "^1",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-form-data": "^2.0.0",

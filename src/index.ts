@@ -41,7 +41,7 @@ export function create <D extends DatasetIndexed = DatasetIndexed>({ dataset, fe
     ]
     const AlcaeusGenerated = coreMixins.reduce((base, mixin) => mixin(base), RdfResource)
 
-    const factory = new rdfine.ResourceFactory<D>(AlcaeusGenerated)
+    const factory = new rdfine.ResourceFactory(AlcaeusGenerated)
     AlcaeusGenerated.factory = factory
 
     const alcaeus = new Alcaeus<D>({

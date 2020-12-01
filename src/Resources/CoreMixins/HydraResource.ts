@@ -1,15 +1,16 @@
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
-import type { Resource, SupportedProperty } from '@rdfine/hydra'
-import type { DatasetCore, Term } from 'rdf-js'
+import type { Term } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import { GraphPointer } from 'clownface'
+import type { Resource, SupportedProperty } from '@rdfine/hydra'
+import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
 import type { HydraClient } from '../../alcaeus'
 import type { ManagesBlockPattern } from '../Mixins/ManagesBlock'
 import { RuntimeOperation, createMixin } from '../Operation'
 
 declare module '@tpluscode/rdfine' {
-    export interface RdfResource<D extends DatasetCore = DatasetCore>{
+    export interface RdfResource<ID extends ResourceNode = ResourceNode> {
         /**
          * Gets the operations which can be performed on this resource
          */
@@ -25,12 +26,12 @@ declare module '@tpluscode/rdfine' {
          *
          * @param includeMissing if true, will include properties not present in resource representation
          */
-        getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: RdfResource<D>[] }[]
+        getLinks(includeMissing?: boolean): { supportedProperty: SupportedProperty; resources: RdfResource<ID>[] }[]
 
         /**
          * Gets objects of hydra:collection property
          */
-        getCollections(filter?: ManagesBlockPattern): RdfResource<D>[]
+        getCollections(filter?: ManagesBlockPattern): RdfResource<ID>[]
     }
 }
 

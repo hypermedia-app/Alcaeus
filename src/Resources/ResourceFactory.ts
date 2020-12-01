@@ -2,19 +2,20 @@ import { defaultGraphInstance } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { AnyFunction, Mixin, ResourceCreationOptions, ResourceIndexer, ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
+import { RdfResourceCore, ResourceNode } from '@tpluscode/rdfine/RdfResource'
 import type { GraphPointer } from 'clownface'
-import type { DatasetCore, Term, NamedNode } from 'rdf-js'
+import type { Term, NamedNode } from 'rdf-js'
 
-export interface CachedResourceFactory<D extends DatasetCore, R extends RdfResource<D>> extends ResourceFactory<D, R> {
-    clone(): CachedResourceFactory<D, R>
+export interface CachedResourceFactory extends ResourceFactory {
+    clone(): CachedResourceFactory
     removeCache(graph: NamedNode): void
 }
 
-export default class CachedResourceFactoryImpl<D extends DatasetCore, R extends RdfResource<D>> implements CachedResourceFactory<D, R> {
-    readonly __cache: Map<Term, Map<NamedNode, any>>
-    readonly __inner: ResourceFactory<D, R>
+export default class CachedResourceFactoryImpl implements CachedResourceFactory {
+    readonly __cache: Map<Term, Map<Term, any>>
+    readonly __inner: ResourceFactory
 
-    constructor(inner: ResourceFactory<D, R>) {
+    constructor(inner: ResourceFactory) {
         this.__cache = new TermMap()
         this.__inner = inner
     }
@@ -23,11 +24,11 @@ export default class CachedResourceFactoryImpl<D extends DatasetCore, R extends 
         this.__cache.delete(graph)
     }
 
-    clone(): CachedResourceFactory<D, R> {
+    clone(): CachedResourceFactory {
         return new CachedResourceFactoryImpl(this.__inner)
     }
 
-    createEntity<S>(pointer: GraphPointer<NamedNode, D>, typeAndMixins?: Mixin<AnyFunction>[] | [Constructor, ...Mixin<AnyFunction>[]], options?: ResourceCreationOptions<D, R & S>): R & S & ResourceIndexer<R> {
+    createEntity<S, ID extends ResourceNode = ResourceNode>(pointer: GraphPointer, typeAndMixins?: Mixin<AnyFunction>[] | [Constructor, ...Mixin<AnyFunction>[]], options?: ResourceCreationOptions<RdfResourceCore<ID> & S>): RdfResourceCore<ID> & S & ResourceIndexer<RdfResource<ID>> {
         const graph = pointer._context[0].graph || defaultGraphInstance
         if (!this.__cache.has(graph)) {
             this.__cache.set(graph, new TermMap())

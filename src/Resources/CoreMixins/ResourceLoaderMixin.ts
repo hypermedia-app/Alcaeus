@@ -1,6 +1,7 @@
 import type { Resource } from '@rdfine/hydra'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { RdfResourceCore, ResourceNode } from '@tpluscode/rdfine/RdfResource'
+import { NamedNode } from 'rdf-js'
 import type { HydraClient, HydraResponse } from '../../alcaeus'
 
 declare module '@tpluscode/rdfine' {
@@ -12,7 +13,7 @@ declare module '@tpluscode/rdfine' {
 export function createResourceLoaderMixin(alcaeus: () => HydraClient<any>) {
     function ResourceLoaderMixin<Base extends Constructor>(base: Base) {
         return class extends base {
-            public load<T extends Resource<any>>() {
+            public load<T extends Resource<ResourceNode<NamedNode>>>() {
                 return alcaeus().loadResource<T>(this.id.value)
             }
         }

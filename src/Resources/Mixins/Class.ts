@@ -1,4 +1,4 @@
-import { SupportedPropertyMixin, OperationMixin } from '@rdfine/hydra'
+import { SupportedPropertyMixin, OperationMixin, Resource } from '@rdfine/hydra'
 import type { Class, Operation, SupportedProperty } from '@rdfine/hydra'
 import type { Class as RdfsClass } from '@rdfine/rdfs'
 import { property } from '@tpluscode/rdfine'
@@ -14,8 +14,8 @@ declare module '@rdfine/hydra' {
 
 export type { Class } from '@rdfine/hydra'
 
-export function ClassMixin<TBase extends Constructor<Class>>(Base: TBase): Constructor<Class> {
-    class ClassClass extends Base implements Class {
+export function ClassMixin<TBase extends Constructor<Resource>>(Base: TBase) {
+    class ClassClass extends Base {
         @property.resource({
             path: rdfs.subClassOf,
             values: 'array',

@@ -1,5 +1,5 @@
 import { turtle } from '@tpluscode/rdf-string'
-import * as HydraClass from '@rdfine/hydra/Class'
+import * as HydraClass from '@rdfine/hydra/lib/Class'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'

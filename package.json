@@ -30,7 +30,8 @@
     "build:gitbook": "gitbook install; gitbook build . docs/latest",
     "gitbook": "gitbook serve",
     "lint": "eslint . --ext .ts --quiet",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "release": "changeset publish"
   },
   "repository": {
     "type": "git",
@@ -80,6 +81,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
+    "@changesets/cli": "^2.10.2",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
     "@rdfjs/data-model": "^1.2",

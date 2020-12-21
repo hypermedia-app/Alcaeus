@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- 9f906d6: Pass request URI to defaultHeaders
+
 ## 1.0.1
 
 ### Patch Changes

@@ -105,17 +105,6 @@ describe('FetchUtil', () => {
                     }),
                 }))
         })
-
-        it('should resolve relative URI against', async () => {
-            // given
-            mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
-
-            // when
-            await fetchUtil.resource('resource', { parsers, baseUri: 'http://example.com/foo/' })
-
-            // then
-            expect(mockFetch).toBeCalledWith('http://example.com/foo/resource', expect.anything())
-        })
     })
 
     describe('invokeOperation', () => {
@@ -212,18 +201,6 @@ describe('FetchUtil', () => {
                         'content-type': expect.anything(),
                     }),
                 }))
-        })
-
-        it('should resolve relative URI against', async () => {
-            // given
-            mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
-
-            // when
-            await fetchUtil.operation('get', 'resource', { parsers, body: 'foo', baseUri: 'http://example.com/foo/' })
-
-            // then
-            expect(mockFetch)
-                .toBeCalledWith('http://example.com/foo/resource', expect.anything())
         })
     })
 })

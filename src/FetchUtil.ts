@@ -11,12 +11,7 @@ function requestAcceptHeaders(sinkMap: Parsers) {
 }
 
 export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
-    async function getResponse(uri, { method, headers = {}, body, baseUri, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; baseUri?: string; parsers: Parsers }) {
-        let effectiveUri = uri
-        if (uri.match(/^https?:\/\//) === null && baseUri) {
-            effectiveUri = new URL(uri, baseUri).toString()
-        }
-
+    async function getResponse(effectiveUri, { method, headers = {}, body, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; parsers: Parsers }) {
         const defaultHeaders: HeadersInit = {
             accept: requestAcceptHeaders(parsers),
         }
@@ -36,7 +31,7 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
         return new ResponseWrapper(effectiveUri, res, parsers)
     }
 
-    function resource(uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit; baseUri?: string }): Promise<ResponseWrapper> {
+    function resource(uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit }): Promise<ResponseWrapper> {
         return getResponse(uri, {
             method: 'get',
             ...requestInit,
@@ -46,7 +41,7 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
     function operation(
         method: string,
         uri: string,
-        requestInit: { parsers: Parsers; headers?: HeadersInit; body?: BodyInit; baseUri?: string }): Promise<ResponseWrapper> {
+        requestInit: { parsers: Parsers; headers?: HeadersInit; body?: BodyInit }): Promise<ResponseWrapper> {
         return getResponse(uri, { method, ...requestInit })
     }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- 48362a0: Empty representation cannot be retrieved back from ResourceStore
+
 ## 1.1.0
 
 ### Minor Changes

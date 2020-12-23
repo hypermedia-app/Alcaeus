@@ -65,7 +65,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
         const node = cf({ dataset: this.dataset, graph })
         const response = this.responses.get(graph)
 
-        if (!node.out().values.length || !response) {
+        if (!response) {
             return undefined
         }
 

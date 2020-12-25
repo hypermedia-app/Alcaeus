@@ -53,7 +53,7 @@ export function RdfPropertyMixin<TBase extends Constructor<Omit<Property, keyof 
         public supportedOperations!: Operation[]
 
         public get isLink() {
-            return this.hasType(hydra.Link)
+            return this.types.has(hydra.Link)
         }
     }
 

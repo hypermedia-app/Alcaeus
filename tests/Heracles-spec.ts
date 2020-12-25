@@ -11,7 +11,7 @@ import * as Constants from './Constants'
 import { create } from '../src/node'
 import { HydraClient } from '../src/alcaeus'
 import FetchUtil from '../src/FetchUtil'
-import { PartialCollectionView } from '../src/Resources'
+import { PartialCollectionView } from '../src'
 import { hydra, rdfs } from '@tpluscode/rdf-ns-builders'
 import { Bodies } from './test-objects'
 import { mockedResponse, responseBuilder } from './test-utils'
@@ -86,7 +86,7 @@ describe('Hydra loadDocumentation', () => {
         expect(dataset.toCanonical()).toMatchSnapshot()
     })
 
-    it('passes base URI to fetch', async () => {
+    it('passes absolute URI to fetch', async () => {
         // given
         fetchResource.mockImplementationOnce(mockedResponse({
             xhrBuilder: responseBuilder().body(''),
@@ -99,10 +99,8 @@ describe('Hydra loadDocumentation', () => {
         // then
         expect(fetchResource)
             .toHaveBeenCalledWith(
-                'bar/docs',
-                expect.objectContaining({
-                    baseUri: 'http://example.com/foo/',
-                }))
+                'http://example.com/foo/bar/docs',
+                expect.anything())
     })
 })
 
@@ -577,6 +575,53 @@ describe('Hydra', () => {
                                 Authorization: 'Token xyz',
                             }),
                         }))
+            })
+
+            it('receives requested uri', async () => {
+                // given
+                client.defaultHeaders = jest.fn()
+
+                // when
+                await client.loadResource('http://example.com/resource')
+
+                // then
+                expect(client.defaultHeaders).toHaveBeenCalledWith({
+                    uri: 'http://example.com/resource',
+                })
+            })
+
+            it('receives absolute uri when using baseUri setting', async () => {
+                // given
+                client.defaultHeaders = jest.fn()
+                client.baseUri = 'http://example.com/'
+
+                // when
+                await client.loadResource('resource')
+
+                // then
+                expect(client.defaultHeaders).toHaveBeenCalledWith({
+                    uri: 'http://example.com/resource',
+                })
+            })
+
+            it('receives absolute uri when using baseUri setting from operation', async () => {
+                // given
+                client.defaultHeaders = jest.fn()
+                client.baseUri = 'http://example.com/'
+                const operation = {
+                    method: 'post',
+                    target: {
+                        id: $rdf.namedNode('resource'),
+                    },
+                }
+
+                // when
+                await client.invokeOperation(operation)
+
+                // then
+                expect(client.defaultHeaders).toHaveBeenCalledWith({
+                    uri: 'http://example.com/resource',
+                })
             })
         })
     })

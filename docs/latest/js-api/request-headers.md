@@ -25,7 +25,7 @@ response.xhr.headers.get('content-type')
 Alternatively, a function can be used to dynamically build the default headers before each request.
 
 ```typescript
-Hydra.defaultHeaders = async () => { /* headers */ }
+Hydra.defaultHeaders = async ({ uri: string }) => { /* headers */ }
 ```
 
 ## Setting headers for a single request

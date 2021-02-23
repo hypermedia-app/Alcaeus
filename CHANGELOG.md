@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+### Patch Changes
+
+- 42e1a8c: alcaeus/node incorrectly imported formats-common
+
 ## 1.1.1
 
 ### Patch Changes

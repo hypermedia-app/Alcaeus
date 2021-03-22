@@ -4,7 +4,7 @@ import * as Alcaeus from './index'
 
 export function create(opts?: Partial<Parameters<typeof Alcaeus['create']>[0]>) {
     return Alcaeus.create({
-        fetch,
+        fetch: (input, init) => fetch(input, init),
         Headers,
         parsers,
         datasetFactory: datasetIndexed,

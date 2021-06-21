@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.4
+
+### Patch Changes
+
+- 8d0a898: Update RDF/JS types, rdfine and rdf-ns-builders
+
 ## 1.1.3
 
 ### Patch Changes

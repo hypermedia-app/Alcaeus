@@ -83,7 +83,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
     public constructor(init: AlcaeusInit<D>) {
         const { resources, datasetFactory, rootSelectors, parsers, fetch } = init
 
-        if (!parsers) throw new Error('No parsers provided. Consider @rdf-esm/formats-common or @rdf-esm/formats-common packages')
+        if (!parsers) throw new Error('No parsers provided. Consider @rdfjs/formats-common or @rdf-esm/formats-common packages')
 
         this.rootSelectors = rootSelectors
         this.resources = resources

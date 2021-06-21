@@ -84,6 +84,7 @@
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
     "@rdfjs/data-model": "^1.2",
+    "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/parser-jsonld": "^1.2.0",
     "@rdfjs/parser-n3": "^1.1.3",

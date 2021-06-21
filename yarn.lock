@@ -1590,6 +1590,18 @@
   dependencies:
     "@types/rdf-js" "*"
 
+"@rdfjs/formats-common@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@rdfjs/formats-common/-/formats-common-2.1.0.tgz#5521684bb8757a49f0b057e2175a2a929e98ddd3"
+  integrity sha512-DVsQsMwSf+bNelIocDe35Wq/POkC+puXYd0BRwP76A3tzYKjIHwBHQFfq7wXMUaBe3jQq80x4DaFpxPaI7sPKA==
+  dependencies:
+    "@rdfjs/parser-jsonld" "^1.1.1"
+    "@rdfjs/parser-n3" "^1.1.2"
+    "@rdfjs/serializer-jsonld" "^1.2.0"
+    "@rdfjs/serializer-ntriples" "^1.0.1"
+    "@rdfjs/sink-map" "^1.0.0"
+    rdfxml-streaming-parser "^1.2.0"
+
 "@rdfjs/namespace@^1.0.0", "@rdfjs/namespace@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/namespace/-/namespace-1.1.0.tgz#869cb9a9f37c4ab4c0a03b603baeb0b95487609f"
@@ -1597,7 +1609,7 @@
   dependencies:
     "@rdfjs/data-model" "^1.1.0"
 
-"@rdfjs/parser-jsonld@^1.2.0", "@rdfjs/parser-jsonld@^1.2.1":
+"@rdfjs/parser-jsonld@^1.1.1", "@rdfjs/parser-jsonld@^1.2.0", "@rdfjs/parser-jsonld@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@rdfjs/parser-jsonld/-/parser-jsonld-1.2.1.tgz#fa4fa2f0b84b05eb326bd904f1d8788237cf40d3"
   integrity sha512-m8WQBacXaU2qPgf+rPEqit4EiEjBxpohvDEG4aF7YvFAT6uEto3lHu7ilKcMKpLfMKmbXp4v6KzJXm9yvockNw==
@@ -1608,7 +1620,7 @@
     jsonld "^1.8.1"
     readable-stream "^3.6.0"
 
-"@rdfjs/parser-n3@^1.1.3", "@rdfjs/parser-n3@^1.1.4":
+"@rdfjs/parser-n3@^1.1.2", "@rdfjs/parser-n3@^1.1.3", "@rdfjs/parser-n3@^1.1.4":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@rdfjs/parser-n3/-/parser-n3-1.1.4.tgz#7f8844c8a2fc62e7d1e40d7daf99a1af025a451d"
   integrity sha512-PUKSNlfD2Zq3GcQZuOF2ndfrLbc+N96FUe2gNIzARlR2er0BcOHBHEFUJvVGg1Xmsg3hVKwfg0nwn1JZ7qKKMw==
@@ -1619,6 +1631,15 @@
     readable-stream "^3.6.0"
     readable-to-readable "^0.1.0"
 
+"@rdfjs/serializer-jsonld@^1.2.0":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@rdfjs/serializer-jsonld/-/serializer-jsonld-1.2.3.tgz#643908db1211667f0c516f05fb20ce04f7ca49a0"
+  integrity sha512-Y6jGvXvtI4eIpHIizkY6WQnwUZNWcNfkwO4ZVTIGZpc7mHrlBMaXpcXc3f6XOBVeeb4k1dNy7Fqu2CL0B5+Uew==
+  dependencies:
+    "@rdfjs/namespace" "^1.1.0"
+    "@rdfjs/sink" "^1.0.3"
+    readable-stream "^3.6.0"
+
 "@rdfjs/serializer-jsonld@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@rdfjs/serializer-jsonld/-/serializer-jsonld-1.2.2.tgz#dc098f549a412c12ac0c98bc862b1930957ccc6a"
@@ -1627,7 +1648,7 @@
     "@rdfjs/sink" "^1.0.2"
     readable-stream "^3.6.0"
 
-"@rdfjs/serializer-ntriples@^1.0.3":
+"@rdfjs/serializer-ntriples@^1.0.1", "@rdfjs/serializer-ntriples@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@rdfjs/serializer-ntriples/-/serializer-ntriples-1.0.3.tgz#2e48ef23591a3f982a7e658bdf70d34737496d0a"
   integrity sha512-XXFgzNJyYrix0YgysqYowKw40hCJ+zeVqA/CGgO3y5XyKY+NL/VJJELMn7cTwjJteiLVCgRNAvaUVn4CjJ2PCg==
@@ -1636,7 +1657,7 @@
     "@rdfjs/to-ntriples" "^1.0.2"
     readable-to-readable "^0.1.0"
 
-"@rdfjs/sink-map@^1.0.1":
+"@rdfjs/sink-map@^1.0.0", "@rdfjs/sink-map@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rdfjs/sink-map/-/sink-map-1.0.1.tgz#e26ea2a9bafd05e2c6420bb438bdcb3854052227"
   integrity sha512-PRp5TjULHe2oRcupR80SClZ/l50wnSuX2Pl+TlkcRazt1w7AT86kLmQYFbDfjqGM7uDwSyD6evLJxXBDf5UuvQ==
@@ -7965,7 +7986,7 @@ rdf-transform-triple-to-quad@^1.0.2:
     "@rdfjs/data-model" "^1.1.2"
     readable-stream "^3.5.0"
 
-rdfxml-streaming-parser@^1.3.6:
+rdfxml-streaming-parser@^1.2.0, rdfxml-streaming-parser@^1.3.6:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/rdfxml-streaming-parser/-/rdfxml-streaming-parser-1.4.0.tgz#32cae3cfbc77aef110f6be8e067935fbf156f3b6"
   integrity sha512-/FKDCq4tuSWz8PZaaPxqIQpenEvRR3Gsqllqg4VmdPFN6WiWfbaD244cKASfXfQHt9Bw7tLsLHsmtA1isIPBCg==

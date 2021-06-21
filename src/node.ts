@@ -1,4 +1,4 @@
-import formats from '@rdfjs/formats-common'
+import * as formats from '@rdf-esm/formats-common'
 import datasetIndexed from 'rdf-dataset-indexed'
 import * as Alcaeus from './index'
 import 'isomorphic-fetch'

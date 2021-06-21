@@ -71,19 +71,17 @@
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.11.5",
-    "@babel/eslint-parser": "^7.11.5",
-    "@babel/eslint-plugin": "^7.11.5",
-    "@babel/helper-create-class-features-plugin": "^7.10.5",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/plugin-proposal-decorators": "^7.10.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
-    "@babel/preset-env": "^7.11.5",
-    "@babel/preset-typescript": "^7.10.4",
-    "@changesets/cli": "^2.10.2",
-    "@commitlint/cli": "^7.0.0",
-    "@commitlint/config-conventional": "^7.0.0",
+    "@babel/cli": "^7.14.5",
+    "@babel/eslint-parser": "^7.14.5",
+    "@babel/eslint-plugin": "^7.14.5",
+    "@babel/helper-create-class-features-plugin": "^7.14.6",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-decorators": "^7.14.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@changesets/cli": "^2.16.0",
     "@rdfjs/data-model": "^1.2",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/parser-jsonld": "^1.2.0",
@@ -137,11 +135,6 @@
     "*.{js,ts}": [
       "eslint --quiet --fix --ignore-path .eslintignore"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   },
   "publishConfig": {
     "access": "public"

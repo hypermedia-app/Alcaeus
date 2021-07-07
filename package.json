@@ -63,7 +63,7 @@
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.27",
     "clownface": "^1",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "isomorphic-form-data": "^2.0.0",
     "parse-link-header": "^1.0.1",
     "rdf-dataset-indexed": "^0.4.0",

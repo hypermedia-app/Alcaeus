@@ -47,4 +47,5 @@ export default {
     variable: 'hydra:variable',
     collection: 'hydra:collection',
     manages: 'hydra:manages',
+    memberAssertion: 'hydra:memberAssertion',
 }

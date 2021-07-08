@@ -1,10 +1,10 @@
 import { addExplicitStatementsInferredFromMemberAssertion } from '../../src/inferences'
-import * as specGraphs from './managesBlock-spec-graphs'
+import * as specGraphs from './memberAssertion-spec-graphs'
 
-describe('manages block inference', () => {
+describe('member assertion inference', () => {
     it('adds rdf:type triples', async () => {
         // given
-        const dataset = await specGraphs.managesWithType()
+        const dataset = await specGraphs.memberAssertionWithType()
 
         // when
         dataset.addAll([...addExplicitStatementsInferredFromMemberAssertion(dataset)])
@@ -13,7 +13,7 @@ describe('manages block inference', () => {
         expect(dataset.toCanonical()).toMatchSnapshot()
     })
 
-    it('adds triples for multiple manages blocks', async () => {
+    it('adds triples for multiple member assertions', async () => {
         // given
         const dataset = await specGraphs.multipleMemberAssertions()
 
@@ -24,7 +24,7 @@ describe('manages block inference', () => {
         expect(dataset.toCanonical()).toMatchSnapshot()
     })
 
-    it('ignores malformed manages blocks', async () => {
+    it('ignores malformed member assertion', async () => {
         // given
         const dataset = await specGraphs.incompleteMemberAssertions()
 

@@ -28,7 +28,7 @@ rep.root.getCollections()
 ## Discovering specific collections
 
 The `getCollections` method accepts an optional parameter which is used to find only
-collections conforming to given ["manages block" pattern](../collections.md#manages-block).
+collections conforming to given [member assertion](../collections.md#member-assertion).
 
 Below is an example for finding collection with members of a given `SupportedClass`.
 

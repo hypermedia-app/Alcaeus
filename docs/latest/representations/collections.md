@@ -9,7 +9,7 @@ interface Collection {
     readonly totalItems: number;
     readonly member: Resource[];
     readonly views?: View[];
-    readonly manages: MemberAssertion[];
+    readonly memberAssertion: MemberAssertion[];
 }
 ```
 
@@ -27,20 +27,23 @@ representation.root.toJSON()
 
 </run-kit>
 
-## Manages block
+## Member assertion
 
-Hydra introduces the so-called "manages block" which adds additional metadata to collections. It can serve two purposes:
+> [!WARNING]
+> I the past a property `hydra:manages` was used instead of `memberAssertion`. It is now deprecated and will be removed in future version of Alcaeus.
+
+Hydra introduces a concept of "member assertions" which add additional metadata to collections. It can serve two purposes:
 
 :one: Inform clients about collection members' relation with another resource
 
 :two: Inform clients about the type of collection elements
 
-In case of member relations, a manages block can look like this (excerpt):
+In case of member relations, a member assertion can look like this (excerpt):
 
 ```json
 {
   "@id": "https://sources.wikibus.org/magazine/Buses/issues",
-  "manages": {
+  "memberAssertion": {
     "subject": "https://sources.wikibus.org/magazine/Buses",
     "predicate": "dcterms:isPartOf"
   }
@@ -58,7 +61,7 @@ The second case is to declare that all members will be of a certain type:
 ```json
 {
   "@id": "https://sources.wikibus.org/magazine/Buses/issues",
-  "manages": {
+  "memberAssertion": {
     "predicate": "rdf:type",
     "object": "https://wikibus.org/vocab#MagazineIssue"
   }
@@ -68,7 +71,7 @@ The second case is to declare that all members will be of a certain type:
 > [!WARNING]
 > Alcaeus will explicitly add all triples which are implicitly stated about collection members.
 
-Here's an example showing how the manages block is retrieved from a collection to find the `rdf:type` of collection members. Nothing more than a simple array filter.
+Here's an example showing how the member assertion is retrieved from a collection to find the `rdf:type` of collection members. Nothing more than a simple array filter.
 
 <run-kit>
 
@@ -78,13 +81,13 @@ const { rdf } = require('@tpluscode/rdf-ns-builders')
 
 const { representation } = await Hydra.loadResource('https://sources.wikibus.org/magazines')
 
-representation.root.manages.find(managesBlock => managesBlock.property.equals(rdf.type)).toJSON()
+representation.root.memberAssertion.find(assertion => assertion.property.equals(rdf.type)).toJSON()
 ```
 
 </run-kit>
 
 > [!NOTE]
-> Do see the [`hydra:collection` page](representations/affordances/collection-property.md) for details on discovering collections based on their manages block specifications.
+> Do see the [`hydra:collection` page](representations/affordances/collection-property.md) for details on discovering collections based on their member assertions.
 
 ## Paged (partial) collections
 

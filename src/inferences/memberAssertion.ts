@@ -5,15 +5,15 @@ import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export function * addExplicitStatementsInferredFromMemberAssertion(dataset: DatasetCore): Iterable<BaseQuad> {
     for (const collection of cf({ dataset }).has([hydra.manages, hydra.memberAssertion]).toArray()) {
-        const managesBlocks = collection.out([hydra.manages, hydra.memberAssertion]).toArray()
+        const assertions = collection.out([hydra.manages, hydra.memberAssertion]).toArray()
 
         for (const member of collection.out(hydra.member).toArray()) {
-            for (const managesBlock of managesBlocks) {
+            for (const assertion of assertions) {
                 let blanks = 0
 
-                let subject = managesBlock.out(hydra.subject)
-                let predicate = managesBlock.out(hydra.property)
-                let object = managesBlock.out(hydra.object)
+                let subject = assertion.out(hydra.subject)
+                let predicate = assertion.out(hydra.property)
+                let object = assertion.out(hydra.object)
 
                 if (subject.terms.length === 0) {
                     subject = member

@@ -118,7 +118,7 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
                             ...c.memberAssertion || [],
                             ...c.manages || [],
                         ]
-                        return memberAssertions.find((managesBlock) => managesBlock.matches(filter))
+                        return memberAssertions.find((assertion) => assertion.matches(filter))
                     })
                 }
 

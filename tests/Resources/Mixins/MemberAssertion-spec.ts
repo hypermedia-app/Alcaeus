@@ -12,13 +12,13 @@ class MemberAssertion extends MemberAssertionMixin(Hydra.MemberAssertionMixin(Re
 describe('MemberAssertion', () => {
     let dataset: DatasetCore
     let node: GraphPointer<BlankNode>
-    let managesBlock: MemberAssertion
+    let memberAssertion: MemberAssertion
 
     beforeEach(() => {
         dataset = $rdf.dataset()
         node = cf({ dataset }).blankNode()
 
-        managesBlock = new MemberAssertion(node)
+        memberAssertion = new MemberAssertion(node)
     })
 
     describe('shouldApply', () => {
@@ -27,7 +27,7 @@ describe('MemberAssertion', () => {
             node.addIn(hydra.manages, node.blankNode())
 
             // when
-            const result = MemberAssertionMixin.shouldApply(managesBlock)
+            const result = MemberAssertionMixin.shouldApply(memberAssertion)
 
             // then
             expect(result).toBeTruthy()
@@ -38,7 +38,7 @@ describe('MemberAssertion', () => {
             node.addIn(hydra.memberAssertion, node.blankNode())
 
             // when
-            const result = MemberAssertionMixin.shouldApply(managesBlock)
+            const result = MemberAssertionMixin.shouldApply(memberAssertion)
 
             // then
             expect(result).toBeTruthy()
@@ -52,7 +52,7 @@ describe('MemberAssertion', () => {
                 node.addOut(hydra.object, node.namedNode('http://vocab/class'))
 
                 // when
-                const obj = managesBlock.object
+                const obj = memberAssertion.object
 
                 // then
                 expect(obj?.id.value).toBe('http://vocab/class')
@@ -65,7 +65,7 @@ describe('MemberAssertion', () => {
                 node.addOut(hydra.subject, node.namedNode('http://example.org/term'))
 
                 // when
-                const obj = managesBlock.subject
+                const obj = memberAssertion.subject
 
                 // then
                 expect(obj?.id.value).toBe('http://example.org/term')
@@ -78,7 +78,7 @@ describe('MemberAssertion', () => {
                 node.addOut(hydra.property, node.namedNode('http://example.org/predicate'))
 
                 // when
-                const obj = managesBlock.property
+                const obj = memberAssertion.property
 
                 // then
                 expect(obj?.id.value).toBe('http://example.org/predicate')
@@ -94,7 +94,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         object: 'http://example.com/vocab#class',
                     })
 
@@ -109,7 +109,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         object: $rdf.namedNode('http://example.com/vocab#class'),
                     })
 
@@ -124,7 +124,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         object: $rdf.namedNode('http://example.com/vocab#class'),
                         predicate: 'http://some.other/property',
                     })
@@ -139,7 +139,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, rdf.type)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         object: $rdf.namedNode('http://example.com/vocab#class'),
                         predicate: 'http://some.other/property',
                     })
@@ -157,7 +157,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         predicate: 'http://xmlns.com/foaf/0.1/knows',
                         subject: 'http://example.com/person/Tomasz',
                     })
@@ -173,7 +173,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         predicate: foaf.knows,
                         subject: 'http://example.com/person/Tomasz',
                     })
@@ -189,7 +189,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         predicate: 'http://xmlns.com/foaf/0.1/knows',
                         subject: $rdf.namedNode('http://example.com/person/Tomasz'),
                     })
@@ -205,7 +205,7 @@ describe('MemberAssertion', () => {
                         .addOut(hydra.property, foaf.knows)
 
                     // when
-                    const isMatch = managesBlock.matches({
+                    const isMatch = memberAssertion.matches({
                         predicate: RdfResourceImpl.factory.createEntity(node.namedNode(foaf.knows)),
                         subject: RdfResourceImpl.factory.createEntity(node.namedNode('http://example.com/person/Tomasz')),
                     })

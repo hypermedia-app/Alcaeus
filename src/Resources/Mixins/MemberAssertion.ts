@@ -14,7 +14,7 @@ export interface MemberAssertionPattern {
 
 interface MemberAssertionEx {
     /**
-     * Checks if the current manages block matches the given pattern
+     * Checks if the current member assertion matches the given pattern
      * @param filter {MemberAssertionPattern}
      */
     matches(filter: MemberAssertionPattern): boolean

@@ -1,9 +1,9 @@
 import { createGraph } from '../test-utils'
 
-const managesWithTypeGraph = `
+const memberAssertionWithTypeGraph = `
     <collection> 
       a hydra:Collection ;
-      hydra:manages [
+      hydra:memberAssertion [
         hydra:property rdf:type ;
         hydra:object <vocab#Member>
       ] ;
@@ -13,7 +13,7 @@ const managesWithTypeGraph = `
 const multipleMemberAssertionsGraph = `
     <collection> 
       a hydra:Collection ;
-      hydra:manages [
+      hydra:memberAssertion [
         hydra:property rdf:type ;
         hydra:object <vocab#Member>
       ], [
@@ -26,15 +26,15 @@ const multipleMemberAssertionsGraph = `
 const incompleteMemberAssertionsGraph = `
   <collection> 
       a hydra:Collection ;
-      hydra:manages [
+      hydra:memberAssertion [
         hydra:property rdf:type ;
-        hydra:object <vocab#Member> ; # manages block must only have two objects
+        hydra:object <vocab#Member> ; # member assertion must only have two objects
         hydra:subject rdf:bar
       ], [
-        hydra:subject <member3> # manages block must only have two objects
+        hydra:subject <member3> # member assertion must only have two objects
       ] ;
       hydra:member <member1>, <member2> .`
 
-export const managesWithType = createGraph(managesWithTypeGraph)
+export const memberAssertionWithType = createGraph(memberAssertionWithTypeGraph)
 export const multipleMemberAssertions = createGraph(multipleMemberAssertionsGraph)
 export const incompleteMemberAssertions = createGraph(incompleteMemberAssertionsGraph)

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+### Minor Changes
+
+- 9894812: Added support for `hydra:memberAssertion`
+
+### Patch Changes
+
+- a15434d: Iterating response and resource count would return same resource multiple times
+- 52beb52: Update isomorphic-fetch
+
 ## 1.1.4
 
 ### Patch Changes

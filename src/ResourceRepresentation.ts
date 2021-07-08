@@ -6,6 +6,8 @@ import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import type { DatasetCore, NamedNode } from 'rdf-js'
+import TermMap from '@rdf-esm/term-map'
+import { Term } from '@rdfjs/types'
 
 export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T extends RdfResourceCore<D> = Hydra.Resource<D>> extends Iterable<Hydra.Resource<D>> {
     /**
@@ -72,8 +74,15 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
     }
 
     public [Symbol.iterator]() {
-        return this.__graph.in()
-            .map(this._createEntity.bind(this))[Symbol.iterator]()
+        return this.__graph.in().toArray()
+            .reduce((uniq, pointer) => {
+                if (!uniq.has(pointer.term)) {
+                    return uniq.set(pointer.term, this._createEntity(pointer))
+                }
+
+                return uniq
+            }, new TermMap<Term, Hydra.Resource<D>>())
+            .values()
     }
 
     private _createEntity<T>(node: GraphPointer<ResourceIdentifier>) {

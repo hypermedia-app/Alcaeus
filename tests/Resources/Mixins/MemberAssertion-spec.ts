@@ -4,21 +4,21 @@ import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { BlankNode, DatasetCore } from 'rdf-js'
-import { ManagesBlockMixin } from '../../../src/Resources/Mixins/ManagesBlock'
+import { MemberAssertionMixin } from '../../../src/Resources/Mixins/MemberAssertion'
 import { foaf, hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
-class ManagesBlock extends ManagesBlockMixin(Hydra.ManagesBlockMixin(Resource)) {}
+class MemberAssertion extends MemberAssertionMixin(Hydra.MemberAssertionMixin(Resource)) {}
 
-describe('ManagesBlock', () => {
+describe('MemberAssertion', () => {
     let dataset: DatasetCore
     let node: GraphPointer<BlankNode>
-    let managesBlock: ManagesBlock
+    let managesBlock: MemberAssertion
 
     beforeEach(() => {
         dataset = $rdf.dataset()
         node = cf({ dataset }).blankNode()
 
-        managesBlock = new ManagesBlock(node)
+        managesBlock = new MemberAssertion(node)
     })
 
     describe('shouldApply', () => {
@@ -27,7 +27,18 @@ describe('ManagesBlock', () => {
             node.addIn(hydra.manages, node.blankNode())
 
             // when
-            const result = ManagesBlockMixin.shouldApply(managesBlock)
+            const result = MemberAssertionMixin.shouldApply(managesBlock)
+
+            // then
+            expect(result).toBeTruthy()
+        })
+
+        it('should return true if resource is object of hydra:memberAssertion property', () => {
+            // given
+            node.addIn(hydra.memberAssertion, node.blankNode())
+
+            // when
+            const result = MemberAssertionMixin.shouldApply(managesBlock)
 
             // then
             expect(result).toBeTruthy()

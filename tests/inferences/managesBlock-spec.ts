@@ -1,4 +1,4 @@
-import { addExplicitStatementsInferredFromManagesBlock } from '../../src/inferences'
+import { addExplicitStatementsInferredFromMemberAssertion } from '../../src/inferences'
 import * as specGraphs from './managesBlock-spec-graphs'
 
 describe('manages block inference', () => {
@@ -7,7 +7,7 @@ describe('manages block inference', () => {
         const dataset = await specGraphs.managesWithType()
 
         // when
-        dataset.addAll([...addExplicitStatementsInferredFromManagesBlock(dataset)])
+        dataset.addAll([...addExplicitStatementsInferredFromMemberAssertion(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()
@@ -15,10 +15,10 @@ describe('manages block inference', () => {
 
     it('adds triples for multiple manages blocks', async () => {
         // given
-        const dataset = await specGraphs.multipleManagesBlocks()
+        const dataset = await specGraphs.multipleMemberAssertions()
 
         // when
-        dataset.addAll([...addExplicitStatementsInferredFromManagesBlock(dataset)])
+        dataset.addAll([...addExplicitStatementsInferredFromMemberAssertion(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()
@@ -26,10 +26,10 @@ describe('manages block inference', () => {
 
     it('ignores malformed manages blocks', async () => {
         // given
-        const dataset = await specGraphs.incompleteManagesBlocks()
+        const dataset = await specGraphs.incompleteMemberAssertions()
 
         // when
-        dataset.addAll([...addExplicitStatementsInferredFromManagesBlock(dataset)])
+        dataset.addAll([...addExplicitStatementsInferredFromMemberAssertion(dataset)])
 
         // then
         expect(dataset.toCanonical()).toMatchSnapshot()

@@ -1,24 +1,28 @@
-import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { ExtendingConstructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { namespace } from '@tpluscode/rdfine'
-import type { Class, ManagesBlock } from '@rdfine/hydra'
+import type { Class, MemberAssertion } from '@rdfine/hydra'
 import type { Property } from '@rdfine/rdf'
 import type { MultiPointer } from 'clownface'
 import type { NamedNode } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
-export interface ManagesBlockPattern {
+export interface MemberAssertionPattern {
     subject?: string | RdfResource | NamedNode
     predicate?: string | Property | NamedNode
     object?: string | Class | NamedNode
 }
 
+interface MemberAssertionEx {
+    /**
+     * Checks if the current manages block matches the given pattern
+     * @param filter {MemberAssertionPattern}
+     */
+    matches(filter: MemberAssertionPattern): boolean
+}
+
 declare module '@rdfine/hydra' {
-    export interface ManagesBlock {
-        /**
-         * Checks if the current manages block matches the given pattern
-         * @param filter {ManagesBlockPattern}
-         */
-        matches(filter: ManagesBlockPattern): boolean
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    export interface MemberAssertion extends MemberAssertionEx {
     }
 }
 
@@ -34,10 +38,10 @@ function getUri(factory: MultiPointer, resource: string | RdfResource | NamedNod
     return resource
 }
 
-export function ManagesBlockMixin<TBase extends Constructor<Omit<ManagesBlock, 'matches'>>>(Base: TBase) {
+export function MemberAssertionMixin<TBase extends ExtendingConstructor<MemberAssertion, MemberAssertionEx>>(Base: TBase) {
     @namespace(hydra)
-    class ManagesBlockClass extends Base implements ManagesBlock {
-        public matches({ subject = '', predicate = rdf.type, object = '' }: ManagesBlockPattern): boolean {
+    class MemberAssertionClass extends Base implements MemberAssertionEx {
+        public matches({ subject = '', predicate = rdf.type, object = '' }: MemberAssertionPattern): boolean {
             const predicateId = getUri(this.pointer, predicate)
             const objectId = getUri(this.pointer, object)
             const subjectId = getUri(this.pointer, subject)
@@ -56,9 +60,9 @@ export function ManagesBlockMixin<TBase extends Constructor<Omit<ManagesBlock, '
         }
     }
 
-    return ManagesBlockClass
+    return MemberAssertionClass
 }
 
-ManagesBlockMixin.shouldApply = (res: RdfResource) => {
-    return res.pointer.in(hydra.manages).terms.length > 0
+MemberAssertionMixin.shouldApply = (res: RdfResource) => {
+    return res.pointer.in([hydra.manages, hydra.memberAssertion]).terms.length > 0
 }

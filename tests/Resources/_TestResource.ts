@@ -1,7 +1,7 @@
 import RdfResource from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
 import { Criteria, RecursiveStopConditions } from '../../src/Resources/CoreMixins/OperationFinder'
-import { ManagesBlockPattern } from '../../src/Resources/Mixins/ManagesBlock'
+import { MemberAssertionPattern } from '../../src/Resources/Mixins/MemberAssertion'
 import { RuntimeOperation } from '../../src/Resources/Operation'
 
 export class Resource extends RdfResource implements Hydra.Resource {
@@ -17,7 +17,7 @@ export class Resource extends RdfResource implements Hydra.Resource {
         return []
     }
 
-    public getCollections(filter?: ManagesBlockPattern): Resource[] {
+    public getCollections(filter?: MemberAssertionPattern): Resource[] {
         return []
     }
 

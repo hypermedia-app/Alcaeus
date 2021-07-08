@@ -3,13 +3,13 @@
 Hydra specifications defines an interface for collections. A basic collection is represented by an array of its items (`member`) and the total number of items.
 
 ```typescript
-import { ManagesBlock, Resource, View } from '@rdfine/hydra'
+import { MemberAssertion, Resource, View } from '@rdfine/hydra'
 
 interface Collection {
     readonly totalItems: number;
     readonly member: Resource[];
     readonly views?: View[];
-    readonly manages: ManagesBlock[];
+    readonly manages: MemberAssertion[];
 }
 ```
 

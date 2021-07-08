@@ -3,9 +3,9 @@ import * as RDF from '@rdf-esm/data-model'
 import { BaseQuad, DatasetCore } from 'rdf-js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
-export function * addExplicitStatementsInferredFromManagesBlock(dataset: DatasetCore): Iterable<BaseQuad> {
-    for (const collection of cf({ dataset }).has(hydra.manages).toArray()) {
-        const managesBlocks = collection.out(hydra.manages).toArray()
+export function * addExplicitStatementsInferredFromMemberAssertion(dataset: DatasetCore): Iterable<BaseQuad> {
+    for (const collection of cf({ dataset }).has([hydra.manages, hydra.memberAssertion]).toArray()) {
+        const managesBlocks = collection.out([hydra.manages, hydra.memberAssertion]).toArray()
 
         for (const member of collection.out(hydra.member).toArray()) {
             for (const managesBlock of managesBlocks) {

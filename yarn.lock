@@ -1464,16 +1464,16 @@
   resolved "https://registry.yarnpkg.com/@rdf-esm/to-ntriples/-/to-ntriples-0.5.0.tgz#4a2c294e6d740509571e3b0efde8277c4824b928"
   integrity sha512-VIcqRv68V/s0NS6bFy58CcsHwV0UCM/DHhAc1MYLB/yue1nyhKsX4uyu/SB5gbbY2r4BIH4G6O+arxf59KzgwQ==
 
-"@rdfine/hydra@^0.6.6":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.6.6.tgz#de3174cffb3a8d72d134b39c31e3b3c7d2babce2"
-  integrity sha512-lKL8H4si9qrdRVP7DXD8FIIwuPElO0Dk4OlWn3WNGBmV3DRKpt1lbOte8DyEmFc+Gfl4zX6s4uLK3llGNomwKw==
+"@rdfine/hydra@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.7.1.tgz#961382ac0d73ef39ed7faf92974e1727830c4dac"
+  integrity sha512-7/DZt7O+MuY4KPFGKm3jcWk3/zDexSA9X9VC+B5Amr5lQdh2eJGRupk/Xoz09lLEGnzWK8t2bpLU71kYyTx1Xw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/rdf" "^0.5.4"
-    "@rdfine/rdfs" "^0.6.5"
+    "@rdfine/rdfs" "^0.6.6"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
-    "@tpluscode/rdfine" "^0.5.27"
+    "@tpluscode/rdfine" "^0.5.29"
     es6-url-template "^3.0.2"
 
 "@rdfine/rdf@^0.5.4":
@@ -1485,15 +1485,15 @@
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     "@tpluscode/rdfine" "^0.5.27"
 
-"@rdfine/rdfs@^0.6.5":
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/@rdfine/rdfs/-/rdfs-0.6.5.tgz#f308f4807a351478a76ee64d34f4602ab0eb31eb"
-  integrity sha512-CAiMfpqzV1GLm0Le/43sY/S7wxZRFbNNkKw2DmSxAupCDFW5ZBRrnKCqMnO8UhG860uLUwmvk2NIUYhkxMcU9w==
+"@rdfine/rdfs@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@rdfine/rdfs/-/rdfs-0.6.6.tgz#c4f6f9bc801a4a4432e19447e98cf9b17119898f"
+  integrity sha512-nyOXHOH2dlksApPhtRHYCGRp6r9HM4FdZCLn60VfP9O+6nN5a00k/VteHeax6QT/nkKhiVJk2uNY1CZiymc0Ag==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/rdf" "^0.5.4"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
-    "@tpluscode/rdfine" "^0.5.27"
+    "@tpluscode/rdfine" "^0.5.29"
 
 "@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.1", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2":
   version "1.2.0"
@@ -1671,10 +1671,10 @@
     "@tpluscode/rdf-ns-builders" "^1"
     "@zazuko/rdf-vocabularies" "*"
 
-"@tpluscode/rdfine@^0.5.27":
-  version "0.5.27"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.27.tgz#27f9a1630d905bdecb65f79f608424cdb0d87a92"
-  integrity sha512-Ah/xM1QDMlGtfygtWOYj5wyovfE3Cn8f5LzHtNQz+qMu69XilZMGPnAOY6c/M1dNHGocnq8QPbXwfcnUcxu97A==
+"@tpluscode/rdfine@^0.5.27", "@tpluscode/rdfine@^0.5.29":
+  version "0.5.29"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.29.tgz#9eec1e36925abc61f18bb537143c3b3d019ae394"
+  integrity sha512-CKudIrhJ2JmnW2gTmVZOrcjN4niKYV9DxEFoo9hndsMary8CdsYT5avzbXtc2B9YcW62lYBMl609TEETTx64Fw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/namespace" "^0.5.2"

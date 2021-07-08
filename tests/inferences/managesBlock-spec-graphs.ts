@@ -10,7 +10,7 @@ const managesWithTypeGraph = `
       hydra:member <member1>, <member2> .
 `
 
-const multipleManagesBlocksGraph = `
+const multipleMemberAssertionsGraph = `
     <collection> 
       a hydra:Collection ;
       hydra:manages [
@@ -23,7 +23,7 @@ const multipleManagesBlocksGraph = `
       hydra:member <member1>, <member2> .
 `
 
-const incompleteManagesBlocksGraph = `
+const incompleteMemberAssertionsGraph = `
   <collection> 
       a hydra:Collection ;
       hydra:manages [
@@ -36,5 +36,5 @@ const incompleteManagesBlocksGraph = `
       hydra:member <member1>, <member2> .`
 
 export const managesWithType = createGraph(managesWithTypeGraph)
-export const multipleManagesBlocks = createGraph(multipleManagesBlocksGraph)
-export const incompleteManagesBlocks = createGraph(incompleteManagesBlocksGraph)
+export const multipleMemberAssertions = createGraph(multipleMemberAssertionsGraph)
+export const incompleteMemberAssertions = createGraph(incompleteMemberAssertionsGraph)

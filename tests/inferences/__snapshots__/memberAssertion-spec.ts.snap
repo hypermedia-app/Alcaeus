@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`manages block inference adds rdf:type triples 1`] = `
+exports[`member assertion inference adds rdf:type triples 1`] = `
 "<http://example.com/collection> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Collection> .
-<http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n0 .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member1> .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member2> .
+<http://example.com/collection> <http://www.w3.org/ns/hydra/core#memberAssertion> _:c14n0 .
 <http://example.com/member1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/vocab#Member> .
 <http://example.com/member2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/vocab#Member> .
 _:c14n0 <http://www.w3.org/ns/hydra/core#object> <http://example.com/vocab#Member> .
@@ -12,12 +12,12 @@ _:c14n0 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22
 "
 `;
 
-exports[`manages block inference adds triples for multiple manages blocks 1`] = `
+exports[`member assertion inference adds triples for multiple member assertions 1`] = `
 "<http://example.com/collection> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Collection> .
-<http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n0 .
-<http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n1 .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member1> .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member2> .
+<http://example.com/collection> <http://www.w3.org/ns/hydra/core#memberAssertion> _:c14n0 .
+<http://example.com/collection> <http://www.w3.org/ns/hydra/core#memberAssertion> _:c14n1 .
 <http://example.com/member1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/vocab#Member> .
 <http://example.com/member2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/vocab#Member> .
 <http://example.com/member3> <http://xmlns.com/foaf/0.1/friend> <http://example.com/member1> .
@@ -29,15 +29,15 @@ _:c14n1 <http://www.w3.org/ns/hydra/core#subject> <http://example.com/member3> .
 "
 `;
 
-exports[`manages block inference ignores malformed manages blocks 1`] = `
+exports[`member assertion inference ignores malformed member assertion 1`] = `
 "<http://example.com/collection> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/hydra/core#Collection> .
-<http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n0 .
-<http://example.com/collection> <http://www.w3.org/ns/hydra/core#manages> _:c14n1 .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member1> .
 <http://example.com/collection> <http://www.w3.org/ns/hydra/core#member> <http://example.com/member2> .
-_:c14n0 <http://www.w3.org/ns/hydra/core#subject> <http://example.com/member3> .
-_:c14n1 <http://www.w3.org/ns/hydra/core#object> <http://example.com/vocab#Member> .
-_:c14n1 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
-_:c14n1 <http://www.w3.org/ns/hydra/core#subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#bar> .
+<http://example.com/collection> <http://www.w3.org/ns/hydra/core#memberAssertion> _:c14n0 .
+<http://example.com/collection> <http://www.w3.org/ns/hydra/core#memberAssertion> _:c14n1 .
+_:c14n0 <http://www.w3.org/ns/hydra/core#object> <http://example.com/vocab#Member> .
+_:c14n0 <http://www.w3.org/ns/hydra/core#property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
+_:c14n0 <http://www.w3.org/ns/hydra/core#subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#bar> .
+_:c14n1 <http://www.w3.org/ns/hydra/core#subject> <http://example.com/member3> .
 "
 `;

@@ -5,7 +5,7 @@ import type { DatasetCore, Term } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import { GraphPointer } from 'clownface'
 import type { HydraClient } from '../../alcaeus'
-import type { ManagesBlockPattern } from '../Mixins/ManagesBlock'
+import type { MemberAssertionPattern } from '../Mixins/MemberAssertion'
 import { RuntimeOperation, createMixin } from '../Operation'
 
 declare module '@tpluscode/rdfine' {
@@ -30,7 +30,7 @@ declare module '@tpluscode/rdfine' {
         /**
          * Gets objects of hydra:collection property
          */
-        getCollections(filter?: ManagesBlockPattern): RdfResource<D>[]
+        getCollections(filter?: MemberAssertionPattern): RdfResource<D>[]
     }
 }
 
@@ -111,10 +111,15 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
                 return [...map.values()]
             }
 
-            public getCollections(filter?: ManagesBlockPattern) {
+            public getCollections(filter?: MemberAssertionPattern) {
                 if (filter) {
-                    return this.collection.filter((c) => c.manages &&
-                        c.manages.find((managesBlock) => managesBlock.matches(filter)))
+                    return this.collection.filter((c) => {
+                        const memberAssertions = [
+                            ...c.memberAssertion || [],
+                            ...c.manages || [],
+                        ]
+                        return memberAssertions.find((assertion) => assertion.matches(filter))
+                    })
                 }
 
                 return this.collection

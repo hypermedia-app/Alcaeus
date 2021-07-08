@@ -391,7 +391,37 @@ describe('HydraResource', () => {
                         <http://example.com/collection3> ,
                         <http://example.com/collection4> .
                         
-                    <http://example.com/collection1> ${hydra.manages} [
+                    <http://example.com/collection1> a ${hydra.Collection} ; ${hydra.manages} [
+                        ${hydra.object} <http://example.org/Class> ;
+                        ${hydra.property} ${rdf.type}
+                    ] .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
+
+            // when
+            const collections = resource.getCollections({
+                object: 'http://example.org/Class',
+            })
+
+            // then
+            expect(collections.length).toBe(1)
+            expect(collections[0].id.value).toBe('http://example.com/collection1')
+        })
+
+        it('returns collections matching member assertion Class given by id', async () => {
+            // given
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> ${hydra.collection} 
+                        <http://example.com/collection1> ,
+                        <http://example.com/collection2> ,
+                        <http://example.com/collection3> ,
+                        <http://example.com/collection4> .
+                        
+                    <http://example.com/collection1> a ${hydra.Collection} ; ${hydra.memberAssertion} [
                         ${hydra.object} <http://example.org/Class> ;
                         ${hydra.property} ${rdf.type}
                     ] .

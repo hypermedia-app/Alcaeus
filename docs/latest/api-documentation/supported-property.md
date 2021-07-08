@@ -18,9 +18,12 @@ Given a reference to an `ApiDocumentation` and a class URI, it is possible to ge
 ```typescript
 const { Hydra } = require("${alcaeus}/node")
 
-const doc = await Hydra.loadDocumentation('https://sources.wikibus.org/doc')
+const doc = await Hydra.loadDocumentation('https://always-read-the-plaque.herokuapp.com/api')
 
-doc.getProperties('https://wikibus.org/ontology#Book')
+doc
+  .supportedClass.find(sc => sc.id.value === 'https://always-read-the-plaque.herokuapp.com/api/class/Plaque')
+  .supportedProperty
+  .map(sp => sp.toJSON())
 ```
 
 </run-kit>
@@ -38,13 +41,12 @@ Here's an example which returns a key/value map of property labels and their val
 ```typescript
 const { Hydra } = require("${alcaeus}/node")
 
-const { representation } = await Hydra.loadResource('https://sources.wikibus.org/brochure/1300')
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre')
 
 representation.root.getProperties()
-    .filter(tuple => tuple.objects.length > 0)
-    .reduce((obj, tuple) => ({
+    .reduce((obj, { supportedProperty: { property }, objects }) => ({
         ...obj,
-        [tuple.supportedProperty.title]: tuple.objects.map(o => o.toJSON())
+        [property.id.value]: objects.map(o => o.toJSON())
     }), {})
 ```
 

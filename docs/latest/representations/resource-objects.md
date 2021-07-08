@@ -9,9 +9,9 @@ Individual resources within a representation will be always in the form similar 
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/book/1331');
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre');
 
-representation.root['http://schema.org/author']['http://schema.org/name'];
+representation.root['http://schema.org/contributor']['http://schema.org/name'];
 ```
 
 </run-kit>
@@ -37,7 +37,7 @@ While it is trivial to tell one from the other just by looking at the `id`, Alca
 ```typescript
 const { Hydra } = require("${alcaeus}/node")
 
-const { representation } = await Hydra.loadResource('https://sources.wikibus.org/book/1331');
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre');
 
 [...representation].map(resource => ({
   id: resource.id.value,
@@ -55,11 +55,11 @@ A `types` property returns resource's RDF types as a JavaScript [`Set<RdfResourc
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/book/1331')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre')
 
 const example = {
-  types: [...representation.root.types],
-  isBook: representation.root.types.has('http://schema.org/Book')
+  types: [...representation.root.types].map(t => t.toJSON()),
+  isPlaque: representation.root.types.has('https://plaque.maze.link/vocab#Plaque')
 }
 ```
 

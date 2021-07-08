@@ -18,11 +18,15 @@ relation every time such link is required.
 It can easily be accessed from the resource itself using a dedicated getter method
 
 <run-kit>
-const { Hydra } = require("${alcaeus}")
 
-const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
+```javascript
+const { Hydra } = require("${alcaeus}/node")
 
-rep.root.getCollections()
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/')
+
+representation.root.getCollections().map(c => c.id)
+```
+
 </run-kit>
 
 ## Discovering specific collections
@@ -32,21 +36,24 @@ collections conforming to given [member assertion](../collections.md#member-asse
 
 Below is an example for finding collection with members of a given `SupportedClass`.
 
+<run-kit>
+
 ```js
-const { Hydra } = require("alcaeus")
+const { Hydra } = require("${alcaeus}/node")
 
-const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
-const supportedClass = rep.root.apiDocumentation.classes[0]
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/')
+const supportedClass = representation.root.apiDocumentation.class
+  .find(c => c.id.value === 'https://plaque.maze.link/vocab#Plaque')
 
-rep.root.getCollections({
+representation.root.getCollections({
     object: supportedClass
 })
 ```
 
-{% hint style="danger" %}
- When using the `object` parameter, `predicate` will implicitly be `rdf:type`. Changing
- it to anything else will cause an empty result.
-{% endhint %}
+</run-kit>
+
+> [!WARNING]
+> When using the `object` parameter, `predicate` will implicitly be `rdf:type`. Changing it to anything else will cause an empty result.
 
 Second option is to look for collections by subject and predicate:
 
@@ -61,8 +68,5 @@ rep.root.getCollections({
 })
 ```
 
-{% hint style="tip" %}
- You may notice in the second snippet that strings are used for `subject`
- and `predicate` parameters. Same is true for `object`; all three parameters can be either
- strings (URI) or resource objects.
-{% endhint %}
+> [!TIP]
+> You may notice in the second snippet that strings are used for `subject` and `predicate` parameters. Same is true for `object`; all three parameters can be either strings (URI) or resource objects.

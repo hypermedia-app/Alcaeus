@@ -7,11 +7,11 @@ Out of the box only absolute URIs will be correctly dereferenced. A base URL can
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-client.baseUri = 'https://sources.wikibus.org/'
+client.baseUri = 'https://always-read-the-plaque.herokuapp.com/'
 
-const { response } = await client.loadResource('brochure/1300')
+const { representation } = await client.loadResource('plaque/red-rocks-amphitheatre')
 
-response.xhr.status
+representation.root.toJSON()
 ```
 
 </run-kit>

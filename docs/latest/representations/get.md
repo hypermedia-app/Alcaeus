@@ -9,7 +9,7 @@ resources.
 ```js
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/books');
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques');
 
 // find a URI of a collection member
 const collection = representation.root

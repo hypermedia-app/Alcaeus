@@ -6,9 +6,9 @@ that it can be used directly in a `for..of` loop.
 <run-kit>
 
 ```typescript
-const client = require("alcaeus@1.0.0-RC.1/node").Hydra
+const client = require("${alcaeus}/node").Hydra
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/books')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques')
 
 for(const resource of representation) {
   if (!resource.isAnonymous) { // handy rdfine property to check for blank nodes 
@@ -27,10 +27,10 @@ Here's an example which counts the occurrences of RDF types within an `ApiDocume
 <run-kit>
 
 ```typescript
-const client = require("alcaeus@1.0.0-RC.1/node").Hydra
+const client = require("${alcaeus}/node").Hydra
 const TermMap = require('@rdfjs/term-map')
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/doc')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/api')
 
 const sums = Array.from(representation)
     .reduce((sums, resource) => {

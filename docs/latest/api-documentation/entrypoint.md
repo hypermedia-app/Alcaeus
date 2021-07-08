@@ -11,7 +11,7 @@ There is a shortcut method on the `ApiDocumentation` object which loads the entr
 ```typescript
 const client = require("${alcaeus}/node").Hydra
 
-const doc = await client.loadDocumentation('https://sources.wikibus.org/doc')
+const doc = await client.loadDocumentation('https://always-read-the-plaque.herokuapp.com/api')
 const { representation } = await doc.loadEntrypoint()
 
 representation.root.toJSON()

@@ -9,9 +9,9 @@ Hydra resources are expressed as a graph which can contain one or more related r
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/book/426');
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre');
 
-representation.root
+representation.root.toJSON()
 ```
 
 </run-kit>
@@ -69,19 +69,19 @@ Consider a `hydra:Collection` which supports paging. Current design of Hydra mak
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/brochures?page=1')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques?page=1')
 
-representation.get('https://sources.wikibus.org/brochures?page=1').toJSON()
+representation.get('https://always-read-the-plaque.herokuapp.com/plaques?page=1').toJSON()
 ```
 
 </run-kit>
 
-As you can see above, the requested "page resource" does not really contain the most "interesting" data: the collection `member`s.
+As you can see above, the requested "page resource" does not really contain the most interesting data: the collection `member`s.
 
 ```json
 {
   "@context": {},
-  "id": "https://sources.test.wikibus.org/brochures?page=1",
+  "id": "https://always-read-the-plaque.herokuapp.com/plaques?page=1",
   "type": ["PartialCollectionView"],
   "next": "",
   "prev": "",
@@ -90,14 +90,14 @@ As you can see above, the requested "page resource" does not really contain the 
 }
 ```
 
-For that reason, whenever a `PartialCollectionView` is returned from the API, the root will actually be the collection itself.
+For that reason, whenever a `PartialCollectionView` is returned from the API, the `root` will actually be the collection itself.
 
 <run-kit>
 
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/brochures?page=1')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques?page=1')
 
 representation.root.toJSON()
 ```

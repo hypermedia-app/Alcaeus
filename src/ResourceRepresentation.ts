@@ -37,11 +37,31 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
     private __graph: AnyPointer<AnyContext, D>
     private __factory: ResourceFactory
     private readonly rootNode: GraphPointer<ResourceIdentifier>
+    private __uniqueResources: () => Map<Term, Hydra.Resource<D>>
 
     public constructor(graph: AnyPointer<AnyContext, D>, factory: ResourceFactory, rootResource: NamedNode) {
         this.__graph = graph
         this.__factory = factory
         this.rootNode = graph.node(rootResource)
+
+        this.__uniqueResources = (() => {
+            let map: Map<Term, Hydra.Resource<D>>
+
+            return () => {
+                if (!map) {
+                    map = this.__graph.in().toArray()
+                        .reduce((uniq, pointer) => {
+                            if (!uniq.has(pointer.term)) {
+                                return uniq.set(pointer.term, this._createEntity(pointer))
+                            }
+
+                            return uniq
+                        }, new TermMap<Term, Hydra.Resource<D>>())
+                }
+
+                return map
+            }
+        })()
     }
 
     public get<T>(uri: string): (T & Hydra.Resource<D>) | undefined {
@@ -64,7 +84,7 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
     }
 
     public get length(): number {
-        return this.__graph.in().terms.length
+        return this.__uniqueResources().size
     }
 
     public ofType<T>(classId: string | NamedNode) {
@@ -74,15 +94,7 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
     }
 
     public [Symbol.iterator]() {
-        return this.__graph.in().toArray()
-            .reduce((uniq, pointer) => {
-                if (!uniq.has(pointer.term)) {
-                    return uniq.set(pointer.term, this._createEntity(pointer))
-                }
-
-                return uniq
-            }, new TermMap<Term, Hydra.Resource<D>>())
-            .values()
+        return this.__uniqueResources().values()
     }
 
     private _createEntity<T>(node: GraphPointer<ResourceIdentifier>) {

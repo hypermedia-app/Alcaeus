@@ -2,4 +2,4 @@
 "alcaeus": patch
 ---
 
-Iterating response would return same resource multiple times
+Iterating response and resource count would return same resource multiple times

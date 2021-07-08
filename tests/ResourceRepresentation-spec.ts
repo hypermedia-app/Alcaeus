@@ -49,6 +49,21 @@ describe('ResourceRepresentation', () => {
         )
     })
 
+    describe('length', () => {
+        it('should count unique resources', () => {
+            // given
+            const dataset = $rdf.dataset()
+            cf({ dataset, graph: ex.a })
+                .namedNode(ex.a).addOut(rdf.type, ex.Res).addOut(schema.knows, [ex.b, ex.c, ex.d])
+                .namedNode(ex.c).addOut(schema.knows, [ex.a, ex.d])
+                .namedNode(ex.d).addIn(schema.knows, ex.a)
+            const r12n = new ResourceRepresentation(cf({ dataset, graph: ex.a }), factory, ex.a)
+
+            // then
+            expect(r12n.length).toEqual(2)
+        })
+    })
+
     describe('root', () => {
         it('should use selection root resource as specified by parameter', () => {
             // given

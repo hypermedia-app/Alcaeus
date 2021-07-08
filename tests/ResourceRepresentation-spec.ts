@@ -28,6 +28,27 @@ describe('ResourceRepresentation', () => {
         expect(array.map(r => r.id.value).join()).toBe('http://example.com/a,http://example.com/b,http://example.com/c,http://example.com/d')
     })
 
+    it('should iterate unique resources', () => {
+        // given
+        const dataset = $rdf.dataset()
+        cf({ dataset, graph: ex.a })
+            .namedNode(ex.a).addOut(rdf.type, ex.Res).addOut(schema.knows, [ex.b, ex.c, ex.d])
+            .namedNode(ex.c).addOut(schema.knows, [ex.a, ex.d])
+            .namedNode(ex.d).addIn(schema.knows, ex.a)
+        const r12n = new ResourceRepresentation(cf({ dataset, graph: ex.a }), factory, ex.a)
+
+        // when
+        const array = Array.from(r12n).map(r => r.id)
+
+        // then
+        expect(array).toHaveLength(2)
+        expect(array).toStrictEqual(
+            expect.arrayContaining([
+                ex.a, ex.c,
+            ]),
+        )
+    })
+
     describe('root', () => {
         it('should use selection root resource as specified by parameter', () => {
             // given

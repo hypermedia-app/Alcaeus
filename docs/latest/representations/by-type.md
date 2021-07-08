@@ -8,10 +8,10 @@ the given RDF type. Code speaks louder than words so here's an example:
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/books');
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques');
 
 representation
-    .ofType('http://schema.org/Book')
-    .map(book => book['http://purl.org/dc/terms/title'].value)
+    .ofType('https://plaque.maze.link/vocab#Plaque')
+    .map(plaque => plaque['http://schema.org/name'].value)
 ```
 </run-kit>

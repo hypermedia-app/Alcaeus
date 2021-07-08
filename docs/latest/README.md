@@ -43,7 +43,7 @@ Here's a most basic example, which fetches an API entrypoint
 ```javascript
 const { Hydra } = require("${alcaeus}/node");
 
-await Hydra.loadResource('https://sources.test.wikibus.org/');
+await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/');
 ```
 
 </run-kit>

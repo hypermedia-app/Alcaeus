@@ -24,11 +24,12 @@ To retrieve these operations the client needs to know the class identifier. With
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const { representation } = await client.loadResource('https://hydra-movies.herokuapp.com/doc')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/api')
 
 representation
-    .get('https://hydra-movies.herokuapp.com/doc#Movie')
-    .supportedOperation
+    .get('http://www.w3.org/ns/auth/acl#Authorization')
+    .supportedOperation[0]
+    .toJSON()
 ```
 
 </run-kit>
@@ -45,13 +46,13 @@ To retrieve operations for a class' property the client has to get hold of the t
 <run-kit>
 
 ```typescript
-const client = require("${alcaeus}").Hydra;
+const client = require("${alcaeus}/node").Hydra;
 
-const doc = await client.loadDocumentation('http://www.markus-lanthaler.com/hydra/api-demo/vocab');
+const doc = await client.loadDocumentation('https://always-read-the-plaque.herokuapp.com/api');
 
 doc.getOperations(
-  'http://www.markus-lanthaler.com/hydra/api-demo/vocab#Comment', // class
-  'http://www.markus-lanthaler.com/hydra/api-demo/vocab#Comment/issue' // property
+  'https://plaque.maze.link/vocab#Plaque', // class
+  'https://plaque.maze.link/vocab#images'  // property
 )
 ```
 

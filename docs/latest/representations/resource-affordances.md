@@ -70,7 +70,7 @@ described in the below snippet.
 
 
 ```js
-import {Hydra} from 'Alcaeus';
+import {Hydra} from 'alcaeus/node';
 
 const representation = await Hydra.loadResource('/a/Person');
 const person = representation.root;
@@ -99,7 +99,7 @@ The client itself has a property for accessing all documentations which have bee
 ```typescript
 const client = require("${alcaeus}/node").Hydra
 
-await client.loadResource('https://sources.wikibus.org/')
+await client.loadResource('https://always-read-the-plaque.herokuapp.com/')
 
 client.apiDocumentations[0].root.toJSON()
 ```

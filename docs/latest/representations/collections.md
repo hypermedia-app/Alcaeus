@@ -20,7 +20,7 @@ Here's an example of loading a collection which is not paged. In such case the s
 ```typescript
 const client = require("${alcaeus}/node").Hydra
 
-const { representation } = await client.loadResource('https://sources.wikibus.org/magazine/Buses/issues')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques')
 
 representation.root.toJSON()
 ```
@@ -79,7 +79,7 @@ Here's an example showing how the member assertion is retrieved from a collectio
 const { Hydra } = require('${alcaeus}/node')
 const { rdf } = require('@tpluscode/rdf-ns-builders')
 
-const { representation } = await Hydra.loadResource('https://sources.wikibus.org/magazines')
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaques')
 
 representation.root.memberAssertion.find(assertion => assertion.property.equals(rdf.type)).toJSON()
 ```
@@ -100,7 +100,7 @@ It is important to notice that requesting a page will actually return the collec
 ```typescript
 const client = require("${alcaeus}/node").Hydra
 
-const { representation } = await client.loadResource('https://sources.test.wikibus.org/magazines?page=2')
+const { representation } = await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaques?page=1')
 
 representation.root.view[0].toJSON()
 ```

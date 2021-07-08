@@ -16,7 +16,7 @@ This could apply to resources from external APIs over which there is no control 
 
 ## Annotated links
 
-Hydra has the ability to explicitly mark links without the necessarily resorting to a `SupportedOperation`. Instead, it's simply required to use `hydra:Link` type for supported RDF properties.
+Hydra has the ability to explicitly mark links without necessarily resorting to a `SupportedOperation`. Instead, it's simply required to use `hydra:Link` type for supported RDF properties.
 
 ```json
 {
@@ -43,7 +43,7 @@ Hydra has the ability to explicitly mark links without the necessarily resorting
 > [!NOTE]
 > `hydra:Link` is subclass of `rdfs:Property` so it may not necessary to explicitly type is as such.
 
-> [!WAENING]
+> [!WARNING]
 > Adding `hydra:Link` type to properties coming from third party vocabularies may have unexpected side effects if the Hydra statements are leaked into other datasets.
 
 ## Links within a resource representation

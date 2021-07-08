@@ -11,12 +11,17 @@ representation based on the datatype. By default numeric xsd types and `xsd:bool
 are converted.
 
 <run-kit>
+
+```javascript
 const { Hydra } = require("${alcaeus}/node");
 
-const collection = (await Hydra.loadResource('https://sources.wikibus.org/brochures')).root;
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaques')
+const collection = representation.root;
 
 // hydra:totalItems is a "real" number
 Number.isInteger(collection.totalItems)
+```
+
 </run-kit>
 
 ## `get` and `getArray`

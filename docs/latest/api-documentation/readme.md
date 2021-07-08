@@ -16,7 +16,7 @@ API Documentation is also an RDF resource and thus it is represented in the exac
 ```typescript
 const client = require("${alcaeus}/node").Hydra
 
-const apiDoc = await client.loadDocumentation('https://sources.wikibus.org/doc')
+const apiDoc = await client.loadDocumentation('https://always-read-the-plaque.herokuapp.com/api')
 
 apiDoc.toJSON()
 ```

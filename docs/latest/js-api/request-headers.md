@@ -15,7 +15,7 @@ Hydra.defaultHeaders = {
   Accept: 'text/turtle, application/ld+json'
 }
 
-const { response } = await Hydra.loadResource('https://sources.wikibus.org/')
+const { response } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/')
 
 response.xhr.headers.get('content-type')
 ```

@@ -24,25 +24,28 @@ There are two steps necessary to apply a mixin:
 ```typescript
 const { Hydra } = require("${alcaeus}/node");
 const { schema } = require('@tpluscode/rdf-ns-builders')
+const namespace = require('@rdf-esm/namespace')
 
-const BookMixin = Base => {
+const ns = namespace('https://plaque.maze.link/vocab#')
+
+const PlaqueMixin = Base => {
   return class extends Base {
-    get authorName() {
-      return this.get(schema.author).getString(schema.name)
+    get contributorName() {
+      return this.get(schema.contributor).getString(schema.name)
     }
   }
 }
 
-// Have the mixin added to schema:Book resources
-BookMixin.appliesTo = schema.Book
+// Have the mixin added to instances of Plaque class
+PlaqueMixin.appliesTo = ns.Plaque
 
 // Add mixin to the client
-Hydra.resources.factory.addMixin(BookMixin)
+Hydra.resources.factory.addMixin(PlaqueMixin)
 
-const { representation } = await Hydra.loadResource('https://sources.wikibus.org/book/1331');
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre');
 
 // access property defined in mixin
-representation.root.authorName
+representation.root.contributorName
 ```
 
 </run-kit>
@@ -55,10 +58,10 @@ To further simplify the code, mixins can be annotated using `@tpluscode/rdfine` 
 const { schema } = require('@tpluscode/rdf-ns-builders')
 const { property, Constructor } = require('@tpluscode/rdfine')
 
-const BookMixin = <Base extends Constructor>(base: Base) => {
+const PlaqueMixin = <Base extends Constructor>(base: Base) => {
   class Book extends base {
-    @property.literal({ path: [schema.author, schema.name]})  
-    authorName?: string
+    @property.literal({ path: [schema.contributor, schema.name]})  
+    contributorName?: string
   }
   
   return Book
@@ -76,28 +79,31 @@ Another way is to apply a mixin to every RDF resource object:
 ```typescript
 const { Hydra } = require("${alcaeus}/node");
 const { schema } = require('@tpluscode/rdf-ns-builders')
+const namespace = require('@rdf-esm/namespace')
 
-const BookMixin = Base => {
+const ns = namespace('https://plaque.maze.link/vocab#')
+
+const PlaqueMixin = Base => {
   return class extends Base {
-    get isBook() {
-      return this.types.has(schema.Book)
+    get isPlaque() {
+      return this.types.has(ns.Plaque)
     }
   }
 }
 
 // Used instead of appliesTo
-BookMixin.shouldApply = true
-Hydra.resources.factory.addMixin(BookMixin)
+PlaqueMixin.shouldApply = true
+Hydra.resources.factory.addMixin(PlaqueMixin)
 
-const { representation } = await Hydra.loadResource('https://sources.wikibus.org/books')
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaques')
 
 // isBook is now a property of all resource objects
-const rootIsBook = representation.root.isBook
-const memberIsBook = representation.root.member[0].isBook
+const rootIsPlaque = representation.root.isPlaque
+const memberIsPlaque = representation.root.member[0].isPlaque
 
 const result = {
-    rootIsBook,
-    memberIsBook,
+    rootIsPlaque,
+    memberIsPlaque,
 }
 ```
 
@@ -112,23 +118,23 @@ Finally, a custom function can be provided to decide whether a resource is to be
 
 ```typescript
 const { Hydra } = require("${alcaeus}/node");
-const { dcterms } = require('@tpluscode/rdf-ns-builders')
+const { schema } = require('@tpluscode/rdf-ns-builders')
 
-const BookMixin = Base => {
+const PlaqueMixin = Base => {
   return class extends Base {
-    get title() {
-      return this.get(dcterms.title)
+    get text() {
+      return this.getString(schema.text)
     }
   }
 }
 
 // Accepts a single parameter - the candidate resource
-BookMixin.shouldApply = (resource) => resource.pointer.out(dcterms.title).values.length > 0
-Hydra.resources.factory.addMixin(BookMixin)
+PlaqueMixin.shouldApply = (resource) => resource.pointer.out(schema.text).values.length > 0
+Hydra.resources.factory.addMixin(PlaqueMixin)
 
-const { representation } = await Hydra.loadResource('https://sources.wikibus.org/books')
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaques')
 
-representation.root.member[0].title
+representation.root.member[0].text
 ```
 
 </run-kit>

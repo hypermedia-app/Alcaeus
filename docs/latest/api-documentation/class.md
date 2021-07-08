@@ -13,13 +13,12 @@ First, it is possible to get all classes using a simple getter. It will return a
 ```typescript
 const client = require("${alcaeus}/node").Hydra
 
-const doc = await client.loadDocumentation('https://source.wikibus.org/doc')
+const doc = await client.loadDocumentation('https://always-read-the-plaque.herokuapp.com/api')
 
-doc.class.map(c => c.toJSON())
+doc.supportedClass.map(c => c.toJSON())
 ```
 
 </run-kit>
-
 
 ## rdfs:subClassOf
 

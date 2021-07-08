@@ -23,7 +23,7 @@ collection.findOperations({
   bySupportedOperation: schema.CreateAction, // matches hydra:SupportedOperation's @id and @type
   expecting: schema.Movie, // matches hydra:expects
   returning: schema.Movie, // matches hydra:returns
-})
+}).map(op => op.toJSON())
 ```
 
 </run-kit>
@@ -47,7 +47,7 @@ resource.findOperations({
   returning: schema.Person
 }, {
   returning: schema.Company
-})
+}).map(op => op.toJSON())
 ```
 
 > [!TIP]
@@ -68,7 +68,7 @@ const { representation } = await Hydra.loadResource('https://hydra-movies.heroku
 representation.root.findOperationsDeep({
   namespaces: [hydra],
   expecting: schema.Movie,
-})
+}).map(op => op.toJSON())
 ```
 
 </run-kit>
@@ -90,7 +90,7 @@ const { representation } = await Hydra.loadResource('https://hydra-movies.heroku
 
 representation.root.findOperationsDeep({
   namespaces: [hydra],
-  excludedProperties: hydra.collection,
+  excludedProperties: [hydra.collection],
 })
 ```
 
@@ -111,7 +111,7 @@ const { representation } = await Hydra.loadResource('https://hydra-movies.heroku
 
 representation.root.getOperationsDeep({
   namespaces: [hydra],
-})
+}).map(op => op.toJSON())
 ```
 
 </run-kit>

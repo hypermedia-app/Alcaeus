@@ -42,12 +42,12 @@ Below is an example for finding collection with members of a given `SupportedCla
 const { Hydra } = require("${alcaeus}/node")
 
 const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/')
-const supportedClass = representation.root.apiDocumentation.class
-  .find(c => c.id.value === 'https://plaque.maze.link/vocab#Plaque')
 
-representation.root.getCollections({
-    object: supportedClass
+const [ collection ] = representation.root.getCollections({
+  object: 'https://plaque.maze.link/vocab#Plaque'
 })
+
+collection.toJSON()
 ```
 
 </run-kit>
@@ -55,18 +55,38 @@ representation.root.getCollections({
 > [!WARNING]
 > When using the `object` parameter, `predicate` will implicitly be `rdf:type`. Changing it to anything else will cause an empty result.
 
+Remember that for the filtering to work the member assertion has to be present not only in the actual `/plaques` resource representation but also on the link context. In this case the entrypoint links to the collection and will have to duplicate the member assertion in its representation too
+
+```turtle
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix api: <https://plaque.maze.link/vocab#>
+base <https://always-read-the-plaque.herokuapp.com/>
+
+<> hydra:collection </plaques> .
+
+# this should match the representation of /plaques
+</plaques>
+  hydra:memberAssertion
+    [
+      hydra:property rdf:type ;
+      hydra:object api:Plaque ;
+    ] ;
+.
+```
+
 Second option is to look for collections by subject and predicate:
 
 ```js
-const { Hydra } = require("alcaeus")
+const { Hydra } = require("alcaeus/node")
 
-const rep = await Hydra.loadResource('http://hydra-movies.herokuapp.com')
+const { representation } = await Hydra.loadResource('https://wikibus.org/')
 
-rep.root.getCollections({
+representation.root.getCollections({
     subject: 'https://sources.test.wikibus.org/magazine/Buses',
     predicate: 'http://purl.org/dc/terms/isPartOf'
 })
 ```
 
 > [!TIP]
-> You may notice in the second snippet that strings are used for `subject` and `predicate` parameters. Same is true for `object`; all three parameters can be either strings (URI) or resource objects.
+> You may notice in the snippets strings are used for `subject`, `predicate` and `object` parameters. They can be either strings (URI) or resource objects.

@@ -38,22 +38,61 @@ representation
 
 Supported properties also can support operations. This may be difficult to grasp initially but allows for fine-grained control of runtime operations available for any single object. Please read about [affordances](representations/resource-affordances) to learn more.
 
-To retrieve operations for a class' property the client has to get hold of the two identifiers: the supported class and the property.
+Any resource which appears a graph as an object of a supported property with a supported operation, will thus inherit this operation. To give an example, here's an excerpt from the resource involved in the snippet below.
 
-> [!TIP]
-> It's the actual `rdf:Property` and not `hydra:SupportedProperty`.
+```turtle
+prefix schema: <http://schema.org/>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix api: <https://plaque.maze.link/vocab#>
+base <https://always-read-the-plaque.herokuapp.com/>
+
+# Class needs to be supported by the API
+<api> hydra:supportedClass <api/class/Plaque> .
+
+# Class needs to support that property
+<api/class/Plaque>
+  a hydra:Class ;
+  hydra:supportedProperty
+    [
+      hydra:property api:images ;
+    ] ;
+.
+
+# The property needs to support the operation
+api:images
+  hydra:supportedOperation
+    [
+      hydra:method "POST" ;
+      hydra:title "Add an image" ;
+      hydra:expects schema:ImageObject ;
+    ] ;
+.
+
+# Create a link using the supported property
+# The link target will support the operation to
+<plaque/red-rocks-amphitheatre> 
+  api:images <plaque/red-rocks-amphitheatre/images> ;
+.
+```
+
+> [!NOTE]
+> Do pay attention to how it's the actual `rdf:Property` and not `hydra:SupportedProperty` which has supports the operation.
+
+Here's a snippet which load the `Plaque` resource and demonstrate how the images child resource support the `POST` operation
 
 <run-kit>
 
 ```typescript
 const client = require("${alcaeus}/node").Hydra;
 
-const doc = await client.loadDocumentation('https://always-read-the-plaque.herokuapp.com/api');
+const { representation: { root: plaque } } = 
+  await client.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre');
 
-doc.getOperations(
-  'https://plaque.maze.link/vocab#Plaque', // class
-  'https://plaque.maze.link/vocab#images'  // property
-)
+const images = plaque.get('https://plaque.maze.link/vocab#images')
+
+images.findOperations({
+  byMethod: 'POST',
+})[0].toJSON()
 ```
 
 </run-kit>

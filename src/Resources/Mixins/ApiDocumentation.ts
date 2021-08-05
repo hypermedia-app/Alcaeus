@@ -7,16 +7,16 @@ import type { HydraResponse } from '../../alcaeus'
 
 declare module '@rdfine/hydra' {
     export interface ApiDocumentation<D extends DatasetCore = DatasetCore> {
-        loadEntryPoint(): Promise<HydraResponse<D>>
+        loadEntrypoint(): Promise<HydraResponse<D>>
     }
 }
 
 export type { ApiDocumentation } from '@rdfine/hydra'
 
-export function ApiDocumentationMixin<TBase extends Constructor<Omit<ApiDocumentation, 'loadEntryPoint'>>>(Base: TBase) {
+export function ApiDocumentationMixin<TBase extends Constructor<Omit<ApiDocumentation, 'loadEntrypoint'>>>(Base: TBase) {
     @namespace(hydra)
     class ApiDocumentationClass extends Base implements Partial<ApiDocumentation> {
-        public loadEntrypoint() {
+        public loadEntrypoint(): Promise<HydraResponse<any>> {
             const entrypoint = this.entrypoint
 
             if (!entrypoint) {

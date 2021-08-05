@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1
+
+### Patch Changes
+
+- 91808a5: Typo in `ApiDocumentation#loadEntrypoint` method
+
 ## 1.2.0
 
 ### Minor Changes

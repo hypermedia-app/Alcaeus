@@ -1,8 +1,10 @@
+import { DatasetCore } from '@rdfjs/types'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from './alcaeus'
 
 export interface ResourceCacheStrategy {
-    shouldLoad(previous: Required<HydraResponse<any, any>>): boolean
-    requestCacheHeaders(previous: Required<HydraResponse<any, any>>): HeadersInit | null
+    shouldLoad(previous: Required<HydraResponse<DatasetCore, RdfResourceCore>>): boolean
+    requestCacheHeaders(previous: Required<HydraResponse<DatasetCore, RdfResourceCore>>): HeadersInit | null
 }
 
 export const shouldLoad = () => true

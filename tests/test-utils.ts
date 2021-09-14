@@ -1,10 +1,10 @@
-import { MediaTypes } from './Constants'
-import { ResponseWrapper } from '../src/ResponseWrapper'
 import stringToStream from 'string-to-stream'
 import rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-n3'
 import { prefixes } from '@zazuko/rdf-vocabularies'
 import { parsers } from '@rdfjs/formats-common'
+import { ResponseWrapper } from '../src/ResponseWrapper'
+import { MediaTypes } from './Constants'
 import 'isomorphic-fetch'
 
 const parser = new Parser()

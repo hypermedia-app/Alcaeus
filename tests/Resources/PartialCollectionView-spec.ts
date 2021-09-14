@@ -1,12 +1,12 @@
+import { NamedNode } from 'rdf-js'
 import cf, { GraphPointer } from 'clownface'
 import * as Hydra from '@rdfine/hydra'
 import $rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-jsonld'
-import { NamedNode } from 'rdf-js'
 import stringToStream from 'string-to-stream'
-import { Resource } from './_TestResource'
 import { PartialCollectionViewMixin } from '../../src/Resources/Mixins/PartialCollectionView'
 import { Bodies } from '../test-objects'
+import { Resource } from './_TestResource'
 
 const parser = new Parser()
 

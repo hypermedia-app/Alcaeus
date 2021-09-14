@@ -1,10 +1,10 @@
+import { NamedNode } from 'rdf-js'
 import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { NamedNode } from 'rdf-js'
-import { Resource } from './_TestResource'
 import { hydra, owl } from '@tpluscode/rdf-ns-builders'
 import { OperationMixin } from '../../src/Resources/Mixins/Operation'
+import { Resource } from './_TestResource'
 
 class SupportedOperation extends OperationMixin(Hydra.OperationMixin(Resource)) {}
 

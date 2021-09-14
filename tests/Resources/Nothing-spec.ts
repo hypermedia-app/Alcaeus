@@ -1,8 +1,8 @@
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
+import { owl } from '@tpluscode/rdf-ns-builders'
 import { NothingMixin } from '../../src/Resources/Nothing'
 import { Resource } from './_TestResource'
-import { owl } from '@tpluscode/rdf-ns-builders'
 
 class Nothing extends NothingMixin(Resource) {}
 

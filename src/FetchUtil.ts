@@ -1,6 +1,6 @@
-import type { SinkMap } from '@rdf-esm/sink-map'
 import type { EventEmitter } from 'events'
 import type { Stream } from 'rdf-js'
+import type { SinkMap } from '@rdf-esm/sink-map'
 import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
 

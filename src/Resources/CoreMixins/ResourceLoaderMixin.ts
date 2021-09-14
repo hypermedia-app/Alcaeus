@@ -1,7 +1,7 @@
-import type { Resource } from '@rdfine/hydra'
-import type { Constructor, RdfResource } from '@tpluscode/rdfine'
-import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { DatasetCore } from 'rdf-js'
+import type { Resource } from '@rdfine/hydra'
+import type { Constructor } from '@tpluscode/rdfine'
+import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { HydraClient, HydraResponse } from '../../alcaeus'
 
 declare module '@tpluscode/rdfine' {

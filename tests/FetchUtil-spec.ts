@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
-import SinkMap from '@rdfjs/sink-map'
 import { Sink, Stream } from 'rdf-js'
+import SinkMap from '@rdfjs/sink-map'
 import FetchUtil from '../src/FetchUtil'
 import { Bodies } from './test-objects'
 import { responseBuilder } from './test-utils'

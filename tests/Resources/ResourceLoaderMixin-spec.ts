@@ -1,8 +1,8 @@
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
-import { createResourceLoaderMixin } from '../../src/Resources/CoreMixins'
 import Resource from '@tpluscode/rdfine'
+import { createResourceLoaderMixin } from '../../src/Resources/CoreMixins'
 
 describe('ResourceLoaderMixin', () => {
     describe('shouldApply', () => {

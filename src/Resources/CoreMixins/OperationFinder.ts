@@ -1,9 +1,9 @@
+import type { NamedNode, Quad } from 'rdf-js'
 import { namedNode } from '@rdf-esm/data-model'
 import type { Resource, Operation } from '@rdfine/hydra'
 import type { NamespaceBuilder } from '@rdfjs/namespace'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
-import type { NamedNode, Quad } from 'rdf-js'
 import type { RuntimeOperation } from '../Operation'
 
 type Constraint<TExactMatch, TFuncMatch = TExactMatch> = (string | TExactMatch) | ((value: TFuncMatch) => boolean)
@@ -112,7 +112,8 @@ function satisfiesReturns(criteria: Criteria, operation: RuntimeOperation) {
 
 function satisfiesTypeOrId(criteria: Criteria, operation: RuntimeOperation) {
     const supportedOperationId = typeof criteria.bySupportedOperation === 'string'
-        ? namedNode(criteria.bySupportedOperation) : criteria.bySupportedOperation
+        ? namedNode(criteria.bySupportedOperation)
+        : criteria.bySupportedOperation
 
     return satisfies(supportedOperationId, operation, (expected, actual) => {
         if ('termType' in expected) {

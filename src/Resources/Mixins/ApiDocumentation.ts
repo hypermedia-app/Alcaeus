@@ -1,8 +1,8 @@
+import type { DatasetCore } from 'rdf-js'
 import type { Constructor } from '@tpluscode/rdfine'
 import { namespace } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { ApiDocumentation } from '@rdfine/hydra'
-import type { DatasetCore } from 'rdf-js'
 import type { HydraResponse } from '../../alcaeus'
 
 declare module '@rdfine/hydra' {

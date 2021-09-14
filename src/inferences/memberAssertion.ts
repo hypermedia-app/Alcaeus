@@ -1,6 +1,6 @@
+import { BaseQuad, DatasetCore } from 'rdf-js'
 import cf from 'clownface'
 import * as RDF from '@rdf-esm/data-model'
-import { BaseQuad, DatasetCore } from 'rdf-js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export function * addExplicitStatementsInferredFromMemberAssertion(dataset: DatasetCore): Iterable<BaseQuad> {

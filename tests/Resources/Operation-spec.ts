@@ -2,11 +2,11 @@ import RdfResourceImpl, { RdfResource } from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
 import $rdf from 'rdf-ext'
 import cf, { GraphPointer } from 'clownface'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import namespace from '@rdfjs/namespace'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { HydraClient } from '../../src/alcaeus'
 import { createMixin, RuntimeOperation } from '../../src/Resources/Operation'
-import { hydra } from '@tpluscode/rdf-ns-builders'
 
 const ex = namespace('http://example.com/')
 

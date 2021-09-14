@@ -1,7 +1,7 @@
+import type { DatasetCore, Term, Literal } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { Resource, SupportedProperty } from '@rdfine/hydra'
-import type { DatasetCore, Term, Literal } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import { GraphPointer } from 'clownface'
 import { fromRdf } from 'rdf-literal'

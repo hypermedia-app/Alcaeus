@@ -1,9 +1,9 @@
+import type { NamedNode } from 'rdf-js'
 import type { ExtendingConstructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { namespace } from '@tpluscode/rdfine'
 import type { Class, MemberAssertion } from '@rdfine/hydra'
 import type { Property } from '@rdfine/rdf'
 import type { MultiPointer } from 'clownface'
-import type { NamedNode } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 export interface MemberAssertionPattern {

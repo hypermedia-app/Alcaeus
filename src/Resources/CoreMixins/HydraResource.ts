@@ -1,9 +1,10 @@
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import type { Constructor, RdfResource } from '@tpluscode/rdfine'
+import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { Resource, SupportedProperty } from '@rdfine/hydra'
-import type { DatasetCore, Term } from 'rdf-js'
+import type { DatasetCore, Term, Literal } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import { GraphPointer } from 'clownface'
+import { fromRdf } from 'rdf-literal'
 import type { HydraClient } from '../../alcaeus'
 import type { MemberAssertionPattern } from '../Mixins/MemberAssertion'
 import { RuntimeOperation, createMixin } from '../Operation'
@@ -32,6 +33,20 @@ declare module '@tpluscode/rdfine' {
          */
         getCollections(filter?: MemberAssertionPattern): RdfResource<D>[]
     }
+}
+
+function isIriOrLiteral(term: GraphPointer): term is GraphPointer<ResourceIdentifier | Literal> {
+    return term.term.termType === 'Literal' || term.term.termType === 'BlankNode' || term.term.termType === 'NamedNode'
+}
+
+function getObject(this: RdfResource, obj: GraphPointer<ResourceIdentifier | Literal>) {
+    if (obj.term.termType === 'BlankNode' || obj.term.termType === 'NamedNode') {
+        return this._create(obj, [], {
+            parent: this,
+        })
+    }
+
+    return fromRdf(obj.term)
 }
 
 export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
@@ -101,7 +116,10 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
                         return current
                     }
 
-                    const objects = this.getArray(predicate.term)
+                    const objects = this._getObjects(predicate.term)
+                        .toArray()
+                        .filter(isIriOrLiteral)
+                        .map(getObject, this)
                     return current.set(predicate.term, {
                         objects,
                         supportedProperty: this._create<SupportedProperty>(supportedProperty),

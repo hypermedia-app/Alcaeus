@@ -1,20 +1,21 @@
+import { DatasetCore, Stream } from 'rdf-js'
 import { Resource } from '@rdfine/hydra'
 import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'
+import TermMap from '@rdf-esm/term-map'
 import * as Hydra from '@rdfine/hydra'
 import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'
 import RdfResourceImpl, { Constructor } from '@tpluscode/rdfine'
 import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
-import { DatasetCore, Stream } from 'rdf-js'
 import stringToStream from 'string-to-stream'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { HydraClient } from '../../src/alcaeus'
 import * as mixins from '../../src/Resources/Mixins'
 import { ResourceRepresentation } from '../../src/ResourceRepresentation'
 import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
-import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
@@ -225,6 +226,52 @@ describe('HydraResource', () => {
 
             // then
             expect(links.length).toBe(1)
+        })
+
+        it('returns all objects as their JS counterparts', async () => {
+            // given
+            const apiGraph = parse(
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Person} .
+                       
+                    ${ex.Person} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.age} ] ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.sallary} ] ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.isAdmin} ] ;
+                    .
+                `)
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/John> 
+                        a ${ex.Person} ;
+                        ${ex.knows} <http://example.com/Jane> ;
+                        ${ex.age} 10 ;
+                        ${ex.sallary} 15.5 ;
+                        ${ex.isAdmin} true ;
+                    .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/John'),
+            }))
+
+            // when
+            const map = new TermMap(resource.getProperties().map((pair) => [
+                pair.supportedProperty.property!.id,
+                pair.objects,
+            ]))
+
+            // then
+            expect(map.get(ex.knows)![0]).toBeInstanceOf(RdfResourceImpl)
+            expect(map.get(ex.age)![0]).toEqual(10)
+            expect(map.get(ex.sallary)![0]).toEqual(15.5)
+            expect(map.get(ex.isAdmin)![0]).toEqual(true)
         })
     })
 

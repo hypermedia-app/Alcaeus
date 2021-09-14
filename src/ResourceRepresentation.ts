@@ -1,3 +1,4 @@
+import type { DatasetCore, NamedNode } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import * as Hydra from '@rdfine/hydra'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'
@@ -5,7 +6,6 @@ import type { ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
-import type { DatasetCore, NamedNode } from 'rdf-js'
 import TermMap from '@rdf-esm/term-map'
 import { Term } from '@rdfjs/types'
 

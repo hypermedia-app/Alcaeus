@@ -1,12 +1,12 @@
 import 'core-js/es6/array'
+import { BlankNode } from 'rdf-js'
 import { Constructor } from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { BlankNode } from 'rdf-js'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { ApiDocumentationMixin } from '../../src/Resources/Mixins/ApiDocumentation'
 import { Resource } from './_TestResource'
-import { hydra } from '@tpluscode/rdf-ns-builders'
 
 class ApiDocumentation extends ApiDocumentationMixin(Hydra.ApiDocumentationMixin(Resource)) {}
 function MockLoad(loadFunc) {

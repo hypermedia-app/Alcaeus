@@ -1,9 +1,9 @@
+import { NamedNode } from 'rdf-js'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { NamedNode } from 'rdf-js'
+import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { DocumentedResourceMixin } from '../../src/Resources/Mixins/DocumentedResource'
 import { Resource } from './_TestResource'
-import { hydra, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 
 class DocumentedResource extends DocumentedResourceMixin(Resource) {}
 

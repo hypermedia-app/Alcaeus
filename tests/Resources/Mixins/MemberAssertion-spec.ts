@@ -1,11 +1,11 @@
+import { BlankNode, DatasetCore } from 'rdf-js'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import Resource from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { BlankNode, DatasetCore } from 'rdf-js'
-import { MemberAssertionMixin } from '../../../src/Resources/Mixins/MemberAssertion'
 import { foaf, hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import { MemberAssertionMixin } from '../../../src/Resources/Mixins/MemberAssertion'
 
 class MemberAssertion extends MemberAssertionMixin(Hydra.MemberAssertionMixin(Resource)) {}
 

@@ -1,6 +1,6 @@
-import SinkMap from '@rdfjs/sink-map'
 import { Stream } from 'rdf-js'
 import { EventEmitter } from 'events'
+import SinkMap from '@rdfjs/sink-map'
 import datasetIndexed from 'rdf-dataset-indexed'
 import 'isomorphic-fetch'
 import { create } from '../src'

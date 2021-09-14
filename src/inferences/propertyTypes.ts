@@ -1,6 +1,6 @@
+import type { BaseQuad, DatasetCore } from 'rdf-js'
 import cf from 'clownface'
 import * as RDF from '@rdf-esm/data-model'
-import type { BaseQuad, DatasetCore } from 'rdf-js'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 const propertyRangeMappings = [

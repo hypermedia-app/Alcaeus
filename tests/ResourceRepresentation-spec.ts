@@ -2,9 +2,9 @@ import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import namespace from '@rdfjs/namespace'
-import ResourceRepresentation from '../src/ResourceRepresentation'
 import Resource from '@tpluscode/rdfine'
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import ResourceRepresentation from '../src/ResourceRepresentation'
 
 const ex = namespace('http://example.com/')
 

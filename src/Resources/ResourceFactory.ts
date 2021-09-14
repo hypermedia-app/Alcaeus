@@ -1,9 +1,9 @@
+import type { DatasetCore, Term, NamedNode } from 'rdf-js'
 import { defaultGraphInstance } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'
 import type { AnyFunction, Mixin, ResourceCreationOptions, ResourceIndexer, ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { GraphPointer } from 'clownface'
-import type { DatasetCore, Term, NamedNode } from 'rdf-js'
 
 export interface CachedResourceFactory<D extends DatasetCore, R extends RdfResource<D>> extends ResourceFactory<D, R> {
     clone(): CachedResourceFactory<D, R>

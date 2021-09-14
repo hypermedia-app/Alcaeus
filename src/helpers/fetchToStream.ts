@@ -1,5 +1,5 @@
-import stream from 'readable-stream'
 import buffer from 'buffer'
+import stream from 'readable-stream'
 
 // from https://github.com/bergos/nodeify-fetch/blob/master/lib/WhatwgReadable.js
 class WhatwgReadable extends stream.Readable {

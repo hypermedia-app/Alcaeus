@@ -1,10 +1,10 @@
-import type { SinkMap } from '@rdf-esm/sink-map'
 import type { EventEmitter } from 'events'
-import li from 'parse-link-header'
 import type { Stream } from 'rdf-js'
+import type { SinkMap } from '@rdf-esm/sink-map'
+import li from 'parse-link-header'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import * as Constants from './Constants'
 import { patchResponseBody } from './helpers/fetchToStream'
-import { hydra } from '@tpluscode/rdf-ns-builders'
 
 const apiDocumentationRel = hydra.apiDocumentation.value
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0
+
+### Minor Changes
+
+- b2fd347: `getProperties` returned only resources (fixes #248)
+
+  **WARNING**: this may be a BREAKING CHANGE for clients relying on the current, broken behaviour. To keep the current return value call `.getProperties({ termTypes: ['NamedNode', 'BlankNode'] })`. See [the docs for details](https://alcaeus.hydra.how/latest/#/api-documentation/supported-property)
+
+- 0537be7: Added generic type argument to operation `invoke` methods
+
+### Patch Changes
+
+- 5536a73: Unwanted `any` type when implementing `ResourceCacheStrategy`
+
 ## 1.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+### Patch Changes
+
+- 04b4959: `rdf-literal` must be default-imported, otherwise webpack fails to bundle alcaeus
+
 ## 1.3.0
 
 ### Minor Changes

@@ -1,4 +1,4 @@
-import type { DatasetCore, Term, Literal } from 'rdf-js'
+import type { DatasetCore, Term, Literal, BlankNode, NamedNode } from '@rdfjs/types'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { Resource, SupportedProperty } from '@rdfine/hydra'
@@ -8,6 +8,10 @@ import { fromRdf } from 'rdf-literal'
 import type { HydraClient } from '../../alcaeus'
 import type { MemberAssertionPattern } from '../Mixins/MemberAssertion'
 import { RuntimeOperation, createMixin } from '../Operation'
+
+export interface GetProperties {
+    termTypes: (Literal | NamedNode | BlankNode)['termType'][]
+}
 
 declare module '@tpluscode/rdfine' {
     export interface RdfResource<D extends DatasetCore = DatasetCore>{
@@ -19,7 +23,7 @@ declare module '@tpluscode/rdfine' {
         /**
          * Gathers all properties from current resource's classes
          */
-        getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[]
+        getProperties(options?: GetProperties): { supportedProperty: SupportedProperty; objects: any[] }[]
 
         /**
          * Get all property/value pairs for hydra:Link properties
@@ -35,8 +39,10 @@ declare module '@tpluscode/rdfine' {
     }
 }
 
-function isIriOrLiteral(term: GraphPointer): term is GraphPointer<ResourceIdentifier | Literal> {
-    return term.term.termType === 'Literal' || term.term.termType === 'BlankNode' || term.term.termType === 'NamedNode'
+function only(termTypes: Term['termType'][] = ['BlankNode', 'NamedNode', 'Literal']) {
+    return function (term: GraphPointer): term is GraphPointer<ResourceIdentifier | Literal> {
+        return termTypes.includes(term.term.termType)
+    }
 }
 
 function getObject(this: RdfResource, obj: GraphPointer<ResourceIdentifier | Literal>) {
@@ -97,7 +103,7 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
             }
 
             public getLinks(includeMissing = false) {
-                return this.getProperties()
+                return this.getProperties({ termTypes: ['NamedNode'] })
                     .filter((tuple) => tuple.supportedProperty.property?.isLink)
                     .filter((tuple) => tuple.objects.length > 0 || includeMissing)
                     .map((tuple) => ({
@@ -106,7 +112,7 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
                     }))
             }
 
-            public getProperties(): { supportedProperty: SupportedProperty; objects: any[] }[] {
+            public getProperties(options?: GetProperties): { supportedProperty: SupportedProperty; objects: any[] }[] {
                 const classProperties = [...getSupportedClasses(this.pointer)]
                     .reduce<GraphPointer[]>((operations, clas) => [...operations, ...clas.out(hydra.supportedProperty).toArray()], [])
 
@@ -118,7 +124,7 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
 
                     const objects = this._getObjects(predicate.term)
                         .toArray()
-                        .filter(isIriOrLiteral)
+                        .filter(only(options?.termTypes))
                         .map(getObject, this)
                     return current.set(predicate.term, {
                         objects,

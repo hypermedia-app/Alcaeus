@@ -54,3 +54,19 @@ representation.root.getProperties()
 
 > [!TIP]
 > `getProperties()` always returns all properties, even if those with no values for a given resource. They can be filtered as seen above by excluding results with an empty `objects` array.
+
+It is possible to filter the values returned from `getProperties()`. For example, to get only resource objects, call the method as shown below.
+
+<run-kit>
+
+```typescript
+const { Hydra } = require("${alcaeus}/node")
+
+const { representation } = await Hydra.loadResource('https://always-read-the-plaque.herokuapp.com/plaque/red-rocks-amphitheatre')
+
+representation.root.getProperties({ termTypes: ['NamedNode' | 'BlankNode'] })
+```
+
+</run-kit>
+
+The `termTypes` array can contain values `NamedNode`, `BlankNode` and `Literal`.

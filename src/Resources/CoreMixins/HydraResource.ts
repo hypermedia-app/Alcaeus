@@ -4,7 +4,7 @@ import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rd
 import type { Resource, SupportedProperty } from '@rdfine/hydra'
 import TermMap from '@rdf-esm/term-map'
 import { GraphPointer } from 'clownface'
-import { fromRdf } from 'rdf-literal'
+import literal from 'rdf-literal'
 import type { HydraClient } from '../../alcaeus'
 import type { MemberAssertionPattern } from '../Mixins/MemberAssertion'
 import { RuntimeOperation, createMixin } from '../Operation'
@@ -52,7 +52,7 @@ function getObject(this: RdfResource, obj: GraphPointer<ResourceIdentifier | Lit
         })
     }
 
-    return fromRdf(obj.term)
+    return literal.fromRdf(obj.term)
 }
 
 export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {

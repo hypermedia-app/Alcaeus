@@ -403,6 +403,41 @@ describe('HydraResource', () => {
             // then
             expect(links.length).toBe(1)
         })
+
+        it('does not return literals or blank nodes', async () => {
+            // given
+            const apiGraph = parse(
+                turtle`
+                    ${ex.api} a ${hydra.ApiDocumentation} ;
+                        ${hydra.supportedClass} ${ex.Resource} .
+                       
+                    ${ex.Resource} a ${hydra.Class} ;
+                        ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
+                        
+                    ${ex.knows} a ${hydra.Link}, ${rdf.Property} .
+                `)
+            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
+                dataset: await $rdf.dataset().import(apiGraph),
+                term: ex.api,
+            })))
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> a ${ex.Resource} ;
+                        ${ex.knows} <http://example.com/linked>, [], 1000.
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
+
+            // when
+            const links = resource.getLinks()
+
+            // then
+            expect(links).toHaveLength(1)
+            expect(links[0].resources).toHaveLength(1)
+            expect(links[0].resources[0].id.value).toBe('http://example.com/linked')
+        })
     })
 
     describe('getCollections', () => {

@@ -37,6 +37,9 @@ await operation.invoke(JSON.stringify(newComment))
 
 </run-kit>
 
+> [!TIP]
+> TypeScript users can add a generic type argument to the method invocation to have the return type of the operation strongly typed to a resource model. For example `operation.invoke<Person>()` call.
+
 > [!WARNING]
 > Note that the `invoke` method does not accept objects. If the client operates on JSON-LD objects, the body must be stringified beforehand.
 

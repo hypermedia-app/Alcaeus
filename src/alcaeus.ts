@@ -40,7 +40,7 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     parsers: SinkMap<EventEmitter, Stream>
     loadResource<T extends RdfResourceCore<any> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<D> | null>
-    invokeOperation(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>>
+    invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D, T>>
     defaultHeaders: HeadersInit | ((params: { uri: string }) => HeadersInit | Promise<HeadersInit>)
     resources: ResourceStore<D>
     apiDocumentations: ResourceRepresentation<D, ApiDocumentation<D>>[]
@@ -163,7 +163,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return null
     }
 
-    public async invokeOperation(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse<D>> {
+    public async invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse<D, T>> {
         const uri = getAbsoluteUri(operation.target.id.value, this.baseUri)
         const mergedHeaders = await this.__mergeHeaders(new this._headers(headers), { uri })
 
@@ -194,7 +194,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
                 response,
             })
 
-            return resources.get(namedNode(response.resourceUri))!
+            return resources.get<T>(namedNode(response.resourceUri))!
         }
 
         return {

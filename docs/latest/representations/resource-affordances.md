@@ -90,23 +90,4 @@ const personOperations = person.operations;
 const addressOperations = person["v:homeAddress"].operations;
 ```
 
-## Accessing all API Documentations
-
-The client itself has a property for accessing all documentations which have been fetched over the client's lifetime, keeping in mind that resources can be loaded from multiple APIs and every response can come with multiple API Documentation `Link` headers.
-
-<run-kit>
-
-```typescript
-const client = require("${alcaeus}/node").Hydra
-
-await client.loadResource('https://always-read-the-plaque.herokuapp.com/')
-
-client.apiDocumentations[0].root.toJSON()
-```
-
-</run-kit>
-
-For more information about the API Documentation please refer to [its dedicated page][doc] and child pages.
-
 [op]: api-documentation/operation.md
-[doc]: api-documentation/readme.md

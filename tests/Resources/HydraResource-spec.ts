@@ -11,8 +11,7 @@ import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import stringToStream from 'string-to-stream'
-import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import { HydraClient } from '../../src/alcaeus'
+import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import * as mixins from '../../src/Resources/Mixins'
 import { ResourceRepresentation } from '../../src/ResourceRepresentation'
 import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
@@ -21,9 +20,13 @@ const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
 
 const apiDocumentations: ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>[] = []
+const resources = {
+    get: jest.fn(),
+}
 const client = () => ({
     apiDocumentations,
-} as HydraClient)
+    resources,
+} as any)
 const HydraResource: Constructor<Resource> = createHydraResourceMixin(client)(Hydra.ResourceMixin(RdfResourceImpl as any))
 
 HydraResource.factory = new ResourceFactory(HydraResource)
@@ -34,7 +37,11 @@ function parse(triples: TurtleTemplateResult): Stream {
     return parser.import(stringToStream(triples.toString()))
 }
 
-function pushApiDocumentation(root: Hydra.ApiDocumentation) {
+async function pushApiDocumentation(apiGraph: Stream, term = ex.api) {
+    const root: Hydra.ApiDocumentation = HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
+        dataset: await $rdf.dataset().import(apiGraph),
+        term,
+    }))
     apiDocumentations.push({
         root,
     } as ResourceRepresentation<DatasetCore, Hydra.ApiDocumentation>)
@@ -67,10 +74,7 @@ describe('HydraResource', () => {
                     ] ;
                     a ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/A> a ${ex.Resource} .
@@ -106,10 +110,7 @@ describe('HydraResource', () => {
                             a ${hydra.Operation}
                         ] .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
@@ -156,10 +157,7 @@ describe('HydraResource', () => {
                     ${ex.ResourceB} a ${hydra.Class} ;
                         ${hydra.supportedOperation} ${ex.DeleteOperation}.
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
@@ -208,10 +206,7 @@ describe('HydraResource', () => {
                     ${ex.ResourceB} a ${hydra.Class} ;
                         ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.ResourceA}, ${ex.ResourceB} .
@@ -242,10 +237,7 @@ describe('HydraResource', () => {
                         ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.isAdmin} ] ;
                     .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/John> 
@@ -286,10 +278,7 @@ describe('HydraResource', () => {
                     ${ex.Resource} a ${hydra.Class} ;
                         ${hydra.supportedProperty} [ a ${hydra.SupportedProperty}; ${hydra.property} ${ex.knows} ] .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.Resource} .
@@ -318,10 +307,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link}, ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.Resource} ;
@@ -352,10 +338,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.Resource} .
@@ -384,10 +367,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link}, ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.Resource} .
@@ -416,10 +396,7 @@ describe('HydraResource', () => {
                         
                     ${ex.knows} a ${hydra.Link}, ${rdf.Property} .
                 `)
-            pushApiDocumentation(HydraResource.factory.createEntity<Hydra.ApiDocumentation>(cf({
-                dataset: await $rdf.dataset().import(apiGraph),
-                term: ex.api,
-            })))
+            await pushApiDocumentation(apiGraph)
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> a ${ex.Resource} ;
@@ -521,6 +498,57 @@ describe('HydraResource', () => {
             // then
             expect(collections.length).toBe(1)
             expect(collections[0].id.value).toBe('http://example.com/collection1')
+        })
+    })
+
+    describe('apiDocumentation', () => {
+        beforeEach(async () => {
+            const apiGraph = parse(turtle`${ex.api1} a ${hydra.ApiDocumentation} . `)
+            await pushApiDocumentation(apiGraph, ex.api1)
+
+            const api2Graph = parse(turtle`${ex.api2} a ${hydra.ApiDocumentation} . `)
+            await pushApiDocumentation(api2Graph, ex.api2)
+        })
+
+        it('returns apiDoc identified by link within representation', async () => {
+            // given
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> ${hydra.apiDocumentation} ${ex.api2} .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
+
+            // when
+            const { apiDocumentation } = resource
+
+            // then
+            expect(apiDocumentation?.id).toEqual(ex.api2)
+        })
+
+        it('returns apiDoc identified by HTTP Link header', async () => {
+            // given
+            resources.get.mockReturnValue({
+                response: {
+                    apiDocumentationLink: ex.api1.value,
+                },
+            })
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> ${schema.name} "foobar" .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
+
+            // when
+            const { apiDocumentation } = resource
+
+            // then
+            expect(apiDocumentation?.id).toEqual(ex.api1)
         })
     })
 })

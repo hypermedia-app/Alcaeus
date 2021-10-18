@@ -1,4 +1,4 @@
-import { rdf } from '@tpluscode/rdf-ns-builders'
+import { foaf, rdf } from '@tpluscode/rdf-ns-builders/strict'
 import { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import clownface from 'clownface'
 import DatasetExt from 'rdf-ext/lib/Dataset'
@@ -91,6 +91,57 @@ describe('ResourceStore', () => {
 
             // then
             expect(resource).toBeUndefined()
+        })
+
+        it('returns resource for graph id', async () => {
+            // given
+            const response: ResponseWrapper = <any> {}
+            const john = clownface({ dataset: $rdf.dataset(), graph: ex.John })
+                .node(ex.John)
+                .addOut(foaf.knows, ex.Jane)
+            const store = new ResourceStore({
+                dataset,
+                inferences,
+                factory,
+                datasetFactory,
+            })
+            await store.set(ex.John, {
+                response,
+                dataset: john.dataset,
+                rootResource: ex.John,
+            })
+
+            // when
+            const resource = store.get(ex.John)
+
+            // then
+            expect(resource?.response).toEqual(response)
+        })
+
+        it('returns resource for matching pointer graph', async () => {
+            // given
+            const response: ResponseWrapper = <any> {}
+            const john = clownface({ dataset: $rdf.dataset(), graph: ex.John })
+                .node(ex.John)
+                .addOut(foaf.knows, ex.Jane)
+            const store = new ResourceStore({
+                dataset,
+                inferences,
+                factory,
+                datasetFactory,
+            })
+            await store.set(ex.John, {
+                response,
+                dataset: john.dataset,
+                rootResource: ex.John,
+            })
+
+            // when
+            const jane = john.node(ex.Jane)
+            const resource = store.get(jane)
+
+            // then
+            expect(resource?.response).toEqual(response)
         })
     })
 

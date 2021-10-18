@@ -1,8 +1,9 @@
 import type { DatasetCore, Term, Literal, BlankNode, NamedNode } from '@rdfjs/types'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { Constructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
-import type { Resource, SupportedProperty } from '@rdfine/hydra'
+import type { ApiDocumentation, Resource, SupportedProperty } from '@rdfine/hydra'
 import TermMap from '@rdf-esm/term-map'
+import { namedNode } from '@rdf-esm/data-model'
 import { GraphPointer } from 'clownface'
 import literal from 'rdf-literal'
 import type { HydraClient } from '../../alcaeus'
@@ -100,6 +101,22 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
                 }, new TermMap<Term, RuntimeOperation>())
 
                 return [...operations.values()]
+            }
+
+            public get apiDocumentation(): ApiDocumentation | undefined {
+                const client = alcaeus()
+                const id = this.pointer.out(hydra.apiDocumentation).value ||
+                  client.resources.get(this.pointer)?.response.apiDocumentationLink
+
+                if (id) {
+                    const idNode = namedNode(id)
+                    const representation = client.apiDocumentations.find(apiDoc => apiDoc.root?.equals(idNode))
+                    if (representation?.root) {
+                        return representation.root
+                    }
+                }
+
+                return undefined
             }
 
             public getLinks(includeMissing = false) {

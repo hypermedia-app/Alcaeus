@@ -1,9 +1,9 @@
 import type { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
 import type { Resource } from '@rdfine/hydra'
-import type { RdfResource } from '@tpluscode/rdfine'
+import type { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import cf from 'clownface'
+import cf, { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import TermMap from '@rdf-esm/term-map'
@@ -21,7 +21,7 @@ interface ResourceStoreEntry<D extends DatasetCore> {
 
 export interface ResourceStore<D extends DatasetIndexed> {
     factory: ResourceFactory<D, RdfResource<D>>
-    get<T extends RdfResourceCore<any> = Resource<D>>(uri: NamedNode): Required<HydraResponse<D, T>> | undefined
+    get<T extends RdfResourceCore<any> = Resource<D>>(idOrPointer: NamedNode | GraphPointer): Required<HydraResponse<D, T>> | undefined
     set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
     clone(): ResourceStore<D>
 }
@@ -61,8 +61,17 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
         })
     }
 
-    public get<T extends RdfResourceCore<D>>(graph: NamedNode): Required<HydraResponse<D, T>> | undefined {
-        const node = cf({ dataset: this.dataset, graph })
+    public get<T extends RdfResourceCore<D>>(idOrPointer: NamedNode | GraphPointer<ResourceIdentifier, D>): Required<HydraResponse<D, T>> | undefined {
+        let graph: NamedNode
+        let node: AnyPointer<AnyContext, D>
+        if ('termType' in idOrPointer) {
+            graph = idOrPointer
+            node = cf({ dataset: this.dataset, graph })
+        } else {
+            graph = idOrPointer._context[0].graph as any
+            node = idOrPointer
+        }
+
         const response = this.responses.get(graph)
 
         if (!response) {

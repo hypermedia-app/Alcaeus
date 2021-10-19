@@ -10,11 +10,11 @@ interface PropertyEx {
     /**
      * Gets the rdfs:range of a property
      */
-    range: Class | null
+    range: Class[]
     /**
      * Gets the rdfs:domain of a property
      */
-    domain: Class | null
+    domain: Class[]
     /**
      * Gets the property's supported operations
      */
@@ -36,14 +36,16 @@ export function RdfPropertyMixin<TBase extends Constructor<Omit<Property, keyof 
         @property.resource({
             path: rdfs.range,
             as: [ClassMixin],
+            values: 'array',
         })
-        public range!: Class
+        public range!: Class[]
 
         @property.resource({
             path: rdfs.domain,
             as: [ClassMixin],
+            values: 'array',
         })
-        public domain!: Class
+        public domain!: Class[]
 
         @property.resource({
             path: hydra.supportedOperation,

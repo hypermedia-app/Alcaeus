@@ -56,7 +56,7 @@
     "@rdf-esm/sink-map": "^0.5.0",
     "@rdf-esm/term-map": "^0.5.0",
     "@rdf-esm/term-set": "^0.5.0",
-    "@rdfine/hydra": "^0.7.1",
+    "@rdfine/hydra": "^0.8.0",
     "@rdfine/rdf": "^0.5.4",
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/types": "*",

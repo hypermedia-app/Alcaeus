@@ -22,6 +22,11 @@ declare module '@tpluscode/rdfine' {
         readonly operations: RuntimeOperation[]
 
         /**
+         * Gets the hydra:ApiDocumentation linked to the original response
+         */
+        readonly apiDocumentation: ApiDocumentation | undefined
+
+        /**
          * Gathers all properties from current resource's classes
          */
         getProperties(options?: GetProperties): { supportedProperty: SupportedProperty; objects: any[] }[]

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0
+
+### Major Changes
+
+- a3061a1: Updated [@rdfine/hydra](https://npm.im/@rdfine/hydra). See https://github.com/tpluscode/rdfine/pull/183 for details
+
+  Breaking changes:
+
+  - `Property#range` and `Property#domain` now return array
+
 ## 1.4.0
 
 ### Minor Changes

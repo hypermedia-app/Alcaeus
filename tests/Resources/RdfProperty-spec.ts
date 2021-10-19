@@ -31,12 +31,12 @@ describe('RdfProperty', () => {
 
     it('should link to domain', async () => {
         // then
-        expect(property.domain!.id).toEqual(xsd.integer)
+        expect(property.domain[0].id).toEqual(xsd.integer)
     })
 
     it('should link to range', async () => {
         // them
-        expect(property.range!.id).toEqual(xsd.string)
+        expect(property.range[0].id).toEqual(xsd.string)
     })
 
     describe('link', () => {

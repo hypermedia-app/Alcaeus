@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+
+### Minor Changes
+
+- ad302ea: `apiDocumentation` property should return actual dereferenced representations (fixes #259)
+
 ## 1.3.1
 
 ### Patch Changes

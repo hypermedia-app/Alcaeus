@@ -203,6 +203,57 @@ describe('ResponseWrapper', () => {
                 }),
             )
         })
+
+        it('should parse plain JSON as LD when context link is present', async () => {
+            // given
+            const xhrResponse = {
+                redirected: true,
+                url: 'http://example.com/redir',
+                headers: new Headers({
+                    'content-type': 'application/json',
+                    link: '<https://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#context"',
+                }),
+            } as Response
+            const parser = {
+                import: jest.fn(),
+            }
+            parsers.set('application/ld+json', parser)
+            const response = new ResponseWrapper('', xhrResponse, parsers)
+
+            // when
+            await response.quadStream()
+
+            // then
+            expect(parser.import).toBeCalled()
+        })
+
+        it('should parse with given JSON-LD context', async () => {
+            // given
+            const xhrResponse = {
+                redirected: true,
+                url: 'http://example.com/redir',
+                headers: new Headers({
+                    'content-type': 'application/ld+json',
+                }),
+            } as Response
+            const parser = {
+                import: jest.fn(),
+            }
+            parsers.set('application/ld+json', parser)
+            const context = {}
+            const response = new ResponseWrapper('', xhrResponse, parsers, context)
+
+            // when
+            await response.quadStream()
+
+            // then
+            expect(parser.import).toBeCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    context,
+                }),
+            )
+        })
     })
 
     describe('resourceUri', () => {

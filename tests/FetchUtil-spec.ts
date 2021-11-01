@@ -7,8 +7,8 @@ import { responseBuilder } from './test-utils'
 import 'isomorphic-fetch'
 
 describe('FetchUtil', () => {
-    let mockFetch
-    let fetchUtil
+    let mockFetch: jest.Mock
+    let fetchUtil: ReturnType<typeof FetchUtil>
     const parsers = new SinkMap<EventEmitter, Stream>()
 
     beforeEach(() => {
@@ -24,7 +24,7 @@ describe('FetchUtil', () => {
         parsers.set('application/n-quads', dummyParser)
     })
 
-    describe('fetchResource', () => {
+    describe('resource', () => {
         it('should load resource with RDF accept header', async () => {
             // given
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
@@ -104,6 +104,27 @@ describe('FetchUtil', () => {
                         accept: 'application/vnd.custom+rdf',
                     }),
                 }))
+        })
+
+        it('should fetch linked JSON-LD context', async () => {
+            // given
+            mockFetch.mockReturnValueOnce(
+                responseBuilder()
+                    .body(Bodies.someJsonLd)
+                    .link('https://www.w3.org/ns/hydra/error', 'http://www.w3.org/ns/json-ld#context')
+                    .build(),
+            )
+            const context = {}
+            mockFetch.mockReturnValueOnce(responseBuilder().body(context).build())
+
+            // when
+            const wrapper = await fetchUtil.resource('http://example.com/resource', {
+                parsers,
+            })
+
+            // then
+            expect(mockFetch).nthCalledWith(2, 'https://www.w3.org/ns/hydra/error')
+            expect(wrapper).toHaveProperty('jsonLdContext', context)
         })
     })
 

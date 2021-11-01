@@ -1,8 +1,10 @@
 import type { EventEmitter } from 'events'
 import type { Stream } from 'rdf-js'
 import type { SinkMap } from '@rdf-esm/sink-map'
+import li from 'parse-link-header'
 import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
+import * as Constants from './Constants'
 
 type Parsers = SinkMap<EventEmitter, Stream>
 
@@ -27,8 +29,15 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
         requestInit.headers = merge(new _Headers(defaultHeaders), new _Headers(headers), _Headers)
 
         const res = await _fetch(effectiveUri, requestInit)
+        const linkHeaders = res.headers.get(Constants.Headers.Link)
+        const links = li(linkHeaders) || {}
 
-        return new ResponseWrapper(effectiveUri, res, parsers)
+        let jsonLdContext: unknown
+        if (links[Constants.LinkRelations.context]) {
+            jsonLdContext = await _fetch(links[Constants.LinkRelations.context].url).then(res => res.json())
+        }
+
+        return new ResponseWrapper(effectiveUri, res, parsers, jsonLdContext)
     }
 
     function resource(uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit }): Promise<ResponseWrapper> {

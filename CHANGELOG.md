@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+### Patch Changes
+
+- e46dffa: Parse JSON responses as JSON-LD when there is a context `Link` header
+
 ## 2.0.0
 
 ### Major Changes

@@ -2,11 +2,8 @@ import type { EventEmitter } from 'events'
 import type { Stream } from 'rdf-js'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import li from 'parse-link-header'
-import { hydra } from '@tpluscode/rdf-ns-builders'
 import * as Constants from './Constants'
 import { patchResponseBody } from './helpers/fetchToStream'
-
-const apiDocumentationRel = hydra.apiDocumentation.value
 
 export interface ResponseWrapper {
     /**
@@ -55,24 +52,18 @@ function stripContentTypeParameters(mediaType: string) {
 }
 
 export default class implements ResponseWrapper {
-    public readonly requestedUri: string;
-
-    public readonly xhr: Response;
-
-    private parsers: SinkMap<EventEmitter, Stream>
-
-    public constructor(requestedUri: string, res: Response, parsers: SinkMap<EventEmitter, Stream>) {
-        this.xhr = res
-
-        this.requestedUri = requestedUri
-        this.parsers = parsers
-    }
+    public constructor(
+        public readonly requestedUri: string,
+        public readonly xhr: Response,
+        private readonly parsers: SinkMap<EventEmitter, Stream>,
+        private readonly jsonLdContext?: unknown,
+    ) {}
 
     public quadStream(): Stream | null {
         const quadStream = this.parsers.import(
             stripContentTypeParameters(this.mediaType),
             patchResponseBody(this.xhr),
-            { baseIRI: this.effectiveUri })
+            { baseIRI: this.effectiveUri, context: this.jsonLdContext })
         if (quadStream == null) {
             return null
         }
@@ -86,11 +77,8 @@ export default class implements ResponseWrapper {
 
     public get apiDocumentationLink() {
         if (this.xhr.headers.has(Constants.Headers.Link)) {
-            const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
-            const links = li(linkHeaders)
-
-            if (links[apiDocumentationRel]) {
-                const linkUrl = links[apiDocumentationRel].url
+            if (this.links[Constants.LinkRelations.apiDocumentation]) {
+                const linkUrl = this.links[Constants.LinkRelations.apiDocumentation].url
 
                 return this.resolveUri(linkUrl)
             }
@@ -99,7 +87,16 @@ export default class implements ResponseWrapper {
         return null
     }
 
+    public get links() {
+        const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
+        return li(linkHeaders) || {}
+    }
+
     public get mediaType(): string {
+        if (this.links[Constants.LinkRelations.context]) {
+            return 'application/ld+json'
+        }
+
         return this.xhr.headers.get(Constants.Headers.ContentType) || ''
     }
 
@@ -130,11 +127,8 @@ export default class implements ResponseWrapper {
     }
 
     private get canonicalUri(): string | undefined {
-        const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
-        const links = li(linkHeaders)
-
-        if (links && links[Constants.LinkRelations.canonical]) {
-            return this.resolveUri(links[Constants.LinkRelations.canonical].url)
+        if (this.links[Constants.LinkRelations.canonical]) {
+            return this.resolveUri(this.links[Constants.LinkRelations.canonical].url)
         }
 
         return undefined

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.2
+
+### Patch Changes
+
+- e4da204: Add root selector for application/problem+json bodies
+
 ## 2.0.1
 
 ### Patch Changes

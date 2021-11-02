@@ -62,7 +62,7 @@
     "@rdfjs/types": "*",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.29",
-    "clownface": "^1",
+    "clownface": "^1.1.0",
     "isomorphic-fetch": "^3.0.0",
     "isomorphic-form-data": "^2.0.0",
     "parse-link-header": "^1.0.1",

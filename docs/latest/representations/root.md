@@ -121,4 +121,23 @@ Ideally, it would have `rdf:type hydra:Error`. If that is not present, alcaeus w
 
 ## Custom root selection policies
 
-TBD
+For example, let's implement a custom function which will have alcaeus look for a resource where a hash fragment `#this` is appended to the original URI.
+
+In other words, when requesting `/resource/foo`, the root node would be `/resource/foo#this`
+
+```typescript
+import { Hydra } from 'alcaeus/web'
+import { namedNode } from '@rdf-esm/data-model'
+
+// inserting as first element to make this the first root node to try 
+Hydra.rootSelectors.unshift(function hashFragmentSelector(response) {
+    const url = new URL(response.resourceUri)
+    if (url.search.length) {
+        // do nothing if URI has query
+        return undefined
+    }
+    
+    url.hash = 'this'
+    return namedNode(url.toString())
+})
+```

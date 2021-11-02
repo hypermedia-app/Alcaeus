@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.3
+
+### Patch Changes
+
+- be5b886: Error response root node would not have been selected
+
 ## 2.0.2
 
 ### Patch Changes

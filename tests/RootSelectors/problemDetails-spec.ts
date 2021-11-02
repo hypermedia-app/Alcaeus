@@ -32,6 +32,7 @@ describe('RootSelector', () => {
                 .addOut(schema.identifier, id => {
                     id.addOut(schema.value, 'foo')
                 })
+                .addOut(schema.name, 'error')
             const response = {
                 resourceUri: 'id',
                 xhr: {

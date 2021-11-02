@@ -4,6 +4,7 @@ import type { SinkMap } from '@rdf-esm/sink-map'
 import li from 'parse-link-header'
 import * as Constants from './Constants'
 import { patchResponseBody } from './helpers/fetchToStream'
+import { stripContentTypeParameters } from './mediaType'
 
 export interface ResponseWrapper {
     /**
@@ -45,10 +46,6 @@ export interface ResponseWrapper {
     resolveUri(uri: string): string
 
     quadStream(): Stream | null
-}
-
-function stripContentTypeParameters(mediaType: string) {
-    return mediaType.split(';').shift() || ''
 }
 
 export default class implements ResponseWrapper {

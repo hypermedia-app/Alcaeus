@@ -10,6 +10,7 @@ import TermSet from '@rdf-esm/term-set'
 import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import { ResourceIdentifier } from '@tpluscode/rdfine'
 import FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import { getAbsoluteUri } from './helpers/uri'
@@ -217,15 +218,15 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return merge(new this._headers(defaultHeaders), headers, this._headers)
     }
 
-    private __findRootResource(dataset: D, response: ResponseWrapper): NamedNode | undefined {
+    private __findRootResource(dataset: D, response: ResponseWrapper): ResourceIdentifier | undefined {
         const candidateNodes = this.rootSelectors.reduce((candidates, [, getCandidate]) => {
-            const candidate = getCandidate(response)
+            const candidate = getCandidate(response, dataset)
             if (candidate && dataset.match(candidate).length) {
                 candidates.add(candidate)
             }
 
             return candidates
-        }, new TermSet<NamedNode>())
+        }, new TermSet<ResourceIdentifier>())
 
         if (!candidateNodes.size) {
             return undefined

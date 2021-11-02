@@ -16,7 +16,7 @@ import type { ResponseWrapper } from './ResponseWrapper'
 interface ResourceStoreEntry<D extends DatasetCore> {
     response: ResponseWrapper
     dataset: D
-    rootResource?: NamedNode
+    rootResource?: ResourceIdentifier
 }
 
 export interface ResourceStore<D extends DatasetIndexed> {
@@ -41,7 +41,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
     public readonly factory: CachedResourceFactory<D, RdfResource<D>>
-    private readonly rootNodes = new TermMap<NamedNode, NamedNode>()
+    private readonly rootNodes = new TermMap<NamedNode, ResourceIdentifier>()
     private readonly responses = new TermMap<NamedNode, ResponseWrapper>()
     private readonly datasetFactory: () => D;
 

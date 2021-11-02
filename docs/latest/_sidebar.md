@@ -20,6 +20,7 @@
   * [Supported properties](api-documentation/supported-property.md)
   * [Supported operations](api-documentation/operation.md)
 * Other
+  * [Error responses](representations/problem-details.md)
   * [Resource cache](js-api/cache.md)
   * [Request headers](js-api/request-headers.md)
   * [Media types](js-api/media-type-processor.md)

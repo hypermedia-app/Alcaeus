@@ -113,6 +113,12 @@ Even though the URI standard clearly states that locators `https://wikibus.org` 
 Sometimes the request will be redirected not to a document but to a completely different resource. In such
 case the correct resource, as identified by the redirect target will be returned as the `root`.
 
+## Error responses
+
+Alcaeus out of the box supports [RFC7807](https://datatracker.ietf.org/doc/html/rfc7807) `application/problem+json` responses, and it will attempt to select the right node from the JSON parsed as JSON-LD.
+
+Ideally, it would have `rdf:type hydra:Error`. If that is not present, alcaeus will select the topmost resource, ie. one which is not an object node.
+
 ## Custom root selection policies
 
 TBD

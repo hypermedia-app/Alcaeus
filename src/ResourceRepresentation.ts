@@ -39,7 +39,7 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
     private readonly rootNode: GraphPointer<ResourceIdentifier>
     private __uniqueResources: () => Map<Term, Hydra.Resource<D>>
 
-    public constructor(graph: AnyPointer<AnyContext, D>, factory: ResourceFactory, rootResource: NamedNode) {
+    public constructor(graph: AnyPointer<AnyContext, D>, factory: ResourceFactory, rootResource: ResourceIdentifier) {
         this.__graph = graph
         this.__factory = factory
         this.rootNode = graph.node(rootResource)

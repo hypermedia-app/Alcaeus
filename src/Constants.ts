@@ -1,5 +1,9 @@
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
+export const ContentTypes = {
+    problemDetails: 'application/problem+json',
+}
+
 export const Headers = {
     Link: 'Link',
     Location: 'Location',

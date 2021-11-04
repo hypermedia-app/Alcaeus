@@ -40,7 +40,7 @@ export function ClassMixin<TBase extends Constructor<Class>>(Base: TBase): Const
         })
         public __allSupportedProperties!: SupportedProperty[]
 
-        public get types() {
+        public get types(): TypeCollection<any> {
             return new TypeCollection(this, true)
         }
 

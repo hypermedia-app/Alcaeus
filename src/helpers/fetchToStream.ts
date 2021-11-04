@@ -30,7 +30,7 @@ class WhatwgReadable extends stream.Readable {
 }
 
 class ArrayBufferReadable extends stream.Readable {
-    public constructor(callback) {
+    public constructor(callback: () => Promise<any>) {
         let done = false
 
         super({

@@ -85,7 +85,7 @@ export default class implements ResponseWrapper {
     }
 
     public get links() {
-        const linkHeaders = this.xhr.headers.get(Constants.Headers.Link)
+        const linkHeaders = this.xhr.headers.get(Constants.Headers.Link) || ''
         return li(linkHeaders) || {}
     }
 

@@ -13,7 +13,7 @@ function requestAcceptHeaders(sinkMap: Parsers) {
 }
 
 export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
-    async function getResponse(effectiveUri, { method, headers = {}, body, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; parsers: Parsers }) {
+    async function getResponse(effectiveUri: string, { method, headers = {}, body, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; parsers: Parsers }) {
         const defaultHeaders: HeadersInit = {
             accept: requestAcceptHeaders(parsers),
         }
@@ -29,7 +29,7 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
         requestInit.headers = merge(new _Headers(defaultHeaders), new _Headers(headers), _Headers)
 
         const res = await _fetch(effectiveUri, requestInit)
-        const linkHeaders = res.headers.get(Constants.Headers.Link)
+        const linkHeaders = res.headers.get(Constants.Headers.Link) || ''
         const links = li(linkHeaders) || {}
 
         let jsonLdContext: unknown

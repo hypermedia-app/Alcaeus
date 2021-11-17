@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0
+
+### Minor Changes
+
+- f6cf34c: Make it possible to override request headers from `Resource#load` method
+
 ## 2.0.3
 
 ### Patch Changes

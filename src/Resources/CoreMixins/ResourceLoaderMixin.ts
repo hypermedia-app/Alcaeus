@@ -6,15 +6,15 @@ import type { HydraClient, HydraResponse } from '../../alcaeus'
 
 declare module '@tpluscode/rdfine' {
     export interface RdfResource<D extends DatasetCore = DatasetCore> {
-        load?<T extends RdfResource<D>>(): Promise<HydraResponse<D, T>>
+        load?<T extends RdfResource<D>>(headers?: HeadersInit): Promise<HydraResponse<D, T>>
     }
 }
 
 export function createResourceLoaderMixin(alcaeus: () => HydraClient<any>) {
     function ResourceLoaderMixin<Base extends Constructor>(base: Base) {
         return class extends base {
-            public load<T extends Resource<any>>() {
-                return alcaeus().loadResource<T>(this.id.value)
+            public load<T extends Resource<any>>(headers?: HeadersInit) {
+                return alcaeus().loadResource<T>(this.id.value, headers)
             }
         }
     }

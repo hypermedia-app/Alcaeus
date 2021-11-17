@@ -21,7 +21,7 @@ describe('ResourceLoaderMixin', () => {
     })
 
     describe('load', () => {
-        let alcaeus
+        let alcaeus: any
         let HydraResource: ReturnType<ReturnType<typeof createResourceLoaderMixin>>
 
         beforeEach(() => {
@@ -41,7 +41,24 @@ describe('ResourceLoaderMixin', () => {
             resource.load()
 
             // then
-            expect(alcaeus.loadResource.calledWithExactly('http://example.com/resource')).toBeTruthy()
+            expect(alcaeus.loadResource.calledWithMatch('http://example.com/resource')).toBeTruthy()
+        })
+
+        it('passes additional headers', () => {
+            // given
+            const node = cf({ dataset: $rdf.dataset() })
+                .namedNode('http://example.com/resource')
+            const resource = new HydraResource(node)
+
+            // when
+            resource.load({
+                Prefer: 'foo-bar: baz',
+            })
+
+            // then
+            expect(alcaeus.loadResource.calledWithMatch('http://example.com/resource', {
+                Prefer: 'foo-bar: baz',
+            })).toBeTruthy()
         })
     })
 })

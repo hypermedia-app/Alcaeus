@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.1
+
+### Patch Changes
+
+- 1318431: Builds would fail with "Could not find a declaration file for module 'parse-link-header'"
+
 ## 2.1.0
 
 ### Minor Changes

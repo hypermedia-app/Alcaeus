@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import cf from 'clownface'
 import namespace from '@rdfjs/namespace'
 import Resource from '@tpluscode/rdfine'
-import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdf, schema, rdfs } from '@tpluscode/rdf-ns-builders'
 import ResourceRepresentation from '../src/ResourceRepresentation'
 
 const ex = namespace('http://example.com/')
@@ -141,6 +141,38 @@ describe('ResourceRepresentation', () => {
 
             // then
             expect(actual).toBeUndefined()
+        })
+
+        it('should not return resource which is only a subject', () => {
+            // given
+            const rootNode = $rdf.namedNode('urn:other:resource')
+            const dataset = $rdf.dataset()
+            const graph = cf({ dataset })
+                .namedNode('http://example.com/foo')
+                .addOut(rdfs.seeAlso, $rdf.namedNode('http://example.com/bar'))
+            const response = new ResourceRepresentation(graph, factory, rootNode)
+
+            // when
+            const actual = response.get('http://example.com/bar')
+
+            // then
+            expect(actual).toBeUndefined()
+        })
+
+        it('should resource which is only a subject if flagged', () => {
+            // given
+            const rootNode = $rdf.namedNode('urn:other:resource')
+            const dataset = $rdf.dataset()
+            const graph = cf({ dataset })
+                .namedNode('http://example.com/foo')
+                .addOut(rdfs.seeAlso, $rdf.namedNode('http://example.com/bar'))
+            const response = new ResourceRepresentation(graph, factory, rootNode)
+
+            // when
+            const actual = response.get('http://example.com/bar', { allObjects: true })
+
+            // then
+            expect(actual).toBeDefined()
         })
 
         it('should return resource for encoded URI', () => {

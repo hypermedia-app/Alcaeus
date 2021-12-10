@@ -22,8 +22,12 @@ export interface ResourceRepresentation<D extends DatasetCore = DatasetCore, T e
 
     /**
      * Indexer to look up any arbitrary resource by its id within the representation
+     *
+     * @param {string} uri Resource to find
+     * @param {object} opts Options
+     * @param {boolean} opts.allObjects Include resources which are only objects
      */
-    get<T = RdfResourceCore>(uri: string): (T & Hydra.Resource<D>) | undefined
+    get<T = RdfResourceCore>(uri: string, opts?: { allObjects?: boolean }): (T & Hydra.Resource<D>) | undefined
 
     /**
      * Gets all resources of given RDF type from the representation
@@ -64,14 +68,14 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
         })()
     }
 
-    public get<T>(uri: string): (T & Hydra.Resource<D>) | undefined {
-        const nodes = this.__graph.dataset.match(this.__graph.namedNode(decodeURI(uri)).term)
+    public get<T>(uri: string, { allObjects = false }: { allObjects?: boolean } = {}): (T & Hydra.Resource<D>) | undefined {
+        const pointer = this.__graph.namedNode(decodeURI(uri))
 
-        if (nodes.size === 0) {
-            return undefined
+        if (pointer.out().terms.length || (allObjects && pointer.in().terms.length)) {
+            return this.__factory.createEntity<T & Hydra.Resource<D>>(pointer)
         }
 
-        return this.__factory.createEntity<T & Hydra.Resource<D>>(this.__graph.namedNode(decodeURI(uri)))
+        return undefined
     }
 
     public get root() {

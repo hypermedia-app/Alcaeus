@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.2
+
+### Patch Changes
+
+- e0f34dc: `ResourceRepresentation#get` would not return resources which are only object of a triple
+
 ## 2.1.1
 
 ### Patch Changes

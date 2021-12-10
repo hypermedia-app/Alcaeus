@@ -71,11 +71,13 @@ export default class <D extends DatasetCore, T extends RdfResourceCore<D>> imple
     public get<T>(uri: string, { allObjects = false }: { allObjects?: boolean } = {}): (T & Hydra.Resource<D>) | undefined {
         const pointer = this.__graph.namedNode(decodeURI(uri))
 
-        if (pointer.out().terms.length || (allObjects && pointer.in().terms.length)) {
-            return this.__factory.createEntity<T & Hydra.Resource<D>>(pointer)
+        const isSubject = pointer.out().terms.length > 0
+        const isObjectAndAllowedToReturn = allObjects && pointer.in().terms.length
+        if (!isSubject && !isObjectAndAllowedToReturn) {
+            return undefined
         }
 
-        return undefined
+        return this.__factory.createEntity<T & Hydra.Resource<D>>(pointer)
     }
 
     public get root() {

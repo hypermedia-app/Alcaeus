@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.3
+
+### Patch Changes
+
+- 996243b: build(deps): bump parse-link-header from 1.0.1 to 2.0.0
+
 ## 2.1.2
 
 ### Patch Changes

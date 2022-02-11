@@ -13,7 +13,7 @@ const ex = namespace('http://example.com/')
 describe('Operation', () => {
     let node: GraphPointer
 
-    function operation({ client, resource }: { client?: HydraClient; resource?: RdfResource } = {}): RuntimeOperation {
+    function operation({ client, resource }: { client?: sinon.SinonSpiedInstance<HydraClient>; resource?: RdfResource } = {}): RuntimeOperation {
         return RdfResourceImpl.factory.createEntity(
             node, [
                 createMixin(client || {} as any, resource || {} as any),
@@ -52,7 +52,7 @@ describe('Operation', () => {
     })
 
     describe('invoke', () => {
-        let client
+        let client: sinon.SinonSpiedInstance<HydraClient>
         const resource = {
             id: $rdf.namedNode('http://target/resource'),
         } as any as RdfResource
@@ -60,7 +60,7 @@ describe('Operation', () => {
         beforeEach(() => {
             client = {
                 invokeOperation: sinon.spy(),
-            }
+            } as any
         })
 
         it('should execute through alcaeus with provided headers', () => {
@@ -75,6 +75,12 @@ describe('Operation', () => {
                     'x-foo': 'bar',
                 })
             expect(client.invokeOperation.firstCall.args[2]).toStrictEqual('')
+        })
+
+        it('should pass body to client', () => {
+            operation({ client, resource }).invoke('body')
+
+            expect(client.invokeOperation.firstCall.args[2]).toStrictEqual('body')
         })
     })
 

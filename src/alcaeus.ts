@@ -164,7 +164,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         return null
     }
 
-    public async invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers: HeadersInit, body?: BodyInit): Promise<HydraResponse<D, T>> {
+    public async invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers: HeadersInit = {}, body?: BodyInit): Promise<HydraResponse<D, T>> {
         const uri = getAbsoluteUri(operation.target.id.value, this.baseUri)
         const mergedHeaders = await this.__mergeHeaders(new this._headers(headers), { uri })
 

@@ -25,7 +25,7 @@ export function createMixin(client: HydraClient, target: RdfResource) {
             }
 
             public invoke<T extends RdfResourceCore<any> = Resource<DatasetCore>>(body?: BodyInit, headers?: HeadersInit): Promise<HydraResponse<DatasetCore, T>> {
-                if (body !== null && typeof body !== 'undefined' && headers !== null && typeof headers !== 'undefined') {
+                if (body !== null && typeof body !== 'undefined') {
                     return client.invokeOperation<T>(this, headers, body)
                 }
 

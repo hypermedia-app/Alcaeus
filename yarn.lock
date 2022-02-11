@@ -1471,14 +1471,7 @@
     "@rdf-esm/data-model" "^0.5.1"
     "@rdfjs/namespace" "^1.1.0"
 
-"@rdf-esm/sink-map@^0.5.0":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@rdf-esm/sink-map/-/sink-map-0.5.2.tgz#6dddec25759ad9a6bab6c54e6200362e32814c0e"
-  integrity sha512-7yyt1YQkKCWNxhaNOfGlMS31OpRoEqnP4epfoEhBTBNqbGcyPmhMw6WYFtelk/LBLtWyvi2V/FM2rP400WZhXA==
-  dependencies:
-    readable-stream "^3.6.0"
-
-"@rdf-esm/sink-map@^0.5.5":
+"@rdf-esm/sink-map@^0.5.0", "@rdf-esm/sink-map@^0.5.5":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@rdf-esm/sink-map/-/sink-map-0.5.5.tgz#3a11f1d5362decfe78e51af4a827591858ddab23"
   integrity sha512-Uk3z74s3+R6f3bm44NReOd/mM8O9Bm3iT83qieXAH2XumlLsd4aBoxN6AnTxlUzv3qb5DCf0mk8fjNl55bhoIQ==
@@ -1537,14 +1530,7 @@
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     "@tpluscode/rdfine" "^0.5.29"
 
-"@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.1", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@rdfjs/data-model/-/data-model-1.2.0.tgz#1daa39f26d48e0ec4d6a60fc4150db7d7ef1bab2"
-  integrity sha512-6ITWcu2sr9zJqXUPDm1XJ8DRpea7PotWBIkTzuO1MCSruLOWH2ICoQOAtlJy30cT+GqH9oAQKPR+CHXejsdizA==
-  dependencies:
-    "@types/rdf-js" "*"
-
-"@rdfjs/data-model@^1.3.4":
+"@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.1", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2", "@rdfjs/data-model@^1.3.4":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@rdfjs/data-model/-/data-model-1.3.4.tgz#2b1b3e52755ab1283bf66aa2d3ac97fd8a0332c2"
   integrity sha512-iKzNcKvJotgbFDdti7GTQDCYmL7GsGldkYStiP0K8EYtN7deJu5t7U11rKTz+nR7RtesUggT+lriZ7BakFv8QQ==
@@ -1570,18 +1556,7 @@
   dependencies:
     "@rdfjs/data-model" "^1.1.0"
 
-"@rdfjs/parser-jsonld@^1.2.0", "@rdfjs/parser-jsonld@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@rdfjs/parser-jsonld/-/parser-jsonld-1.2.1.tgz#fa4fa2f0b84b05eb326bd904f1d8788237cf40d3"
-  integrity sha512-m8WQBacXaU2qPgf+rPEqit4EiEjBxpohvDEG4aF7YvFAT6uEto3lHu7ilKcMKpLfMKmbXp4v6KzJXm9yvockNw==
-  dependencies:
-    "@rdfjs/data-model" "^1.0.1"
-    "@rdfjs/sink" "^1.0.2"
-    concat-stream "^2.0.0"
-    jsonld "^1.8.1"
-    readable-stream "^3.6.0"
-
-"@rdfjs/parser-jsonld@^1.2.2":
+"@rdfjs/parser-jsonld@^1.2.0", "@rdfjs/parser-jsonld@^1.2.1", "@rdfjs/parser-jsonld@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@rdfjs/parser-jsonld/-/parser-jsonld-1.2.2.tgz#01cf0ab6d74b7702983ff332bb6245053110dda4"
   integrity sha512-CU3VDaTIJtYmm0CaLNvJLiQ2HX3/m2s9dOE1VSgNXSwSwIj+H8aAcCxTeiIzAlDkmMpggFgxtJqODk2tB4/CuA==
@@ -1662,17 +1637,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.8.3":
+"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.3":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
   integrity sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==
-  dependencies:
-    type-detect "4.0.8"
-
-"@sinonjs/commons@^1.7.0":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"
-  integrity sha512-892K+kWUUi3cl+LlqEWIDrhvLgdL79tECi8JZUyq6IviKy/DNhuzCRlbHUjxK89f4ypPMMaFnFuR9Ie6DoIMsw==
   dependencies:
     type-detect "4.0.8"
 

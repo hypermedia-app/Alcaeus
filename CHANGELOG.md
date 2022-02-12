@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.2.0
+
+### Minor Changes
+
+- a5b52c5: Removed dependencies `rdf-dataset-indexed`, `rdf-transform-triple-to-quad`. Replaced with `@rdfjs/dataset` and `rdf-dataset-ext`
+
+### Patch Changes
+
+- f23f1e0: Operation body was ignored when `headers` were not provided
+- 512bcdf: Update RDF/JS formats packages
+
 ## 2.1.3
 
 ### Patch Changes

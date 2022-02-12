@@ -1,4 +1,4 @@
-import { DatasetCore, Literal, Stream } from 'rdf-js'
+import { DatasetCore, Literal, Stream } from '@rdfjs/types'
 import * as Hydra from '@rdfine/hydra'
 import namespace from '@rdfjs/namespace'
 import Parser from '@rdfjs/parser-n3'

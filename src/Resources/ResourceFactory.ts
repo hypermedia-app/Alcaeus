@@ -1,4 +1,4 @@
-import type { DatasetCore, Term, NamedNode } from 'rdf-js'
+import type { DatasetCore, Term, NamedNode } from '@rdfjs/types'
 import { defaultGraphInstance } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
 import type { Constructor, RdfResource } from '@tpluscode/rdfine'

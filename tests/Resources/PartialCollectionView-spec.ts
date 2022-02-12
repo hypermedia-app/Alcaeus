@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode } from '@rdfjs/types'
 import cf, { GraphPointer } from 'clownface'
 import * as Hydra from '@rdfine/hydra'
 import $rdf from 'rdf-ext'

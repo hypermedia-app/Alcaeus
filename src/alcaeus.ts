@@ -1,5 +1,5 @@
 import type { EventEmitter } from 'events'
-import type { DatasetCore, NamedNode, Stream } from 'rdf-js'
+import type { DatasetCoreFactory, Quad, DatasetCore, NamedNode, Stream } from '@rdfjs/types'
 import { namedNode } from '@rdf-esm/data-model'
 import TermMap from '@rdf-esm/term-map'
 import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
@@ -9,7 +9,7 @@ import type { SinkMap } from '@rdf-esm/sink-map'
 import TermSet from '@rdf-esm/term-set'
 import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import fromStream from 'rdf-dataset-ext/fromStream'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import FetchUtil from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
@@ -34,7 +34,7 @@ function byInProperties(left: GraphPointer, right: GraphPointer) {
     return left.in().terms.length - right.in().terms.length
 }
 
-export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
+export interface HydraClient<D extends DatasetCore = DatasetCore> {
     log: (msg: string) => void
     baseUri?: string
     rootSelectors: [string, RootNodeCandidate][]
@@ -48,16 +48,16 @@ export interface HydraClient<D extends DatasetIndexed = DatasetIndexed> {
     cacheStrategy: ResourceCacheStrategy
 }
 
-interface AlcaeusInit<D extends DatasetIndexed> {
+interface AlcaeusInit<D extends DatasetCore> {
     rootSelectors: [string, RootNodeCandidate][]
     resources: ResourceStore<D>
-    datasetFactory: () => D
+    datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset']
     parsers?: SinkMap<EventEmitter, Stream>
     fetch: typeof fetch
     Headers: typeof Headers
 }
 
-export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
+export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
     public baseUri?: string = undefined;
 
     public rootSelectors: [string, RootNodeCandidate][];
@@ -75,7 +75,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
 
     private readonly __apiDocumentations: Map<NamedNode, ResourceRepresentation<D, ApiDocumentation<D>>> = new TermMap()
 
-    private readonly datasetFactory: () => D;
+    private readonly datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset'];
 
     private readonly _fetch: ReturnType<typeof FetchUtil>
 
@@ -127,7 +127,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
 
         const stream = await response.quadStream()
         if (stream) {
-            const dataset = await this.datasetFactory().import(stream)
+            const dataset = await fromStream(this.datasetFactory(), stream)
             const rootResource = this.__findRootResource(dataset, response)
 
             if (dereferenceApiDocumentation) {
@@ -182,7 +182,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
         const responseStream = await response.quadStream()
 
         if (responseStream) {
-            const dataset = await this.datasetFactory().import(responseStream)
+            const dataset = await fromStream(this.datasetFactory(), responseStream)
             const rootResource = this.__findRootResource(dataset, response)
             let resources = this.resources
             if (operation.method?.toUpperCase() !== 'GET') {
@@ -221,7 +221,7 @@ export class Alcaeus<D extends DatasetIndexed> implements HydraClient<D> {
     private __findRootResource(dataset: D, response: ResponseWrapper): ResourceIdentifier | undefined {
         const candidateNodes = this.rootSelectors.reduce((candidates, [, getCandidate]) => {
             const candidate = getCandidate(response, dataset)
-            if (candidate && dataset.match(candidate).length) {
+            if (candidate && dataset.match(candidate).size) {
                 candidates.add(candidate)
             }
 

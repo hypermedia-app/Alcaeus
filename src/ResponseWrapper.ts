@@ -1,5 +1,5 @@
 import type { EventEmitter } from 'events'
-import type { Stream } from 'rdf-js'
+import type { Stream } from '@rdfjs/types'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import li from 'parse-link-header'
 import * as Constants from './Constants'

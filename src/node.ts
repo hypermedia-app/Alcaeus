@@ -1,5 +1,5 @@
 import formats from '@rdfjs/formats-common'
-import datasetIndexed from 'rdf-dataset-indexed'
+import { dataset } from '@rdfjs/dataset'
 import * as Alcaeus from './index'
 import 'isomorphic-fetch'
 
@@ -8,7 +8,7 @@ export function create(opts?: Partial<Parameters<typeof Alcaeus['create']>[0]>) 
         fetch,
         Headers,
         parsers: formats.parsers,
-        datasetFactory: datasetIndexed,
+        datasetFactory: dataset,
         ...opts,
     })
 }

@@ -1,4 +1,4 @@
-import type { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import type { ExtendingConstructor, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import { namespace } from '@tpluscode/rdfine'
 import type { Class, MemberAssertion } from '@rdfine/hydra'

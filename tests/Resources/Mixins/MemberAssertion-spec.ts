@@ -1,4 +1,4 @@
-import { BlankNode, DatasetCore } from 'rdf-js'
+import { BlankNode, DatasetCore } from '@rdfjs/types'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import Resource from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'

@@ -1,4 +1,4 @@
-import type { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import type { Constructor } from '@tpluscode/rdfine'
 import { namespace } from '@tpluscode/rdfine'
 import { hydra } from '@tpluscode/rdf-ns-builders'

@@ -1,4 +1,4 @@
-import type { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import type { Resource } from '@rdfine/hydra'
 import type { Constructor } from '@tpluscode/rdfine'
 import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'

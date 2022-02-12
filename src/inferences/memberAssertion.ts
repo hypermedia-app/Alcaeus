@@ -1,4 +1,4 @@
-import { BaseQuad, DatasetCore } from 'rdf-js'
+import type { BaseQuad, DatasetCore } from '@rdfjs/types'
 import cf from 'clownface'
 import * as RDF from '@rdf-esm/data-model'
 import { hydra } from '@tpluscode/rdf-ns-builders'

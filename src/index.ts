@@ -1,11 +1,10 @@
 import type { EventEmitter } from 'events'
-import type { Stream } from 'rdf-js'
+import type { Stream, DatasetCore, DatasetCoreFactory, Quad } from '@rdfjs/types'
 import type { SinkMap } from '@rdf-esm/sink-map'
 import type { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import RdfResource from '@tpluscode/rdfine'
 import * as rdfine from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
-import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 import { Alcaeus } from './alcaeus'
 import type { HydraClient } from './alcaeus'
 import * as inferences from './inferences'
@@ -22,16 +21,16 @@ export * from '@rdfine/hydra'
 export type { RuntimeOperation } from './Resources/Operation'
 export type { HydraResponse } from './alcaeus'
 
-interface AlcaeusInit<D extends DatasetIndexed> {
+interface AlcaeusInit<D extends DatasetCore> {
     rootSelectors?: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    datasetFactory: () => D
+    datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset']
     dataset?: D
     fetch: typeof fetch
     Headers: typeof Headers
 }
 
-export function create <D extends DatasetIndexed = DatasetIndexed>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: AlcaeusInit<D>): HydraClient<D> {
+export function create <D extends DatasetCore = DatasetCore>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: AlcaeusInit<D>): HydraClient<D> {
     const getClient = () => alcaeus
 
     const coreMixins: Mixin[] = [

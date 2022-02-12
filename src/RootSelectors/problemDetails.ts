@@ -1,4 +1,4 @@
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import clownface, { AnyPointer, MultiPointer } from 'clownface'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders/strict'
 import TermSet from '@rdf-esm/term-set'

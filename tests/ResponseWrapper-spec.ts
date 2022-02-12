@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { Stream } from 'rdf-js'
+import { Stream } from '@rdfjs/types'
 import sinon from 'sinon'
 import SinkMap from '@rdfjs/sink-map'
 import ResponseWrapper from '../src/ResponseWrapper'

@@ -7,7 +7,7 @@ The main method of Alcaeus client is `loadResource(string)` which performs a `GE
 ```typescript
 import { RdfResource } from '@tpluscode/rdfine'
 import { Resource } from '@rdfine/hydra'
-import { DatasetCore } from 'rdf-js'
+import { DatasetCore } from '@rdfjs/types'
 import { ResourceRepresentation } from 'alcaeus/ResourceRepresentation'
 import { ResponseWrapper } from 'alcaeus/ResourceWrapper'
 

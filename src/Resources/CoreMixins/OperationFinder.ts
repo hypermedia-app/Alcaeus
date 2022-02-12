@@ -1,4 +1,4 @@
-import type { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import { namedNode } from '@rdf-esm/data-model'
 import type { Resource, Operation } from '@rdfine/hydra'
 import type { NamespaceBuilder } from '@rdfjs/namespace'

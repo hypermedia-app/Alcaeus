@@ -1,4 +1,4 @@
-import type { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResponseWrapper } from '../ResponseWrapper'
 import { exactId } from './exactId'

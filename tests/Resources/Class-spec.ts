@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode } from '@rdfjs/types'
 import { turtle } from '@tpluscode/rdf-string'
 import * as HydraClass from '@rdfine/hydra/lib/Class'
 import cf, { GraphPointer } from 'clownface'

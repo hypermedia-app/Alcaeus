@@ -1,7 +1,7 @@
-import { Stream } from 'rdf-js'
 import { EventEmitter } from 'events'
+import { Stream } from '@rdfjs/types'
 import SinkMap from '@rdfjs/sink-map'
-import datasetIndexed from 'rdf-dataset-indexed'
+import { dataset } from '@rdfjs/dataset'
 import 'isomorphic-fetch'
 import { create } from '../src'
 
@@ -19,7 +19,7 @@ describe('alcaeus', () => {
                 parsers,
                 fetch,
                 Headers,
-                datasetFactory: datasetIndexed,
+                datasetFactory: dataset,
             })
 
             // then

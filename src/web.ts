@@ -1,5 +1,5 @@
 import { parsers } from '@rdf-esm/formats-common'
-import datasetIndexed from 'rdf-dataset-indexed'
+import { dataset } from '@rdfjs/dataset'
 import * as Alcaeus from './index'
 
 export function create(opts?: Partial<Parameters<typeof Alcaeus['create']>[0]>) {
@@ -7,7 +7,7 @@ export function create(opts?: Partial<Parameters<typeof Alcaeus['create']>[0]>) 
         fetch: (input, init) => fetch(input, init),
         Headers,
         parsers,
-        datasetFactory: datasetIndexed,
+        datasetFactory: dataset,
         ...opts,
     })
 }

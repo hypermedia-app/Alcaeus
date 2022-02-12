@@ -1,4 +1,4 @@
-import type { DatasetCore, NamedNode } from 'rdf-js'
+import type { DatasetCore, NamedNode } from '@rdfjs/types'
 import * as $rdf from '@rdf-esm/data-model'
 import * as Hydra from '@rdfine/hydra'
 import { rdf, hydra } from '@tpluscode/rdf-ns-builders'

@@ -1,17 +1,18 @@
-import type { DatasetCore, NamedNode, BaseQuad } from 'rdf-js'
+import type { DatasetCore, NamedNode, BaseQuad, DatasetCoreFactory, Quad } from '@rdfjs/types'
 import type { Resource } from '@rdfine/hydra'
 import type { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import cf, { AnyContext, AnyPointer, GraphPointer } from 'clownface'
-import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
-import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import deleteMatch from 'rdf-dataset-ext/deleteMatch'
+import addAll from 'rdf-dataset-ext/addAll'
 import TermMap from '@rdf-esm/term-map'
 import type { HydraResponse } from './alcaeus'
 import ResourceRepresentationImpl from './ResourceRepresentation'
 import CachedResourceFactoryImpl from './Resources/ResourceFactory'
 import type { CachedResourceFactory } from './Resources/ResourceFactory'
 import type { ResponseWrapper } from './ResponseWrapper'
+import { tripleToQuad } from './helpers/dataModel'
 
 interface ResourceStoreEntry<D extends DatasetCore> {
     response: ResponseWrapper
@@ -19,10 +20,10 @@ interface ResourceStoreEntry<D extends DatasetCore> {
     rootResource?: ResourceIdentifier
 }
 
-export interface ResourceStore<D extends DatasetIndexed> {
+export interface ResourceStore<D extends DatasetCore> {
     factory: ResourceFactory<D, RdfResource<D>>
     get<T extends RdfResourceCore<any> = Resource<D>>(idOrPointer: NamedNode | GraphPointer): Required<HydraResponse<D, T>> | undefined
-    set(uri: NamedNode, entry: ResourceStoreEntry<D>): Promise<void>
+    set(uri: NamedNode, entry: ResourceStoreEntry<D>): void
     clone(): ResourceStore<D>
 }
 
@@ -30,20 +31,20 @@ export interface RepresentationInference {
     (dataset: DatasetCore): Iterable<BaseQuad>
 }
 
-interface ResourceStoreInit<D extends DatasetIndexed> {
+interface ResourceStoreInit<D extends DatasetCore> {
     dataset: D
-    datasetFactory: () => D
+    datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset']
     inferences: RepresentationInference[]
     factory: ResourceFactory<D, RdfResource<D>>
 }
 
-export default class ResourceStoreImpl<D extends DatasetIndexed> implements ResourceStore<D> {
+export default class ResourceStoreImpl<D extends DatasetCore> implements ResourceStore<D> {
     private readonly dataset: D;
     private readonly inferences: RepresentationInference[];
     public readonly factory: CachedResourceFactory<D, RdfResource<D>>
     private readonly rootNodes = new TermMap<NamedNode, ResourceIdentifier>()
     private readonly responses = new TermMap<NamedNode, ResponseWrapper>()
-    private readonly datasetFactory: () => D;
+    private readonly datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset'];
 
     public constructor({ dataset, inferences, factory, datasetFactory }: ResourceStoreInit<D>) {
         this.dataset = dataset
@@ -55,7 +56,7 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
     public clone(): ResourceStore<D> {
         return new ResourceStoreImpl({
             inferences: this.inferences,
-            dataset: this.dataset.clone(),
+            dataset: this.datasetFactory([...this.dataset]),
             factory: this.factory.clone(),
             datasetFactory: this.datasetFactory,
         })
@@ -90,12 +91,13 @@ export default class ResourceStoreImpl<D extends DatasetIndexed> implements Reso
 
         const inferredQuads = this.datasetFactory()
 
-        this.inferences.forEach(inferenceOver => inferredQuads.addAll([...inferenceOver(dataset)]))
+        this.inferences.forEach(inferenceOver => addAll(inferredQuads, [...inferenceOver(dataset)]))
 
-        await this.dataset
-            .removeMatches(undefined, undefined, undefined, graph)
-            .import(dataset.toStream().pipe(new TripleToQuadTransform(graph)))
-        await this.dataset.import(inferredQuads.toStream().pipe(new TripleToQuadTransform(graph)))
+        addAll(
+            deleteMatch(this.dataset, undefined, undefined, undefined, graph),
+            [...dataset].map(tripleToQuad(graph)),
+        )
+        addAll(this.dataset, [...inferredQuads].map(tripleToQuad(graph)))
 
         this.responses.set(graph, response)
 

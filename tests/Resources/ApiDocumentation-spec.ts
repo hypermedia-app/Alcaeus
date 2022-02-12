@@ -1,5 +1,5 @@
 import 'core-js/es6/array'
-import { BlankNode } from 'rdf-js'
+import { BlankNode } from '@rdfjs/types'
 import { Constructor } from '@tpluscode/rdfine'
 import * as Hydra from '@rdfine/hydra'
 import cf, { GraphPointer } from 'clownface'

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { Sink, Stream } from 'rdf-js'
+import { Sink, Stream } from '@rdfjs/types'
 import SinkMap from '@rdfjs/sink-map'
 import FetchUtil from '../src/FetchUtil'
 import { Bodies } from './test-objects'

@@ -1,4 +1,4 @@
-import { DatasetCore, Stream } from 'rdf-js'
+import { DatasetCore, Stream } from '@rdfjs/types'
 import { Resource } from '@rdfine/hydra'
 import { namedNode } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'

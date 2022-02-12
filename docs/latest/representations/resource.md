@@ -6,7 +6,7 @@ methods for accessing the resource withing the returned payload.
 
 ```typescript
 import { Resource } from '@rdfine/hydra'
-import { NamedNode } from 'rdf-js'
+import { NamedNode } from '@rdfjs/types'
  
 interface ResourceRepresentation extends Iterable<Resource> {
     /**

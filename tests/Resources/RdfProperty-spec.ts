@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode } from '@rdfjs/types'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import * as Rdf from '@rdfine/rdf'

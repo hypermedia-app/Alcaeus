@@ -23,7 +23,7 @@ export const Bodies = {
         '@context': {
             '@vocab': 'http://example.com/vocab#',
         },
-        '@id': 'http://example.com/biała gęś',
+        '@id': 'http://example.com/biała-gęś',
         '@type': 'Resource',
     },
 

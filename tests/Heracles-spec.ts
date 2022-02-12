@@ -123,8 +123,8 @@ describe('Hydra', () => {
     describe('loadResource', () => {
         it('should return object with matching @id when it is unescaped in response', async () => {
             // given
-            const unescaped = 'http://example.com/biała gęś'
-            const id = 'http://example.com/bia%C5%82a%20g%C4%99%C5%9B'
+            const unescaped = 'http://example.com/biała-gęś'
+            const id = 'http://example.com/bia%C5%82a-g%C4%99%C5%9B'
             fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
             }))
@@ -139,7 +139,7 @@ describe('Hydra', () => {
 
         it('should return object with matching @id when selected with unescaped uri', async () => {
             // given
-            const id = 'http://example.com/biała gęś'
+            const id = 'http://example.com/biała-gęś'
             fetchResource.mockImplementationOnce(mockedResponse({
                 xhrBuilder: responseBuilder().body(Bodies.unescapedDiacritics),
             }))

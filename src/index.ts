@@ -21,7 +21,7 @@ export * from '@rdfine/hydra'
 export type { RuntimeOperation } from './Resources/Operation'
 export type { HydraResponse } from './alcaeus'
 
-interface AlcaeusInit<D extends DatasetCore> {
+export interface Init<D extends DatasetCore> {
     rootSelectors?: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
     datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset']
@@ -30,7 +30,7 @@ interface AlcaeusInit<D extends DatasetCore> {
     Headers: typeof Headers
 }
 
-export function create <D extends DatasetCore = DatasetCore>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: AlcaeusInit<D>): HydraClient<D> {
+export function create <D extends DatasetCore = DatasetCore>({ dataset, fetch, Headers, parsers, rootSelectors, datasetFactory }: Init<D>): HydraClient<D> {
     const getClient = () => alcaeus
 
     const coreMixins: Mixin[] = [

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.2
+
+### Patch Changes
+
+- 61e9e74: Update `@types/parse-link-header` to v2
+
 ## 2.2.1
 
 ### Patch Changes

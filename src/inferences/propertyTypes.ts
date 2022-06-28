@@ -10,7 +10,7 @@ const propertyRangeMappings = [
     [hydra.supportedOperation, hydra.Operation],
     [hydra.operation, hydra.Operation],
     [hydra.supportedProperty, hydra.SupportedProperty],
-    [hydra.statusCodes, hydra.StatusCodeDescription],
+    [hydra.statusCode, hydra.Status],
     [hydra.property, rdf.Property],
     [hydra.mapping, hydra.IriTemplateMapping],
 ]

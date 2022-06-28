@@ -1,4 +1,4 @@
-import { foaf, rdf } from '@tpluscode/rdf-ns-builders/strict'
+import { foaf, rdf } from '@tpluscode/rdf-ns-builders'
 import { ResourceFactory } from '@tpluscode/rdfine/lib/ResourceFactory'
 import clownface from 'clownface'
 import DatasetExt from 'rdf-ext/lib/Dataset'

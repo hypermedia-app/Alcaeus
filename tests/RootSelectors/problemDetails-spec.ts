@@ -1,6 +1,6 @@
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
-import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
+import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { ResponseWrapper } from '../../src/ResponseWrapper'
 import { problemDetails } from '../../src/RootSelectors/problemDetails'
 

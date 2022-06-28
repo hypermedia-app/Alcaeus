@@ -1,6 +1,6 @@
 import type { DatasetCore } from '@rdfjs/types'
 import clownface, { AnyPointer, MultiPointer } from 'clownface'
-import { hydra, rdf } from '@tpluscode/rdf-ns-builders/strict'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdf-esm/term-set'
 import { ResponseWrapper } from '../ResponseWrapper'
 import { Headers, ContentTypes } from '../Constants'

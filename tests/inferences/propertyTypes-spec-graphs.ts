@@ -8,7 +8,7 @@ const hydraProperties = `
  
  <Operation> hydra:expects <ExpectedClass> ;
              hydra:returns <ReturnedClass> ;
-             hydra:statusCodes [] .
+             hydra:statusCode [] .
              
  <Property> hydra:property foaf:knows .
              

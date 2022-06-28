@@ -1,13 +1,13 @@
 import { BlankNode, DatasetCore } from '@rdfjs/types'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import Resource from '@tpluscode/rdfine'
-import * as Hydra from '@rdfine/hydra'
+import { MemberAssertionMixin as HydraMemberAssertionMixin } from '@rdfine/hydra/extensions/MemberAssertion'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { foaf, hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { MemberAssertionMixin } from '../../../src/Resources/Mixins/MemberAssertion'
 
-class MemberAssertion extends MemberAssertionMixin(Hydra.MemberAssertionMixin(Resource)) {}
+class MemberAssertion extends MemberAssertionMixin(HydraMemberAssertionMixin(Resource)) {}
 
 describe('MemberAssertion', () => {
     let dataset: DatasetCore

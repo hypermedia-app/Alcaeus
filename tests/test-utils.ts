@@ -12,7 +12,7 @@ const parser = new Parser()
 export function responseBuilder() {
     let statusCode = 200
     let responseBody: any
-    let responseUri
+    let responseUri: string
     const headers = {
         'Content-Type': MediaTypes.jsonLd,
     } as any
@@ -67,15 +67,16 @@ export function responseBuilder() {
             return this.link(docUri, 'http://www.w3.org/ns/hydra/core#apiDocumentation')
         },
 
-        build(): Promise<Response> {
+        build({ url }: { url?: string } = {}): Promise<Response> {
             let response
 
             if (responseUri) {
                 response = Response.redirect(responseUri, 302)
             } else {
-                response = new Response(responseBody, {
+                response = new Response(responseBody, <any>{
                     headers: new Headers(headers),
                     status: statusCode,
+                    url,
                 })
             }
 
@@ -85,7 +86,7 @@ export function responseBuilder() {
     }
 }
 
-export function mockedResponse({ includeDocsLink = true, xhrBuilder }): (uri: string) => Promise<ResponseWrapper> {
+export function mockedResponse({ includeDocsLink = true, xhrBuilder }: { includeDocsLink: boolean; xhrBuilder: ReturnType<typeof responseBuilder> }): (uri: string) => Promise<ResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
 
     return async (requestedUri: string) => {
@@ -93,14 +94,14 @@ export function mockedResponse({ includeDocsLink = true, xhrBuilder }): (uri: st
 
         const response: Omit<ResponseWrapper, 'xhr'> = {
             apiDocumentationLink: includeDocsLink ? 'http://api.example.com/doc/' : null,
-            mediaType: xhr.headers.get('Content-Type'),
+            mediaType: xhr.headers.get('Content-Type')!,
             redirectUrl: null,
             quadStream() {
                 if (!xhr.body) {
                     return null
                 }
 
-                return parsers.import(this.mediaType, xhr.body)
+                return parsers.import(this.mediaType, xhr.body as any)
             },
             requestedUri,
             resourceUri: requestedUri,

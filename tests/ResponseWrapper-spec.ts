@@ -17,7 +17,9 @@ describe('ResponseWrapper', () => {
     describe('apiDocumentationLink', () => {
         it('should get absolute link', async () => {
             // given
-            const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation().build()
+            const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation().build({
+                url: 'http://resources.example.com/',
+            })
 
             // when
             const res = new ResponseWrapper('http://resources.example.com/', xhrResponse, parsers)
@@ -28,7 +30,9 @@ describe('ResponseWrapper', () => {
 
         it('should get relative link', async () => {
             // given
-            const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation('doc/').build()
+            const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).apiDocumentation('doc/').build({
+                url: 'http://api.example.com/resource/',
+            })
 
             // when
             const res = new ResponseWrapper('http://api.example.com/resource/', xhrResponse, parsers)
@@ -91,6 +95,7 @@ describe('ResponseWrapper', () => {
         it('returns absolute URL resolved to request base', () => {
             // given
             const xhrResponse = {
+                url: 'http://localhost:9876/to-strip',
             } as any
             const wrapper = new ResponseWrapper('http://localhost:9876/to-strip', xhrResponse, parsers)
 
@@ -166,6 +171,7 @@ describe('ResponseWrapper', () => {
         it('should apply effectiveUri as baseIRI parser option', async () => {
             // given
             const xhrResponse = {
+                url: 'http://example.com/res',
                 headers: new Headers({
                     'content-type': 'application/ld+json',
                 }),
@@ -272,7 +278,9 @@ describe('ResponseWrapper', () => {
             // given
             const redirectUri = 'http://example.com/canonical'
 
-            const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).canonical(redirectUri).build()
+            const xhrResponse = await responseBuilder().body(Bodies.someJsonLd).canonical(redirectUri).build({
+                url: 'http://example.com/original',
+            })
             const response = new ResponseWrapper('http://example.com/original', xhrResponse, parsers)
 
             // when
@@ -287,7 +295,7 @@ describe('ResponseWrapper', () => {
                 // given
                 const xhrResponse = await responseBuilder()
                     .canonical('http://example.com/canonical')
-                    .build()
+                    .build({ url: 'http://example.com/original' })
                 const response = new ResponseWrapper('http://example.com/original', xhrResponse, parsers)
 
                 // when
@@ -304,7 +312,7 @@ describe('ResponseWrapper', () => {
                 const xhrResponse = await responseBuilder()
                     .header('Location', 'http://example.com/the-real-id')
                     .statusCode(201)
-                    .build()
+                    .build({ url: 'http://example.com/original' })
                 const response = new ResponseWrapper('http://example.com/original', xhrResponse, parsers)
 
                 // when
@@ -318,7 +326,7 @@ describe('ResponseWrapper', () => {
                 // given
                 const xhrResponse = await responseBuilder()
                     .header('Location', 'http://example.com/the-real-id')
-                    .build()
+                    .build({ url: 'http://example.com/original' })
                 const response = new ResponseWrapper('http://example.com/original', xhrResponse, parsers)
 
                 // when

@@ -106,7 +106,7 @@ export default class implements ResponseWrapper {
     }
 
     public get effectiveUri() {
-        return this.redirectUrl || this.requestedUri
+        return this.redirectUrl || this.xhr.url
     }
 
     public get resourceUri(): string {

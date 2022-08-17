@@ -77,7 +77,6 @@ describe('ResponseWrapper', () => {
     describe('resolveUri', () => {
         it('returns absolute URL unchanged', () => {
             // given
-            // given
             const xhrResponse = {
             } as any
             const wrapper = new ResponseWrapper('http://api.example.com/resource/', xhrResponse, parsers)
@@ -91,7 +90,6 @@ describe('ResponseWrapper', () => {
 
         it('returns absolute URL resolved to request base', () => {
             // given
-            // given
             const xhrResponse = {
             } as any
             const wrapper = new ResponseWrapper('http://localhost:9876/to-strip', xhrResponse, parsers)
@@ -103,8 +101,21 @@ describe('ResponseWrapper', () => {
             expect(resolved).toBe('http://localhost:9876/whatever')
         })
 
-        it('returns absolute URL resolved to redirected url', () => {
+        it('uses response URL to resolve relative reference', () => {
             // given
+            const xhrResponse = {
+                url: 'http://localhost:9876/to-strip',
+            } as any
+            const wrapper = new ResponseWrapper('/to-strip', xhrResponse, parsers)
+
+            // when
+            const resolved = wrapper.resolveUri('/whatever')
+
+            // then
+            expect(resolved).toBe('http://localhost:9876/whatever')
+        })
+
+        it('returns absolute URL resolved to redirected url', () => {
             // given
             const xhrResponse = {
                 redirected: true,

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.4
+
+### Patch Changes
+
+- f883d78: `Invalid base URL` error would have been thrown when performing request of a relative URL
+
 ## 2.2.3
 
 ### Patch Changes

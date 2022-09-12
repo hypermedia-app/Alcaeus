@@ -102,6 +102,27 @@ describe('Hydra loadDocumentation', () => {
                 'http://example.com/foo/bar/docs',
                 expect.anything())
     })
+
+    it('forwards additional options to fetch', async () => {
+        // given
+        fetchResource.mockImplementationOnce(mockedResponse({
+            xhrBuilder: responseBuilder().body(''),
+        }))
+        client.baseUri = 'http://example.com/foo/'
+
+        // when
+        await client.loadDocumentation('bar/docs', {}, {
+            credentials: 'same-origin',
+        })
+
+        // then
+        expect(fetchResource)
+            .toHaveBeenCalledWith(
+                'http://example.com/foo/bar/docs',
+                expect.objectContaining({
+                    credentials: 'same-origin',
+                }))
+    })
 })
 
 describe('Hydra', () => {
@@ -366,6 +387,46 @@ describe('Hydra', () => {
                 // then
                 expect(dataset.length).toBeGreaterThan(0)
             })
+        })
+    })
+
+    describe('customizing default request init', () => {
+        let client: HydraClient
+
+        beforeEach(() => {
+            client = create({ parsers })
+            fetchResource.mockImplementation(mockedResponse({
+                xhrBuilder: responseBuilder().body(''),
+            }))
+            invokeOperation.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder().body(''),
+            }))
+        })
+
+        it('combines default init with per-request init', async () => {
+            // given
+            client.defaultRequestInit = {
+                cache: 'no-cache',
+                mode: 'cors',
+            }
+
+            // when
+            await client.loadResource('uri', {}, {
+                credentials: 'omit',
+                mode: 'no-cors',
+            })
+
+            // then
+            expect(fetchResource).toHaveBeenCalledWith(
+                'uri',
+                expect.objectContaining({
+                    headers: new Headers({
+                        Authorization: 'Bearer foobar',
+                    }),
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                    mode: 'no-cors',
+                }))
         })
     })
 

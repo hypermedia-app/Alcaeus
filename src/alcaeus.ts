@@ -11,7 +11,7 @@ import type { Resource, Operation, ApiDocumentation } from '@rdfine/hydra'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import fromStream from 'rdf-dataset-ext/fromStream'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
-import FetchUtil from './FetchUtil'
+import FetchUtil, { AllowedRequestInit } from './FetchUtil'
 import { merge } from './helpers/MergeHeaders'
 import { getAbsoluteUri } from './helpers/uri'
 import * as DefaultCacheStrategy from './ResourceCacheStrategy'
@@ -39,10 +39,11 @@ export interface HydraClient<D extends DatasetCore = DatasetCore> {
     baseUri?: string
     rootSelectors: [string, RootNodeCandidate][]
     parsers: SinkMap<EventEmitter, Stream>
-    loadResource<T extends RdfResourceCore<any> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit): Promise<HydraResponse<D, T>>
-    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit): Promise<ApiDocumentation<D> | null>
-    invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit): Promise<HydraResponse<D, T>>
+    loadResource<T extends RdfResourceCore<any> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit, request?: AllowedRequestInit): Promise<HydraResponse<D, T>>
+    loadDocumentation(uri: string | NamedNode, headers?: HeadersInit, request?: AllowedRequestInit): Promise<ApiDocumentation<D> | null>
+    invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit, request?: AllowedRequestInit): Promise<HydraResponse<D, T>>
     defaultHeaders: HeadersInit | ((params: { uri: string }) => HeadersInit | Promise<HeadersInit>)
+    defaultRequestInit: AllowedRequestInit
     resources: ResourceStore<D>
     apiDocumentations: ResourceRepresentation<D, ApiDocumentation<D>>[]
     cacheStrategy: ResourceCacheStrategy
@@ -58,13 +59,15 @@ interface AlcaeusInit<D extends DatasetCore> {
 }
 
 export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
-    public baseUri?: string = undefined;
+    public baseUri?: string = undefined
 
-    public rootSelectors: [string, RootNodeCandidate][];
+    public rootSelectors: [string, RootNodeCandidate][]
 
-    public parsers: SinkMap<EventEmitter, Stream>;
+    public parsers: SinkMap<EventEmitter, Stream>
 
     public defaultHeaders: HeadersInit | ((params: { uri: string }) => HeadersInit | Promise<HeadersInit>) = {}
+
+    public defaultRequestInit: AllowedRequestInit = {}
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public log: (msg: string) => void = () => {}
@@ -75,7 +78,7 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
 
     private readonly __apiDocumentations: Map<NamedNode, ResourceRepresentation<D, ApiDocumentation<D>>> = new TermMap()
 
-    private readonly datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset'];
+    private readonly datasetFactory: DatasetCoreFactory<Quad, Quad, D>['dataset']
 
     private readonly _fetch: ReturnType<typeof FetchUtil>
 
@@ -98,7 +101,7 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
         return [...this.__apiDocumentations.values()]
     }
 
-    public async loadResource <T extends RdfResourceCore<any>>(id: string | NamedNode, headers: HeadersInit = {}, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
+    public async loadResource <T extends RdfResourceCore<any>>(id: string | NamedNode, headers: HeadersInit = {}, requestInit?: AllowedRequestInit, dereferenceApiDocumentation = true): Promise<HydraResponse<D, T>> {
         const term = typeof id === 'string' ? namedNode(id) : id
         let requestHeaders = new this._headers(headers)
 
@@ -119,6 +122,7 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
         const response = await this._fetch.resource(uri, {
             parsers: this.parsers,
             headers: await this.__mergeHeaders(requestHeaders, { uri }),
+            ...{ ...this.defaultRequestInit, ...requestInit },
         })
 
         if (previousResource && response.xhr.status === 304) {
@@ -149,10 +153,10 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
         }
     }
 
-    public async loadDocumentation(id: string | NamedNode, headers: HeadersInit = {}): Promise<ApiDocumentation<D> | null> {
+    public async loadDocumentation(id: string | NamedNode, headers: HeadersInit = {}, requestInit: AllowedRequestInit = {}): Promise<ApiDocumentation<D> | null> {
         const term = typeof id === 'string' ? namedNode(id) : id
 
-        const resource = await this.loadResource<ApiDocumentation<D>>(term, headers, false)
+        const resource = await this.loadResource<ApiDocumentation<D>>(term, headers, requestInit, false)
         if (resource && resource.representation) {
             this.__apiDocumentations.set(term, resource.representation)
             const [apiDocs] = resource.representation.ofType<ApiDocumentation<D>>(hydra.ApiDocumentation)
@@ -164,7 +168,7 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
         return null
     }
 
-    public async invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers: HeadersInit = {}, body?: BodyInit): Promise<HydraResponse<D, T>> {
+    public async invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers: HeadersInit = {}, body?: BodyInit, requestInit: AllowedRequestInit = {}): Promise<HydraResponse<D, T>> {
         const uri = getAbsoluteUri(operation.target.id.value, this.baseUri)
         const mergedHeaders = await this.__mergeHeaders(new this._headers(headers), { uri })
 
@@ -176,6 +180,7 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
             parsers: this.parsers,
             headers: mergedHeaders,
             body,
+            ...requestInit,
         })
         await this.__getApiDocumentation(response, headers)
 

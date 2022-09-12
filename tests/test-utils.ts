@@ -86,7 +86,7 @@ export function responseBuilder() {
     }
 }
 
-export function mockedResponse({ includeDocsLink = true, xhrBuilder }: { includeDocsLink: boolean; xhrBuilder: ReturnType<typeof responseBuilder> }): (uri: string) => Promise<ResponseWrapper> {
+export function mockedResponse({ includeDocsLink = true, xhrBuilder }: { includeDocsLink?: boolean; xhrBuilder: ReturnType<typeof responseBuilder> }): (uri: string) => Promise<ResponseWrapper> {
     xhrBuilder = xhrBuilder || responseBuilder()
 
     return async (requestedUri: string) => {

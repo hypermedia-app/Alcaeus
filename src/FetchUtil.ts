@@ -6,6 +6,7 @@ import ResponseWrapper from './ResponseWrapper'
 import { merge } from './helpers/MergeHeaders'
 import * as Constants from './Constants'
 
+export type AllowedRequestInit = Omit<RequestInit, 'headers' | 'method' | 'body' | 'redirect'>
 type Parsers = SinkMap<EventEmitter, Stream>
 
 function requestAcceptHeaders(sinkMap: Parsers) {
@@ -13,13 +14,14 @@ function requestAcceptHeaders(sinkMap: Parsers) {
 }
 
 export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
-    async function getResponse(effectiveUri: string, { method, headers = {}, body, parsers }: { method: string; headers?: HeadersInit; body?: BodyInit; parsers: Parsers }) {
+    async function getResponse(effectiveUri: string, { method = 'get', headers = {}, body, parsers, ...rest }: { parsers: Parsers } & RequestInit) {
         const defaultHeaders: HeadersInit = {
             accept: requestAcceptHeaders(parsers),
         }
 
         const requestInit: RequestInit = {
             method,
+            ...filterRequestInit(rest),
         }
 
         if (method.toLowerCase() !== 'get') {
@@ -40,7 +42,7 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
         return new ResponseWrapper(effectiveUri, res, parsers, jsonLdContext)
     }
 
-    function resource(uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit }): Promise<ResponseWrapper> {
+    function resource(uri: string, requestInit: { parsers: Parsers; headers?: HeadersInit } & AllowedRequestInit): Promise<ResponseWrapper> {
         return getResponse(uri, {
             method: 'get',
             ...requestInit,
@@ -50,7 +52,7 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
     function operation(
         method: string,
         uri: string,
-        requestInit: { parsers: Parsers; headers?: HeadersInit; body?: BodyInit }): Promise<ResponseWrapper> {
+        requestInit: { parsers: Parsers; headers?: HeadersInit; body?: BodyInit } & AllowedRequestInit): Promise<ResponseWrapper> {
         return getResponse(uri, { method, ...requestInit })
     }
 
@@ -58,4 +60,9 @@ export default function (_fetch: typeof fetch, _Headers: typeof Headers) {
         resource,
         operation,
     }
+}
+
+function filterRequestInit(arg: RequestInit = {}): AllowedRequestInit {
+    const { headers, body, method, redirect, ...rest } = arg
+    return rest
 }

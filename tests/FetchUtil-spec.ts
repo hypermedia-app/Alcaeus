@@ -165,6 +165,30 @@ describe('FetchUtil', () => {
                 }))
         })
 
+        it('should set additional request options', async () => {
+            // given
+            mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())
+
+            // when
+            await fetchUtil.operation('get', 'http://example.com/resource', {
+                parsers,
+                headers: {
+                    'x-foo': 'bar',
+                },
+                cache: 'no-cache',
+            })
+
+            // then
+            expect(mockFetch)
+                .toBeCalledWith(expect.anything(), expect.objectContaining({
+                    headers: new Headers({
+                        'x-foo': 'bar',
+                        accept: 'application/ld+json, application/n-triples, application/n-quads',
+                    }),
+                    cache: 'no-cache',
+                }))
+        })
+
         it('should not alter accept header if other headers added', async () => {
             // given
             mockFetch.mockReturnValue(responseBuilder().body(Bodies.someJsonLd).build())

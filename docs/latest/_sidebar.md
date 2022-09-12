@@ -23,5 +23,6 @@
   * [Error responses](representations/problem-details.md)
   * [Resource cache](js-api/cache.md)
   * [Request headers](js-api/request-headers.md)
+  * [fetch parameters](js-api/request-init.md)
   * [Media types](js-api/media-type-processor.md)
   * [Base URL](js-api/base-url.md)

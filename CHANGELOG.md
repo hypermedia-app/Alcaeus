@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.0
+
+### Minor Changes
+
+- 1529482: Allow setting all of fetch `RequestInit` both globally, as well as on a per-request basis
+
 ## 2.2.4
 
 ### Patch Changes

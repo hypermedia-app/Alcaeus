@@ -428,6 +428,32 @@ describe('Hydra', () => {
                     mode: 'no-cors',
                 }))
         })
+
+        it('combines lazy request init defaults with per-request init', async () => {
+            // given
+            client.defaultRequestInit = async () => ({
+                cache: 'no-cache',
+                mode: 'cors',
+            })
+
+            // when
+            await client.loadResource('uri', {}, {
+                credentials: 'omit',
+                mode: 'no-cors',
+            })
+
+            // then
+            expect(fetchResource).toHaveBeenCalledWith(
+                'uri',
+                expect.objectContaining({
+                    headers: new Headers({
+                        Authorization: 'Bearer foobar',
+                    }),
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                    mode: 'no-cors',
+                }))
+        })
     })
 
     describe('customizing default headers', () => {

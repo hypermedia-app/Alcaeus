@@ -34,6 +34,10 @@ function byInProperties(left: GraphPointer, right: GraphPointer) {
     return left.in().terms.length - right.in().terms.length
 }
 
+interface Defaults<T> {
+    (arg: { uri: string }): T | Promise<T>
+}
+
 export interface HydraClient<D extends DatasetCore = DatasetCore> {
     log: (msg: string) => void
     baseUri?: string
@@ -42,8 +46,8 @@ export interface HydraClient<D extends DatasetCore = DatasetCore> {
     loadResource<T extends RdfResourceCore<any> = Resource<D>>(uri: string | NamedNode, headers?: HeadersInit, request?: AllowedRequestInit): Promise<HydraResponse<D, T>>
     loadDocumentation(uri: string | NamedNode, headers?: HeadersInit, request?: AllowedRequestInit): Promise<ApiDocumentation<D> | null>
     invokeOperation<T extends RdfResourceCore<any> = Resource<D>>(operation: InvokedOperation, headers?: HeadersInit, body?: BodyInit, request?: AllowedRequestInit): Promise<HydraResponse<D, T>>
-    defaultHeaders: HeadersInit | ((params: { uri: string }) => HeadersInit | Promise<HeadersInit>)
-    defaultRequestInit: AllowedRequestInit
+    defaultHeaders: HeadersInit | Defaults<HeadersInit>
+    defaultRequestInit: AllowedRequestInit | Defaults<AllowedRequestInit>
     resources: ResourceStore<D>
     apiDocumentations: ResourceRepresentation<D, ApiDocumentation<D>>[]
     cacheStrategy: ResourceCacheStrategy
@@ -67,7 +71,7 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
 
     public defaultHeaders: HeadersInit | ((params: { uri: string }) => HeadersInit | Promise<HeadersInit>) = {}
 
-    public defaultRequestInit: AllowedRequestInit = {}
+    public defaultRequestInit = {}
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public log: (msg: string) => void = () => {}
@@ -119,10 +123,13 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
         }
 
         const uri = getAbsoluteUri(term.value, this.baseUri)
+        const defaultRequestInit = typeof this.defaultRequestInit === 'function'
+            ? await this.defaultRequestInit({ uri })
+            : this.defaultRequestInit
         const response = await this._fetch.resource(uri, {
             parsers: this.parsers,
             headers: await this.__mergeHeaders(requestHeaders, { uri }),
-            ...{ ...this.defaultRequestInit, ...requestInit },
+            ...{ ...defaultRequestInit, ...requestInit },
         })
 
         if (previousResource && response.xhr.status === 304) {

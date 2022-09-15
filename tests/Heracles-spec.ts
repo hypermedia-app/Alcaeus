@@ -454,6 +454,39 @@ describe('Hydra', () => {
                     mode: 'no-cors',
                 }))
         })
+
+        it('is used by operation', async () => {
+            // given
+            client.defaultRequestInit = {
+                cache: 'no-cache',
+                mode: 'cors',
+            }
+            const operation = {
+                method: 'POST',
+                target: {
+                    id: ex.resource,
+                },
+            }
+
+            // when
+            await client.invokeOperation(operation, {}, undefined, {
+                credentials: 'omit',
+                mode: 'no-cors',
+            })
+
+            // then
+            expect(invokeOperation).toHaveBeenCalledWith(
+                'POST',
+                ex.resource.value,
+                expect.objectContaining({
+                    headers: new Headers({
+                        Authorization: 'Bearer foobar',
+                    }),
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                    mode: 'no-cors',
+                }))
+        })
     })
 
     describe('customizing default headers', () => {

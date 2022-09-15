@@ -183,11 +183,14 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
             throw new Error('Cannot invoke operation without a hydra:method')
         }
 
+        const defaultRequestInit = typeof this.defaultRequestInit === 'function'
+            ? await this.defaultRequestInit({ uri })
+            : this.defaultRequestInit
         const response = await this._fetch.operation(operation.method, uri, {
             parsers: this.parsers,
             headers: mergedHeaders,
             body,
-            ...requestInit,
+            ...{ ...defaultRequestInit, ...requestInit },
         })
         await this.__getApiDocumentation(response, headers)
 

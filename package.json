@@ -1,6 +1,6 @@
 {
   "name": "alcaeus",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "index.js",
   "types": "index.d.ts",

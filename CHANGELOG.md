@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.2
+
+### Patch Changes
+
+- 6793756: RequestInit default were not applied when invoking operations
+
 ## 2.3.1
 
 ### Patch Changes

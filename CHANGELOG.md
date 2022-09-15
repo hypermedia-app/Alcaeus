@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.1
+
+### Patch Changes
+
+- eabfc12: Also support function to initialize fetch `RequestInit`
+
 ## 2.3.0
 
 ### Minor Changes

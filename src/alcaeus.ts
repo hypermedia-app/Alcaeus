@@ -51,6 +51,7 @@ export interface HydraClient<D extends DatasetCore = DatasetCore> {
     resources: ResourceStore<D>
     apiDocumentations: ResourceRepresentation<D, ApiDocumentation<D>>[]
     cacheStrategy: ResourceCacheStrategy
+    apiDocumentationDiscovery: 'header-first' | 'representation-first'
 }
 
 interface AlcaeusInit<D extends DatasetCore> {
@@ -77,6 +78,8 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
     public log: (msg: string) => void = () => {}
 
     public cacheStrategy: ResourceCacheStrategy = { ...DefaultCacheStrategy }
+
+    public apiDocumentationDiscovery = 'representation-first' as const
 
     public readonly resources: ResourceStore<D>
 

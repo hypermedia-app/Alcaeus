@@ -110,8 +110,11 @@ export function createHydraResourceMixin(alcaeus: () => HydraClient<any>) {
 
             public get apiDocumentation(): ApiDocumentation | undefined {
                 const client = alcaeus()
-                const id = this.pointer.out(hydra.apiDocumentation).value ||
-                  client.resources.get(this.pointer)?.response.apiDocumentationLink
+                const representationLink = this.pointer.out(hydra.apiDocumentation).value
+                const headerLink = client.resources.get(this.pointer)?.response.apiDocumentationLink
+                const id = client.apiDocumentationDiscovery === 'header-first'
+                    ? headerLink || representationLink
+                    : representationLink || headerLink
 
                 if (id) {
                     const idNode = namedNode(id)

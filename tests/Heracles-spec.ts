@@ -825,6 +825,29 @@ describe('Hydra', () => {
             expect(res.response).toBe(previousResponse)
         })
 
+        it('should reuse previous representation when server responds with equal etag', async () => {
+            // given
+            const previousResponse = await mockedResponse({
+                xhrBuilder: responseBuilder().body(Bodies.someJsonLd).header('etag', 'foobar'),
+            })(id)
+            fetchResource.mockImplementationOnce(mockedResponse({
+                xhrBuilder: responseBuilder().statusCode(200).header('etag', 'foobar'),
+            }))
+            client.cacheStrategy.shouldLoad = () => true
+            clownface({ dataset }).namedNode(id).addOut(rdfs.label, 'Foo')
+            await client.resources.set(namedNode(id), {
+                response: previousResponse,
+                dataset,
+            })
+
+            // when
+            const res = await client.loadResource(id)
+
+            // then
+            expect(res.representation).toBeDefined()
+            expect(res.response).toBe(previousResponse)
+        })
+
         it('should set caching request headers provided by cache strategy', async () => {
             // given
             const previousResponse = mockedResponse({

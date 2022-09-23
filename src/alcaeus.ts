@@ -135,7 +135,8 @@ export class Alcaeus<D extends DatasetCore> implements HydraClient<D> {
         if (previousResource) {
             const etag = response.xhr.headers.get('etag')
             const previousEtag = previousResource.response.xhr.headers.get('etag')
-            if (response.xhr.status === 304 || (etag && etag === previousEtag)) {
+            const etagsEqual = etag && etag === previousEtag
+            if (response.xhr.status === 304 || etagsEqual) {
                 return previousResource
             }
         }

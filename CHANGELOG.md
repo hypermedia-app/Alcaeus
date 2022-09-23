@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.3
+
+### Patch Changes
+
+- d1d2e9e: Previously retrieved resource representation will be used when response has equal `etag` header
+
 ## 2.3.2
 
 ### Patch Changes

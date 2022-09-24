@@ -15,6 +15,7 @@ import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import * as mixins from '../../src/Resources/Mixins'
 import { ResourceRepresentation } from '../../src/ResourceRepresentation'
 import { createHydraResourceMixin } from '../../src/Resources/CoreMixins'
+import { HydraClient } from '../../src/alcaeus'
 
 const parser = new Parser()
 const ex = namespace('http://example.com/vocab#')
@@ -23,11 +24,9 @@ const apiDocumentations: ResourceRepresentation<DatasetCore, Hydra.ApiDocumentat
 const resources = {
     get: jest.fn(),
 }
-const client = () => ({
-    apiDocumentations,
-    resources,
-} as any)
-const HydraResource: Constructor<Resource> = createHydraResourceMixin(client)(Hydra.ResourceMixin(RdfResourceImpl as any))
+let client: HydraClient
+const getClient = () => client
+const HydraResource: Constructor<Resource> = createHydraResourceMixin(getClient)(Hydra.ResourceMixin(RdfResourceImpl as any))
 
 HydraResource.factory = new ResourceFactory(HydraResource)
 HydraResource.factory.addMixin(...Object.values(mixins))
@@ -50,6 +49,10 @@ async function pushApiDocumentation(apiGraph: Stream, term = ex.api) {
 describe('HydraResource', () => {
     beforeEach(() => {
         apiDocumentations.splice(0, apiDocumentations.length)
+        client = {
+            apiDocumentations,
+            resources,
+        } as any
     })
 
     describe('get operations', () => {
@@ -538,6 +541,30 @@ describe('HydraResource', () => {
             const resourceGraph = parse(
                 turtle`
                     <http://example.com/> ${schema.name} "foobar" .
+                `)
+            const resource = new HydraResource(cf({
+                dataset: await $rdf.dataset().import(resourceGraph),
+                term: namedNode('http://example.com/'),
+            }))
+
+            // when
+            const { apiDocumentation } = resource
+
+            // then
+            expect(apiDocumentation?.id).toEqual(ex.api1)
+        })
+
+        it('ignores link within representation when set to "header-first"', async () => {
+            // given
+            client.apiDocumentationDiscovery = 'header-first'
+            resources.get.mockReturnValue({
+                response: {
+                    apiDocumentationLink: ex.api1.value,
+                },
+            })
+            const resourceGraph = parse(
+                turtle`
+                    <http://example.com/> ${hydra.apiDocumentation} ${ex.api2} .
                 `)
             const resource = new HydraResource(cf({
                 dataset: await $rdf.dataset().import(resourceGraph),

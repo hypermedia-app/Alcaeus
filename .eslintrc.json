@@ -3,49 +3,19 @@
     "@tpluscode"
   ],
   "parserOptions": {
-    "project": "./tsconfig.eslint.json",
-    "extraFileExtensions": [".mjs"]
+    "project": "./tsconfig.json"
   },
   "env": {
-    "browser": true,
-    "jest/globals": true
-  },
-  "plugins": [
-    "jest"
-  ],
-  "rules": {
-    "@typescript-eslint/indent": ["error", 4],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["tests/**"]}]
+    "mocha": true
   },
   "overrides": [
     {
-      "extends": [
-        "eslint:recommended",
-        "plugin:import/errors",
-        "plugin:import/warnings"
+      "files": [
+        "test/**"
       ],
-      "files": ["**/*.mjs"],
       "rules": {
-        "no-void": "off",
-        "no-func-assign": "off",
-        "prefer-const": "off",
-        "@typescript-eslint/no-empty-function": "off"
-      },
-      "settings": {
-        "import/extensions": [
-          ".js",
-          ".mjs"
-        ]
-      }
-    },
-    {
-      "files": ["tests/**/*.ts"],
-      "rules": {
-        "@typescript-eslint/no-object-literal-type-assertion": "off",
-        "no-prototype-builtins": "off",
-        "@typescript-eslint/no-namespace": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/explicit-function-return-type": "off"
+        "no-unused-expressions": "off",
+        "import/no-extraneous-dependencies": "off"
       }
     }
   ]

@@ -7,62 +7,62 @@ import type { MultiPointer } from 'clownface'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 export interface MemberAssertionPattern {
-    subject?: string | RdfResource | NamedNode
-    predicate?: string | Property | NamedNode
-    object?: string | Class | NamedNode
+  subject?: string | RdfResource | NamedNode
+  predicate?: string | Property | NamedNode
+  object?: string | Class | NamedNode
 }
 
 interface MemberAssertionEx {
-    /**
+  /**
      * Checks if the current member assertion matches the given pattern
      * @param filter {MemberAssertionPattern}
      */
-    matches(filter: MemberAssertionPattern): boolean
+  matches(filter: MemberAssertionPattern): boolean
 }
 
 declare module '@rdfine/hydra' {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    export interface MemberAssertion extends MemberAssertionEx {
-    }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  export interface MemberAssertion extends MemberAssertionEx {
+  }
 }
 
 function getUri(factory: MultiPointer, resource: string | RdfResource | NamedNode): ResourceIdentifier {
-    if (typeof resource === 'string') {
-        return factory.namedNode(resource).term
-    }
+  if (typeof resource === 'string') {
+    return factory.namedNode(resource).term
+  }
 
-    if ('id' in resource) {
-        return resource.id
-    }
+  if ('id' in resource) {
+    return resource.id
+  }
 
-    return resource
+  return resource
 }
 
 export function MemberAssertionMixin<TBase extends ExtendingConstructor<MemberAssertion, MemberAssertionEx>>(Base: TBase) {
-    @namespace(hydra)
-    class MemberAssertionClass extends Base implements MemberAssertionEx {
-        public matches({ subject = '', predicate = rdf.type, object = '' }: MemberAssertionPattern): boolean {
-            const predicateId = getUri(this.pointer, predicate)
-            const objectId = getUri(this.pointer, object)
-            const subjectId = getUri(this.pointer, subject)
+  @namespace(hydra)
+  class MemberAssertionClass extends Base implements MemberAssertionEx {
+    public matches({ subject = '', predicate = rdf.type, object = '' }: MemberAssertionPattern): boolean {
+      const predicateId = getUri(this.pointer, predicate)
+      const objectId = getUri(this.pointer, object)
+      const subjectId = getUri(this.pointer, subject)
 
-            if (object && this.object && this.property) {
-                const predicateIsRdfType = rdf.type.equals(predicateId)
+      if (object && this.object && this.property) {
+        const predicateIsRdfType = rdf.type.equals(predicateId)
 
-                return predicateIsRdfType && objectId.equals(this.object.id) && predicateId.equals(this.property.id)
-            }
+        return predicateIsRdfType && objectId.equals(this.object.id) && predicateId.equals(this.property.id)
+      }
 
-            if (subject && predicate && this.subject && this.property) {
-                return subjectId.equals(this.subject.id) && predicateId.equals(this.property.id)
-            }
+      if (subject && predicate && this.subject && this.property) {
+        return subjectId.equals(this.subject.id) && predicateId.equals(this.property.id)
+      }
 
-            return false
-        }
+      return false
     }
+  }
 
-    return MemberAssertionClass
+  return MemberAssertionClass
 }
 
 MemberAssertionMixin.shouldApply = (res: RdfResource) => {
-    return res.pointer.in([hydra.manages, hydra.memberAssertion]).terms.length > 0
+  return res.pointer.in([hydra.manages, hydra.memberAssertion]).terms.length > 0
 }

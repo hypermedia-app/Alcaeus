@@ -1,2 +1,2 @@
-export { inferTypesFromPropertyRanges } from './propertyTypes'
-export { addExplicitStatementsInferredFromMemberAssertion } from './memberAssertion'
+export { inferTypesFromPropertyRanges } from './propertyTypes.js'
+export { addExplicitStatementsInferredFromMemberAssertion } from './memberAssertion.js'

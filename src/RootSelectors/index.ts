@@ -1,18 +1,18 @@
 import type { DatasetCore } from '@rdfjs/types'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
-import type { ResponseWrapper } from '../ResponseWrapper'
-import { exactId } from './exactId'
-import { redirectTarget } from './redirectTarget'
-import { trailingSlash } from './trailingSlash'
-import { problemDetails } from './problemDetails'
+import type { ResponseWrapper } from '../ResponseWrapper.js'
+import { exactId } from './exactId.js'
+import { redirectTarget } from './redirectTarget.js'
+import { trailingSlash } from './trailingSlash.js'
+import { problemDetails } from './problemDetails.js'
 
 export interface RootNodeCandidate {
-    (response: ResponseWrapper, dataset: DatasetCore): ResourceIdentifier | undefined
+  (response: ResponseWrapper, dataset: DatasetCore): ResourceIdentifier | undefined
 }
 
 export const defaultSelectors: Record<string, RootNodeCandidate> = {
-    exactId,
-    trailingSlash,
-    redirectTarget,
-    problemDetails,
+  exactId,
+  trailingSlash,
+  redirectTarget,
+  problemDetails,
 }

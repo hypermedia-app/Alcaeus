@@ -7,6 +7,10 @@
     "build": "tsc",
     "prepack": "npm run build"
   },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
   "license": "MIT",
   "dependencies": {
     "@rdfine/hydra": "^0.10.5",

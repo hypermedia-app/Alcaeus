@@ -1,0 +1,43 @@
+{
+  "name": "alcaeus-model",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "rdfine models for Alcaeus, Hydra client",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wikibus/alcaeus",
+    "directory": "packages/model"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "ajax",
+    "hydra",
+    "semanticweb",
+    "hypermedia",
+    "rdf",
+    "json-ld"
+  ],
+  "author": "Tomasz Pluskiewicz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wikibus/alcaeus/issues"
+  },
+  "homepage": "https://alcaeus.hydra.how",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@rdfine/hydra": "^0.10.5",
+    "@rdfjs/types": "^1.1.0",
+    "@tpluscode/rdf-ns-builders": "^4.3.0",
+    "@tpluscode/rdfine": "^0.7.7",
+    "alcaeus-core": "^0.0.0",
+    "rdf-literal": "^1.3.2"
+  },
+  "devDependencies": {
+    "typescript": "~4.2"
+  }
+}

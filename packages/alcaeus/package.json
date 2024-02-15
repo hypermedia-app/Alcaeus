@@ -1,0 +1,62 @@
+{
+  "name": "alcaeus",
+  "version": "2.3.3",
+  "description": "Hydra Core hypermedia-aware client library",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "module": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha",
+    "build": "tsc",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@rdfjs/types": "^1.1.0",
+    "@tpluscode/rdf-ns-builders": "^4.3.0",
+    "@types/parse-link-header": "^2.0.3",
+    "alcaeus-core": "^0.0.0",
+    "alcaeus-model": "^0.0.0",
+    "parse-link-header": "^2.0.0",
+    "rdf-dataset-ext": "^1.1.0",
+    "readable-stream": ">=3.6.0",
+    "@tpluscode/rdfine": "^0.7.7",
+    "@rdfine/hydra": "^0.10.5"
+  },
+  "devDependencies": {
+    "@zazuko/env": "^2.0.6"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wikibus/alcaeus",
+    "directory": "packages/alcaeus"
+  },
+  "keywords": [
+    "ajax",
+    "hydra",
+    "semanticweb",
+    "hypermedia",
+    "rdf",
+    "json-ld"
+  ],
+  "author": "Tomasz Pluskiewicz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wikibus/alcaeus/issues"
+  },
+  "homepage": "https://alcaeus.hydra.how",
+  "publishConfig": {
+    "access": "public"
+  },
+  "mocha": {
+    "recursive": true,
+    "extension": "ts",
+    "loader": "ts-node/esm",
+    "require": [
+      "test/mocha-setup.cjs"
+    ]
+  }
+}

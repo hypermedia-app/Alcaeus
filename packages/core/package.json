@@ -1,0 +1,22 @@
+{
+  "name": "alcaeus-core",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Core interfaces for alcaeus",
+  "scripts": {
+    "build": "tsc",
+    "prepack": "npm run build"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@rdfine/hydra": "^0.10.5",
+    "@rdfjs/types": "^1.1.0",
+    "@tpluscode/rdfine": "^0.7.7",
+    "@zazuko/env-core": "^1.0.1"
+  },
+  "peerDependencies": {
+    "@types/rdfjs__formats": "^4",
+    "@types/rdfjs__term-map": "^2.0.9",
+    "@types/rdfjs__term-set": "^2.0.9"
+  }
+}

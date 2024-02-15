@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "CommonJS",
-    "outDir": ".",
-    "moduleResolution": "node",
     "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -11,22 +7,20 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": false,
     "declaration": true,
-    "declarationDir": ".",
     "declarationMap": true,
     "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true,
     "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "lib": [
       "es2017",
       "es2015",
       "dom"
     ],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "files": [
-    "src/index.ts",
-    "src/node.ts",
-    "src/web.ts"
-  ],
   "exclude": [
     "node_modules"
   ]

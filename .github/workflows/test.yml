@@ -6,34 +6,33 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '14'
-      - run: yarn
-      - run: yarn test
+          node-version: '18'
+      - run: npm ci
+      - run: npm test
       - name: Codecov
-        uses: codecov/codecov-action@v1.0.5
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '14'
-      - run: yarn
-      - run: yarn build
-      - run: yarn eslint .  --ext .mjs --fix --quiet
+          node-version: '18'
+      - run: npm ci
+      - run: npx wsrun -c build --noEmit
 
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '14'
-      - run: yarn
+          node-version: '18'
+      - run: npm ci
       - run: yarn lint

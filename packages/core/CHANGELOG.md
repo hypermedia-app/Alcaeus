@@ -1,5 +1,11 @@
 # alcaeus-core
 
+## 1.0.0-esm.1
+
+### Patch Changes
+
+- 1f828be: Remove TS from packed packages
+
 ## 1.0.0-esm.0
 
 ### Major Changes

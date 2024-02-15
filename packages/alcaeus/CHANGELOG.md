@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.0-esm.1
+
+### Patch Changes
+
+- 1f828be: Remove TS from packed packages
+- Updated dependencies [1f828be]
+  - alcaeus-core@1.0.0-esm.1
+  - alcaeus-model@1.0.0-esm.1
+
 ## 3.0.0-esm.0
 
 ### Major Changes

@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.0.0-esm.0
+
+### Major Changes
+
+- f48a8a4: Convert to ESM-only. Other changes include:
+
+  1. `isomorphic-fetch` and `isomorhpic-form-data` are removed as dependencies. They should be loaded by consumer s if necessary
+  2. Removed `./web` and `./node` modules. Instead, consumers must use `alcaeus` in conjunction with an RDF/JS environment
+  3. Extracted packages `alcaeus-model` and `alcaeus-core`
+
+### Patch Changes
+
+- Updated dependencies [6a2cfd5]
+  - alcaeus-model@1.0.0-esm.0
+  - alcaeus-core@1.0.0-esm.0
+
 ## 2.3.3
 
 ### Patch Changes
@@ -56,7 +72,7 @@
 
   // client's type will be inferred as HydraClient<DatasetExt>
   const client = create({
-    datasetFactory: $rdf.dataset
+    datasetFactory: $rdf.dataset,
   });
   ```
 

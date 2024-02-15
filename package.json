@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "test": "c8 --all --reporter lcovonly wsrun -mc test",
+    "test": "c8 wsrun -mc test",
     "docs": "docsify serve docs",
     "lint": "eslint . --ext .ts --quiet",
     "release": "changeset publish"
@@ -54,6 +54,19 @@
   "lint-staged": {
     "*.{js,ts}": [
       "eslint --quiet --fix --ignore-path .eslintignore"
+    ]
+  },
+  "c8": {
+    "all": true,
+    "exclude": [
+      "docs",
+      "coverage",
+      "**/test/**"
+    ],
+    "reporter": [
+      "lcovonly",
+      "text",
+      "html"
     ]
   }
 }

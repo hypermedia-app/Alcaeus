@@ -1,6 +1,6 @@
 {
   "name": "alcaeus",
-  "version": "3.0.0-esm.0",
+  "version": "3.0.0-esm.1",
   "description": "Hydra Core hypermedia-aware client library",
   "main": "index.js",
   "types": "index.d.ts",
@@ -15,8 +15,8 @@
     "@rdfjs/types": "^1.1.0",
     "@tpluscode/rdf-ns-builders": "^4.3.0",
     "@types/parse-link-header": "^2.0.3",
-    "alcaeus-core": "^1.0.0-esm.0",
-    "alcaeus-model": "^1.0.0-esm.0",
+    "alcaeus-core": "^1.0.0-esm.1",
+    "alcaeus-model": "^1.0.0-esm.1",
     "parse-link-header": "^2.0.0",
     "rdf-dataset-ext": "^1.1.0",
     "readable-stream": ">=3.6.0",

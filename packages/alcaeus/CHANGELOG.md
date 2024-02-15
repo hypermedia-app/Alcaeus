@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.0.0
+
+### Major Changes
+
+- f48a8a4: Convert to ESM-only. Other changes include:
+
+  1. `isomorphic-fetch` and `isomorhpic-form-data` are removed as dependencies. They should be loaded by consumers if necessary
+  2. Removed `./web` and `./node` modules. Instead, consumers must use `alcaeus` in conjunction with an RDF/JS environment
+  3. Extracted packages `alcaeus-model` and `alcaeus-core`
+
+### Patch Changes
+
+- 1f828be: Remove TS from packed packages
+- Updated dependencies [c90e5bb]
+- Updated dependencies [1f828be]
+- Updated dependencies [6a2cfd5]
+  - alcaeus-model@1.0.0
+  - alcaeus-core@1.0.0
+
 ## 3.0.0-esm.1
 
 ### Patch Changes
@@ -15,7 +34,7 @@
 
 - f48a8a4: Convert to ESM-only. Other changes include:
 
-  1. `isomorphic-fetch` and `isomorhpic-form-data` are removed as dependencies. They should be loaded by consumer s if necessary
+  1. `isomorphic-fetch` and `isomorhpic-form-data` are removed as dependencies. They should be loaded by consumers if necessary
   2. Removed `./web` and `./node` modules. Instead, consumers must use `alcaeus` in conjunction with an RDF/JS environment
   3. Extracted packages `alcaeus-model` and `alcaeus-core`
 

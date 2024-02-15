@@ -3,6 +3,7 @@
   "type": "module",
   "version": "1.0.0-esm.1",
   "description": "rdfine models for Alcaeus, Hydra client",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/wikibus/alcaeus",

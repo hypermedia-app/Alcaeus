@@ -3,6 +3,7 @@
   "version": "1.0.0-esm.1",
   "type": "module",
   "description": "Core interfaces for alcaeus",
+  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "prepack": "npm run build"

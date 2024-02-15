@@ -8,6 +8,6 @@ export * from 'alcaeus-model'
 export type { RuntimeOperation } from 'alcaeus-model/Operation.js'
 export type { HydraResponse } from './alcaeus.js'
 
-export default function (init: Parameters<typeof create>[0] = {}) {
+export default function (init: Parameters<typeof create>[0] = {}): [typeof RdfineFactory, typeof HydraFactory, typeof AlcaeusHydraFactory, ReturnType<typeof create>] {
   return [RdfineFactory, HydraFactory, AlcaeusHydraFactory, create(init)]
 }

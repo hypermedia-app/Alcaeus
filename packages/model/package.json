@@ -9,7 +9,6 @@
     "directory": "packages/model"
   },
   "scripts": {
-    "test": "mocha --package ../../package.json",
     "build": "tsc",
     "prepack": "npm run build"
   },

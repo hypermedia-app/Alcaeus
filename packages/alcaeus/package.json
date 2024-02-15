@@ -52,6 +52,7 @@
     "access": "public"
   },
   "mocha": {
+    "recursive": true,
     "extension": "ts",
     "loader": "ts-node/esm",
     "require": [

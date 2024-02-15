@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "esm",
+  "initialVersions": {
+    "alcaeus": "2.3.3",
+    "alcaeus-core": "0.0.0",
+    "alcaeus-model": "0.0.0"
+  },
+  "changesets": []
+}

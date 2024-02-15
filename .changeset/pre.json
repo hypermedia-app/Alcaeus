@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "esm",
   "initialVersions": {
     "alcaeus": "2.3.3",

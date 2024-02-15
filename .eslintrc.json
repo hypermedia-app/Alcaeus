@@ -2,16 +2,16 @@
   "extends": [
     "@tpluscode"
   ],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "env": {
     "mocha": true
+  },
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "overrides": [
     {
       "files": [
-        "test/**"
+        "**/test/**"
       ],
       "rules": {
         "no-unused-expressions": "off",

@@ -18,5 +18,8 @@
     "@types/rdfjs__formats": "^4",
     "@types/rdfjs__term-map": "^2.0.9",
     "@types/rdfjs__term-set": "^2.0.9"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

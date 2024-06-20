@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.1
+
+### Patch Changes
+
+- bde6d93: Export type for alcaeus factory
+
 ## 3.0.0
 
 ### Major Changes

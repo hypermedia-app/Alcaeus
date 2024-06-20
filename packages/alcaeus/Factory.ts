@@ -11,7 +11,12 @@ interface AlcaeusInit<D extends DatasetCore> {
   Headers?: typeof Headers
 }
 
-export default <D extends DatasetCore<Quad, Quad>>({ dataset, fetch, Headers, rootSelectors }: AlcaeusInit<D> = {}) => class AlcaeusFactory {
+export interface AlcaeusFactory<D extends DatasetCore = DatasetCore> {
+  hydra: HydraClient<D>
+  init(this: HydraEnvironment<D>): void
+}
+
+export default <D extends DatasetCore<Quad, Quad>>({ dataset, fetch, Headers, rootSelectors }: AlcaeusInit<D> = {}) => class implements AlcaeusFactory<D> {
   hydra!: HydraClient<D>
 
   init(this: HydraEnvironment<D>) {

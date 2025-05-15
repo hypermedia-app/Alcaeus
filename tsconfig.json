@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "target": "ES2022",
     "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -14,11 +17,6 @@
     "strict": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "lib": [
-      "es2017",
-      "es2015",
-      "dom"
-    ],
     "esModuleInterop": true,
     "skipLibCheck": true
   },

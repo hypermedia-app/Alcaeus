@@ -1,7 +1,7 @@
 {
   "name": "alcaeus-model",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "rdfine models for Alcaeus, Hydra client",
   "main": "index.js",
   "repository": {
@@ -35,7 +35,7 @@
     "@rdfjs/types": ">=1",
     "@tpluscode/rdf-ns-builders": "^5",
     "@tpluscode/rdfine": "^0.7.11",
-    "alcaeus-core": "^1.0.0",
+    "alcaeus-core": "^1.0.1",
     "rdf-literal": "^2.0.0"
   }
 }

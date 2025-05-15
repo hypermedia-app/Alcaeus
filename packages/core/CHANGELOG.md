@@ -1,5 +1,11 @@
 # alcaeus-core
 
+## 1.0.1
+
+### Patch Changes
+
+- 7cfdaaa: Updated `@rdfine/hydra`, `@rdfjs/types`, `@tpluscode/rdfine`, `@zazuko/env-core`
+
 ## 1.0.0
 
 ### Major Changes

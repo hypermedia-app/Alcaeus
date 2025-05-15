@@ -37,7 +37,7 @@
     "eslint-import-resolver-typescript": "^3.6.1",
     "husky": "^8.0.3",
     "isomorphic-form-data": "^2.0.0",
-    "json-server": "^0.16.3",
+    "json-server": "^0",
     "jsonld": "^8.2.0",
     "lint-staged": "^11.0.0",
     "mocha": "^10.2.0",

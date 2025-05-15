@@ -24,7 +24,6 @@
     "@rdfine/hydra": "^0.10.6"
   },
   "devDependencies": {
-    "@types/node": "^20",
     "@zazuko/env": "^3.0.1"
   },
   "directories": {

@@ -23,6 +23,7 @@
     "@types/clownface": "^2.0.10",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/mocha": "^10.0.1",
+    "@types/node": "^20",
     "@types/readable-stream": "^4.0.10",
     "@types/sinon": "^17.0.3",
     "@types/sinon-chai": "^3.2.9",

@@ -1,4 +1,4 @@
-import { Dataset } from '@zazuko/env/lib/Dataset.js'
+import { Dataset } from '@zazuko/env/lib/DatasetExt.js'
 import chai, { expect } from 'chai'
 import sinon from 'sinon'
 import { jestSnapshotPlugin } from 'mocha-chai-jest-snapshot'

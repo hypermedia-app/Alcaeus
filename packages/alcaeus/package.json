@@ -12,19 +12,19 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@rdfjs/types": "^1.1.0",
-    "@tpluscode/rdf-ns-builders": "^4.3.0",
+    "@rdfjs/types": ">=1",
+    "@tpluscode/rdf-ns-builders": "^5",
     "@types/parse-link-header": "^2.0.3",
     "alcaeus-core": "^1.0.0",
     "alcaeus-model": "^1.0.0",
     "parse-link-header": "^2.0.0",
     "rdf-dataset-ext": "^1.1.0",
     "readable-stream": ">=3.6.0",
-    "@tpluscode/rdfine": "^0.7.7",
-    "@rdfine/hydra": "^0.10.5"
+    "@tpluscode/rdfine": "^0.7.11",
+    "@rdfine/hydra": "^0.10.6"
   },
   "devDependencies": {
-    "@zazuko/env": "^2.0.6"
+    "@zazuko/env": "^3.0.1"
   },
   "directories": {
     "test": "tests"
@@ -54,8 +54,8 @@
   "mocha": {
     "recursive": true,
     "extension": "ts",
-    "loader": "ts-node/esm",
     "require": [
+      "tsx",
       "test/mocha-setup.cjs"
     ]
   }

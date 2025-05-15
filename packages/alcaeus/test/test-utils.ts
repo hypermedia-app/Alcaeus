@@ -1,4 +1,4 @@
-import { Readable } from 'stream'
+import { Readable } from 'node:stream'
 import stringToStream from 'string-to-stream'
 import rdf from '@zazuko/env'
 import Parser from '@rdfjs/parser-n3'

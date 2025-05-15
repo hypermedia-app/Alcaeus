@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.0.2
+
+### Patch Changes
+
+- 7cfdaaa: Updated `@rdfjs/types`, `@tpluscode/rdf-ns-builders`, `@tpluscode/rdfine`, `@rdfine/hydra`
+- Updated dependencies [7cfdaaa]
+- Updated dependencies [7cfdaaa]
+  - alcaeus-model@1.0.1
+  - alcaeus-core@1.0.1
+
 ## 3.0.1
 
 ### Patch Changes

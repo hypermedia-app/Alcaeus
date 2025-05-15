@@ -1,6 +1,6 @@
 {
   "name": "alcaeus-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Core interfaces for alcaeus",
   "main": "index.js",

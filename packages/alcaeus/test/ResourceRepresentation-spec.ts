@@ -1,4 +1,3 @@
-import ResourceFactory from '@tpluscode/rdfine/lib/ResourceFactory'
 import { hydra, rdf, schema, rdfs } from '@tpluscode/rdf-ns-builders/loose'
 import { expect } from 'chai'
 import Environment from '@zazuko/env/Environment.js'
@@ -9,8 +8,6 @@ import parent from './env.js'
 const $rdf = new Environment([RdfineFactory], { parent })
 
 const ex = $rdf.namespace('http://example.com/')
-
-const factory = new ResourceFactory($rdf)
 
 describe('ResourceRepresentation', () => {
   it('should be iterable', () => {

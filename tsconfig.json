@@ -3,6 +3,7 @@
     "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "removeComments": false,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": false,
